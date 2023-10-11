@@ -13,7 +13,7 @@ import com.damhoe.scoresheetskat.player.application.ports.out.UpdatePlayerPort;
 
 import javax.inject.Inject;
 
-public class PlayersViewModelFactory implements ViewModelProvider.Factory {
+class PlayersViewModelFactory implements ViewModelProvider.Factory {
 
    private final ManagePlayerUseCase managePlayerUseCase;
    private final GetPlayersUseCase getPlayersUseCase;

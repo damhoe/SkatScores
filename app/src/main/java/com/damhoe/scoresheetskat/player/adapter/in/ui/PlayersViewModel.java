@@ -14,7 +14,7 @@ import java.util.List;
 
 import kotlin.contracts.ReturnsNotNull;
 
-public class PlayersViewModel extends ViewModel {
+class PlayersViewModel extends ViewModel {
 
     private final ManagePlayerUseCase managePlayerUseCase;
     private final GetPlayersUseCase getPlayersUseCase;
@@ -23,17 +23,17 @@ public class PlayersViewModel extends ViewModel {
 
     private MutableLiveData<Player> selectedPlayer = new MutableLiveData<>();
 
-    public PlayersViewModel(ManagePlayerUseCase managePlayerUseCase, GetPlayersUseCase getPlayersUseCase) {
+    PlayersViewModel(ManagePlayerUseCase managePlayerUseCase, GetPlayersUseCase getPlayersUseCase) {
         this.managePlayerUseCase = managePlayerUseCase;
         this.getPlayersUseCase = getPlayersUseCase;
         players.setValue(getPlayersUseCase.loadAll());
     }
 
-    public void initialize() {
+    void initialize() {
         players.postValue(getPlayersUseCase.loadAll());
     }
 
-    public LiveData<List<Player>> getPlayers() {
+    LiveData<List<Player>> getPlayers() {
         return players;
     }
 
@@ -71,14 +71,6 @@ public class PlayersViewModel extends ViewModel {
             players.postValue(playerList);
         }
         return removedPlayer;
-    }
-
-    public Player findPlayerByName(String name) {
-        SearchResult<Player> searchResult = getPlayersUseCase.searchForPlayersWithName(name);
-        if (searchResult.numberOfHits == 1) {
-            return searchResult.hits.get(0);
-        }
-        return null;
     }
 
     public boolean isExistentName(String name) {

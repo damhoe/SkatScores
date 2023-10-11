@@ -73,9 +73,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:clickable="false"
-            app:backgroundTint="?attr/colorPrimaryContainer"
+            app:backgroundTint="?attr/colorPrimary"
             app:icon="@drawable/ic_resume_black_24dp"
-            app:iconTint="?attr/colorOnPrimaryContainer"
+            app:iconTint="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

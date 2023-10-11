@@ -35,8 +35,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:padding="16dp"
                 android:text="@string/title_create_new_game"
-                android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-                android:fontFamily="@font/amatic_sc_bold"
+                android:textAppearance="@style/TextAppearance.App.HeadlineCasual"
                 />
 
             <!--
@@ -59,7 +58,7 @@
                 android:background="@android:color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 app:layout_constraintTop_toBottomOf="@id/title_create_new_game"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="36dp"/>
@@ -80,6 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
+                    android:textAppearance="@style/TextAppearance.App.TitleLarge"
                     android:focusedByDefault="false"
                     tools:text="New List 88"
                     android:textSize="18sp"
@@ -93,10 +93,9 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 android:text="@string/title_number_of_players"
                 android:background="@android:color/transparent"
-                android:textColor="@color/blue_main"
                 app:layout_constraintTop_toBottomOf="@id/list_name_text_input"
                 app:layout_constraintStart_toStartOf="@id/list_name_title_view"
                 android:layout_marginTop="24dp"/>
@@ -142,7 +141,7 @@
                 android:background="@android:color/transparent"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 app:layout_constraintStart_toStartOf="@id/game_settings_title_view"
                 app:layout_constraintTop_toBottomOf="@id/game_settings_title_view"/>
 
@@ -186,7 +185,7 @@
                 android:layout_marginTop="24dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 app:layout_constraintStart_toStartOf="@id/game_settings_title_view"
                 app:layout_constraintTop_toBottomOf="@+id/scoring_settings_rg"/>
 
@@ -198,7 +197,7 @@
                 android:gravity="center"
                 android:paddingBottom="16dp"
                 android:paddingTop="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 app:layout_constraintTop_toBottomOf="@id/rounds_setting_title_view"/>
 
             <com.google.android.material.slider.Slider

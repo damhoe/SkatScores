@@ -36,11 +36,12 @@ import android.widget.Button;
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.base.Result;
+import com.damhoe.scoresheetskat.base.ValidationResult;
 import com.damhoe.scoresheetskat.databinding.FragmentGameBinding;
+import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator;
+import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator.MessageType;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
 import com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand;
-import com.damhoe.scoresheetskat.player.adapter.in.ui.PlayersViewModel;
-import com.damhoe.scoresheetskat.player.adapter.in.ui.PlayersViewModelFactory;
 import com.damhoe.scoresheetskat.score.adapter.in.ui.SharedScoreResponseViewModel;
 import com.damhoe.scoresheetskat.score.domain.ScoreEvent;
 import com.damhoe.scoresheetskat.score.domain.ScoreEventType;
@@ -61,6 +62,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -68,9 +70,9 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
     @Inject
     GameViewModelFactory viewModelFactory;
     @Inject
-    PlayersViewModelFactory playersViewModelFactory;
+    SelectPlayerVMFactory selectPlayerVMFactory;
     private SkatGameViewModel viewModel;
-    private PlayersViewModel playersViewModel;
+    private SelectPlayerViewModel playerVM;
     private SharedScoreResponseViewModel scoreResponseViewModel;
     private FragmentGameBinding binding;
 
@@ -357,8 +359,7 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
             throw new RuntimeException("GameFragment needs nonnull command or game ID");
         }
 
-        playersViewModel = new ViewModelProvider(this, playersViewModelFactory).get(PlayersViewModel.class);
-        playersViewModel.initialize();
+        playerVM = new ViewModelProvider(this, selectPlayerVMFactory).get(SelectPlayerViewModel.class);
     }
 
     private void setupNavigation() {
@@ -380,8 +381,17 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
                 .show();
     }
 
+    private PlayerSelectionValidator validator;
+
     @SuppressLint("InflateParams")
     private void showEditPlayerDialog() {
+        // Get current players and registered players
+        List<Player> currentPlayers = viewModel.getPlayers().getValue();
+        assert currentPlayers != null;
+        List<Player> allPlayers = playerVM.getAllPlayers();
+        validator = new PlayerSelectionValidator(allPlayers);
+        validator.initialize(currentPlayers.stream().map(Player::getName).collect(Collectors.toList()));
+
         View contentView = getLayoutInflater().inflate(R.layout.dialog_player_names, null);
         TextInputLayout input1 = contentView.findViewById(R.id.player1_input);
         TextInputLayout input2 = contentView.findViewById(R.id.player2_input);
@@ -390,23 +400,15 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
         MaterialAutoCompleteTextView editPlayer2 = contentView.findViewById(R.id.player2_edit_text);
         MaterialAutoCompleteTextView editPlayer3 = contentView.findViewById(R.id.player3_edit_text);
 
-        List<Player> players = viewModel.getPlayers().getValue();
-        if (Objects.requireNonNull(players).size() >= 3) {
-            editPlayer1.setText(players.get(0).getName());
-            editPlayer1.setSelection(editPlayer1.getText().length());
-            editPlayer2.setText(players.get(1).getName());
-            editPlayer2.setSelection(editPlayer2.getText().length());
-            editPlayer3.setText(players.get(2).getName());
-            editPlayer3.setSelection(editPlayer3.getText().length());
-        }
+        // Set current player names
+        editPlayer1.setText(currentPlayers.get(0).getName());
+        editPlayer1.setSelection(editPlayer1.getText().length());
+        editPlayer2.setText(currentPlayers.get(1).getName());
+        editPlayer2.setSelection(editPlayer2.getText().length());
+        editPlayer3.setText(currentPlayers.get(2).getName());
+        editPlayer3.setSelection(editPlayer3.getText().length());
 
-        List<Player> allPlayers = playersViewModel.getPlayers().getValue();
-        if (allPlayers == null) {
-            allPlayers = new ArrayList<>();
-        }
-
-        ArrayAdapter<Player > adapter = new ArrayAdapter<>(requireContext(),
-                R.layout.text_input_list_item, allPlayers);
+        ArrayAdapter<Player> adapter = new ArrayAdapter<>(requireContext(), R.layout.text_input_list_item, allPlayers);
         editPlayer1.setAdapter(adapter);
         editPlayer2.setAdapter(adapter);
         editPlayer3.setAdapter(adapter);
@@ -416,49 +418,33 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
                 .setTitle("Edit Players")
                 .setNegativeButton("Cancel", (d, i) -> d.cancel())
                 .setPositiveButton("Save", (d, i) -> {
-                    if (input1.getError() == null &&
-                            input2.getError() == null &&
-                            input3.getError() == null) {
+                    String name1 = editPlayer1.getText().toString().trim();
+                    String name2 = editPlayer2.getText().toString().trim();
+                    String name3 = editPlayer3.getText().toString().trim();
 
-                        String name1 = editPlayer1.getText().toString().trim();
-                        String name2 = editPlayer2.getText().toString().trim();
-                        String name3 = editPlayer3.getText().toString().trim();
+                    Player player1 = validator.isNewPlayer(name1) ?
+                            playerVM.createPlayer(name1).getValue() : validator.getPlayer(name1);
+                    Player player2 = validator.isNewPlayer(name2) ?
+                            playerVM.createPlayer(name2).getValue() : validator.getPlayer(name2);
+                    Player player3 = validator.isNewPlayer(name3) ?
+                            playerVM.createPlayer(name3).getValue() : validator.getPlayer(name3);
 
-                        Player p1 = playersViewModel.findPlayerByName(name1);
-                        Player p2 = playersViewModel.findPlayerByName(name2);
-                        Player p3 = playersViewModel.findPlayerByName(name3);
-
-                        if (p1 == null) {
-                            p1 = playersViewModel.addPlayer(name1);
-                        }
-                        if (p2 == null) {
-                            p2 = playersViewModel.addPlayer(name2);
-                        }
-                        if (p3 == null) {
-                            p3 = playersViewModel.addPlayer(name3);
-                        }
-
-                        List<Player> newPlayers = Arrays.asList(p1, p2, p3);
-                        viewModel.updatePlayers(newPlayers);
-                        d.dismiss();
-                    }
+                    List<Player> newPlayers = Arrays.asList(player1, player2, player3);
+                    viewModel.updatePlayers(newPlayers);
+                    d.dismiss();
                 })
                 .create();
 
-        Button buttonSave = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-
         // Add listeners
-        addTextChangeListener(editPlayer1, input1, allPlayers, buttonSave);
-        addTextChangeListener(editPlayer2, input2, allPlayers, buttonSave);
-        addTextChangeListener(editPlayer3, input3, allPlayers, buttonSave);
+        addTextChangeListener(editPlayer1, input1, dialog, 0);
+        addTextChangeListener(editPlayer2, input2, dialog, 1);
+        addTextChangeListener(editPlayer3, input3, dialog, 2);
 
         dialog.show();
     }
 
-    private void addTextChangeListener(AutoCompleteTextView textView,
-                                       TextInputLayout inputLayout,
-                                       List<Player> allPlayers,
-                                       Button buttonSave) {
+    private void addTextChangeListener(AutoCompleteTextView textView, TextInputLayout inputLayout,
+                                       AlertDialog dialog, int position) {
         textView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -472,16 +458,9 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String name = s.toString().trim();
+                // Reset error
                 inputLayout.setError(null);
-                if (name.isEmpty()) {
-                    inputLayout.setError("Name is required!");
-                    return;
-                }
-
-                if (allPlayers.stream().noneMatch(player -> player.getName().equals(name))) {
-                    inputLayout.setHelperText("New player is created!");
-                }
+                inputLayout.setHelperText(null);
 
                 // Check if the current length exceeds the maximum length
                 int maxLength = inputLayout.getCounterMaxLength();
@@ -490,6 +469,21 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
                     // Trim the text to the maximum length
                     s.replace(maxLength, currentLength, "");
                 }
+
+                String name = s.toString().trim();
+                validator.select(position, name);
+                List<Pair<MessageType, String>> messages = validator.validate();
+                MessageType type = messages.get(position).first;
+                String message = messages.get(position).second;
+
+                if (type == MessageType.Error) {
+                    inputLayout.setError(message);
+                } else if (message != null) {
+                    inputLayout.setHelperText(message);
+                }
+
+                Button buttonSave = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                buttonSave.setEnabled(messages.stream().noneMatch(pair -> pair.first == MessageType.Error));
             }
         });
     }

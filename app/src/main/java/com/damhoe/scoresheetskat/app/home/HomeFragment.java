@@ -52,6 +52,12 @@ public class HomeFragment extends TopLevelFragment implements GamePreviewItemCli
         super.onAttach(context);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupNewButton();
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this, factory).get(HomeViewModel.class);
@@ -64,7 +70,6 @@ public class HomeFragment extends TopLevelFragment implements GamePreviewItemCli
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.openGamesRecycler.setLayoutManager(layoutManager);
         binding.openGamesRecycler.addItemDecoration(new GamePreviewAdapter.ItemDecoration(16));
-        setupNewButton();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
