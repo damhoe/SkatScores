@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="titleTextColor">?attr/colorPrimary</item>
+        <item name="textAppearanceLargePopupMenu">@style/TextAppearance.App.Subtitle</item>
+        <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.App.Subtitle</item>
+        <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
+    </style>
+    
+    <style name="Widget.App.PopupMenu" parent="@style/Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/popup_menu_background</item>
+    </style>
+
+    <style name="Widget.App.CollapsingToolbar" parent="@style/Widget.Material3.CollapsingToolbar.Medium">
+        <item name="background">?attr/colorSecondaryContainer</item>
+        <item name="elevation">0dp</item>
+        <item name="titleEnabled">true</item>
+        <item name="statusBarScrim">?attr/colorSurfaceVariant</item>
+        <item name="contentScrim">?attr/colorSurfaceVariant</item>
+        <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
+        <item name="collapsedTitleTextAppearance">@style/TextAppearance.App.CollapsingToolbar.Collapsed</item>
+        <item name="expandedTitleTextAppearance">@style/TextAppearance.App.CollapsingToolbar.Expanded</item>
+    </style>
+
+    <style name="GameSettingsRadioButton" parent="Widget.Material3.Button">
+        <item name="android:background">@drawable/radio_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="NumberPicker">
+        <item name="android:textColor">@color/gray_dark</item>
+        <item name="colorControlNormal">@color/blue_main</item>
+        <item name="android:descendantFocusability">blocksDescendants</item>
+    </style>
+
+    <style name="Widget.App.TextInputLayout.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
+    </style>
+
+    <style name="Widget.App.AutoCompleteTextView" parent="Widget.Material3.AutoCompleteTextView.FilledBox">
+
+    </style>
+
+    <style name="Widget.App.RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="android:paddingHorizontal">24dp</item>
+    </style>
+
+    <style name="EditText" parent="Widget.AppCompat.EditText">
+        <item name="colorControlNormal">@color/blue_main</item>
+        <item name="colorAccent">@color/blue_main</item>
+    </style>
+
+    <style name="Widget.App.Seekbar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressTint">@color/blue_main</item>
+        <item name="android:thumbTint">@color/blue_main</item>
+    </style>
+    
+    <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
+    </style>
+    
+    <style name="ThemeOverlay.App.TextInputLayout" parent="">
+        <item name="colorPrimary">@color/blue_main</item>
+        <item name="colorOnSurface">@color/gray_dark</item>
+        <item name="endIconTint">@color/blue_main</item>
+        <item name="errorTextColor">@color/colorRedPrimary</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+    </style>
+
+    <style name="RoundImageViewShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+    
+    <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+    </style>
+
+    <!-- Text appearance -->
+
+    <style name="TextAppearance.App.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.CollapsingToolbar.Collapsed" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.CategorySubtitle" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textColor">?attr/colorTertiary</item>
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.App.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.ItemTitle" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.BodyLight" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">@color/gray</item>
+        <item name="fontFamily">@font/roboto_serif_variable</item>
+    </style>
+    <style name="TextAppearance.App.HeadlineCasual" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/amatic_sc_bold</item>
+        <item name="android:fontFamily">@font/amatic_sc_bold</item>
+    </style>
+    <style name="TextAppearance.App.Subtitle" parent="TextAppearance.Material3.ActionBar.Subtitle">
+
+    </style>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="app_languages">
+        <item>Deutsch</item>
+        <item>English</item>
+    </string-array>
+
+    <integer-array name="allowed_rounds">
+        <item>3</item>
+        <item>6</item>
+        <item>9</item>
+        <item>12</item>
+        <item>18</item>
+        <item>24</item>
+        <item>32</item>
+    </integer-array>
+
+</resources>

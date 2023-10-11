@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.damhoe.scoresheetskat.app.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_settings"
+            app:destination="@id/navigation_settings" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_new_game"
+            app:destination="@id/navigation_new_game"
+            app:enterAnim="@anim/enter_from_bottom"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@anim/exit_to_bottom"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_statistics"
+        android:name="com.damhoe.scoresheetskat.statistics.ui.StatisticsFragment"
+        android:label="@string/title_statistics"
+        tools:layout="@layout/fragment_statistics" >
+        <action
+            android:id="@+id/action_statistics_to_settings"
+            app:destination="@id/navigation_settings" />
+        <action
+            android:id="@+id/action_navigation_statistics_to_navigation_new_game"
+            app:destination="@id/navigation_new_game" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_new_game"
+        android:name="com.damhoe.scoresheetskat.game_setup.adapter.in.ui.GameSetupFragment"
+        android:label=""
+        tools:layout="@layout/fragment_game_setup">
+        <action
+            android:id="@+id/action_navigation_new_game_to_navigation_game"
+            app:popUpTo="@id/navigation_home"
+            app:destination="@id/navigation_game"
+            app:exitAnim="@anim/exit_to_bottom"
+            app:enterAnim="@anim/zoom_fade_in"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.damhoe.scoresheetskat.app.app_settings.ui.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.damhoe.scoresheetskat.history.HistoryFragment"
+        android:label="@string/title_history"
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_navigation_history_to_navigation_settings"
+            app:destination="@id/navigation_settings" />
+        <action
+            android:id="@+id/action_navigation_history_to_navigation_new_game"
+            app:destination="@id/navigation_new_game" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_players"
+        android:name="com.damhoe.scoresheetskat.player.adapter.in.ui.PlayersFragment"
+        android:label="@string/title_players"
+        tools:layout="@layout/fragment_players" >
+        <action
+            android:id="@+id/action_navigation_players_to_navigation_settings"
+            app:destination="@id/navigation_settings" />
+        <action
+            android:id="@+id/action_navigation_players_to_navigation_new_game"
+            app:destination="@id/navigation_new_game" />
+        <action
+            android:id="@+id/action_navigation_players_to_playerDetailsFragment"
+            app:destination="@id/playerDetailsFragment"
+            app:exitAnim="@android:anim/fade_out"
+            app:enterAnim="@anim/zoom_fade_in"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_game"
+        android:name="com.damhoe.scoresheetskat.game.adapter.in.ui.GameFragment"
+        android:label=""
+        tools:layout="@layout/fragment_game" >
+
+        <argument
+            android:name="gameCommand"
+            app:argType="com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+        <argument
+            android:name="gameId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+
+        <action
+            android:id="@+id/action_navigation_game_to_scoreFragment"
+            app:destination="@id/scoreFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/scoreFragment"
+        android:name="com.damhoe.scoresheetskat.score.adapter.in.ui.ScoreFragment"
+        android:label="Edit score"
+        tools:layout="@layout/fragment_score" >
+
+        <argument
+            android:name="scoreRequest"
+            app:argType="com.damhoe.scoresheetskat.score.domain.ScoreRequest"
+            app:nullable="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/playerDetailsFragment"
+        android:name="com.damhoe.scoresheetskat.player.adapter.in.ui.PlayerDetailsFragment"
+        android:label="Details" />
+
+</navigation>

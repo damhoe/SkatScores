@@ -1,0 +1,31 @@
+<!-- values-de/strings.xml -->
+<resources>
+    <string name="title_statistics">Statistik</string>
+    <string name="title_new_game" translatable="false">Neue Liste</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="title_help">Hilfe</string>
+    <string name="title_history">Verlauf</string>
+    <string name="title_users">Spieler</string>
+    <string name="title_home">Start</string>
+    <string name="title_scoring_settings">Wertungsmodus</string>
+    <string name="title_rounds_settings">Anzahl Runden</string>
+    <string name="title_general_settings">Allgemein</string>
+    <string name="title_settings_language">Sprache</string>
+    <string name="label_game_settings">Spieleinstellungen</string>
+    <string name="option_tournament_scoring">Turnier</string>
+    <string name="option_simple_scoring">Einfach</string>
+    <string name="title_number_of_players">Number of players</string>
+    <string name="title_list_name">List name</string>
+    <string name="title_about">Info</string>
+    <string name="title_players">Spieler</string>
+    <string name="label_new_game_button">Neues Spiel</string>
+    <string name="title_category_general">General</string>
+    <string name="title_badge_unfinished">Show unfinished lists as badge</string>
+    <string name="title_settings_scoring">Scoring</string>
+    <string name="title_settings_number_rounds">Number of rounds</string>
+    <string name="title_settings_number_players">Number of players</string>
+    <string name="message_scoring_dialog">Select scoring mode</string>
+    <string name="message_dialog_rounds">Select number of rounds</string>
+    <string name="message_dialog_number_players">Select number of players</string>
+    <string name="message_language_dialog">Select language</string>
+</resources>

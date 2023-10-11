@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootContainer"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="104dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="?attr/colorSurface">
+
+        <TextView
+            android:id="@+id/solo_player_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:text="Solo player"
+            android:background="@android:color/transparent"
+            android:textColor="@color/blue_main"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleGroupSoloPlayer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:checkedButton="@id/buttonPlayer1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/solo_player_title"
+            app:layout_constraintHorizontal_chainStyle="packed">
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/buttonPlayer1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                tools:text="Player 1"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/buttonPlayer2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                tools:text="Player 2"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/buttonPlayer3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                tools:text="Player 3"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/buttonPasse"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                android:text="Passe" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/result_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:text="Result"
+            android:background="@android:color/transparent"
+            android:textColor="@color/blue_main"
+            app:layout_constraintTop_toBottomOf="@id/toggleGroupSoloPlayer"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleGroupResult"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:checkedButton="@id/buttonWon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/result_title"
+            app:layout_constraintHorizontal_chainStyle="packed">
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:checked="true"
+                android:id="@+id/buttonWon"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Won"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/buttonLost"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Lost"/>
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/spitzen_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:text="With / Without"
+            android:background="@android:color/transparent"
+            android:textColor="@color/blue_main"
+            app:layout_constraintTop_toBottomOf="@id/toggleGroupResult"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/spitzen_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            android:text="1"
+            android:background="@android:color/transparent"
+            android:textColor="@color/blue_main"
+            app:layout_constraintTop_toTopOf="@id/spitzen_title"
+            app:layout_constraintBottom_toBottomOf="@id/spitzen_title"
+            app:layout_constraintStart_toEndOf="@id/spitzen_title"
+            android:layout_marginStart="16dp"
+            android:padding="8dp"/>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/spitzen_slider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/spitzenRemoveButton"
+            app:layout_constraintEnd_toStartOf="@id/spitzenAddButton"
+            app:layout_constraintTop_toBottomOf="@id/spitzen_title"
+            android:stepSize="1"
+            android:valueFrom="1"
+            android:valueTo="11"
+            android:value="2"
+            app:labelBehavior="floating"
+            android:contentDescription="Number of Spitzen"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.IconButton"
+            android:id="@+id/spitzenAddButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_add_black_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/spitzen_slider"
+            app:layout_constraintBottom_toBottomOf="@id/spitzen_slider"
+            android:contentDescription="Increase number of Spitzen"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.IconButton"
+            android:id="@+id/spitzenRemoveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_remove_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/spitzen_slider"
+            app:layout_constraintBottom_toBottomOf="@id/spitzen_slider"
+            android:contentDescription="Remove number of Spitzen."
+            />
+
+        <TextView
+            android:id="@+id/type_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:text="Suit"
+            android:background="@android:color/transparent"
+            android:textColor="@color/blue_main"
+            app:layout_constraintTop_toBottomOf="@id/spitzen_slider"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleGroupSuit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:checkedButton="@id/buttonClubs"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/type_title"
+
+            app:layout_constraintHorizontal_chainStyle="packed">
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:id="@+id/buttonClubs"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/clubs"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:id="@+id/buttonSpades"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/spades"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:id="@+id/buttonHearts"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                app:iconTint="@color/colorRedPrimary"
+                app:icon="@drawable/hearts" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:id="@+id/buttonDiamonds"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                app:iconTint="@color/colorRedPrimary"
+                app:icon="@drawable/diamonds" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleGroupSpecialSuit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:checkedButton="@id/buttonWon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toggleGroupSuit"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:checked="true"
+                android:id="@+id/buttonGrand"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Grand"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/buttonNull"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Null"/>
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/announcements_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:text="Announcements"
+            android:background="@android:color/transparent"
+            android:textColor="@color/blue_main"
+            app:layout_constraintTop_toBottomOf="@id/toggleGroupSpecialSuit"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/announcements_chips"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/announcements_title">
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.Material3.Chip.Filter"
+                android:id="@+id/schneider_announced_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schneider announced"
+                />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.Material3.Chip.Filter"
+                android:id="@+id/schwarz_announced_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schwarz announced"
+                />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <TextView
+            android:id="@+id/win_levels_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:text="Win levels"
+            android:background="@android:color/transparent"
+            android:textColor="@color/blue_main"
+            app:layout_constraintTop_toBottomOf="@id/announcements_chips"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/winLevelChips"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/win_levels_title">
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.Material3.Chip.Filter"
+                android:id="@+id/hand_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hand"
+                />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.Material3.Chip.Filter"
+                android:id="@+id/ouvert_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Over"
+                />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.Material3.Chip.Filter"
+                android:id="@+id/schneider_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schneider"
+                />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.Material3.Chip.Filter"
+                android:id="@+id/schwarz_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schwarz"
+                />
+
+        </com.google.android.material.chip.ChipGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
