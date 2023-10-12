@@ -1,4 +1,4 @@
-package com.damhoe.scoresheetskat.shared_ui.utils;
+package com.damhoe.scoresheetskat.shared_ui.behaviors;
 
 import android.content.Context;
 import android.util.AttributeSet;

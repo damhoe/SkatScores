@@ -26,6 +26,7 @@ import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentPlayersBinding;
 import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.shared_ui.base.TopLevelFragment;
+import com.damhoe.scoresheetskat.shared_ui.behaviors.HideFABOnScrollDownBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -60,11 +61,6 @@ public class PlayersFragment extends TopLevelFragment implements NotifyItemClick
         binding.playerRecyclerView.setAdapter(playerAdapter);
         binding.playerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.playerRecyclerView.addItemDecoration(new PlayerAdapter.ItemDecoration());
-
-        MaterialButton buttonAddPlayer = requireActivity().findViewById(R.id.add_player_button);
-        buttonAddPlayer.setOnClickListener(view -> {
-            buildStartAddPlayerDialog();
-        });
 
         contentLayout = root;
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -154,6 +150,13 @@ public class PlayersFragment extends TopLevelFragment implements NotifyItemClick
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ExtendedFloatingActionButton buttonAddPlayer = requireActivity().findViewById(R.id.add_player_button);
+        buttonAddPlayer.setOnClickListener(v -> {
+            buildStartAddPlayerDialog();
+        });
+        baseBinding.container.setOnScrollChangeListener(new HideFABOnScrollDownBehavior(buttonAddPlayer).getOnScrollChangeListener());
+
         viewModel = new ViewModelProvider(requireActivity(), viewModelFactory).get(PlayersViewModel.class);
         viewModel.getPlayers().observe(getViewLifecycleOwner(), new Observer<List<Player>>() {
             /** @noinspection DataFlowIssue*/

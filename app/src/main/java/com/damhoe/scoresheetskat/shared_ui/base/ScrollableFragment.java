@@ -15,14 +15,13 @@ import com.damhoe.scoresheetskat.databinding.FragmentScrollableBaseBinding;
 public abstract class ScrollableFragment extends BaseFragment {
 
    protected View contentLayout;
+   protected FragmentScrollableBaseBinding baseBinding;
 
    @Nullable
    @Override
    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-      FragmentScrollableBaseBinding baseBinding = DataBindingUtil.inflate(inflater,
+      baseBinding = DataBindingUtil.inflate(inflater,
               R.layout.fragment_scrollable_base, container, false);
-
       baseBinding.container.addView(contentLayout);
       return baseBinding.getRoot();
    }

@@ -15,9 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.damhoe.scoresheetskat.databinding.ActivityMainBinding;
-import com.damhoe.scoresheetskat.shared_ui.utils.CollapseAppBarBehavior;
-
-import java.util.Map;
+import com.damhoe.scoresheetskat.shared_ui.behaviors.CollapseAppBarBehavior;
 
 public class MainActivity extends AppCompatActivity {
 

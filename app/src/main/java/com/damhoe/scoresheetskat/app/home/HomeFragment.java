@@ -2,6 +2,7 @@ package com.damhoe.scoresheetskat.app.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,10 +26,12 @@ import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentHomeBinding;
 import com.damhoe.scoresheetskat.game.domain.GamePreview;
 import com.damhoe.scoresheetskat.shared_ui.base.TopLevelFragment;
+import com.damhoe.scoresheetskat.shared_ui.behaviors.HideFABOnScrollDownBehavior;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -55,7 +58,7 @@ public class HomeFragment extends TopLevelFragment implements GamePreviewItemCli
     @Override
     public void onResume() {
         super.onResume();
-        setupNewButton();
+        setupNewGameButton();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -135,13 +138,17 @@ public class HomeFragment extends TopLevelFragment implements GamePreviewItemCli
         binding = null;
     }
 
-    public void setupNewButton() {
+    public void setupNewGameButton() {
         ExtendedFloatingActionButton fab = requireActivity().findViewById(R.id.new_game_button);
         if (fab != null) {
             fab.setOnClickListener(v -> {
                 findNavController().navigate(R.id.action_navigation_home_to_navigation_new_game);
             });
         }
+
+        // Hide and show FAB depending on scroll events
+        baseBinding.container.setOnScrollChangeListener(
+                new HideFABOnScrollDownBehavior(fab).getOnScrollChangeListener());
     }
 
     @Override
