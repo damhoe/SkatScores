@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,7 +25,7 @@ import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentPlayerDetailsBinding;
 import com.damhoe.scoresheetskat.player.domain.Player;
-import com.damhoe.scoresheetskat.shared_ui.base.BaseFragment;
+import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -34,7 +36,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-public class PlayerDetailsFragment extends BaseFragment {
+public class PlayerDetailsFragment extends Fragment {
 
     private FragmentPlayerDetailsBinding binding;
     private PlayersViewModel viewModel;
@@ -44,7 +46,6 @@ public class PlayerDetailsFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bottomNavigationVisibility = View.GONE;
     }
 
     @Override
@@ -57,7 +58,6 @@ public class PlayerDetailsFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_player_details, container, false);
-        ((MainActivity)requireActivity()).disableCollapsingToolbar();
         binding.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,12 +148,22 @@ public class PlayerDetailsFragment extends BaseFragment {
     }
 
     private NavController findNavController() {
-        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        InsetsManager.applyStatusBarInsets(binding.appbarLayout);
+        InsetsManager.applyNavigationBarInsets(binding.content);
+
+        // Setup navigation controller
+        NavController navController = findNavController();
+        AppBarConfiguration appBarConfiguration =
+                ((MainActivity)requireActivity()).getAppBarConfiguration();
+        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
+
         viewModel = new ViewModelProvider(requireActivity(), viewModelFactory).get(PlayersViewModel.class);
         viewModel.getSelectedPlayer().observe(getViewLifecycleOwner(), player -> {
             updateUI(player);
@@ -173,17 +183,5 @@ public class PlayerDetailsFragment extends BaseFragment {
         if (player != null) {
             updateUI(player);
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        ((MainActivity)requireActivity()).enableCollapsingToolbar();
-    }
-
-    @Override
-    public void onResume() {
-        ((MainActivity)requireActivity()).disableCollapsingToolbar();
-        super.onResume();
     }
 }

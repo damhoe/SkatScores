@@ -2,7 +2,7 @@ package com.damhoe.scoresheetskat;
 
 import android.content.Context;
 
-import com.damhoe.scoresheetskat.app.home.HomeFragment;
+import com.damhoe.scoresheetskat.home.HomeFragment;
 import com.damhoe.scoresheetskat.game.GameModule;
 import com.damhoe.scoresheetskat.game.adapter.in.ui.GameFragment;
 import com.damhoe.scoresheetskat.persistance.DbHelper;
@@ -12,7 +12,6 @@ import com.damhoe.scoresheetskat.player.adapter.in.ui.PlayersFragment;
 import com.damhoe.scoresheetskat.score.ScoreModule;
 import com.damhoe.scoresheetskat.score.adapter.in.ui.ScoreFragment;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Component;

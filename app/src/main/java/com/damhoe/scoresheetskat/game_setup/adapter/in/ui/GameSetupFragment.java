@@ -9,35 +9,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentGameSetupBinding;
 import com.damhoe.scoresheetskat.game.Constants;
 import com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand;
-import com.damhoe.scoresheetskat.shared_ui.base.ScrollableFragment;
+import com.damhoe.scoresheetskat.shared_ui.behaviors.ScrollViewBehaviorHandler;
+import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
+import com.damhoe.scoresheetskat.shared_ui.utils.LayoutMargins;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.slider.Slider;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class GameSetupFragment extends ScrollableFragment {
+public class GameSetupFragment extends Fragment {
 
     private GameSetupViewModel viewModel;
     private FragmentGameSetupBinding binding;
@@ -45,24 +44,37 @@ public class GameSetupFragment extends ScrollableFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bottomNavigationVisibility = View.GONE;
-        showStartGameButton = true;
     }
 
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game_setup, container, false);
-        View root = binding.getRoot();
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater,
+                R.layout.fragment_game_setup, container, false);
 
-        ((MainActivity)requireActivity()).disableCollapsingToolbar();
+        ScrollViewBehaviorHandler.setupWithExtendedFAB(binding.nestedScrollView, binding.startButton);
 
-        contentLayout = root;
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        InsetsManager.applyStatusBarInsets(binding.appbarLayout);
+        int marginBottom = getResources().getDimensionPixelSize(R.dimen.fab_margin_bottom);
+        LayoutMargins defaultMargins =
+                new LayoutMargins(0, 0, 0, marginBottom);
+        InsetsManager.applyNavigationBarInsets(binding.startButton, defaultMargins);
+        InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
+
+        // Setup toolbar
+        NavController navController = findNavController();
+        AppBarConfiguration appBarConfiguration =
+                ((MainActivity)requireActivity()).getAppBarConfiguration();
+        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
 
         viewModel = new GameSetupViewModel();
         binding.setViewModel(viewModel);
@@ -120,8 +132,7 @@ public class GameSetupFragment extends ScrollableFragment {
     }
 
     private void setUpStartButton() {
-        ExtendedFloatingActionButton startButton = requireActivity().findViewById(R.id.start_button);
-        startButton.setOnClickListener(view -> {
+        binding.startButton.setOnClickListener(view -> {
             SkatGameCommand command = viewModel.getSkatGameCommand().getValue();
             Bundle bundle = new Bundle();
             bundle.putParcelable("gameCommand", command);
@@ -130,7 +141,7 @@ public class GameSetupFragment extends ScrollableFragment {
     }
 
     private NavController findNavController() {
-        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
     }
 
     private void setUpListNameInput() {
@@ -224,17 +235,5 @@ public class GameSetupFragment extends ScrollableFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        ((MainActivity)requireActivity()).enableCollapsingToolbar();
-    }
-
-    @Override
-    public void onResume() {
-        ((MainActivity)requireActivity()).disableCollapsingToolbar();
-        super.onResume();
     }
 }

@@ -1,12 +1,14 @@
 package com.damhoe.scoresheetskat.player.adapter.in.ui;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,14 +29,10 @@ import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentPlayersBinding;
 import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.shared_ui.base.TopLevelFragment;
-import com.damhoe.scoresheetskat.shared_ui.behaviors.HideFABOnScrollDownBehavior;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -48,12 +47,10 @@ public class PlayersFragment extends TopLevelFragment implements NotifyItemClick
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showAddPlayerButton = true;
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    protected View onCreateContentView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_players, container, false);
         View root = binding.getRoot();
 
@@ -62,8 +59,17 @@ public class PlayersFragment extends TopLevelFragment implements NotifyItemClick
         binding.playerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.playerRecyclerView.addItemDecoration(new PlayerAdapter.ItemDecoration());
 
-        contentLayout = root;
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return binding.getRoot();
+    }
+
+    @Override
+    protected Drawable addButtonDrawable() {
+        return ResourcesCompat.getDrawable(getResources(), R.drawable.ic_person_add_24dp, null);
+    }
+
+    @Override
+    protected String title() {
+        return getString(R.string.title_players);
     }
 
     private void buildStartAddPlayerDialog() {
@@ -144,18 +150,17 @@ public class PlayersFragment extends TopLevelFragment implements NotifyItemClick
     }
 
     public NavController findNavController() {
-        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ExtendedFloatingActionButton buttonAddPlayer = requireActivity().findViewById(R.id.add_player_button);
-        buttonAddPlayer.setOnClickListener(v -> {
+        baseBinding.addButton.setOnClickListener(v -> {
             buildStartAddPlayerDialog();
         });
-        baseBinding.container.setOnScrollChangeListener(new HideFABOnScrollDownBehavior(buttonAddPlayer).getOnScrollChangeListener());
+
 
         viewModel = new ViewModelProvider(requireActivity(), viewModelFactory).get(PlayersViewModel.class);
         viewModel.getPlayers().observe(getViewLifecycleOwner(), new Observer<List<Player>>() {
@@ -170,8 +175,25 @@ public class PlayersFragment extends TopLevelFragment implements NotifyItemClick
     }
 
     @Override
+    protected boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.menu_about) {
+            findNavController().navigate(R.id.action_players_to_about);
+            return true;
+        }
+        if (menuItem.getItemId() == R.id.menu_help) {
+            findNavController().navigate(R.id.action_players_to_help);
+            return true;
+        }
+        if (menuItem.getItemId() == R.id.menu_settings) {
+            findNavController().navigate(R.id.action_players_to_settings);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void notifyItemClick(Player player, int position) {
         viewModel.selectPlayer(player);
-        findNavController().navigate(R.id.action_navigation_players_to_playerDetailsFragment);
+        findNavController().navigate(R.id.action_players_to_player_details);
     }
 }

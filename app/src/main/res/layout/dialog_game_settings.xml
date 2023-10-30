@@ -27,8 +27,7 @@
             android:inputType="text"
             android:focusedByDefault="false"
             tools:text="My first skat round"
-            android:textSize="18sp"
-            android:textColor="@color/gray_dark" />
+            android:textSize="18sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -50,7 +49,6 @@
             style="@style/GameSettingsRadioButton"
             android:checked="true"
             android:text="@string/option_simple_scoring"
-            android:textColor="@color/radio_content_color_selector"
             android:button="@android:color/transparent"/>
 
         <RadioButton
@@ -60,7 +58,6 @@
             android:layout_height="wrap_content"
             style="@style/GameSettingsRadioButton"
             android:text="@string/option_tournament_scoring"
-            android:textColor="@color/radio_content_color_selector"
             android:button="@android:color/transparent"/>
 
     </RadioGroup>

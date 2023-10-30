@@ -11,6 +11,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,24 +30,23 @@ public class HistoryFragment extends TopLevelFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false);
-
-        View root = binding.getRoot();
-
-        contentLayout = root;
-        return super.onCreateView(inflater, container, savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        showNewGameButton = true;
+    protected View onCreateContentView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false);
+        return binding.getRoot();
     }
 
-    public NavController findNavController() {
-        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+    @Override
+    protected String title() {
+        return getString(R.string.title_history);
+    }
+
+    private NavController findNavController() {
+        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
     }
 
     @Override
@@ -55,12 +55,8 @@ public class HistoryFragment extends TopLevelFragment {
         mViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
     }
 
-    public void setupNewButton() {
-        ExtendedFloatingActionButton fab = requireActivity().findViewById(R.id.new_game_button);
-        if (fab != null) {
-            fab.setOnClickListener(v -> {
-                findNavController().navigate(R.id.action_navigation_history_to_navigation_new_game);
-            });
-        }
+    @Override
+    protected boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+        return false;
     }
 }

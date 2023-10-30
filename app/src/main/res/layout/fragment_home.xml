@@ -4,252 +4,107 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".app.home.HomeFragment">
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true"
+        android:descendantFocusability="blocksDescendants"
+        >
 
-        <TextView
-            android:id="@+id/welcome_text"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome_text"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.App.HeadlineCasual"
-            android:layout_marginTop="32dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <TextView
-            android:id="@+id/title_unfinished_games"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="42dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="Open Games"
-            android:textAppearance="@style/TextAppearance.App.TitleMedium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_total" />
-
-        <TextView
-            android:id="@+id/label_unfinished_games"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:alpha="0.6"
-            android:text="No unfinished games found."
-            android:textAppearance="@style/TextAppearance.App.BodyMedium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title_unfinished_games" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_total"
-            android:layout_width="0dp"
-            android:layout_height="142dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp"
-            app:layout_constraintEnd_toStartOf="@id/card_year"
-            app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/welcome_text">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:textAppearance="@style/TextAppearance.App.TitleSmall"
-                android:text="Total" />
-
-            <TextView
-                android:id="@+id/total_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                android:text="12"
-                android:textStyle="bold"
-                android:layout_marginBottom="40dp"/>
-
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/total_progress_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="16dp"
-                android:progress="70"
-                app:trackThickness="6dp"
-                app:indicatorSize="56dp"
-                app:indicatorColor="@color/blue_main"
-                app:trackColor="@color/blue_main_light"
-                app:trackCornerRadius="6dp" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_year"
-            android:layout_width="0dp"
-            android:layout_height="142dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant"
-            app:layout_constraintEnd_toStartOf="@id/card_month"
-            app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toEndOf="@id/card_total"
-            app:layout_constraintTop_toTopOf="@id/card_total">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:textAppearance="@style/TextAppearance.App.TitleSmall"
-                android:text="This year" />
-
-            <TextView
-                android:id="@+id/year_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                android:text="6"
-                android:textStyle="bold"
-                android:layout_marginBottom="40dp"/>
-
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/year_progress_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="16dp"
-                android:progress="50"
-                app:trackThickness="6dp"
-                app:indicatorSize="56dp"
-                app:indicatorColor="@color/blue_main"
-                app:trackColor="@color/blue_main_light"
-                app:trackCornerRadius="6dp" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_month"
-            android:layout_width="0dp"
-            android:layout_height="142dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="24dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toEndOf="@id/card_year"
-            app:layout_constraintTop_toTopOf="@id/card_total">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:textAppearance="@style/TextAppearance.App.TitleSmall"
-                android:text="This month" />
-
-            <TextView
-                android:id="@+id/month_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                android:text="12"
-                android:textStyle="bold"
-                android:layout_marginBottom="40dp"/>
-
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/month_progress_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="16dp"
-                android:progress="70"
-                app:trackThickness="6dp"
-                app:indicatorSize="56dp"
-                app:indicatorColor="@color/blue_main"
-                app:trackColor="@color/blue_main_light"
-                app:trackCornerRadius="6dp" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <TextView
-            android:id="@+id/label_legend_unfinished"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="unfinished"
-            android:textAppearance="@style/TextAppearance.App.BodySmall"
-            android:alpha="0.6"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="24dp"
-            app:layout_constraintTop_toBottomOf="@id/card_total"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/label_legend_finished"
-            />
-
-        <View
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginEnd="8dp"
-            android:alpha="0.9"
-            android:background="@color/blue_main_light"
-            app:layout_constraintTop_toTopOf="@id/label_legend_unfinished"
-            app:layout_constraintBottom_toBottomOf="@id/label_legend_unfinished"
-            app:layout_constraintEnd_toStartOf="@id/label_legend_unfinished"
-            />
-
-        <View
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginEnd="8dp"
-            android:background="@color/blue_main"
-            android:alpha="0.9"
-            app:layout_constraintTop_toTopOf="@id/label_legend_unfinished"
-            app:layout_constraintBottom_toBottomOf="@id/label_legend_unfinished"
-            app:layout_constraintEnd_toStartOf="@id/label_legend_finished"
-            />
-
-        <TextView
-            android:id="@+id/label_legend_finished"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="finished"
-            android:textAppearance="@style/TextAppearance.App.BodySmall"
-            android:alpha="0.6"
-            android:layout_marginEnd="24dp"
-            app:layout_constraintTop_toTopOf="@id/label_legend_unfinished"
-            app:layout_constraintStart_toEndOf="@id/label_legend_unfinished"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/open_games_recycler"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintTop_toBottomOf="@id/title_unfinished_games"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="164dp"
-            android:overScrollMode="never"
-            />
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            tools:context=".home.HomeFragment">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_welcome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="32dp"
+                style="@style/Widget.Material3.CardView.Filled"
+                app:cardBackgroundColor="?colorTertiaryContainer"
+                app:cardCornerRadius="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardUseCompatPadding="true"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="24dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon_welcome"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="8dp"
+                        app:srcCompat="@drawable/ic_lightbulb_24dp"
+                        app:tint="?colorTertiary"
+                        app:layout_constraintTop_toTopOf="@id/welcome_text"
+                        app:layout_constraintStart_toStartOf="parent"
+                        />
+
+                    <TextView
+                        android:id="@+id/welcome_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@string/welcome_text"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textColor="?colorOnTertiaryContainer"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/icon_welcome"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+
+            <TextView
+                android:id="@+id/title_unfinished_games"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="42dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="Open Games"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_welcome" />
+
+            <TextView
+                android:id="@+id/label_unfinished_games"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:alpha="0.6"
+                android:text="No unfinished games found."
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_unfinished_games" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/open_games_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@id/title_unfinished_games"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:overScrollMode="never"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

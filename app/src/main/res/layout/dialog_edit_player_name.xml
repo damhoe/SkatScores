@@ -30,7 +30,7 @@
             tools:text="Franziska KA"
             style="@style/Widget.Material3.TextInputEditText.FilledBox"
             android:textSize="18sp"
-            android:textColor="@color/gray_dark" />
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 

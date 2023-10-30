@@ -39,9 +39,14 @@
     <string name="title_done">Done</string>
     <string name="description_score_done">Score edit is finished.</string>
     <string name="default_list_title">Skatround</string>
-    <string name="welcome_text_open_games">Hello, there are \nunfinished games remaining!</string>
-    <string name="welcome_text">Hello, it\'s time to start\n a new Skat round!</string>
+    <string name="welcome_text_open_games">Hello, you have not finished all of your games.</string>
+    <string name="welcome_text">Hello, it\'s time to start a new Skat round!</string>
     <string name="dealer_message">%s is dealer</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_new_game_button">New game</string>
+    <string name="text_add_player_button">Add player</string>
+    <string name="text_about">Version 1.0 (2023)\nCopyright © Geneva 2023\nThis app was developed by Damian Hoedtke.</string>
+    <string name="text_tutorial">The tutorial is not implemented yet.</string>
+    <string name="description_new_score">Create a new score</string>
 </resources>

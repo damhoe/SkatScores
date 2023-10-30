@@ -8,7 +8,15 @@ import com.damhoe.scoresheetskat.score.domain.ScoreEvent;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 
 public class SharedScoreResponseViewModel extends ViewModel {
-   private final MutableLiveData<ScoreEvent> scoreEvent = new MutableLiveData<>();
+   private MutableLiveData<ScoreEvent> scoreEvent = new MutableLiveData<>();
+
+   /**
+    * Called after creation of the viewModel with activity scope
+    * to reset the stored data.
+    */
+   public void reset() {
+      scoreEvent = new MutableLiveData<>();
+   }
 
    public void setScoreEvent(ScoreEvent scoreEvent) {
       this.scoreEvent.postValue(scoreEvent);

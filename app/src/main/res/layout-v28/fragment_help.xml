@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.damhoe.scoresheetskat.app.help.FragmentHelp">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbarLayout"
+            style="@style/Widget.App.AppBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/Widget.App.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:title="Help"
+                />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <TextView
+                android:id="@+id/title_general"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                android:textStyle="bold"
+                android:textColor="?colorPrimaryContainer"
+                android:layout_marginTop="32dp"
+                android:text="General"/>
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/title_general"
+                android:layout_marginTop="16dp"
+                android:lineHeight="24dp"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:text="ScoreSheet Skat is an app that should be used to keep track of the scores when you play a round of Skat."
+                />
+
+            <TextView
+                android:id="@+id/title_how_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text"
+                android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                android:textStyle="bold"
+                android:textColor="?colorPrimaryContainer"
+                android:layout_marginTop="32dp"
+                android:text="Tutorial"/>
+
+            <TextView
+                android:id="@+id/text_how_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/title_how_to"
+                android:layout_marginTop="16dp"
+                android:lineHeight="24dp"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:text="@string/text_tutorial"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

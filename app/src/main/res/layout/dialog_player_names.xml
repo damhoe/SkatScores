@@ -21,7 +21,6 @@
         app:errorEnabled="true"
         app:counterEnabled="true"
         app:counterMaxLength="15"
-        app:helperTextTextColor="@color/colorGreenPrimary"
         style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -32,8 +31,7 @@
             android:focusedByDefault="false"
             tools:text="Franziska KA"
             style="@style/Widget.Material3.TextInputEditText.FilledBox"
-            android:textSize="18sp"
-            android:textColor="@color/gray_dark" />
+            android:textSize="18sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,8 +57,7 @@
             android:focusedByDefault="false"
             tools:text="Damian"
             style="@style/Widget.App.AutoCompleteTextView"
-            android:textSize="18sp"
-            android:textColor="@color/gray_dark" />
+            android:textSize="18sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,8 +83,7 @@
             android:focusedByDefault="false"
             tools:text="Josua E."
             style="@style/Widget.App.AutoCompleteTextView"
-            android:textSize="18sp"
-            android:textColor="@color/gray_dark" />
+            android:textSize="18sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

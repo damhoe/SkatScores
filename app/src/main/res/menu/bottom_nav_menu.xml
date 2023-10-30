@@ -18,7 +18,7 @@
         />
 
     <item
-        android:id="@+id/navigation_players"
+        android:id="@+id/players"
         android:title="@string/title_users"
         android:icon="@drawable/ic_people_black_24dp" />
 

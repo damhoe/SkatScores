@@ -2,17 +2,21 @@ package com.damhoe.scoresheetskat.score.adapter.in.ui;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,7 +29,9 @@ import com.damhoe.scoresheetskat.score.domain.ScoreRequest;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 import com.damhoe.scoresheetskat.score.domain.SkatScoreCommand;
 import com.damhoe.scoresheetskat.score.domain.SkatSuit;
-import com.damhoe.scoresheetskat.shared_ui.base.ScrollableFragment;
+import com.damhoe.scoresheetskat.shared_ui.base.TopLevelFragment;
+import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
+import com.damhoe.scoresheetskat.shared_ui.utils.LayoutMargins;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.ChipGroup;
@@ -38,7 +44,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class ScoreFragment extends ScrollableFragment {
+public class ScoreFragment extends Fragment {
     @Inject
     ScoreViewModelFactory viewModelFactory;
     private ScoreViewModel viewModel;
@@ -55,9 +61,6 @@ public class ScoreFragment extends ScrollableFragment {
         ((MainActivity) requireActivity()).appComponent.inject(this);
         super.onCreate(savedInstanceState);
 
-        bottomNavigationVisibility = View.GONE;
-        showScoreDoneButton = true;
-
         ScoreRequest scoreRequest = requireArguments().getParcelable("scoreRequest");
         if (scoreRequest == null) {
             throw new RuntimeException("Score request should have nonnull value.");
@@ -66,15 +69,15 @@ public class ScoreFragment extends ScrollableFragment {
         viewModelFactory.setScoreRequest(scoreRequest);
         eventType = scoreRequest.getScoreId() == -1L ? ScoreEventType.CREATE : ScoreEventType.UPDATE;
         viewModel = viewModelFactory.create(ScoreViewModel.class);
+
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedScoreResponseViewModel.class);
+        sharedViewModel.reset();
     }
 
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        ((MainActivity)requireActivity()).disableCollapsingToolbar();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.fragment_score, container, false);
-        contentLayout = binding.getRoot();
         initializeButtonSkatSuitMap();
         initializeButtonPlayerActionMap();
 
@@ -105,12 +108,12 @@ public class ScoreFragment extends ScrollableFragment {
         binding.announcementsChips.setOnCheckedStateChangeListener(new ChipGroup.OnCheckedStateChangeListener() {
             @Override
             public void onCheckedChanged(@NonNull ChipGroup group, @NonNull List<Integer> checkedIds) {
-                binding.rootContainer.requestLayout();
+                binding.content.requestLayout();
                 handleAnnouncementChips(checkedIds);
             }
         });
         binding.winLevelChips.setOnCheckedStateChangeListener(((group, checkedIds) -> {
-            binding.rootContainer.requestLayout();
+            binding.content.requestLayout();
             handleWinLevelChips(checkedIds);
         }));
         binding.spitzenSlider.addOnChangeListener(new Slider.OnChangeListener() {
@@ -131,13 +134,11 @@ public class ScoreFragment extends ScrollableFragment {
             binding.spitzenSlider.setValue(binding.spitzenSlider.getValue() + 1);
         });
 
-        ExtendedFloatingActionButton scoreDoneButton =
-                requireActivity().findViewById(R.id.score_done_button);
-        scoreDoneButton.setOnClickListener(view -> {
+        binding.scoreDoneButton.setOnClickListener(view -> {
             saveScore();
             findNavController().navigateUp();
         });
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return binding.getRoot();
     }
 
     private void handleAnnouncementChips(@NonNull List<Integer> checkedIds) {
@@ -164,7 +165,7 @@ public class ScoreFragment extends ScrollableFragment {
     }
 
     private NavController findNavController() {
-        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
     }
 
     private void handlePlayerButtonCheck(int buttonId) {
@@ -256,6 +257,21 @@ public class ScoreFragment extends ScrollableFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Setup navigation
+        NavController navController = findNavController();
+        AppBarConfiguration appBarConfiguration =
+                ((MainActivity)requireActivity()).getAppBarConfiguration();
+        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
+
+        // Set insets
+        InsetsManager.applyStatusBarInsets(binding.appbarLayout);
+        int marginRight = getResources().getDimensionPixelSize(R.dimen.fab_margin_right);
+        int marginBottom = getResources().getDimensionPixelSize(R.dimen.fab_margin_bottom);
+        LayoutMargins defaultMargins =
+                new LayoutMargins(0, 0, marginRight, marginBottom);
+        InsetsManager.applyNavigationBarInsets(binding.scoreDoneButton, defaultMargins);
+        InsetsManager.applyNavigationBarInsets(binding.content);
 
         viewModel.isSuitsEnabled.observe(getViewLifecycleOwner(), this::enableSuitButtons);
         viewModel.isHandEnabled.observe(getViewLifecycleOwner(), isEnabled -> {

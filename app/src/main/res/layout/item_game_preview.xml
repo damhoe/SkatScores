@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    style="@style/Widget.Material3.CardView.Elevated"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:textAppearance="@style/TextAppearance.App.HeadlineLarge"
+            android:fontFamily="@font/rubik_light"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Skatrunde im Okt." />
+
+        <TextView
+            android:id="@+id/players"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/date"
+            app:layout_constraintBottom_toTopOf="@id/button_continue"
+            android:textAlignment="center"
+            tools:text="Marlon \t 40 points \nEvi \t 0 points, \nDaniel K. \t -100 points" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            android:fontFamily="@font/rubik_bold"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:alpha="0.4"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="@id/title"
+            android:layout_marginTop="8dp"
+            tools:text="8. Oktober 2023" />
+
+        <TextView
+            android:id="@+id/rounds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.App.BodyLarge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/button_continue"
+            app:layout_constraintBottom_toBottomOf="@id/button_continue"
+            tools:text="11/12" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.TonalButton"
+            app:backgroundTint="?colorPrimaryContainer"
+            android:id="@+id/button_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/players"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:focusedByDefault="false"
+            android:text="Continue"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:id="@+id/button_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/button_continue"
+            app:layout_constraintStart_toEndOf="@id/button_continue"
+            app:layout_constraintTop_toTopOf="@id/button_continue"
+            android:layout_marginStart="8dp"
+            android:focusedByDefault="false"
+            android:text="Delete"
+            />
+
+        <!--<com.google.android.material.button.MaterialButton
+            android:id="@+id/button_continue"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_main_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp"
+            />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

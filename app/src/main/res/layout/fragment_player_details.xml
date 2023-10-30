@@ -3,121 +3,139 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card"
-            android:layout_width="108dp"
-            android:layout_height="108dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/name"
-            android:layout_marginBottom="32dp"
-            app:cardCornerRadius="16dp"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant"
-            app:cardElevation="0dp">
+
+        <com.google.android.material.appbar.AppBarLayout
+            style="@style/Widget.App.AppBarLayout"
+            android:id="@+id/appbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.App.Toolbar"
+                app:title="Details" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            >
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_person_black_24dp"
-                app:tint="@color/blue_main_light"
+                android:id="@+id/avatar"
+                android:layout_width="108dp"
+                android:layout_height="108dp"
+                android:background="?colorSurfaceVariant"
+                app:srcCompat="@drawable/ic_avatar_48dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/guideline"
+                android:layout_marginBottom="36dp"
+                app:tint="?colorOnSurfaceVariant"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView"
                 />
 
-        </androidx.cardview.widget.CardView>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.33" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.33" />
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                app:layout_constraintTop_toBottomOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="@id/avatar"
+                app:layout_constraintEnd_toEndOf="@id/avatar"
+                tools:text="Daniel D."
+                />
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            app:layout_constraintTop_toBottomOf="@id/guideline"
-            app:layout_constraintStart_toStartOf="@id/card"
-            app:layout_constraintEnd_toEndOf="@id/card"
-            tools:text="Daniel D."
-            />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/edit_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:icon="@drawable/ic_edit_black_24dp"
+                app:layout_constraintStart_toEndOf="@id/name"
+                app:layout_constraintTop_toTopOf="@id/name"
+                app:layout_constraintBottom_toBottomOf="@id/name"
+                android:layout_marginStart="8dp"
+                />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/edit_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.IconButton"
-            app:icon="@drawable/ic_edit_black_24dp"
-            app:layout_constraintStart_toEndOf="@id/name"
-            app:layout_constraintTop_toTopOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="@id/name"
-            android:layout_marginStart="8dp"
-            />
+            <TextView
+                android:id="@+id/created"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/name"
+                app:layout_constraintEnd_toEndOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                android:layout_marginTop="16dp"
+                android:enabled="false"
+                tools:text="created at 29. Oct. 2023"
+                />
 
-        <TextView
-            android:id="@+id/created"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/name"
-            app:layout_constraintEnd_toEndOf="@id/name"
-            app:layout_constraintTop_toBottomOf="@id/name"
-            android:layout_marginTop="16dp"
-            android:enabled="false"
-            tools:text="created at 29. Oct. 2023"
-            />
+            <TextView
+                android:id="@+id/updated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/created"
+                app:layout_constraintEnd_toEndOf="@id/created"
+                app:layout_constraintTop_toBottomOf="@id/created"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                tools:text="last updated at 29. Oct. 2023"
+                />
 
-        <TextView
-            android:id="@+id/updated"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/created"
-            app:layout_constraintEnd_toEndOf="@id/created"
-            app:layout_constraintTop_toBottomOf="@id/created"
-            android:layout_marginTop="8dp"
-            android:enabled="false"
-            tools:text="last updated at 29. Oct. 2023"
-            />
+            <TextView
+                android:id="@+id/number_games"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/updated"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"
+                tools:text="Participated in 12 games"
+                />
 
-        <TextView
-            android:id="@+id/number_games"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/updated"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"
-            tools:text="Participated in 12 games"
-            />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_stats"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:text="View stats"
+                app:layout_constraintEnd_toStartOf="@id/button_delete"
+                app:layout_constraintStart_toStartOf="@id/number_games"
+                app:layout_constraintTop_toBottomOf="@id/number_games"
+                android:layout_marginTop="32dp"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_stats"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="View stats"
-            app:layout_constraintEnd_toStartOf="@id/button_delete"
-            app:layout_constraintStart_toStartOf="@id/number_games"
-            app:layout_constraintTop_toBottomOf="@id/number_games"
-            android:layout_marginTop="32dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.TonalButton"
+                app:layout_constraintEnd_toEndOf="@id/number_games"
+                app:layout_constraintStart_toEndOf="@id/button_stats"
+                app:layout_constraintTop_toTopOf="@id/button_stats"
+                android:layout_marginStart="8dp"
+                android:text="Delete"
+                app:icon="@drawable/ic_delete_black_24dp"
+                />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.TonalButton"
-            app:layout_constraintEnd_toEndOf="@id/number_games"
-            app:layout_constraintStart_toEndOf="@id/button_stats"
-            app:layout_constraintTop_toTopOf="@id/button_stats"
-            android:layout_marginStart="8dp"
-            android:text="Delete"
-            app:icon="@drawable/ic_delete_black_24dp"
-            />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

@@ -1,9 +1,11 @@
 package com.damhoe.scoresheetskat.game.adapter.in.ui;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.text.Editable;
@@ -36,7 +40,6 @@ import android.widget.Button;
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.base.ValidationResult;
 import com.damhoe.scoresheetskat.databinding.FragmentGameBinding;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator.MessageType;
@@ -49,7 +52,8 @@ import com.damhoe.scoresheetskat.score.domain.ScoreRequest;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 import com.damhoe.scoresheetskat.game.domain.SkatSettings;
 import com.damhoe.scoresheetskat.player.domain.Player;
-import com.damhoe.scoresheetskat.shared_ui.base.BaseFragment;
+import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
+import com.damhoe.scoresheetskat.shared_ui.utils.LayoutMargins;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -60,13 +64,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-public class GameFragment extends BaseFragment implements IScoreActionListener {
+public class GameFragment extends Fragment implements IScoreActionListener {
     @Inject
     GameViewModelFactory viewModelFactory;
     @Inject
@@ -79,7 +82,6 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupNavigation();
         setupViewModel();
     }
 
@@ -90,13 +92,12 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
     }
 
     private NavController findNavController() {
-        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        ((MainActivity)requireActivity()).disableCollapsingToolbar();
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false);
         setUpEditScoreButton();
         setUpRecyclerView();
@@ -106,6 +107,17 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Set insets
+        InsetsManager.applyStatusBarInsets(binding.appbarLayout);
+        int marginRight = getResources().getDimensionPixelSize(R.dimen.fab_margin_right);
+        int marginBottom = getResources().getDimensionPixelSize(R.dimen.fab_margin_bottom);
+        LayoutMargins defaultMargins =
+                new LayoutMargins(0, 0, marginRight, marginBottom);
+        InsetsManager.applyNavigationBarInsets(binding.editScoreButton, defaultMargins);
+        InsetsManager.applyNavigationBarInsets(binding.content);
+
+        setupNavigation();
         setupObservers();
         addMenu();
         initializeUI();
@@ -289,18 +301,6 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
     }
 
     @Override
-    public void onResume() {
-        ((MainActivity)requireActivity()).disableCollapsingToolbar();
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        ((MainActivity)requireActivity()).enableCollapsingToolbar();
-    }
-
-    @Override
     public void notifyDelete() {
         Result<SkatScore> deleteResult = viewModel.removeLastScore();
         if (deleteResult.isFailure()) {
@@ -346,6 +346,7 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
     private void setupViewModel() {
         viewModel = new ViewModelProvider(this, viewModelFactory).get(SkatGameViewModel.class);
         scoreResponseViewModel = new ViewModelProvider(requireActivity()).get(SharedScoreResponseViewModel.class);
+        scoreResponseViewModel.reset();
 
         // Get arguments and initialize the game
         SkatGameCommand command = GameFragmentArgs.fromBundle(requireArguments()).getGameCommand();
@@ -363,10 +364,12 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
     }
 
     private void setupNavigation() {
-        bottomNavigationVisibility = View.GONE;
-        showStartGameButton = false;
-        showNewGameButton = false;
-        showEditScoreButton = true;
+
+        NavController navController = findNavController();
+        AppBarConfiguration appBarConfiguration =
+                ((MainActivity)requireActivity()).getAppBarConfiguration();
+        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
+
     }
 
     private void showEditDealerDialog() {
@@ -495,13 +498,11 @@ public class GameFragment extends BaseFragment implements IScoreActionListener {
 
     private void setToolbarTitle(String title) {
         // Set toolbar label
-        Objects.requireNonNull(((MainActivity) requireActivity())
-                .getSupportActionBar()).setTitle(title);
+        binding.toolbar.setTitle(title);
     }
 
     private void setUpEditScoreButton() {
-        FloatingActionButton editScoreButton = requireActivity().findViewById(R.id.edit_score_button);
-        editScoreButton.setOnClickListener(view -> {
+        binding.editScoreButton.setOnClickListener(view -> {
             Log.d("Event", "Edit score button clicked.");
 
             List<Player> players = viewModel.getPlayers().getValue();

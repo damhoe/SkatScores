@@ -3,9 +3,10 @@
 
     <application
         android:name=".ScoreSheetSkatApplication"
+        android:label="@string/app_name"
+        android:windowSoftInputMode="adjustResize"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_scoresheet_skat"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_scoresheet_skat_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ScoreSheetSkat">
