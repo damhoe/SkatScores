@@ -1,26 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".history.HistoryFragment">
+        android:nestedScrollingEnabled="true"
+        android:descendantFocusability="blocksDescendants"
+        >
 
-        <TextView
-            android:id="@+id/text_history"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:elevation="0dp"
+            app:layout_behavior=".shared_ui.behaviors.CollapseAppBarBehavior"
+            app:liftOnScroll="true"
+            >
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/toolbarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/collapsingToolbarLayoutMediumSize"
+                style="@style/Widget.App.CollapsingToolbar"
+                app:layout_behavior=".shared_ui.behaviors.CollapseAppBarBehavior"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:titleCollapseMode="scale"
+                app:titleEnabled="true"
+                app:expandedTitleMarginBottom="20dp">
+
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="6dp"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="16dp"
+                    android:background="?attr/colorSecondaryContainer"
+                    app:layout_collapseMode="parallax" />
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:title="@string/title_history">
+
+                </com.google.android.material.appbar.MaterialToolbar>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:paddingBottom="100dp"
+            android:clipToPadding="false"
+            android:translationZ="-1dp"
+            android:contentDescription="Scroll view that contains main content"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                tools:context=".home.HomeFragment">
+
+                <TextView
+                    android:id="@+id/monthly_games_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="This month"
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/monthly_no_games"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:alpha="0.6"
+                    android:text="No unfinished games found."
+                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/monthly_games_title" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/monthly_games_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingBottom="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/monthly_games_title"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/item_game_preview"
+                    tools:itemCount="1"
+                    />
+
+                <TextView
+                    android:id="@+id/older_games_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Last month and before"
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/monthly_games_rv" />
+
+                <TextView
+                    android:id="@+id/older_no_games"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:alpha="0.6"
+                    android:text="No unfinished games found."
+                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/older_games_title" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/older_games_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingBottom="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/older_games_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/item_game_preview"
+                    tools:itemCount="1"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            style="@style/Widget.App.BottomAppBar"
+            android:id="@+id/bottom_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:elevation="0dp"
+            app:menu="@menu/history_menu" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/bottom_app_bar"
+            android:src="@drawable/ic_add_black_24dp"
+            android:contentDescription="Primary top level add action"
+            style="@style/Widget.Material3.FloatingActionButton.Secondary"
+            />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

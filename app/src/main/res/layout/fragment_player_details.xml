@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.App.Toolbar"
-                app:title="Details" />
+                app:title="" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -40,7 +40,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/guideline"
                 android:layout_marginBottom="36dp"
-                app:tint="?colorOnSurfaceVariant"
+                app:tint="?colorOnSurfaceLight"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView"
                 />
 
@@ -66,8 +66,8 @@
                 android:id="@+id/edit_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.Button.IconButton"
-                app:icon="@drawable/ic_edit_black_24dp"
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                app:icon="@drawable/ic_edit_24dp"
                 app:layout_constraintStart_toEndOf="@id/name"
                 app:layout_constraintTop_toTopOf="@id/name"
                 app:layout_constraintBottom_toBottomOf="@id/name"

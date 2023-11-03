@@ -13,13 +13,13 @@
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.App.AppBarLayout">
+            style="@style/Widget.App.AppBarLayout.Variant">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.App.Toolbar"
+                style="@style/Widget.App.Toolbar.Variant"
                 app:title="@string/title_settings" />
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -44,7 +44,7 @@
                     android:layout_marginStart="72dp"
                     android:paddingTop="16dp"
                     android:text="@string/title_category_languages"
-                    android:textAppearance="@style/TextAppearance.App.CategorySubtitle"
+                    style="@style/Theme.App.CategorySubtitle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -74,7 +74,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Default"
-                        android:textAppearance="@style/TextAppearance.App.BodyLight"
+                        android:textColor="?colorOnSurfaceLight"
+                        android:textAppearance="@style/TextAppearance.App.BodySmall"
                         app:layout_constraintStart_toStartOf="@id/title_settings_language"
                         app:layout_constraintTop_toBottomOf="@id/title_settings_language" />
 
@@ -95,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
                     android:text="@string/title_category_general"
-                    android:textAppearance="@style/TextAppearance.App.CategorySubtitle"
+                    style="@style/Theme.App.CategorySubtitle"
                     app:layout_constraintStart_toStartOf="@id/title_category_languages"
                     app:layout_constraintTop_toBottomOf="@id/spacer_language" />
 
@@ -104,7 +105,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/title_category_general"
-                    android:paddingTop="16dp"
                     android:clickable="false"
                     >
 
@@ -113,12 +113,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/title_badge_unfinished"
-                        android:textAppearance="@style/TextAppearance.App.ItemTitle"
+                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
                         android:layout_marginStart="72dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.google.android.material.switchmaterial.SwitchMaterial
+                    <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/switchMaterial"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -145,9 +146,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
                     android:text="@string/title_settings_match_preset"
-                    android:textAppearance="@style/TextAppearance.App.CategorySubtitle"
+                    style="@style/Theme.App.CategorySubtitle"
                     app:layout_constraintStart_toStartOf="@id/title_category_languages"
                     app:layout_constraintTop_toBottomOf="@id/spacer_general" />
 
@@ -167,7 +167,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/title_settings_number_players"
-                        android:textAppearance="@style/TextAppearance.App.ItemTitle"
+                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
                         android:layout_marginStart="72dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -177,7 +177,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Default"
-                        android:textAppearance="@style/TextAppearance.App.BodyLight"
+                        android:textColor="?colorOnSurfaceLight"
+                        android:textAppearance="@style/TextAppearance.App.BodySmall"
                         app:layout_constraintStart_toStartOf="@id/title_number_players"
                         app:layout_constraintTop_toBottomOf="@id/title_number_players" />
 
@@ -209,7 +210,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Default"
-                        android:textAppearance="@style/TextAppearance.App.BodyLight"
+                        android:textColor="?colorOnSurfaceLight"
+                        android:textAppearance="@style/TextAppearance.App.BodySmall"
                         app:layout_constraintStart_toStartOf="@id/title_scoring"
                         app:layout_constraintTop_toBottomOf="@id/title_scoring" />
 
@@ -241,7 +243,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Default"
-                        android:textAppearance="@style/TextAppearance.App.BodyLight"
+                        android:textColor="?colorOnSurfaceLight"
+                        android:textAppearance="@style/TextAppearance.App.BodySmall"
                         app:layout_constraintStart_toStartOf="@id/title_number_rounds"
                         app:layout_constraintTop_toBottomOf="@id/title_number_rounds" />
 

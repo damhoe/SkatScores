@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
+import android.view.WindowInsets;
 
 import androidx.annotation.NonNull;
 import androidx.core.graphics.Insets;
@@ -87,7 +88,35 @@ public class InsetsManager {
          params.rightMargin = insets.right + mMargins.getRightMargin();
          params.topMargin = insets.top + mMargins.getTopMargin();
          params.bottomMargin = insets.bottom + mMargins.getBottomMargin();
+
          view.setLayoutParams(params);
+
+         return WindowInsetsCompat.CONSUMED;
+      });
+   }
+
+   /**
+    * Applies both navigation bar and status bar insets
+    *
+    * @param view View on which the insets are applied
+    */
+   public static void applySystemBarInsets(@NonNull View view) {
+      ViewCompat.setOnApplyWindowInsetsListener(view, (v, insetsCompat) -> {
+         Insets insets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+
+         Log.d("Navigation bar insets", "Top: " + insets.top);
+         Log.d("Navigation bar insets", "Left: " + insets.left);
+         Log.d("Navigation bar insets", "Right: " + insets.right);
+         Log.d("Navigation bar insets", "Bottom: " + insets.bottom);
+
+         MarginLayoutParams params = (MarginLayoutParams) view.getLayoutParams();
+
+         params.leftMargin = insets.left;
+         params.rightMargin = insets.right;
+         params.bottomMargin = insets.bottom;
+
+         view.setLayoutParams(params);
+         view.setPadding(view.getPaddingLeft(), insets.top, view.getPaddingRight(), view.getPaddingBottom());
 
          return WindowInsetsCompat.CONSUMED;
       });

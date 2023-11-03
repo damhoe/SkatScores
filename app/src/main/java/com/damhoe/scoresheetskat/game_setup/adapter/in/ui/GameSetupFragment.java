@@ -73,7 +73,7 @@ public class GameSetupFragment extends Fragment {
         // Setup toolbar
         NavController navController = findNavController();
         AppBarConfiguration appBarConfiguration =
-                ((MainActivity)requireActivity()).getAppBarConfiguration();
+                new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
 
         viewModel = new GameSetupViewModel();

@@ -130,7 +130,7 @@
             android:layout_marginBottom="@dimen/fab_margin_bottom"
             android:layout_marginEnd="@dimen/fab_margin_right"
             android:layout_gravity="bottom|end"
-            android:src="@drawable/ic_edit_black_24dp"
+            android:src="@drawable/ic_edit_24dp"
             android:textStyle="bold"
             style="@style/Widget.Material3.FloatingActionButton.Large.Secondary"
             android:contentDescription="@string/description_new_score" />

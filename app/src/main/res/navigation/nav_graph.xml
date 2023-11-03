@@ -3,15 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/home">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/home"
         android:name="com.damhoe.scoresheetskat.home.HomeFragment"
         tools:layout="@layout/fragment_home">
-        <argument
-            android:name="ShowBottomAppBar"
-            android:defaultValue="true" />
         <action
             android:id="@+id/action_home_to_settings"
             app:destination="@id/app_settings"
@@ -41,44 +38,16 @@
             app:exitAnim="@anim/slide_out_left"
             app:popExitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@android:anim/slide_in_left" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_statistics"
-        android:name="com.damhoe.scoresheetskat.statistics.adapter.ui.StatisticsFragment"
-        android:label="@string/title_statistics"
-        tools:layout="@layout/fragment_statistics" >
-        <argument
-            android:name="ShowBottomAppBar"
-            android:defaultValue="true" />
         <action
-            android:id="@+id/action_statistics_to_settings"
-            app:destination="@id/app_settings"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left" />
+            android:id="@+id/action_home_to_players"
+            app:destination="@id/playersFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
         <action
-            android:id="@+id/action_navigation_statistics_to_navigation_new_game"
-            app:destination="@id/game_setup"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left" />
-        <action
-            android:id="@+id/action_navigation_statistics_to_aboutFragment"
-            app:destination="@id/about"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left" />
-        <action
-            android:id="@+id/action_navigation_statistics_to_helpFragment"
-            app:destination="@id/help"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"/>
+            android:id="@+id/action_home_to_history"
+            app:destination="@id/historyFragment" />
     </fragment>
 
     <fragment
@@ -90,7 +59,7 @@
             android:defaultValue="false" />
         <action
             android:id="@+id/action_navigation_new_game_to_navigation_game"
-            app:popUpTo="@id/navigation_home"
+            app:popUpTo="@id/home"
             app:destination="@id/navigation_game"
             app:exitAnim="@anim/exit_to_bottom"
             app:enterAnim="@anim/zoom_fade_in"
@@ -108,78 +77,6 @@
         <action
             android:id="@+id/action_navigation_settings_to_aboutFragment"
             app:destination="@id/about" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_history"
-        android:name="com.damhoe.scoresheetskat.history.HistoryFragment"
-        android:label="@string/title_history"
-        tools:layout="@layout/fragment_history" >
-        <argument
-            android:name="ShowBottomAppBar"
-            android:defaultValue="true" />
-        <action
-            android:id="@+id/action_navigation_history_to_navigation_settings"
-            app:destination="@id/app_settings"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"/>
-        <action
-            android:id="@+id/action_navigation_history_to_navigation_new_game"
-            app:destination="@id/game_setup" />
-        <action
-            android:id="@+id/action_navigation_history_to_aboutFragment"
-            app:destination="@id/about"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left" />
-        <action
-            android:id="@+id/action_navigation_history_to_helpFragment"
-            app:destination="@id/help"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/players"
-        android:name="com.damhoe.scoresheetskat.player.adapter.in.ui.PlayersFragment"
-        android:label="@string/title_players"
-        tools:layout="@layout/fragment_players" >
-        <argument
-            android:name="ShowBottomAppBar"
-            android:defaultValue="true" />
-        <action
-            android:id="@+id/action_players_to_settings"
-            app:destination="@id/app_settings"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left" />
-        <action
-            android:id="@+id/action_players_to_player_details"
-            app:destination="@id/player_details"
-            app:exitAnim="@android:anim/fade_out"
-            app:enterAnim="@anim/zoom_fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"/>
-        <action
-            android:id="@+id/action_players_to_about"
-            app:destination="@id/about"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"/>
-        <action
-            android:id="@+id/action_players_to_help"
-            app:destination="@id/help"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left" />
     </fragment>
 
     <fragment
@@ -239,5 +136,42 @@
         android:id="@+id/help"
         android:name="com.damhoe.scoresheetskat.app.help.HelpFragment"
         tools:layout="@layout/fragment_help" />
+    <fragment
+        android:id="@+id/playersFragment"
+        android:name="com.damhoe.scoresheetskat.player.adapter.in.ui.PlayersFragment"
+        tools:layout="@layout/fragment_players">
+        <action
+            android:id="@+id/action_playersFragment_to_player_details"
+            app:destination="@id/player_details"
+            app:enterAnim="@anim/zoom_fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            />
+        <action
+            android:id="@+id/action_playersFragment_to_app_settings"
+            app:destination="@id/app_settings"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.damhoe.scoresheetskat.history.HistoryFragment"
+        android:label="HistoryFragment"
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_historyFragment_to_game_setup"
+            app:destination="@id/game_setup"
+            app:enterAnim="@anim/enter_from_bottom"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@anim/exit_to_bottom" />
+        <action
+            android:id="@+id/action_history_to_players"
+            app:destination="@id/playersFragment"
+            app:popUpTo="@id/home" />
+    </fragment>
 
 </navigation>

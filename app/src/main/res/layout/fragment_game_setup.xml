@@ -77,7 +77,6 @@
                     android:id="@+id/list_name_text_input"
                     android:layout_width="240dp"
                     android:layout_height="wrap_content"
-                    app:startIconDrawable="@drawable/ic_title_black_24dp"
                     app:endIconDrawable="@drawable/ic_cancel_black_24dp"
                     app:endIconMode="clear_text"
                     style="@style/Widget.App.TextInputLayout"
@@ -115,7 +114,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="@id/result_title"
                     app:layout_constraintTop_toBottomOf="@id/result_title"
-                    app:startIconDrawable="@drawable/ic_people_black_24dp"
+                    app:startIconDrawable="@drawable/ic_people_24dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -130,29 +129,16 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
-                    android:id="@+id/game_settings_title_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_game_settings"
-                    android:textSize="14sp"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp"
-                    android:layout_marginTop="36dp"
-                    android:textAppearance="@style/TextAppearance.App.CategorySubtitle"
-                    app:layout_constraintStart_toStartOf="@id/list_name_title_view"
-                    app:layout_constraintTop_toBottomOf="@id/number_of_players_text_input" />
-
-                <TextView
                     android:id="@+id/scoring_settings_title_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/title_scoring_settings"
                     android:background="@android:color/transparent"
-                    android:paddingTop="8dp"
+                    android:paddingTop="36dp"
                     android:paddingBottom="8dp"
                     android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                    app:layout_constraintStart_toStartOf="@id/game_settings_title_view"
-                    app:layout_constraintTop_toBottomOf="@id/game_settings_title_view"/>
+                    app:layout_constraintStart_toStartOf="@id/number_of_players_text_input"
+                    app:layout_constraintTop_toBottomOf="@id/number_of_players_text_input"/>
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/scoring_settings_rg"
@@ -164,7 +150,7 @@
                     app:singleSelection="true"
                     app:checkedButton="@id/tournament_scoring_rb"
                     app:selectionRequired="true"
-                    app:layout_constraintStart_toStartOf="@id/game_settings_title_view"
+                    app:layout_constraintStart_toStartOf="@id/scoring_settings_title_view"
                     app:layout_constraintTop_toBottomOf="@id/scoring_settings_title_view">
 
                     <com.google.android.material.button.MaterialButton
@@ -176,7 +162,7 @@
                         android:text="@string/option_simple_scoring"/>
 
                     <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        style="?attr/materialButtonOutlinedStyle"
                         android:id="@+id/tournament_scoring_rb"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -195,7 +181,7 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                    app:layout_constraintStart_toStartOf="@id/game_settings_title_view"
+                    app:layout_constraintStart_toStartOf="@id/scoring_settings_title_view"
                     app:layout_constraintTop_toBottomOf="@+id/scoring_settings_rg"/>
 
                 <TextView
@@ -231,7 +217,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            style="@style/Widget.Material3.ExtendedFloatingActionButton.Secondary"
+            style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
             android:id="@+id/start_button"
             android:layout_width="wrap_content"
             android:layout_height="56dp"

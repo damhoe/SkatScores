@@ -10,13 +10,13 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbarLayout"
-            style="@style/Widget.App.AppBarLayout"
+            style="@style/Widget.App.AppBarLayout.Variant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
-                style="@style/Widget.App.Toolbar"
+                style="@style/Widget.App.Toolbar.Variant"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:title="Help"
@@ -28,7 +28,7 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
+            android:padding="24dp"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <TextView
@@ -37,10 +37,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:textAppearance="@style/TextAppearance.App.TitleLarge"
-                android:textStyle="bold"
-                android:textColor="?colorPrimaryContainer"
-                android:layout_marginTop="32dp"
+                style="@style/Theme.App.SubtitleLightLarge"
+                android:layout_marginTop="8dp"
                 android:text="General"/>
 
             <TextView
@@ -60,9 +58,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text"
-                android:textAppearance="@style/TextAppearance.App.TitleLarge"
-                android:textStyle="bold"
-                android:textColor="?colorPrimaryContainer"
+                style="@style/Theme.App.SubtitleLightLarge"
                 android:layout_marginTop="32dp"
                 android:text="Tutorial"/>
 

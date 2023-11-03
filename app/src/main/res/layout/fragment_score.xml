@@ -12,12 +12,14 @@
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?colorSecondaryContainer">
+            style="@style/Widget.App.AppBarLayout"
+            android:background="?colorSurfaceVariant">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
+                style="@style/Widget.App.Toolbar"
                 app:title="Edit score"/>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -320,14 +322,14 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schneider_announced_chip"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Schneider announced" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schwarz_announced_chip"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Schwarz announced" />
@@ -344,28 +346,28 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/hand_chip"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hand" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/ouvert_chip"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Over" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schneider_chip"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Schneider" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schwarz_chip"
-                        style="@style/Widget.Material3.Chip.Filter"
+                        style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Schwarz" />

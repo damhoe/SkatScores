@@ -2,14 +2,17 @@ package com.damhoe.scoresheetskat.game.adapter.in.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.damhoe.scoresheetskat.R;
@@ -17,13 +20,17 @@ import com.damhoe.scoresheetskat.score.domain.SkatScore;
 
 import java.util.List;
 
-public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreViewHolder> {
-   private List<SkatScore> scores;
+public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.SkatScoreViewHolder> {
    private final IScoreActionListener listener;
+   private List<SkatScore> scores;
+   private int numberOfRounds;
 
-   public SkatScoreAdapter(List<SkatScore> scores, IScoreActionListener listener) {
+   public SkatScoreAdapter(List<SkatScore> scores,
+                           IScoreActionListener listener,
+                           int numberOfRounds) {
       this.scores = scores;
       this.listener = listener;
+      this.numberOfRounds = numberOfRounds;
    }
 
    public void updateScores(List<SkatScore> scores) {
@@ -34,11 +41,15 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreViewHolder> 
       return scores;
    }
 
+   public void updateNumberOfRounds(int newNumberOfRounds) {
+      numberOfRounds = newNumberOfRounds;
+   }
+
    @NonNull
    @Override
    public SkatScoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
       View itemView = LayoutInflater.from(parent.getContext())
-              .inflate(R.layout.points_board_item, parent, false);
+              .inflate(R.layout.points_board_item_v2, parent, false);
       return new SkatScoreViewHolder(itemView);
    }
 
@@ -51,9 +62,17 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreViewHolder> 
 
    @Override
    public void onBindViewHolder(@NonNull SkatScoreViewHolder holder, int position) {
+      holder.roundsText.setText(String.valueOf(position + 1));
+
+      if (position >= scores.size()) {
+         return;
+      }
       SkatScore score = scores.get(position);
+      if (score == null) {
+         return;
+      }
       ensureCorrectPosition(score.getIndex(), position);
-      holder.pointsText.setText(makeScoreString(score.toPoints()));
+
       int[] pointsArray = new int[]{0, 0, 0}; // Initialize with zeros
       if (score.getPlayerPosition() >= 0) {
          // Set the value at the appropriate index
@@ -62,7 +81,6 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreViewHolder> 
       holder.points1Text.setText(makeScoreString(pointsArray[0]));
       holder.points2Text.setText(makeScoreString(pointsArray[1]));
       holder.points3Text.setText(makeScoreString(pointsArray[2]));
-      holder.roundsText.setText(String.valueOf(position + 1));
 
       holder.itemView.setOnLongClickListener(view -> {
          showPopupMenu(view.getContext(), view, position);
@@ -79,7 +97,9 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreViewHolder> 
    }
 
    @Override
-   public void onBindViewHolder(@NonNull SkatScoreViewHolder holder, int position,  @NonNull List<Object> payloads) {
+   public void onBindViewHolder(@NonNull SkatScoreViewHolder holder,
+                                int position,
+                                @NonNull List<Object> payloads) {
       if (payloads.isEmpty()) {
          onBindViewHolder(holder, position);
          // Full binding if there are no payloads
@@ -128,6 +148,35 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreViewHolder> 
 
    @Override
    public int getItemCount() {
-      return scores.size();
+      return numberOfRounds;
+   }
+
+
+   public static class SkatScoreViewHolder extends RecyclerView.ViewHolder {
+      public TextView roundsText;
+      public TextView points1Text;
+      public TextView points2Text;
+      public TextView points3Text;
+      public TextView points4Text;
+
+      public SkatScoreViewHolder(@NonNull View itemView) {
+         super(itemView);
+         points1Text = itemView.findViewById(R.id.points1_text);
+         points2Text = itemView.findViewById(R.id.points2_text);
+         points3Text = itemView.findViewById(R.id.points3_text);
+         roundsText = itemView.findViewById(R.id.round_text);
+      }
+
+      public void updateRounds(int position) {
+         roundsText.setText(String.valueOf(position));
+      }
+   }
+
+   public static class ItemDecoration extends RecyclerView.ItemDecoration {
+
+      @Override
+      public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+         outRect.top = 1;
+      }
    }
 }

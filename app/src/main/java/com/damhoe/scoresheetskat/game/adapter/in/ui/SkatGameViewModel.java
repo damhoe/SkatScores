@@ -29,12 +29,11 @@ public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, Ska
    public final LiveData<int[]> winBonus = Transformations.map(getGame(), SkatGame::calculateWinBonus);
    public final LiveData<int[]> lossOfOthersBonus = Transformations.map(getGame(), SkatGame::calculateLossOfOthersBonus);
 
-   final LiveData<Player> dealer = Transformations.map(getGame(), skatGame -> {
+   final LiveData<Integer> dealerPosition = Transformations.map(getGame(), skatGame -> {
       int firstDealerPosition = skatGame.getFirstDealerPosition();
       int currentRound = skatGame.getCurrentRound();
       int playerCount = skatGame.getPlayers().size();
-      int dealerPosition = (firstDealerPosition - 1 + currentRound) % playerCount;
-      return skatGame.getPlayers().get(dealerPosition);
+      return (firstDealerPosition - 1 + currentRound) % playerCount;
    });
 
    public SkatGameViewModel(CreateGameUseCase createGameUseCase,

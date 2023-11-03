@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/total_points_label"
+            android:layout_width="@dimen/points_board_first_label_width"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
+            android:maxLines="1"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.App.BodySmall"
+            android:textColor="?colorOnSurface"
+            android:fontFamily="@font/rubik_medium"
+            android:text="Points"
+            />
+
+        <TextView
+            android:id="@+id/points1_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:singleLine="true"
+            android:textAlignment="center"
+            android:fontFamily="@font/rubik_medium"
+            android:textAppearance="@style/TextAppearance.App.BodyLarge"
+            tools:text="24" />
+
+        <TextView
+            android:id="@+id/points2_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:singleLine="true"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.App.BodyLarge"
+            android:fontFamily="@font/rubik_medium"
+            tools:text="0" />
+
+        <TextView
+            android:id="@+id/points3_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:singleLine="true"
+            android:textAlignment="center"
+            android:fontFamily="@font/rubik_medium"
+            android:textAppearance="@style/TextAppearance.App.BodyLarge"
+            tools:text="230" />
+
+    </LinearLayout>
+</layout>

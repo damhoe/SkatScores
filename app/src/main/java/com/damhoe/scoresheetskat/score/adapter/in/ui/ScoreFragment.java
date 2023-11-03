@@ -11,12 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,13 +27,11 @@ import com.damhoe.scoresheetskat.score.domain.ScoreRequest;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 import com.damhoe.scoresheetskat.score.domain.SkatScoreCommand;
 import com.damhoe.scoresheetskat.score.domain.SkatSuit;
-import com.damhoe.scoresheetskat.shared_ui.base.TopLevelFragment;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
 import com.damhoe.scoresheetskat.shared_ui.utils.LayoutMargins;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.slider.Slider;
 
 import java.util.HashMap;

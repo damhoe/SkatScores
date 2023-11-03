@@ -1,8 +1,6 @@
 package com.damhoe.scoresheetskat.game.adapter.in.ui;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -20,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.text.Editable;
@@ -40,7 +38,7 @@ import android.widget.Button;
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.databinding.FragmentGameBinding;
+import com.damhoe.scoresheetskat.databinding.FragmentGameV2Binding;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator.MessageType;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
@@ -53,9 +51,7 @@ import com.damhoe.scoresheetskat.score.domain.SkatScore;
 import com.damhoe.scoresheetskat.game.domain.SkatSettings;
 import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
-import com.damhoe.scoresheetskat.shared_ui.utils.LayoutMargins;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -77,7 +73,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     private SkatGameViewModel viewModel;
     private SelectPlayerViewModel playerVM;
     private SharedScoreResponseViewModel scoreResponseViewModel;
-    private FragmentGameBinding binding;
+    private FragmentGameV2Binding binding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,10 +94,17 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game_v2, container, false);
         setUpEditScoreButton();
+        setUpEditPlayersButton();
         setUpRecyclerView();
         return binding.getRoot();
+    }
+
+    private void setUpEditPlayersButton() {
+        binding.titleView.buttonEdit.setOnClickListener(view -> {
+            showEditPlayerDialog();
+        });
     }
 
     @Override
@@ -109,22 +112,46 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         super.onViewCreated(view, savedInstanceState);
 
         // Set insets
-        InsetsManager.applyStatusBarInsets(binding.appbarLayout);
-        int marginRight = getResources().getDimensionPixelSize(R.dimen.fab_margin_right);
-        int marginBottom = getResources().getDimensionPixelSize(R.dimen.fab_margin_bottom);
-        LayoutMargins defaultMargins =
-                new LayoutMargins(0, 0, marginRight, marginBottom);
-        InsetsManager.applyNavigationBarInsets(binding.editScoreButton, defaultMargins);
-        InsetsManager.applyNavigationBarInsets(binding.content);
+        InsetsManager.applySystemBarInsets(binding.content);
+        InsetsManager.applyNavigationBarInsets(binding.editScoreButton);
+        InsetsManager.applyNavigationBarInsets(binding.bottomAppBar);
+
 
         setupNavigation();
         setupObservers();
         addMenu();
         initializeUI();
+        setupBottomScrimWithScrollView();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void setupBottomScrimWithScrollView() {
+        int tolerance = 12;
+
+        View.OnScrollChangeListener listener = new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int scrollX, int scrollY,
+                                       int oldScrollX, int oldScrollY) {
+                int dScrollY = scrollY;
+                int scrollViewHeight = view.getHeight();
+                int contentHeight = binding.scrollViewContent.getHeight();
+
+                boolean isScrolledDown = scrollY >= contentHeight - scrollViewHeight;
+
+                // On scroll down
+                if (isScrolledDown) {
+                    //binding.bottomScrim.setAlpha(0.0f);
+                } else {
+                    //binding.bottomScrim.setAlpha(1.0f);
+                }
+            }
+        };
+
+        binding.nestedScrollView.setOnScrollChangeListener(listener);
     }
 
     private void setupObservers() {
-        final Observer<String> titleObserver = this::setToolbarTitle;
+        final Observer<String> titleObserver = this::setTitle;
         viewModel.getTitle().observe(getViewLifecycleOwner(), titleObserver);
 
         final Observer<SkatGame> gameObserver = new Observer<SkatGame>() {
@@ -138,12 +165,24 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         final Observer<Pair<Integer, Integer>> currentRoundObserver = roundPair -> {
             binding.currentRoundText.setText(
                     String.format(Locale.getDefault(),
-                            "Round %d/%d", roundPair.first, roundPair.second));
+                            "%d / %d", roundPair.first, roundPair.second));
         };
         viewModel.getCurrentRoundInfo().observe(getViewLifecycleOwner(), currentRoundObserver);
 
-        viewModel.dealer.observe(getViewLifecycleOwner(), dealer -> {
-            binding.dealerText.setText(String.format(getString(R.string.dealer_message), dealer.getName()));
+        viewModel.dealerPosition.observe(getViewLifecycleOwner(), dealerPosition -> {
+            if (dealerPosition == 0) {
+                binding.titleView.indicator1.setAlpha(1.0f);
+                binding.titleView.indicator2.setAlpha(0.0f);
+                binding.titleView.indicator3.setAlpha(0.0f);
+            } else if (dealerPosition == 1) {
+                binding.titleView.indicator1.setAlpha(0.0f);
+                binding.titleView.indicator2.setAlpha(1.0f);
+                binding.titleView.indicator3.setAlpha(0.0f);
+            } else if (dealerPosition == 2) {
+                binding.titleView.indicator1.setAlpha(0.0f);
+                binding.titleView.indicator2.setAlpha(0.0f);
+                binding.titleView.indicator3.setAlpha(1.0f);
+            }
         });
 
         final Observer<List<Player>> playerObserver = players -> {
@@ -161,9 +200,16 @@ public class GameFragment extends Fragment implements IScoreActionListener {
                         .isTournamentScoring() ? View.VISIBLE : View.GONE;
                 binding.winsLossesBonusView.getRoot().setVisibility(visibilityWinLossBonus);
                 binding.lostGamesBonusView.getRoot().setVisibility(visibilityWinLossBonus);
+                binding.middleDivider.setVisibility(visibilityWinLossBonus);
                 SkatGame game = viewModel.getGame().getValue();
                 if (game != null)
                     updatePoints(game);
+
+                SkatScoreAdapter adapter = (SkatScoreAdapter)binding.scoresRv.getAdapter();
+                if (adapter != null) {
+                    adapter.updateNumberOfRounds(skatSettings.getNumberOfRounds());
+                    adapter.notifyItemRangeChanged(0, skatSettings.getNumberOfRounds());
+                }
 
             }
         };
@@ -205,35 +251,31 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     }
 
     private void displayTotalPoints(int[] totalPoints) {
-        binding.pointsBoardTopSums.points1Text.setText(String.valueOf(totalPoints[0]));
-        binding.pointsBoardTopSums.points2Text.setText(String.valueOf(totalPoints[1]));
-        binding.pointsBoardTopSums.points3Text.setText(String.valueOf(totalPoints[2]));
         binding.bottomSumView.points1Text.setText(String.valueOf(totalPoints[0]));
         binding.bottomSumView.points2Text.setText(String.valueOf(totalPoints[1]));
         binding.bottomSumView.points3Text.setText(String.valueOf(totalPoints[2]));
     }
 
     private void addMenu() {
-        MenuHost menuHost = requireActivity();
-        menuHost.addMenuProvider(new MenuProvider() {
+        binding.bottomAppBar.addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menu.clear();
                 menuInflater.inflate(R.menu.game_menu, menu);
             }
 
-            @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.game_settings:
-                        //showGameSettingsDialog();
-                        break;
-                    case R.id.game_edit_players:
-                        showEditPlayerDialog();
-                        break;
-                    case R.id.game_edit_dealer:
-                        showEditDealerDialog();
-                        break;
+                int itemId = item.getItemId();
+                if (itemId == R.id.game_edit) {
+                    showEditDealerDialog();
+                } else if (itemId == R.id.game_show_chart) {
+                    Snackbar.make(binding.bottomSumView.getRoot(),
+                                    "This feature is not implemented yet.",
+                                    Snackbar.LENGTH_SHORT)
+                            .show();
+                } else if (itemId == R.id.home) {
+                    findNavController().navigateUp();
                 }
                 return true;
             }
@@ -287,12 +329,6 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         playerPoints.add(0);//game.getIndividualPoints();
         playerPoints.add(0);//game.getIndividualPoints();
         playerPoints.add(0);//game.getIndividualPoints();
-
-        // Set top sum
-        binding.pointsBoardTopSums.gamePointsText.setText("-");
-        binding.pointsBoardTopSums.points1Text.setText(String.valueOf(playerPoints.get(0)));
-        binding.pointsBoardTopSums.points2Text.setText(String.valueOf(playerPoints.get(1)));
-        binding.pointsBoardTopSums.points3Text.setText(String.valueOf(playerPoints.get(2)));
 
         // Bottom sum
         binding.bottomSumView.points1Text.setText(String.valueOf(playerPoints.get(0)));
@@ -364,12 +400,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     }
 
     private void setupNavigation() {
-
-        NavController navController = findNavController();
-        AppBarConfiguration appBarConfiguration =
-                ((MainActivity)requireActivity()).getAppBarConfiguration();
-        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
-
+        // Empty.
     }
 
     private void showEditDealerDialog() {
@@ -491,14 +522,20 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         });
     }
 
+    /** @noinspection DataFlowIssue*/
     private void setUpRecyclerView() {
         binding.scoresRv.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.scoresRv.setAdapter(new SkatScoreAdapter(new ArrayList<>(), this));
+        binding.scoresRv.setAdapter(
+                new SkatScoreAdapter(
+                        new ArrayList<>(), this, 0
+                )
+        );
+        binding.scoresRv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
     }
 
-    private void setToolbarTitle(String title) {
+    private void setTitle(String title) {
         // Set toolbar label
-        binding.toolbar.setTitle(title);
+        binding.gameTitle.setText(title);
     }
 
     private void setUpEditScoreButton() {

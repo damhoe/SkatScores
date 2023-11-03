@@ -3,13 +3,18 @@ package com.damhoe.scoresheetskat.home;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -18,13 +23,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentHomeBinding;
+import com.damhoe.scoresheetskat.game.adapter.in.ui.shared.GamePreviewAdapter;
+import com.damhoe.scoresheetskat.game.adapter.in.ui.shared.GamePreviewItemClickListener;
 import com.damhoe.scoresheetskat.game.domain.GamePreview;
-import com.damhoe.scoresheetskat.shared_ui.base.TopLevelFragment;
+import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
 import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
-public class HomeFragment extends TopLevelFragment implements GamePreviewItemClickListener{
+public class HomeFragment extends Fragment implements GamePreviewItemClickListener {
 
     @Inject
     HomeViewModelFactory factory;
@@ -51,8 +58,9 @@ public class HomeFragment extends TopLevelFragment implements GamePreviewItemCli
     }
 
     @Override
-    protected View onCreateContentView(@NonNull LayoutInflater inflater,
-                                       @Nullable ViewGroup container) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                                       @Nullable ViewGroup container,
+                                       @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_home, container, false);
 
@@ -64,11 +72,6 @@ public class HomeFragment extends TopLevelFragment implements GamePreviewItemCli
         return binding.getRoot();
     }
 
-    @Override
-    protected String title() {
-        return getString(R.string.title_home);
-    }
-
     public NavController findNavController() {
         return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
     }
@@ -76,6 +79,10 @@ public class HomeFragment extends TopLevelFragment implements GamePreviewItemCli
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Set insets to account for status and navigation bars
+        InsetsManager.applyStatusBarInsets(binding.appbarLayout);
+        InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
 
         //NavigationUI.setupWithNavController(binding.toolbar, findNavController());
         viewModel.getOpenGames().observe(getViewLifecycleOwner(), gamePreviews -> {
@@ -89,23 +96,8 @@ public class HomeFragment extends TopLevelFragment implements GamePreviewItemCli
             adapter.setGamePreviews(gamePreviews);
             binding.openGamesRecycler.invalidate();
         });
-    }
 
-    @Override
-    protected boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.menu_settings) {
-            findNavController().navigate(R.id.action_home_to_settings);
-            return true;
-        }
-        if (menuItem.getItemId() == R.id.menu_about) {
-            findNavController().navigate(R.id.action_home_to_about);
-            return true;
-        }
-        if (menuItem.getItemId() == R.id.menu_help) {
-            findNavController().navigate(R.id.action_home_to_help);
-            return true;
-        }
-        return false;
+        addMenu();
     }
 
     @Override
@@ -115,17 +107,62 @@ public class HomeFragment extends TopLevelFragment implements GamePreviewItemCli
     }
 
     public void setupNewGameButton() {
-        baseBinding.addButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        findNavController().navigate(R.id.action_home_to_game_setup);
-                    }
-                }
+        binding.addButton.setOnClickListener(
+                view -> findNavController().navigate(R.id.action_home_to_game_setup)
         );
 
         // Hide and show FAB depending on scroll events
+    }
 
+    private void addMenu() {
+        /*
+         * Toolbar menu
+         */
+        binding.toolbar.addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.options_menu, menu);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.menu_settings) {
+                    findNavController().navigate(R.id.action_home_to_settings);
+                    return true;
+                }
+                return false; //TopLevelFragment.this.onMenuItemSelected(menuItem);
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+
+
+        /*
+         * Bottom app bar menu
+         */
+        binding.bottomAppBar.addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menu.clear();
+                menuInflater.inflate(R.menu.home_menu, menu);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.players) {
+                    findNavController().navigate(R.id.action_home_to_players);
+                    return true;
+                } else if (menuItem.getItemId() == R.id.history) {
+                    findNavController().navigate(R.id.action_home_to_history);
+                    return true;
+                } else if (menuItem.getItemId() == R.id.menu_help) {
+                    findNavController().navigate(R.id.action_home_to_help);
+                    return true;
+                } else if (menuItem.getItemId() == R.id.menu_about) {
+                    findNavController().navigate(R.id.action_home_to_about);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override

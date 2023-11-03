@@ -7,10 +7,13 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.WindowCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
+import androidx.navigation.NavHost;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -21,38 +24,33 @@ public class MainActivity extends AppCompatActivity {
 
     public ApplicationComponent appComponent;
     public ActivityMainBinding binding;
-    private NavController navController;
-    private AppBarConfiguration appBarConfiguration;
-    private Menu menu;
 
-    /** @noinspection DataFlowIssue*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Initialize dependency injection with dagger
         appComponent = ((ScoreSheetSkatApplication) getApplicationContext()).appComponent;
         appComponent.inject(this);
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
-        // Initialize appBar configuration
-        appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home,
-                R.id.navigation_statistics,
-                R.id.navigation_history,
-                R.id.players
-        ).build();
     }
 
     public AppBarConfiguration getAppBarConfiguration() {
-        return appBarConfiguration;
+        return new AppBarConfiguration.Builder(findNavController().getGraph()).build();
+    }
+
+    private NavController findNavController() {
+        return Navigation.findNavController(this, R.id.nav_host_fragment);
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(findNavController(), getAppBarConfiguration())
+                || super.onSupportNavigateUp();
     }
 }

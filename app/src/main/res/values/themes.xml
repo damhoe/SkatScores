@@ -1,35 +1,37 @@
 
 <resources>
     <style name="Theme.ScoreSheetSkat" parent="Theme.App">
-        <item name="colorPrimary">@color/md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
-        <item name="colorError">@color/md_theme_light_error</item>
-        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/md_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
-        <item name="android:colorBackground">@color/md_theme_light_background</item>
-        <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
-        <item name="colorSurface">@color/md_theme_light_surface</item>
-        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/md_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
-
-        <item name="app_colorPrimaryContainerVariant">@color/theme_primary_30</item>
-        <item name="app_colorSurfaceContainer">?colorPrimaryContainer</item>
+        <item name="colorPrimary">@color/primary_800</item>
+        <item name="colorOnPrimary">@color/primary_100</item>
+        <item name="colorPrimaryContainer">@color/primary_800</item>
+        <item name="colorOnPrimaryContainer">@color/primary_100</item>
+        <item name="colorSecondary">@color/secondary_300</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/secondary_50</item>
+        <item name="colorOnSecondaryContainer">@color/secondary_800</item>
+        <item name="colorTertiary">@color/tertiary_800</item>
+        <item name="colorOnTertiary">@color/tertiary_50</item>
+        <item name="colorTertiaryContainer">@color/tertiary_100</item>
+        <item name="colorOnTertiaryContainer">@color/tertiary_900</item>
+        <item name="colorError">@color/error_900</item>
+        <item name="colorErrorContainer">@color/error_100</item>
+        <item name="colorOnError">@color/error_50</item>
+        <item name="colorOnErrorContainer">@color/error_variant_900</item>
+        <item name="android:colorBackground">@color/neutral_50</item>
+        <item name="colorOnBackground">@color/primary_900</item>
+        <item name="colorSurface">@color/neutral_50</item>
+        <item name="colorOnSurface">@color/primary_900</item>
+        <item name="colorSurfaceVariant">@color/neutral_200</item>
+        <item name="colorOnSurfaceVariant">@color/primary_900</item>
+        <item name="colorOutline">@color/neutral_600</item>
+        <item name="colorOnSurfaceInverse">@color/primary_100</item>
+        <item name="colorSurfaceInverse">@color/primary_800</item>
+        <item name="colorPrimaryInverse">@color/primary_100</item>
+        <item name="colorOnSurfaceLight">@color/primary_200</item>
+        <item name="colorSurfaceContainer">@color/primary_200</item>
+        <item name="colorSurfaceBright">@color/neutral_100</item>
+        <item name="colorControlNormal">@color/primary_800</item>
+        <item name="colorCategorySubtitle">@color/tertiary_200</item>
 
         <item name="textAppearanceHeadlineSmall">@style/TextAppearance.App.HeadlineSmall</item>
         <item name="textAppearanceHeadlineMedium">@style/TextAppearance.App.HeadlineMedium</item>

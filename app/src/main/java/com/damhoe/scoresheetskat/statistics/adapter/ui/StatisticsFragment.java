@@ -2,32 +2,26 @@ package com.damhoe.scoresheetskat.statistics.adapter.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentStatisticsBinding;
-import com.damhoe.scoresheetskat.shared_ui.base.TopLevelFragment;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
-public class StatisticsFragment extends TopLevelFragment {
+public class StatisticsFragment extends Fragment {
 
     private StatisticsViewModel statisticsViewModel;
     private FragmentStatisticsBinding binding;
 
-    @Override
-    protected View onCreateContentView(@NonNull LayoutInflater inflater,
-                                       @Nullable ViewGroup container) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         statisticsViewModel =
                 new ViewModelProvider(this).get(StatisticsViewModel.class);
 
@@ -55,20 +49,6 @@ public class StatisticsFragment extends TopLevelFragment {
 //            binding.monthProgressIndicator.setProgress(
 //                    ints.first != null ? (int) (100. * (1. - ints.second * 1./ ints.first)) : 0);
 //        });
-    }
-
-    @Override
-    protected String title() {
-        return getString(R.string.title_statistics);
-    }
-
-    @Override
-    protected boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-        return false;
-    }
-
-    public NavController findNavController() {
-        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
     }
 
     @Override

@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:startIconDrawable="@drawable/ic_people_black_24dp"
+        app:startIconDrawable="@drawable/ic_people_24dp"
         style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu">
 
         <AutoCompleteTextView

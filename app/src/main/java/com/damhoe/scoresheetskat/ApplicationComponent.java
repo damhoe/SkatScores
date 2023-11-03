@@ -2,6 +2,7 @@ package com.damhoe.scoresheetskat;
 
 import android.content.Context;
 
+import com.damhoe.scoresheetskat.history.HistoryFragment;
 import com.damhoe.scoresheetskat.home.HomeFragment;
 import com.damhoe.scoresheetskat.game.GameModule;
 import com.damhoe.scoresheetskat.game.adapter.in.ui.GameFragment;
@@ -26,6 +27,7 @@ public interface ApplicationComponent {
  void inject(GameFragment gameFragment);
  void inject(ScoreFragment scoreFragment);
  void inject(HomeFragment homeFragment);
+ void inject(HistoryFragment historyFragment);
  void inject(PlayersFragment playersFragment);
  void inject(PlayerDetailsFragment playerDetailsFragment);
 }

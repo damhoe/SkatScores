@@ -5,9 +5,11 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
         <item name="textAppearanceLargePopupMenu">@style/TextAppearance.App.Subtitle</item>
         <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.App.Subtitle</item>
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
+        <item name="android:listDivider">@drawable/list_divider</item>
     </style>
 
     <style name="Theme.App.Dark" parent="Theme.Material3.Dark.NoActionBar">
@@ -26,35 +28,44 @@
     <style name="Widget.App.CollapsingToolbar" parent="@style/Widget.Material3.CollapsingToolbar.Medium">
         <item name="elevation">0dp</item>
         <item name="titleEnabled">true</item>
-        <item name="statusBarScrim">?colorPrimaryContainer</item>
-        <item name="contentScrim">?colorPrimaryContainer</item>
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="statusBarScrim">?colorSurfaceVariant</item>
+        <item name="contentScrim">?colorSurfaceVariant</item>
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="collapsedTitleTextAppearance">@style/TextAppearance.App.CollapsingToolbar.Collapsed</item>
         <item name="expandedTitleTextAppearance">@style/TextAppearance.App.CollapsingToolbar.Expanded</item>
     </style>
 
     <style name="Widget.App.AppBarLayout" parent="Widget.Material3.AppBarLayout">
-        <item name="android:background">?attr/colorPrimaryContainer</item>
+        <item name="android:background">?attr/colorSurface</item>
+    </style>
+
+    <style name="Widget.App.AppBarLayout.Variant" parent="Widget.Material3.AppBarLayout">
+        <item name="android:background">?colorSurfaceContainer</item>
     </style>
 
     <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
-        <item name="titleTextColor">?attr/colorOnPrimaryContainer</item>
+        <item name="titleTextColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="Widget.App.Toolbar.Variant" parent="Widget.Material3.Toolbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+        <item name="titleTextColor">@color/black</item>
     </style>
 
     <style name="ThemeOverlay.App.Toolbar" parent="">
-        <item name="colorControlNormal">?attr/colorOnPrimaryContainer</item>
+        <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
     </style>
 
-    <style name="Widget.App.BottomNavigationBar" parent="Widget.Material3.BottomNavigationView">
-        <item name="backgroundTint">?app_colorSurfaceContainer</item>
-        <item name="itemIconTint">?colorOnPrimaryContainer</item>
-        <item name="titleTextColor">?colorOnPrimaryContainer</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationBar</item>
+    <style name="ThemeOverlay.App.Toolbar.Variant" parent="">
+        <item name="colorControlNormal">@color/black</item>
     </style>
 
-    <style name="ThemeOverlay.App.BottomNavigationBar" parent="ThemeOverlay.Material3">
-        <item name="colorSecondaryContainer">?app_colorPrimaryContainerVariant</item>
+    <style name="Widget.App.BottomAppBar" parent="Widget.Material3.BottomAppBar">
+        <item name="android:minHeight">80dp</item>
+        <item name="backgroundTint">?attr/colorSurfaceVariant</item>
+        <item name="titleTextColor">?colorOnSurfaceVariant</item>
     </style>
 
     <style name="GameSettingsRadioButton" parent="Widget.Material3.Button">
@@ -148,7 +159,6 @@
     </style>
 
     <style name="TextAppearance.App.CategorySubtitle" parent="TextAppearance.Material3.LabelSmall">
-        <item name="android:textColor">?colorSecondary</item>
         <item name="fontFamily">@font/rubik_bold</item>
     </style>
 
@@ -188,13 +198,35 @@
     <style name="TextAppearance.App.ItemTitle" parent="TextAppearance.Material3.BodyMedium">
         <item name="fontFamily">@font/app_font</item>
     </style>
-    <style name="TextAppearance.App.BodyLight" parent="TextAppearance.Material3.BodySmall">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
     <style name="TextAppearance.App.HeadlineCasual" parent="TextAppearance.Material3.HeadlineMedium">
         <item name="fontFamily">@font/app_font</item>
     </style>
     <style name="TextAppearance.App.Subtitle" parent="TextAppearance.Material3.ActionBar.Subtitle">
         <item name="fontFamily">@font/app_font</item>
     </style>
+
+    <style name="Theme.App.SubtitleLightLarge" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.App.TitleLarge</item>
+        <item name="fontFamily">@font/rubik_medium</item>
+        <item name="android:textColor">?colorOnSurfaceLight</item>
+    </style>
+
+    <style name="Theme.App.SubtitleLightMedium" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.App.TitleMedium</item>
+        <item name="fontFamily">@font/rubik_medium</item>
+        <item name="android:textColor">?colorOnSurfaceLight</item>
+    </style>
+
+    <style name="Theme.App.SubtitleLightSmall" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.App.TitleSmall</item>
+        <item name="fontFamily">@font/rubik_medium</item>
+        <item name="android:textColor">?colorOnSurfaceLight</item>
+    </style>
+
+    <style name="Theme.App.CategorySubtitle" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.App.CategorySubtitle</item>
+        <item name="fontFamily">@font/rubik_medium</item>
+        <item name="android:textColor">?colorCategorySubtitle</item>
+    </style>
+
 </resources>

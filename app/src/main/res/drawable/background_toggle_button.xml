@@ -8,7 +8,7 @@
                     <corners android:radius="8dp" />
                 </shape>
             </item>
-            <item android:drawable="@drawable/ic_people_black_24dp" />
+            <item android:drawable="@drawable/ic_people_24dp" />
         </layer-list>
     </item>
     <item>

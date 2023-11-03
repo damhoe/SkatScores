@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="app_colorSurfaceContainer" format="color" />
-    <attr name="app_colorPrimaryContainerVariant" format="color" />
+    <attr name="colorOnSurfaceLight" format="color" />
+    <attr name="colorCategorySubtitle" format="color" />
 </resources>

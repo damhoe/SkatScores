@@ -10,13 +10,13 @@
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.App.AppBarLayout">
+            style="@style/Widget.App.AppBarLayout.Variant">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.App.Toolbar"
+                style="@style/Widget.App.Toolbar.Variant"
                 app:title="@string/title_about" />
 
         </com.google.android.material.appbar.AppBarLayout>
