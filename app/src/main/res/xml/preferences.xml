@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="System">
+
+        <ListPreference
+            app:key="language"
+            app:title="Language"
+            app:entryValues="@array/app_languages_values"
+            app:entries="@array/app_languages"
+            app:useSimpleSummaryProvider="true"
+            app:persistent="true"
+            app:defaultValue="@string/pref_language_english_value"
+            />
+
+        <ListPreference
+            app:key="ui_mode"
+            app:title="Theme"
+            app:entries="@array/ui_modes"
+            app:entryValues="@array/ui_modes_values"
+            app:useSimpleSummaryProvider="true"
+            app:persistent="true"
+            app:defaultValue="@string/pref_uiMode_system_value"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Behavior">
+
+        <SwitchPreference
+            app:key="unfinished_as_badge"
+            app:title="Show unfinished games as badge"
+            app:defaultValue="false"
+            app:persistent="true"
+            />
+
+    </PreferenceCategory>
+
+    <!--<PreferenceCategory app:title="Presets">
+
+
+    </PreferenceCategory>-->
+
+</PreferenceScreen>

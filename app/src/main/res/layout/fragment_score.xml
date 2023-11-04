@@ -267,7 +267,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:icon="@drawable/hearts"
-                        app:iconTint="?colorError" />
+                        app:iconTint="?colorTertiary" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonDiamonds"
@@ -276,7 +276,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:icon="@drawable/diamonds"
-                        app:iconTint="?colorError" />
+                        app:iconTint="?colorTertiary" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 

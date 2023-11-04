@@ -28,4 +28,9 @@
     <string name="message_dialog_rounds">Select number of rounds</string>
     <string name="message_dialog_number_players">Select number of players</string>
     <string name="message_language_dialog">Select language</string>
+    <string name="german">German</string>
+    <string name="english">English</string>
+    <string name="mode_night_title">Dark</string>
+    <string name="mode_day_title">Light</string>
+    <string name="mode_system_title">System default</string>
 </resources>

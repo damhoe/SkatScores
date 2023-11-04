@@ -38,7 +38,7 @@ public class HistoryViewModel extends ViewModel {
         List<GamePreview> previews = new ArrayList<>();
         GamePreview p = new GamePreview();
         p.setDate(Calendar.getInstance().getTime());
-        p.setGameId(1234l);
+        p.setGameId(1234L);
         p.setFinished(false);
         p.setTitle("My game 1");
         List<String> names = new ArrayList<>();

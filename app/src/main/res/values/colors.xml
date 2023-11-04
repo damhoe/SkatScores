@@ -7,6 +7,7 @@
     <color name="primary_200">#b3c3d6</color>
     <color name="primary_100">#cddbea</color>
     <color name="primary_50">#e9f0fd</color>
+    <color name="primary_900d">#1F2832</color>
 
     <color name="secondary_800">#00292a</color>
     <color name="secondary_700">#003639</color>
@@ -22,6 +23,7 @@
     <color name="tertiary_600">#e70069</color>
     <color name="tertiary_800">#bb0061</color>
     <color name="tertiary_900">#940059</color>
+    <color name="tertiary_900d">#66003D</color>
 
     <color name="error_900">#BA1A1A</color> <!-- seed error -->
     <color name="error_50">#ffebee</color>

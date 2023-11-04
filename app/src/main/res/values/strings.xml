@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">ScoreSheet Skat</string>
+    <string name="app_name" translatable="false">Skat Scores</string>
     <string name="title_home">My Games</string>
     <string name="title_statistics">Statistics</string>
     <string name="title_new_game">New List</string>
@@ -49,4 +49,16 @@
     <string name="text_about">Version 1.0 (2023)\nCopyright © Geneva 2023\nThis app was developed by Damian Hoedtke.</string>
     <string name="text_tutorial">The tutorial is not implemented yet.</string>
     <string name="description_new_score">Create a new score</string>
+
+    <string name="german">German</string>
+    <string name="english">English</string>
+    <string name="pref_language_german_value" translatable="false">de</string>
+    <string name="pref_language_english_value" translatable="false">en</string>
+
+    <string name="mode_night_title">Dark</string>
+    <string name="mode_day_title">Light</string>
+    <string name="mode_system_title">System default</string>
+    <string name="pref_uiMode_day_value" translatable="false">day</string>
+    <string name="pref_uiMode_night_value" translatable="false">night</string>
+    <string name="pref_uiMode_system_value" translatable="false">system</string>
 </resources>

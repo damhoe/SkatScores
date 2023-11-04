@@ -2,8 +2,25 @@
 <resources>
 
     <string-array name="app_languages">
-        <item>Deutsch</item>
-        <item>English</item>
+        <item>@string/german</item>
+        <item>@string/english</item>
+    </string-array>
+
+    <string-array name="app_languages_values">
+        <item>@string/pref_language_german_value</item>
+        <item>@string/pref_language_english_value</item>
+    </string-array>
+
+    <string-array name="ui_modes">
+        <item>@string/mode_day_title</item>
+        <item>@string/mode_night_title</item>
+        <item>@string/mode_system_title</item>
+    </string-array>
+
+    <string-array name="ui_modes_values">
+        <item>@string/pref_uiMode_day_value</item>
+        <item>@string/pref_uiMode_night_value</item>
+        <item>@string/pref_uiMode_system_value</item>
     </string-array>
 
     <integer-array name="allowed_rounds">
@@ -15,5 +32,4 @@
         <item>24</item>
         <item>32</item>
     </integer-array>
-
 </resources>
