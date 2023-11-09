@@ -1,10 +1,10 @@
 package com.damhoe.scoresheetskat.score.application;
 
 import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.score.application.ports.in.CUDScoreUseCase;
-import com.damhoe.scoresheetskat.score.application.ports.in.LoadScoreUseCase;
+import com.damhoe.scoresheetskat.score.application.ports.in.CreateScoreUseCase;
+import com.damhoe.scoresheetskat.score.application.ports.in.GetScoreUseCase;
+import com.damhoe.scoresheetskat.score.application.ports.out.CreateScorePort;
 import com.damhoe.scoresheetskat.score.application.ports.out.GetScoresPort;
-import com.damhoe.scoresheetskat.score.application.ports.out.CUDScorePort;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 import com.damhoe.scoresheetskat.score.domain.SkatScoreCommand;
 
@@ -12,58 +12,43 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ScoreService implements CUDScoreUseCase, LoadScoreUseCase {
+public class ScoreService implements CreateScoreUseCase, GetScoreUseCase {
 
     private final GetScoresPort getScoresPort;
-    private final CUDScorePort cudScorePort;
+    private final CreateScorePort createScorePort;
 
     @Inject
-    ScoreService(GetScoresPort getScoresPort, CUDScorePort cudScorePort) {
+    ScoreService(GetScoresPort getScoresPort, CreateScorePort createScorePort) {
         this.getScoresPort = getScoresPort;
-        this.cudScorePort = cudScorePort;
+        this.createScorePort = createScorePort;
     }
 
     @Override
     public Result<SkatScore> createScore(SkatScoreCommand command) {
         SkatScore score = new SkatScore(command);
-        score = cudScorePort.saveScore(score);
-        if (score != null) {
-            return Result.success(score);
-        }
-        return Result.failure("Unable to create Skat score.");
-    }
-
-    @Override
-    public List<SkatScore> loadScores(long gameId) {
-        return getScoresPort.loadScores(gameId);
-    }
-
-    @Override
-    public Result<SkatScore> loadScore(long id) {
-        SkatScore score = getScoresPort.getScore(id);
-        if (score == null) {
-            return Result.failure("Unable to load score with id: " + id);
-        }
+        score = createScorePort.saveScore(score);
         return Result.success(score);
+    }
+
+    @Override
+    public List<SkatScore> getScores(long gameId) {
+        return getScoresPort.getScores(gameId);
+    }
+
+    @Override
+    public Result<SkatScore> getScore(long id) {
+        return Result.success(getScoresPort.getScore(id));
     }
 
     @Override
     public Result<SkatScore> updateScore(long id, SkatScoreCommand command) {
         SkatScore score = new SkatScore(command);
         score.setId(id);
-        boolean succeeded = cudScorePort.updateScore(score);
-        if (!succeeded) {
-            return Result.failure("Unable to update Skat score with id: " + id);
-        }
-        return Result.success(score);
+        return Result.success(createScorePort.updateScore(score));
     }
 
     @Override
     public Result<SkatScore> deleteScore(long id) {
-        SkatScore score = cudScorePort.deleteScore(id);
-        if (score == null) {
-            return Result.failure("Unable to delete score with id: " + id);
-        }
-        return Result.success(score);
+        return Result.success(createScorePort.deleteScore(id));
     }
 }

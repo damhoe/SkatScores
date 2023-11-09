@@ -13,10 +13,11 @@ public class PlayerSelectionValidator {
       Warning
    }
 
-   private final List<Player> allPlayers;
-   private final List<String> selectedNames = new ArrayList<>();
+   private List<Player> allPlayers;
+   private List<String> selectedNames = new ArrayList<>();
 
-   public PlayerSelectionValidator(List<Player> allPlayers) {
+   public void initialize(List<Player> allPlayers, List<String> selectedNames) {
+      this.selectedNames = selectedNames;
       this.allPlayers = allPlayers;
    }
 
@@ -35,6 +36,11 @@ public class PlayerSelectionValidator {
             continue;
          }
 
+         if (isDummyName(name)) {
+            messages.add(new Pair<>(null, null));
+            continue;
+         }
+
          if (allPlayers.stream().noneMatch(p -> p.getName().equals(name))) {
             messages.add(new Pair<>(MessageType.Warning, "New player is created!"));
             continue;
@@ -46,21 +52,8 @@ public class PlayerSelectionValidator {
       return messages;
    }
 
-   public boolean isNewPlayer(String name) {
-      return allPlayers.stream().noneMatch(p -> p.getName().equals(name.trim()));
-   }
-
-   public Player getPlayer(String name) {
-      for (Player player: allPlayers) {
-         if (player.getName().equals(name)) {
-            return player;
-         }
-      }
-      return null;
-   }
-
-   public void initialize(List<String> selectedNames) {
-      this.selectedNames.addAll(selectedNames);
+   public boolean isDummyName(String name) {
+      return name.matches(Player.DUMMY_PATTERN);
    }
 
    public void select(int index, String name) {

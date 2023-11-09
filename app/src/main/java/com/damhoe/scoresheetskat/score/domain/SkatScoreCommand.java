@@ -1,41 +1,39 @@
 package com.damhoe.scoresheetskat.score.domain;
 
+import com.damhoe.scoresheetskat.score.Constant;
+
 public class SkatScoreCommand {
     private int spitzen;
-    private SkatSuit suit; // Clubs, Diamonds, Hears, Spades, Null, Grand, Overbid
+    private SkatSuit suit; // Clubs, Diamonds, Hears, Spades, Null, Grand
+    private SkatResult result; // Won, Lost, Overbid, Passe
     private boolean hand;
     private boolean schneider;
     private boolean schneiderAnnounced;
     private boolean schwarz;
     private boolean schwarzAnnounced;
     private boolean ouvert;
-    private boolean isWon;
     private int playerPosition;
     private long gameId;
-    private int index;
-    private boolean isPasse;
 
     public SkatScoreCommand() {
         spitzen = 1;
-        suit = SkatSuit.CLUBS;
+        suit = SkatSuit.INVALID;
+        result = SkatResult.PASSE;
         hand = false;
         ouvert = false;
         schneider = false;
         schneiderAnnounced = false;
         schwarz = false;
         schwarzAnnounced = false;
-        isWon = true;
         gameId = -1L;
-        playerPosition = 0;
-        index = 0;
-        isPasse = false;
+        playerPosition = Constant.PASSE_PLAYER_POSITION;
     }
 
     public static SkatScoreCommand fromSkatScore(SkatScore score) {
         SkatScoreCommand command = new SkatScoreCommand();
         command.setHand(score.isHand());
         command.setOuvert(score.isOuvert());
-        command.setWon(score.isWon());
+        command.setResult(score.getResult());
         command.setSchneider(score.isSchneider());
         command.setSchwarz(score.isSchwarz());
         command.setSuit(score.getSuit());
@@ -44,8 +42,6 @@ public class SkatScoreCommand {
         command.setSchwarzAnnounced(score.isSchwarzAnnounced());
         command.setPlayerPosition(score.getPlayerPosition());
         command.setGameId(score.getGameId());
-        command.setIndex(score.getIndex());
-        command.setPasse(score.isPasse());
         return command;
     }
 
@@ -94,12 +90,12 @@ public class SkatScoreCommand {
         this.ouvert = ouvert;
     }
 
-    public boolean isWon() {
-        return isWon;
+    public SkatResult getResult() {
+        return result;
     }
 
-    public void setWon(boolean won) {
-        isWon = won;
+    public void setResult(SkatResult result) {
+        this.result = result;
     }
 
     public int getSpitzen() {
@@ -153,30 +149,6 @@ public class SkatScoreCommand {
         return 11;
     }
 
-    public boolean isSuitsEnabled() {
-        return !isPasse;
-    }
-
-    public boolean isSpitzenEnabled() {
-        return !isPasse && suit != SkatSuit.NULL;
-    }
-
-    public boolean isSchneiderSchwarzEnabled() {
-        return suit != SkatSuit.NULL && !isPasse;
-    }
-
-    public boolean isOuvertEnabled() {
-        return !isPasse;
-    }
-
-    public boolean isHandEnabled() {
-        return !isPasse;
-    }
-
-    public boolean isResultEnabled() {
-        return !isPasse;
-    }
-
     public int getPlayerPosition() {
         return playerPosition;
     }
@@ -193,19 +165,26 @@ public class SkatScoreCommand {
         this.gameId = gameId;
     }
 
-    public int getIndex() {
-        return index;
+    public boolean isPasse() { return playerPosition == Constant.PASSE_PLAYER_POSITION; }
+
+    public boolean isWon() { return SkatResult.WON.equals(getResult()); }
+
+    public boolean isOverbid() { return SkatResult.OVERBID.equals(getResult()); }
+
+    public boolean isLost() {
+        return SkatResult.LOST.equals(getResult());
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void resetWinLevels() {
+        setHand(false);
+        setOuvert(false);
+        setSchwarz(false);
+        setSchwarzAnnounced(false);
+        setSchneider(false);
+        setSchneiderAnnounced(false);
     }
 
-    public boolean isPasse() {
-        return isPasse;
-    }
-
-    public void setPasse(boolean passe) {
-        isPasse = passe;
+    public void resetSpitzen() {
+        setSpitzen(1);
     }
 }

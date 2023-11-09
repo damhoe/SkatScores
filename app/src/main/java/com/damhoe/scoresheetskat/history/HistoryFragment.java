@@ -26,7 +26,7 @@ import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentHistoryBinding;
 import com.damhoe.scoresheetskat.game.adapter.in.ui.shared.GamePreviewItemClickListener;
-import com.damhoe.scoresheetskat.game.domain.GamePreview;
+import com.damhoe.scoresheetskat.game.domain.SkatGamePreview;
 import com.damhoe.scoresheetskat.game.adapter.in.ui.shared.GamePreviewAdapter;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
 
@@ -91,22 +91,16 @@ public class HistoryFragment extends Fragment implements GamePreviewItemClickLis
 
         // Add live data observers
         mViewModel.getLastMonthGames().observe(getViewLifecycleOwner(),
-                new Observer<List<GamePreview>>() {
-            @Override
-            public void onChanged(List<GamePreview> gamePreviews) {
-                lastMonthGamesAdapter.setGamePreviews(gamePreviews);
-                binding.monthlyGamesRv.invalidate();
-            }
-        });
+                skatGamePreviews -> {
+                    lastMonthGamesAdapter.setGamePreviews(skatGamePreviews);
+                    binding.monthlyGamesRv.invalidate();
+                });
 
         // Add live data observers
         mViewModel.getOldGames().observe(getViewLifecycleOwner(),
-                new Observer<List<GamePreview>>() {
-                    @Override
-                    public void onChanged(List<GamePreview> gamePreviews) {
-                        oldGamesAdapter.setGamePreviews(gamePreviews);
-                        binding.olderGamesRv.invalidate();
-                    }
+                skatGamePreviews -> {
+                    oldGamesAdapter.setGamePreviews(skatGamePreviews);
+                    binding.olderGamesRv.invalidate();
                 });
 
         addMenu();
@@ -130,9 +124,9 @@ public class HistoryFragment extends Fragment implements GamePreviewItemClickLis
                     return true;
                 } else if (menuItem.getItemId() == R.id.players) {
                     findNavController().navigate(R.id.action_history_to_players);
-                } else if (menuItem.getItemId() == R.id.statistics) {
-                    // findNavController().navigate(R.id.); // TODO
-                }
+                } // TODO else if (menuItem.getItemId() == R.id.statistics) {
+                    // findNavController().navigate(R.id.);
+                //}
                 return false;
             }
         });
@@ -143,7 +137,12 @@ public class HistoryFragment extends Fragment implements GamePreviewItemClickLis
     }
 
     @Override
-    public void notifyItemClicked(GamePreview gamePreview) {
+    public void notifyDelete(SkatGamePreview skatGamePreview) {
+
+    }
+
+    @Override
+    public void notifySelect(SkatGamePreview skatGamePreview) {
 
     }
 }

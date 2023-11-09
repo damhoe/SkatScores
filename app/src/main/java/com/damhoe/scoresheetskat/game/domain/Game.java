@@ -5,18 +5,25 @@ import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.score.domain.Score;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 public abstract class Game<TSettings extends GameSettings, TScore extends Score> {
-    public static final int STATE_INITIALIZED = 0;
-    public static final int STATE_RUNNING = 1;
-    public static final int STATE_FINISHED = 2;
+
+    public enum RunState {
+        INITIALIZED,
+        RUNNING,
+        FINISHED
+    }
+
     private long id;
+    protected Date createdAt;
     protected String title;
     protected List<Player> players;
-    protected int runState;
+    protected RunState runState;
     protected TSettings settings;
     protected List<TScore> scores;
 
@@ -25,7 +32,8 @@ public abstract class Game<TSettings extends GameSettings, TScore extends Score>
         this.players = players;
         this.settings = settings;
         id = UUID.randomUUID().getMostSignificantBits();
-        runState = STATE_INITIALIZED;
+        createdAt = Calendar.getInstance().getTime();
+        runState = RunState.INITIALIZED;
         scores = new ArrayList<>();
     }
 
@@ -41,8 +49,21 @@ public abstract class Game<TSettings extends GameSettings, TScore extends Score>
         return this.scores.remove(lastIndex);
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date date) {
+        this.createdAt = date;
+    }
+
     public void updateScore(TScore score) {
-        this.scores.set(score.getIndex(), score);
+        for (int i = 0; i < scores.size(); i++) {
+            if (scores.get(i).getId() == score.getId()) {
+                scores.set(i, score);
+                break;
+            }
+        }
     }
 
     public List<TScore> getScores() {
@@ -58,19 +79,23 @@ public abstract class Game<TSettings extends GameSettings, TScore extends Score>
     }
 
     public void start() {
-        runState = STATE_RUNNING;
+        runState = RunState.RUNNING;
     }
 
     public void finish() {
-        runState = STATE_FINISHED;
+        runState = RunState.FINISHED;
     }
 
     public boolean isRunning() {
-        return runState == STATE_RUNNING;
+        return runState == RunState.RUNNING;
     }
 
     public boolean isFinished() {
-        return runState == STATE_FINISHED;
+        return runState == RunState.FINISHED;
+    }
+
+    public RunState getRunState() {
+        return runState;
     }
 
     public void setTitle(String title) {
@@ -99,20 +124,35 @@ public abstract class Game<TSettings extends GameSettings, TScore extends Score>
 
     public abstract static class Builder<T extends Game<S, C>,
             S extends GameSettings, C extends Score> {
-        protected String title;
-        protected List<Player> players;
-        protected S settings;
+        protected String mTitle;
+        protected List<Player> mPlayers;
+        protected S mSettings;
 
         public abstract T build();
 
         public Builder<T, S, C> fromCommand(GameCommand<S> command) {
-            this.title = command.getTitle();
-            this.players = new ArrayList<>();
+            mTitle = command.getTitle();
+            mPlayers = new ArrayList<>();
             for (int j = 1; j <= command.getNumberOfPlayers(); j++) {
-                players.add(new Player("Player " + j));
+                mPlayers.add(new Player("Player " + j));
             }
-            players = Collections.unmodifiableList(players);
-            this.settings = command.getSettings();
+            mPlayers = Collections.unmodifiableList(mPlayers);
+            mSettings = command.getSettings();
+            return this;
+        }
+
+        public Builder<T, S, C> setSettings(S settings) {
+            mSettings = settings;
+            return this;
+        }
+
+        public Builder<T, S, C> setTitle(String title) {
+            mTitle = title;
+            return this;
+        }
+
+        public Builder<T, S, C> setPlayers(List<Player> players) {
+            mPlayers = players;
             return this;
         }
     }

@@ -7,13 +7,19 @@ import androidx.annotation.NonNull;
 
 public class ScoreRequest implements Parcelable {
    private final long scoreId;
+   private final long gameId;
    private final String[] playerNames;
    private final int[] playerPositions;
 
    public ScoreRequest(Builder builder) {
       scoreId = builder.scoreId;
-      this.playerNames = builder.playerNames;
-      this.playerPositions = builder.playerPositions;
+      gameId = builder.gameId;
+      playerNames = builder.playerNames;
+      playerPositions = builder.playerPositions;
+   }
+
+   public long getGameId() {
+      return gameId;
    }
 
    public int[] getPlayerPositions() {
@@ -30,11 +36,17 @@ public class ScoreRequest implements Parcelable {
 
    public static class Builder {
       private long scoreId = -1L;
+      private long gameId = -1L;
       private final String[] playerNames = new String[3];
       private final int[] playerPositions = new int[] { 0, 1, 2 };
 
       public Builder setScoreId(long scoreId) {
          this.scoreId = scoreId;
+         return this;
+      }
+
+      public Builder setGameId(long gameId) {
+         this.gameId = gameId;
          return this;
       }
 
@@ -65,6 +77,7 @@ public class ScoreRequest implements Parcelable {
    @Override
    public void writeToParcel(@NonNull Parcel parcel, int flag) {
       parcel.writeLong(scoreId);
+      parcel.writeLong(gameId);
       parcel.writeString(playerNames[0]);
       parcel.writeString(playerNames[1]);
       parcel.writeString(playerNames[2]);
@@ -89,6 +102,7 @@ public class ScoreRequest implements Parcelable {
 
    private ScoreRequest(Parcel in) {
       scoreId = in.readLong();
+      gameId = in.readLong();
       playerNames = new String[3];
       playerPositions = new int[3];
       playerNames[0] = in.readString();

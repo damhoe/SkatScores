@@ -10,12 +10,13 @@
         android:icon="@mipmap/ic_launcher_scoresheet_skat"
         android:roundIcon="@mipmap/ic_launcher_scoresheet_skat_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ScoreSheetSkat"
+        android:theme="@style/Theme.App.SplashTheme"
         android:localeConfig="@xml/locale_config"
         tools:targetApi="tiramisu">
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.ScoreSheetSkat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

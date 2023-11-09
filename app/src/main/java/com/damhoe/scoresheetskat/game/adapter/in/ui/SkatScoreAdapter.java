@@ -12,36 +12,50 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.SkatScoreViewHolder> {
-   private final IScoreActionListener listener;
-   private List<SkatScore> scores;
+   private final IScoreActionListener mListener;
+   private final List<SkatScore> mScores;
    private int numberOfRounds;
 
-   public SkatScoreAdapter(List<SkatScore> scores,
-                           IScoreActionListener listener,
-                           int numberOfRounds) {
-      this.scores = scores;
-      this.listener = listener;
-      this.numberOfRounds = numberOfRounds;
+   public SkatScoreAdapter(IScoreActionListener listener) {
+      mScores = new ArrayList<>();
+      mListener = listener;
+      numberOfRounds = 0;
    }
 
-   public void updateScores(List<SkatScore> scores) {
-      this.scores = scores;
+   public void setScores(List<SkatScore> newScores) {
+      if (newScores != null) {
+         SkatScoreDiffCallback callback = new SkatScoreDiffCallback(mScores, newScores);
+         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
+         mScores.clear();
+         mScores.addAll(newScores);
+         diffResult.dispatchUpdatesTo(this);
+      }
    }
 
    public List<SkatScore> getScores() {
-      return scores;
+      return mScores;
    }
 
-   public void updateNumberOfRounds(int newNumberOfRounds) {
+   public int getPosition(long scoreId) {
+      for (int i = 0; i < mScores.size(); i++) {
+         if (mScores.get(i).getId() == scoreId) {
+            return i;
+         }
+      }
+      return -1;
+   }
+
+   public void setNumberOfRounds(int newNumberOfRounds) {
       numberOfRounds = newNumberOfRounds;
    }
 
@@ -53,25 +67,17 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
       return new SkatScoreViewHolder(itemView);
    }
 
-   private void ensureCorrectPosition(int scoreIndex, int position) {
-      if (scoreIndex != position) {
-         throw new RuntimeException(String.format("Score position does not match " +
-                 "the saved match index: %d, %d", position, scoreIndex));
-      }
-   }
-
    @Override
    public void onBindViewHolder(@NonNull SkatScoreViewHolder holder, int position) {
       holder.roundsText.setText(String.valueOf(position + 1));
 
-      if (position >= scores.size()) {
+      if (position >= mScores.size()) {
          return;
       }
-      SkatScore score = scores.get(position);
+      SkatScore score = mScores.get(position);
       if (score == null) {
          return;
       }
-      ensureCorrectPosition(score.getIndex(), position);
 
       int[] pointsArray = new int[]{0, 0, 0}; // Initialize with zeros
       if (score.getPlayerPosition() >= 0) {
@@ -101,8 +107,8 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
                                 int position,
                                 @NonNull List<Object> payloads) {
       if (payloads.isEmpty()) {
+         // Full binding if payloads are empty
          onBindViewHolder(holder, position);
-         // Full binding if there are no payloads
       } else {
          // Handle payloads (e.g., update item index)
          for (Object payload : payloads) {
@@ -118,7 +124,7 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
    private void showPopupMenu(Context context, View anchorView, int position) {
       PopupMenu menu = new PopupMenu(context, anchorView, Gravity.END);
       menu.getMenuInflater().inflate(R.menu.score_item_menu, menu.getMenu());
-      if (position != scores.size() - 1) {
+      if (position != mScores.size() - 1) {
          menu.getMenu().removeItem(R.id.delete);
       }
       menu.setForceShowIcon(true);
@@ -127,15 +133,15 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
          switch (item.getItemId()) {
             case R.id.delete:
                Log.d("Menu item clicked", "Delete menu item.");
-               listener.notifyDelete();
+               mListener.notifyDelete();
                return true;
             case R.id.details:
                Log.d("Menu item clicked", "Show item details.");
-               listener.notifyDetails(scores.get(position));
+               mListener.notifyDetails(mScores.get(position));
                return true;
             case R.id.edit:
                Log.d("Menu item clicked", "Delete menu item");
-               listener.notifyEdit(scores.get(position));
+               mListener.notifyEdit(mScores.get(position));
                return true;
             default:
                return false;
@@ -148,7 +154,7 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
 
    @Override
    public int getItemCount() {
-      return numberOfRounds;
+      return mScores.size();
    }
 
 
@@ -175,8 +181,50 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
    public static class ItemDecoration extends RecyclerView.ItemDecoration {
 
       @Override
-      public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+      public void getItemOffsets(
+              @NonNull Rect outRect,
+              @NonNull View view,
+              @NonNull RecyclerView parent,
+              @NonNull RecyclerView.State state
+      ) {
          outRect.top = 1;
+      }
+   }
+
+   public static class SkatScoreDiffCallback extends DiffUtil.Callback {
+
+      private final List<SkatScore> mOldScores;
+      private final List<SkatScore> mNewScores;
+
+      public SkatScoreDiffCallback(List<SkatScore> oldScores, List<SkatScore> newScores) {
+         mNewScores = newScores;
+         mOldScores = oldScores;
+      }
+
+      @Override
+      public int getOldListSize() {
+         return mOldScores.size();
+      }
+
+      @Override
+      public int getNewListSize() {
+         return mNewScores.size();
+      }
+
+      @Override
+      public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+         return mOldScores.get(oldItemPosition).equals(mNewScores.get(newItemPosition));
+      }
+
+      @Override
+      public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+         return mOldScores.get(oldItemPosition).getId() == mNewScores.get(newItemPosition).getId();
+      }
+
+      @Override
+      public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+         // Check if a payload was requested
+         return null;
       }
    }
 }

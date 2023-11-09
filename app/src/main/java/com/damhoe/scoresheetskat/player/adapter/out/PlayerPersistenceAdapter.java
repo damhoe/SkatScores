@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 class PlayerPersistenceAdapter {
     private final DbHelper dbHelper;
@@ -72,12 +71,11 @@ class PlayerPersistenceAdapter {
             contentValues.put(DbHelper.PLAYER_COLUMN_NAME, player.getName());
             contentValues.put(DbHelper.PLAYER_COLUMN_UPDATED_AT, player.getUpdatedAt());
             String whereClause = DbHelper.PLAYER_COLUMN_ID + " = ? ";
-            return db.update(DbHelper.PLAYER_TABLE_NAME, contentValues, whereClause, new String[] { String.valueOf(player.getId()) });
+            return db.update(DbHelper.PLAYER_TABLE_NAME, contentValues, whereClause,
+                    new String[] { String.valueOf(player.getId()) });
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
-        } finally {
-
         }
     }
 
@@ -100,20 +98,15 @@ class PlayerPersistenceAdapter {
         }
     }
 
-    public boolean isPlayerNameExistent(String name) {
+    protected int getGameCount(long playerId) {
         Cursor cursor = null;
         try {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            cursor = db.rawQuery(
-                    "SELECT " + DbHelper.PLAYER_COLUMN_ID
-                            + " FROM " + DbHelper.PLAYER_TABLE_NAME
-                            + " WHERE " + DbHelper.PLAYER_COLUMN_NAME
-                            + " = ? ",
-                    new String[] { name.trim() });
-            cursor.moveToFirst();
-            int numberOfHits = cursor.getCount();
-            return numberOfHits > 0;
-        } catch (Exception e) {
+            cursor = db.rawQuery("SELECT * FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
+                            + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID + " = ?",
+                    new String[] { playerId + "" });
+            return cursor.getCount();
+        } catch (NullPointerException e) {
             e.printStackTrace();
             throw e;
         } finally {

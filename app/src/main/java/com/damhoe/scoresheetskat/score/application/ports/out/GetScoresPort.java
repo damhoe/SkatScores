@@ -5,6 +5,6 @@ import com.damhoe.scoresheetskat.score.domain.SkatScore;
 import java.util.List;
 
 public interface GetScoresPort {
- List<SkatScore> loadScores(long gameId);
+ List<SkatScore> getScores(long gameId);
  SkatScore getScore(long id);
 }

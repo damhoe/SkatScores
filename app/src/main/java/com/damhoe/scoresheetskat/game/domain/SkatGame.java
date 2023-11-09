@@ -1,33 +1,41 @@
 package com.damhoe.scoresheetskat.game.domain;
 
+import com.damhoe.scoresheetskat.game.application.TotalPointsCalculator;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 
 public class SkatGame extends Game<SkatSettings, SkatScore> {
    private int currentRound;
-   private int firstDealerPosition;
+   private int startDealerPosition;
 
    public SkatGame(SkatGameBuilder builder) {
-      super(builder.title, builder.players, builder.settings);
-      firstDealerPosition = 0;
+      super(builder.mTitle, builder.mPlayers, builder.mSettings);
+      startDealerPosition = builder.mStartDealerPosition;
    }
 
    public int getCurrentRound() {
       return currentRound;
    }
 
-   public int getFirstDealerPosition() {
-      return firstDealerPosition;
+   public int getStartDealerPosition() {
+      return startDealerPosition;
    }
 
-   public void setFirstDealerPosition(int firstDealerPosition) {
-      this.firstDealerPosition = firstDealerPosition;
+   public void setStartDealerPosition(int startDealerPosition) {
+      this.startDealerPosition = startDealerPosition;
    }
 
    public static class SkatGameBuilder extends
            Game.Builder<SkatGame, SkatSettings, SkatScore> {
+      protected int mStartDealerPosition = 0;
+
       @Override
       public SkatGame build() {
          return new SkatGame(this);
+      }
+
+      public SkatGameBuilder setStartDealerPosition(int position) {
+         mStartDealerPosition = position;
+         return this;
       }
    }
 

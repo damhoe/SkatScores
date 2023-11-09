@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -60,7 +59,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -71,9 +69,11 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     @Inject
     SelectPlayerVMFactory selectPlayerVMFactory;
     private SkatGameViewModel viewModel;
-    private SelectPlayerViewModel playerVM;
+    private SelectPlayerViewModel selectPlayerViewModel;
     private SharedScoreResponseViewModel scoreResponseViewModel;
     private FragmentGameV2Binding binding;
+    private PlayerSelectionValidator playerValidator = new PlayerSelectionValidator();
+    private SkatScoreAdapter scoreAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,9 +102,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     }
 
     private void setUpEditPlayersButton() {
-        binding.titleView.buttonEdit.setOnClickListener(view -> {
-            showEditPlayerDialog();
-        });
+        binding.titleView.buttonEdit.setOnClickListener(view -> showEditPlayerDialog());
     }
 
     @Override
@@ -121,52 +119,20 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         setupObservers();
         addMenu();
         initializeUI();
-        setupBottomScrimWithScrollView();
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    public void setupBottomScrimWithScrollView() {
-        int tolerance = 12;
-
-        View.OnScrollChangeListener listener = new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int scrollX, int scrollY,
-                                       int oldScrollX, int oldScrollY) {
-                int dScrollY = scrollY;
-                int scrollViewHeight = view.getHeight();
-                int contentHeight = binding.scrollViewContent.getHeight();
-
-                boolean isScrolledDown = scrollY >= contentHeight - scrollViewHeight;
-
-                // On scroll down
-                if (isScrolledDown) {
-                    //binding.bottomScrim.setAlpha(0.0f);
-                } else {
-                    //binding.bottomScrim.setAlpha(1.0f);
-                }
-            }
-        };
-
-        binding.nestedScrollView.setOnScrollChangeListener(listener);
     }
 
     private void setupObservers() {
         final Observer<String> titleObserver = this::setTitle;
         viewModel.getTitle().observe(getViewLifecycleOwner(), titleObserver);
 
-        final Observer<SkatGame> gameObserver = new Observer<SkatGame>() {
-            @Override
-            public void onChanged(SkatGame game) {
-                updatePoints(game);
-            }
-        };
+        final Observer<SkatGame> gameObserver = this::updatePoints;
         viewModel.getGame().observe(getViewLifecycleOwner(), gameObserver);
 
-        final Observer<Pair<Integer, Integer>> currentRoundObserver = roundPair -> {
-            binding.currentRoundText.setText(
-                    String.format(Locale.getDefault(),
-                            "%d / %d", roundPair.first, roundPair.second));
-        };
+        final Observer<Pair<Integer, Integer>> currentRoundObserver =
+                roundPair -> binding.currentRoundText.setText(
+                        String.format(Locale.getDefault(),
+                                "%d / %d", roundPair.first, roundPair.second)
+                );
         viewModel.getCurrentRoundInfo().observe(getViewLifecycleOwner(), currentRoundObserver);
 
         viewModel.dealerPosition.observe(getViewLifecycleOwner(), dealerPosition -> {
@@ -205,33 +171,31 @@ public class GameFragment extends Fragment implements IScoreActionListener {
                 if (game != null)
                     updatePoints(game);
 
-                SkatScoreAdapter adapter = (SkatScoreAdapter)binding.scoresRv.getAdapter();
-                if (adapter != null) {
-                    adapter.updateNumberOfRounds(skatSettings.getNumberOfRounds());
-                    adapter.notifyItemRangeChanged(0, skatSettings.getNumberOfRounds());
+                if (scoreAdapter != null) {
+                    scoreAdapter.setNumberOfRounds(skatSettings.getNumberOfRounds());
+                    scoreAdapter.notifyItemRangeChanged(0, scoreAdapter.getItemCount());
                 }
-
             }
         };
         viewModel.getSettings().observe(getViewLifecycleOwner(), settingsObserver);
 
         final Observer<ScoreEvent> scoreEventObserver = scoreEvent -> {
-            Log.d("ScoreEvent", "New score is added at position: "
-                    + scoreEvent.getScore().getIndex());
+            SkatScore score = scoreEvent.getScore();
+            Log.d("ScoreEvent", "New score is added, id: " + score.getId());
             if (scoreEvent.getEventType() == ScoreEventType.CREATE) {
                 viewModel.addScore(scoreEvent.getScore());
-                SkatScoreAdapter adapter = (SkatScoreAdapter) binding.scoresRv.getAdapter();
-                if (adapter != null) {
-                    adapter.notifyItemInserted(scoreEvent.getScore().getIndex());
+                if (scoreAdapter != null) {
+                    scoreAdapter.notifyItemInserted(scoreAdapter.getItemCount() - 1);
                 }
             }
             else {
-                Log.d("ScoreEvent", "Score is updated at position: "
-                        + scoreEvent.getScore().getIndex());
+                Log.d("ScoreEvent", "Score was updated, id: " + score.getId());
                 viewModel.updateScore(scoreEvent.getScore());
-                SkatScoreAdapter adapter = (SkatScoreAdapter) binding.scoresRv.getAdapter();
-                if (adapter != null) {
-                    adapter.notifyItemChanged(scoreEvent.getScore().getIndex());
+                if (scoreAdapter != null) {
+                    int position = scoreAdapter.getPosition(score.getId());
+                    if (position >= 0) {
+                        scoreAdapter.notifyItemChanged(position);
+                    }
                 }
             }
         };
@@ -303,27 +267,18 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     }
 
     private void initializeUI() {
-        //updatePoints(Objects.requireNonNull(viewModel.getGame().getValue()));
+        // Empty
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void updatePoints(SkatGame game) {
         // Set adapter items
-        SkatScoreAdapter adapter = (SkatScoreAdapter)binding.scoresRv.getAdapter();
-        if (adapter != null) {
+        if (scoreAdapter != null) {
             List<SkatScore> scores = game.getScores();
-            if (adapter.getScores() != scores) {
-                adapter.updateScores(scores);
-                adapter.notifyDataSetChanged();
+            if (scoreAdapter.getScores() != scores) {
+                scoreAdapter.setScores(scores);
             }
-            //List<SkatScore> oldScores = adapter.getScores();
-            //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
-            //        new SkatScoreDiffCallback(oldScores, newScores));
-            //adapter.updateScores(newScores);
-            //diffResult.dispatchUpdatesTo(adapter);
-            //adapter.notifyItemRangeChanged(0, Math.max(newScores.size(), oldScores.size()));
         }
-        //binding.scoresRv.invalidate();
 
         ArrayList<Integer> playerPoints = new ArrayList<>();
         playerPoints.add(0);//game.getIndividualPoints();
@@ -341,13 +296,13 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         Result<SkatScore> deleteResult = viewModel.removeLastScore();
         if (deleteResult.isFailure()) {
             Snackbar.make(requireView(), deleteResult.getMessage(), Snackbar.LENGTH_SHORT)
-                    .setAction("GOT IT", view -> { onDestroy(); })
+                    .setAction("GOT IT", view -> onDestroy())
                     .show();
             return;
         }
-        SkatScoreAdapter adapter = (SkatScoreAdapter) binding.scoresRv.getAdapter();
-        if (adapter != null) {
-            adapter.notifyItemRemoved(deleteResult.getValue().getIndex());
+        if (scoreAdapter != null) {
+            int position = scoreAdapter.getPosition(deleteResult.getValue().getId());
+            scoreAdapter.notifyItemRemoved(position);
         }
     }
 
@@ -376,7 +331,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
                 .build();
         Bundle bundle = new Bundle();
         bundle.putParcelable("scoreRequest", scoreRequest);
-        findNavController().navigate(R.id.action_navigation_game_to_scoreFragment, bundle);
+        findNavController().navigate(R.id.action_game_to_score, bundle);
     }
 
     private void setupViewModel() {
@@ -396,7 +351,8 @@ public class GameFragment extends Fragment implements IScoreActionListener {
             throw new RuntimeException("GameFragment needs nonnull command or game ID");
         }
 
-        playerVM = new ViewModelProvider(this, selectPlayerVMFactory).get(SelectPlayerViewModel.class);
+        selectPlayerViewModel = new ViewModelProvider(this, selectPlayerVMFactory)
+                .get(SelectPlayerViewModel.class);
     }
 
     private void setupNavigation() {
@@ -408,23 +364,17 @@ public class GameFragment extends Fragment implements IScoreActionListener {
                 .setTitle("Who was dealer in the first round?")
                 //.setView()
                 .setNegativeButton("Cancel", (d, i) -> d.cancel())
-                .setPositiveButton("Save", (d, i) -> {
-                    d.dismiss();
-                })
+                .setPositiveButton("Save", (d, i) -> d.dismiss())
                 .create()
                 .show();
     }
-
-    private PlayerSelectionValidator validator;
 
     @SuppressLint("InflateParams")
     private void showEditPlayerDialog() {
         // Get current players and registered players
         List<Player> currentPlayers = viewModel.getPlayers().getValue();
         assert currentPlayers != null;
-        List<Player> allPlayers = playerVM.getAllPlayers();
-        validator = new PlayerSelectionValidator(allPlayers);
-        validator.initialize(currentPlayers.stream().map(Player::getName).collect(Collectors.toList()));
+        List<Player> allPlayers = selectPlayerViewModel.getAllPlayers();
 
         View contentView = getLayoutInflater().inflate(R.layout.dialog_player_names, null);
         TextInputLayout input1 = contentView.findViewById(R.id.player1_input);
@@ -442,7 +392,8 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         editPlayer3.setText(currentPlayers.get(2).getName());
         editPlayer3.setSelection(editPlayer3.getText().length());
 
-        ArrayAdapter<Player> adapter = new ArrayAdapter<>(requireContext(), R.layout.text_input_list_item, allPlayers);
+        ArrayAdapter<Player> adapter =
+                new ArrayAdapter<>(requireContext(), R.layout.text_input_list_item, allPlayers);
         editPlayer1.setAdapter(adapter);
         editPlayer2.setAdapter(adapter);
         editPlayer3.setAdapter(adapter);
@@ -456,12 +407,10 @@ public class GameFragment extends Fragment implements IScoreActionListener {
                     String name2 = editPlayer2.getText().toString().trim();
                     String name3 = editPlayer3.getText().toString().trim();
 
-                    Player player1 = validator.isNewPlayer(name1) ?
-                            playerVM.createPlayer(name1).getValue() : validator.getPlayer(name1);
-                    Player player2 = validator.isNewPlayer(name2) ?
-                            playerVM.createPlayer(name2).getValue() : validator.getPlayer(name2);
-                    Player player3 = validator.isNewPlayer(name3) ?
-                            playerVM.createPlayer(name3).getValue() : validator.getPlayer(name3);
+                    // Map names to players
+                    Player player1 = mapToPlayer(name1);
+                    Player player2 = mapToPlayer(name2);
+                    Player player3 = mapToPlayer(name3);
 
                     List<Player> newPlayers = Arrays.asList(player1, player2, player3);
                     viewModel.updatePlayers(newPlayers);
@@ -474,11 +423,33 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         addTextChangeListener(editPlayer2, input2, dialog, 1);
         addTextChangeListener(editPlayer3, input3, dialog, 2);
 
+        if (playerValidator == null) {
+            playerValidator = new PlayerSelectionValidator();
+        }
+        playerValidator.initialize(
+                allPlayers,
+                currentPlayers.stream()
+                        .map(Player::getName)
+                        .collect(Collectors.toList())
+        );
+
         dialog.show();
     }
 
-    private void addTextChangeListener(AutoCompleteTextView textView, TextInputLayout inputLayout,
-                                       AlertDialog dialog, int position) {
+    private Player mapToPlayer(String name) {
+        Result<Player> playerResult = selectPlayerViewModel.findOrCreatePlayer(name);
+        if (playerResult.isFailure()) {
+            return Player.createDummy(0);
+        }
+        return playerResult.getValue();
+    }
+
+    private void addTextChangeListener(
+            AutoCompleteTextView textView,
+            TextInputLayout inputLayout,
+            AlertDialog dialog,
+            int position
+    ) {
         textView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -505,8 +476,8 @@ public class GameFragment extends Fragment implements IScoreActionListener {
                 }
 
                 String name = s.toString().trim();
-                validator.select(position, name);
-                List<Pair<MessageType, String>> messages = validator.validate();
+                playerValidator.select(position, name);
+                List<Pair<MessageType, String>> messages = playerValidator.validate();
                 MessageType type = messages.get(position).first;
                 String message = messages.get(position).second;
 
@@ -522,15 +493,13 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         });
     }
 
-    /** @noinspection DataFlowIssue*/
+    /** */
     private void setUpRecyclerView() {
         binding.scoresRv.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.scoresRv.setAdapter(
-                new SkatScoreAdapter(
-                        new ArrayList<>(), this, 0
-                )
-        );
-        binding.scoresRv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+        scoreAdapter = new SkatScoreAdapter(this);
+        binding.scoresRv.setAdapter(scoreAdapter);
+        binding.scoresRv.addItemDecoration(
+                new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
     }
 
     private void setTitle(String title) {
@@ -544,24 +513,19 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
             List<Player> players = viewModel.getPlayers().getValue();
             assert players != null;
-            Random random = new Random();
-            int index = random.nextInt(players.size());
-            int points = random.nextInt(39) + 18;
-            //SkatScore newScore = new SkatScore(points, players.get(index));
-            //viewModel.addScore(newScore);
-            //binding.scoresRv.smoothScrollToPosition(
-            //        Objects.requireNonNull(viewModel.getGame().getValue()).getScores().size() - 1);
 
+            SkatGame game = viewModel.getGame().getValue();
+            long gameId = game != null ? game.getId() : -1L;
             ScoreRequest scoreRequest = new ScoreRequest.Builder()
-                    .setPlayerNames(
-                            players.get(0).getName(),
+                    .setGameId(gameId)
+                    .setPlayerNames(players.get(0).getName(),
                             players.get(1).getName(),
                             players.get(2).getName())
                     .setPlayerPositions(0, 1, 2)
                     .build();
             Bundle bundle = new Bundle();
             bundle.putParcelable("scoreRequest", scoreRequest);
-            findNavController().navigate(R.id.action_navigation_game_to_scoreFragment, bundle);
+            findNavController().navigate(R.id.action_game_to_score, bundle);
         });
     }
 }

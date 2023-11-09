@@ -3,28 +3,24 @@ package com.damhoe.scoresheetskat.game.adapter.in.ui;
 import androidx.lifecycle.ViewModel;
 
 import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.player.application.ports.in.GetPlayersUseCase;
-import com.damhoe.scoresheetskat.player.application.ports.in.ManagePlayerUseCase;
+import com.damhoe.scoresheetskat.player.application.ports.in.GetPlayerUseCase;
 import com.damhoe.scoresheetskat.player.domain.Player;
 
 import java.util.List;
 
 class SelectPlayerViewModel extends ViewModel {
-   private final ManagePlayerUseCase managePlayerUseCase;
-   private final GetPlayersUseCase getPlayersUseCase;
+   private final GetPlayerUseCase getPlayerUseCase;
 
 
-   SelectPlayerViewModel(ManagePlayerUseCase managePlayerUseCase,
-                         GetPlayersUseCase getPlayersUseCase) {
-      this.managePlayerUseCase = managePlayerUseCase;
-      this.getPlayersUseCase = getPlayersUseCase;
+   SelectPlayerViewModel(GetPlayerUseCase getPlayerUseCase) {
+      this.getPlayerUseCase = getPlayerUseCase;
    }
 
    protected List<Player> getAllPlayers() {
-      return getPlayersUseCase.loadAll();
+      return getPlayerUseCase.getPlayers();
    }
 
-   protected Result<Player> createPlayer(String name) {
-      return managePlayerUseCase.createPlayer(name);
+   protected Result<Player> findOrCreatePlayer(String name) {
+      return getPlayerUseCase.findOrCreate(name);
    }
 }

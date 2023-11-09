@@ -40,7 +40,7 @@
             app:popEnterAnim="@android:anim/slide_in_left" />
         <action
             android:id="@+id/action_home_to_players"
-            app:destination="@id/playersFragment"
+            app:destination="@id/playerFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
@@ -48,6 +48,13 @@
         <action
             android:id="@+id/action_home_to_history"
             app:destination="@id/historyFragment" />
+        <action
+            android:id="@+id/action_home_to_navigation_game"
+            app:destination="@id/navigation_game"
+            app:exitAnim="@anim/exit_to_bottom"
+            app:enterAnim="@anim/zoom_fade_in"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"/>
     </fragment>
 
     <fragment
@@ -82,7 +89,7 @@
     <fragment
         android:id="@+id/navigation_game"
         android:name="com.damhoe.scoresheetskat.game.adapter.in.ui.GameFragment"
-        tools:layout="@layout/fragment_game" >
+        tools:layout="@layout/fragment_game_v2" >
         <argument
             android:name="ShowBottomAppBar"
             android:defaultValue="false" />
@@ -98,7 +105,7 @@
             android:defaultValue="-1L" />
 
         <action
-            android:id="@+id/action_navigation_game_to_scoreFragment"
+            android:id="@+id/action_game_to_score"
             app:destination="@id/scoreFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -137,8 +144,8 @@
         android:name="com.damhoe.scoresheetskat.app.help.HelpFragment"
         tools:layout="@layout/fragment_help" />
     <fragment
-        android:id="@+id/playersFragment"
-        android:name="com.damhoe.scoresheetskat.player.adapter.in.ui.PlayersFragment"
+        android:id="@+id/playerFragment"
+        android:name="com.damhoe.scoresheetskat.player.adapter.in.ui.PlayerFragment"
         tools:layout="@layout/fragment_players">
         <action
             android:id="@+id/action_playersFragment_to_player_details"
@@ -170,8 +177,15 @@
             app:popExitAnim="@anim/exit_to_bottom" />
         <action
             android:id="@+id/action_history_to_players"
-            app:destination="@id/playersFragment"
+            app:destination="@id/playerFragment"
             app:popUpTo="@id/home" />
+        <action
+            android:id="@+id/action_historyFragment_to_navigation_game"
+            app:destination="@id/navigation_game"
+            app:exitAnim="@anim/exit_to_bottom"
+            app:enterAnim="@anim/zoom_fade_in"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"/> />
     </fragment>
 
 </navigation>

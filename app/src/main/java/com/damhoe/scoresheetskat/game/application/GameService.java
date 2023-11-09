@@ -1,16 +1,17 @@
 package com.damhoe.scoresheetskat.game.application;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 
 import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.game.application.ports.in.AddScoreToGameUseCase;
 import com.damhoe.scoresheetskat.game.application.ports.in.CreateGameUseCase;
 import com.damhoe.scoresheetskat.game.application.ports.in.LoadGameUseCase;
 import com.damhoe.scoresheetskat.game.application.ports.out.GamePort;
-import com.damhoe.scoresheetskat.game.domain.GamePreview;
+import com.damhoe.scoresheetskat.game.domain.SkatGamePreview;
 import com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
-import com.damhoe.scoresheetskat.score.application.ports.in.CUDScoreUseCase;
+import com.damhoe.scoresheetskat.score.application.ports.in.CreateScoreUseCase;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 
 import java.util.Date;
@@ -20,12 +21,12 @@ import javax.inject.Inject;
 
 public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, LoadGameUseCase {
     private final GamePort crudGamePort;
-    private final CUDScoreUseCase cudScoreUseCase;
+    private final CreateScoreUseCase createScoreUseCase;
 
     @Inject
-    public GameService(GamePort crudGamePort, CUDScoreUseCase cudScoreUseCase) {
+    public GameService(GamePort crudGamePort, CreateScoreUseCase createScoreUseCase) {
         this.crudGamePort = crudGamePort;
-        this.cudScoreUseCase = cudScoreUseCase;
+        this.createScoreUseCase = createScoreUseCase;
     }
 
 
@@ -34,13 +35,10 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
         // Set game data
         int index = skatGame.getScores().size();
         long gameId = skatGame.getId();
-        score.setIndex(index);
         score.setGameId(gameId);
         // Validation
         // Add score to game
         skatGame.addScore(score);
-        // Persist changes
-        crudGamePort.addScore(skatGame.getId(), score);
     }
 
     @Override
@@ -52,7 +50,7 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
         // Get score
         SkatScore lastScore = skatGame.getScores().get(count-1);
         // Delete score
-        Result<SkatScore> deleteResult = cudScoreUseCase.deleteScore(lastScore.getId());
+        Result<SkatScore> deleteResult = createScoreUseCase.deleteScore(lastScore.getId());
         if (deleteResult.isFailure()) {
             return Result.failure("Failed to remove score from game: " + deleteResult.getMessage());
         }
@@ -74,11 +72,21 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
 
     @Override
     public Result<SkatGame> deleteSkatGame(long id) {
-        SkatGame deletedGame = crudGamePort.deleteSkatGame(id);
+        SkatGame deletedGame = crudGamePort.deleteGame(id);
         if (deletedGame == null) {
             return Result.failure("Unable to delete SkatGame with id: " + id);
         }
         return Result.success(deletedGame);
+    }
+
+    @Override
+    public Result<SkatGame> updateSkatGame(SkatGame game) {
+        try {
+            return Result.success(crudGamePort.updateGame(game));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Result.failure(ex.getMessage());
+        }
     }
 
     private static boolean isInvalidTitle(String title) {
@@ -87,7 +95,7 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
 
     @Override
     public Result<SkatGame> getGame(long id) {
-        SkatGame game = crudGamePort.loadSkatGame(id);
+        SkatGame game = crudGamePort.getGame(id);
         if (game == null) {
             return Result.failure("Unable to load Game with id: " + id);
         }
@@ -95,12 +103,17 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
     }
 
     @Override
-    public Result<List<GamePreview>> getGamesSince(@Nullable Date oldest) {
-        return null;
+    public LiveData<List<SkatGamePreview>> getGamesSince(@Nullable Date oldest) {
+        return crudGamePort.getGamesSince(oldest);
     }
 
     @Override
-    public Result<List<GamePreview>> getUnfinishedGames() {
-        return null;
+    public LiveData<List<SkatGamePreview>> getUnfinishedGames() {
+        return crudGamePort.getUnfinishedGames();
+    }
+
+    @Override
+    public void refreshDataFromRepository() {
+        crudGamePort.refreshGamePreviews();
     }
 }

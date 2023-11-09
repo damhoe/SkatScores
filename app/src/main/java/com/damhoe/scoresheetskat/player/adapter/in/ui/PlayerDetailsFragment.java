@@ -39,9 +39,9 @@ import javax.inject.Inject;
 public class PlayerDetailsFragment extends Fragment {
 
     private FragmentPlayerDetailsBinding binding;
-    private PlayersViewModel viewModel;
+    private PlayerViewModel viewModel;
     @Inject
-    PlayersViewModelFactory viewModelFactory;
+    PlayerViewModelFactory viewModelFactory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -164,18 +164,29 @@ public class PlayerDetailsFragment extends Fragment {
                 ((MainActivity)requireActivity()).getAppBarConfiguration();
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
 
-        viewModel = new ViewModelProvider(requireActivity(), viewModelFactory).get(PlayersViewModel.class);
-        viewModel.getSelectedPlayer().observe(getViewLifecycleOwner(), player -> {
-            updateUI(player);
-        });
+        viewModel = new ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(PlayerViewModel.class);
+        viewModel.getSelectedPlayer().observe(getViewLifecycleOwner(), this::updateUI);
         initializeUI();
     }
 
     private void updateUI(Player player) {
+        String gameCountTemplate = getString(R.string.template_game_count_long);
+        String createdAtTemplate = getString(R.string.template_created_at);
+        String updatedAtTemplate = getString(R.string.template_updated_at);
+
         binding.name.setText(player.getName());
-        binding.created.setText("Created at " + new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(player.getCreatedAt()));
-        binding.updated.setText("Last updated at " + new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(player.getUpdatedAt()));
-        binding.numberGames.setText("Played 0 games");
+        binding.created.setText(String.format(createdAtTemplate,
+                new SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                        .format(player.getCreatedAt())
+                )
+        );
+        binding.updated.setText(String.format(updatedAtTemplate,
+                new SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                        .format(player.getUpdatedAt())
+                )
+        );
+        binding.numberGames.setText(String.format(gameCountTemplate, player.getGameCount()));
     }
 
     private void initializeUI() {

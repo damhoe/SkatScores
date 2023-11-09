@@ -1,93 +1,124 @@
 package com.damhoe.scoresheetskat.player.application;
 
-import android.content.res.Resources;
+import android.database.SQLException;
 
-import com.damhoe.scoresheetskat.R;
+import androidx.lifecycle.LiveData;
+
 import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.base.SearchResult;
-import com.damhoe.scoresheetskat.player.application.ports.in.ManagePlayerUseCase;
-import com.damhoe.scoresheetskat.player.application.ports.in.GetPlayersUseCase;
+import com.damhoe.scoresheetskat.player.application.ports.in.UpdatePlayerUseCase;
+import com.damhoe.scoresheetskat.player.application.ports.in.GetPlayerUseCase;
 import com.damhoe.scoresheetskat.player.application.ports.out.CreatePlayerPort;
-import com.damhoe.scoresheetskat.player.application.ports.out.LoadPlayerPort;
+import com.damhoe.scoresheetskat.player.application.ports.out.GetPlayerPort;
 import com.damhoe.scoresheetskat.player.application.ports.out.UpdatePlayerPort;
 import com.damhoe.scoresheetskat.player.domain.Player;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
-public class PlayerService implements ManagePlayerUseCase, GetPlayersUseCase {
+public class PlayerService implements UpdatePlayerUseCase, GetPlayerUseCase {
 
-    private final LoadPlayerPort loadPlayerPort;
-    private final CreatePlayerPort createPlayerPort;
-    private final UpdatePlayerPort updatePlayerPort;
+    private final GetPlayerPort mGetPlayerPort;
+    private final CreatePlayerPort mCreatePlayerPort;
+    private final UpdatePlayerPort mUpdatePlayerPort;
 
     @Inject
-    PlayerService(LoadPlayerPort loadPlayerPort,
-                  CreatePlayerPort createPlayerPort,
-                  UpdatePlayerPort updatePlayerPort) {
-        this.loadPlayerPort = loadPlayerPort;
-        this.createPlayerPort = createPlayerPort;
-        this.updatePlayerPort = updatePlayerPort;
+    PlayerService(
+            GetPlayerPort getPlayerPort,
+            CreatePlayerPort createPlayerPort,
+            UpdatePlayerPort updatePlayerPort
+    ) {
+        mGetPlayerPort = getPlayerPort;
+        mCreatePlayerPort = createPlayerPort;
+        mUpdatePlayerPort = updatePlayerPort;
+    }
+
+    @Override
+    public LiveData<List<Player>> getPlayersLiveData() {
+        return mGetPlayerPort.getPlayersLiveData();
+    }
+
+    @Override
+    public List<Player> getPlayers() {
+        return mGetPlayerPort.getPlayers();
+    }
+
+    @Override
+    public Result<Player> getPlayer(long id) {
+        try {
+            Player player = mGetPlayerPort.getPlayer(id);
+            if (player == null) {
+                return Result.failure("Unable to find player with id: " + id);
+            }
+            return Result.success(player);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return Result.failure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public Result<Player> findOrCreate(String name) {
+        try {
+            if (Player.isDummyName(name)) {
+                return Result.success(Player.createDummy(name));
+            }
+
+            List<Player> players = mGetPlayerPort.getPlayers();
+            Optional<Player> optionalPlayer = players.stream()
+                    .filter(x -> x.getName().equals(name))
+                    .findFirst();
+
+            return optionalPlayer.map(Result::success)
+                    .orElseGet(() -> createPlayer(name));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Result.failure(ex.getMessage());
+        }
     }
 
     @Override
     public Result<Player> createPlayer(String name) {
-        if (createPlayerPort.isPlayerNameExistent(name)) {
-            return Result.failure("A player with this name already exists.");
-        }
-        Player p = createPlayerPort.createPlayer(name);
-        return Result.success(p);
-    }
-
-    @Override
-    public Result<Boolean> renamePlayer(long id, String name) {
-        if (isEmptyName(name))
-            return Result.failure("Invalid player name");
-        if (createPlayerPort.isPlayerNameExistent(name)) {
-            return Result.failure(
-                    Resources.getSystem().getString(R.string.error_player_name_exists));
-        }
-        return Result.success(updatePlayerPort.updateName(id, name));
-    }
-
-    @Override
-    public Result<Player> deletePlayer(Player player) {
-        return Result.success(createPlayerPort.deletePlayer(player.getID()));
-    }
-
-    @Override
-    public Result<Boolean> checkIfNameExists(String name) {
         try {
-            return Result.success(createPlayerPort.isPlayerNameExistent(name));
-        } catch (Exception e) {
-            return Result.failure(e.getMessage());
+            return Result.success(mCreatePlayerPort.createPlayer(name));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return Result.failure(ex.getMessage());
         }
     }
 
-    private boolean isEmptyName(String name) {
-        return Objects.equals(name, "");
-    }
-
     @Override
-    public Player getPlayer(long id) {
-        return loadPlayerPort.loadPlayer(id);
-    }
-
-    @Override
-    public SearchResult<Player> searchForPlayersWithName(String name) {
-        if (isEmptyName(name)) {
-            return new SearchResult.Builder<Player>()
-                    .hits(Collections.emptyList())
-                    .build();
+    public Result<Player> deletePlayer(long id) {
+        try {
+            return Result.success(mCreatePlayerPort.deletePlayer(id));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return Result.failure(ex.getMessage());
         }
-        return loadPlayerPort.searchByName(name);
     }
 
     @Override
-    public List<Player> loadAll() {
-        return loadPlayerPort.loadAllPlayers();
+    public boolean isNameExistent(String name) {
+        List<Player> players = getPlayersLiveData().getValue();
+        if (players == null) {
+            return false;
+        }
+        return players.stream().anyMatch(x -> x.getName().equals(name));
+    }
+
+    @Override
+    public void refreshPlayers() {
+        mGetPlayerPort.refreshPlayersFromRepository();
+    }
+
+    @Override
+    public Result<Player> renamePlayer(long id, String name) {
+        try {
+            return Result.success(mUpdatePlayerPort.updateName(id, name));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return Result.failure(ex.getMessage());
+        }
     }
 }

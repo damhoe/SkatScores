@@ -45,7 +45,7 @@
                     android:background="@android:color/transparent"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="Solo player"
+                    android:text="@string/title_solo_player"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -58,7 +58,7 @@
                     android:background="@android:color/transparent"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="Result"
+                    android:text="@string/title_result"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/toggleGroupSoloPlayer" />
@@ -71,7 +71,7 @@
                     android:background="@android:color/transparent"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="With / Without"
+                    android:text="@string/title_spitzen"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/toggleGroupResult" />
@@ -83,7 +83,7 @@
                     android:layout_marginStart="16dp"
                     android:background="@android:color/transparent"
                     android:padding="8dp"
-                    android:text="1"
+                    tools:text="1"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                     app:layout_constraintBottom_toBottomOf="@id/spitzen_title"
                     app:layout_constraintStart_toEndOf="@id/spitzen_title"
@@ -97,7 +97,7 @@
                     android:background="@android:color/transparent"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="Suit"
+                    android:text="@string/title_suit"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/spitzen_slider" />
@@ -110,7 +110,7 @@
                     android:background="@android:color/transparent"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="Announcements"
+                    android:text="@string/title_announcements"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/toggleGroupSpecialSuit" />
@@ -123,7 +123,7 @@
                     android:background="@android:color/transparent"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="Win levels"
+                    android:text="@string/title_win_levels"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/announcements_chips" />
@@ -133,7 +133,7 @@
                     style="@style/Widget.Material3.Button.IconButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Increase number of Spitzen"
+                    android:contentDescription="@string/description_increase_spitzen"
                     app:icon="@drawable/ic_add_black_24dp"
                     app:layout_constraintBottom_toBottomOf="@id/spitzen_slider"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +144,7 @@
                     style="@style/Widget.Material3.Button.IconButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Remove number of Spitzen."
+                    android:contentDescription="@string/description_lower_spitzen"
                     app:icon="@drawable/ic_remove_black_24dp"
                     app:layout_constraintBottom_toBottomOf="@id/spitzen_slider"
                     app:layout_constraintStart_toStartOf="parent"
@@ -169,7 +169,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                        tools:text="Player 1" />
+                        tools:text="Player 1"
+                        tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonPlayer2"
@@ -178,7 +179,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                        tools:text="Player 2" />
+                        tools:text="Player 2"
+                        tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonPlayer3"
@@ -187,7 +189,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                        tools:text="Player 3" />
+                        tools:text="Player 3"
+                        tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonPasse"
@@ -195,8 +198,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Passe"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                        android:text="@string/label_passe"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                        tools:ignore="VisualLintButtonSize" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -219,7 +223,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:checked="true"
-                        android:text="Won" />
+                        android:text="@string/label_won"
+                        tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonLost"
@@ -227,7 +232,17 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Lost" />
+                        android:text="@string/label_lost"
+                        tools:ignore="VisualLintButtonSize" />
+
+                    <com.google.android.material.button.MaterialButton
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:id="@+id/buttonOverbid"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/label_overbid"
+                        tools:ignore="VisualLintButtonSize" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -241,7 +256,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/type_title"
                     app:selectionRequired="true"
-
                     app:singleSelection="true">
 
                     <com.google.android.material.button.MaterialButton
@@ -250,7 +264,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:icon="@drawable/clubs" />
+                        android:contentDescription="@string/description_clubs"
+                        app:icon="@drawable/clubs"
+                        tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonSpades"
@@ -258,7 +274,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:icon="@drawable/spades" />
+                        android:contentDescription="@string/description_spades"
+                        app:icon="@drawable/spades"
+                        tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonHearts"
@@ -266,8 +284,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:contentDescription="@string/description_hearts"
                         app:icon="@drawable/hearts"
-                        app:iconTint="?colorTertiary" />
+                        app:iconTint="?colorTertiary"
+                        tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonDiamonds"
@@ -275,8 +295,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:contentDescription="@string/description_diamonds"
                         app:icon="@drawable/diamonds"
-                        app:iconTint="?colorTertiary" />
+                        app:iconTint="?colorTertiary"
+                        tools:ignore="VisualLintButtonSize" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -300,7 +322,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:checked="true"
-                        android:text="Grand" />
+                        android:text="@string/label_grand"
+                        tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonNull"
@@ -308,7 +331,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Null" />
+                        android:text="@string/label_null"
+                        tools:ignore="VisualLintButtonSize" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -325,14 +349,14 @@
                         style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Schneider announced" />
+                        android:text="@string/label_schneider_announced" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schwarz_announced_chip"
                         style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Schwarz announced" />
+                        android:text="@string/label_schwarz_announced" />
 
                 </com.google.android.material.chip.ChipGroup>
 
@@ -349,28 +373,28 @@
                         style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hand" />
+                        android:text="@string/label_hand" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/ouvert_chip"
                         style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Over" />
+                        android:text="@string/label_ouvert" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schneider_chip"
                         style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Schneider" />
+                        android:text="@string/label_schneider" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schwarz_chip"
                         style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Schwarz" />
+                        android:text="@string/label_schwarz" />
 
                 </com.google.android.material.chip.ChipGroup>
 
@@ -378,7 +402,7 @@
                     android:id="@+id/spitzen_slider"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Number of Spitzen"
+                    android:contentDescription="@string/description_spitzen_slider"
                     android:stepSize="1"
                     android:value="2"
                     android:valueFrom="1"

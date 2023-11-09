@@ -24,6 +24,7 @@ import com.damhoe.scoresheetskat.databinding.FragmentScoreBinding;
 import com.damhoe.scoresheetskat.score.domain.ScoreEvent;
 import com.damhoe.scoresheetskat.score.domain.ScoreEventType;
 import com.damhoe.scoresheetskat.score.domain.ScoreRequest;
+import com.damhoe.scoresheetskat.score.domain.SkatResult;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 import com.damhoe.scoresheetskat.score.domain.SkatScoreCommand;
 import com.damhoe.scoresheetskat.score.domain.SkatSuit;
@@ -32,7 +33,6 @@ import com.damhoe.scoresheetskat.shared_ui.utils.LayoutMargins;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.slider.Slider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,15 +78,19 @@ public class ScoreFragment extends Fragment {
         initializeButtonPlayerActionMap();
 
         binding.toggleGroupSoloPlayer.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            // showOrHideCheckedIcon(group, checkedId, isChecked);
             if (isChecked) {
                 handlePlayerButtonCheck(checkedId);
             }
         });
         binding.toggleGroupResult.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            // showOrHideCheckedIcon(group, checkedId, isChecked);
             if (isChecked) {
-                viewModel.setWon(checkedId == R.id.buttonWon);
+                if (checkedId == R.id.buttonOverbid) {
+                    viewModel.setResult(SkatResult.OVERBID);
+                } else if (checkedId == R.id.buttonWon){
+                    viewModel.setResult(SkatResult.WON);
+                } else {
+                    viewModel.setResult(SkatResult.LOST);
+                }
             }
         });
         binding.toggleGroupSuit.addOnButtonCheckedListener(((group, checkedId, isChecked) -> {
@@ -101,35 +105,24 @@ public class ScoreFragment extends Fragment {
                 handleSuitButtonCheck(checkedId);
             }
         }));
-        binding.announcementsChips.setOnCheckedStateChangeListener(new ChipGroup.OnCheckedStateChangeListener() {
-            @Override
-            public void onCheckedChanged(@NonNull ChipGroup group, @NonNull List<Integer> checkedIds) {
-                binding.content.requestLayout();
-                handleAnnouncementChips(checkedIds);
-            }
+        binding.announcementsChips.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            binding.content.requestLayout();
+            handleAnnouncementChips(checkedIds);
         });
         binding.winLevelChips.setOnCheckedStateChangeListener(((group, checkedIds) -> {
             binding.content.requestLayout();
             handleWinLevelChips(checkedIds);
         }));
-        binding.spitzenSlider.addOnChangeListener(new Slider.OnChangeListener() {
-            @Override
-            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                binding.spitzenLabel.setText(String.valueOf((int) value));
-                viewModel.setSpitzen((int) value);
-                binding.spitzenAddButton.setEnabled(value < slider.getValueTo());
-                binding.spitzenRemoveButton.setEnabled(value > slider.getValueFrom());
-            }
+        binding.spitzenSlider.addOnChangeListener((slider, value, fromUser) -> {
+            binding.spitzenLabel.setText(String.valueOf((int) value));
+            viewModel.setSpitzen((int) value);
         });
-
-        binding.spitzenRemoveButton.setOnClickListener(view -> {
-            binding.spitzenSlider.setValue(binding.spitzenSlider.getValue() - 1);
-        });
-
-        binding.spitzenAddButton.setOnClickListener(view -> {
-            binding.spitzenSlider.setValue(binding.spitzenSlider.getValue() + 1);
-        });
-
+        binding.spitzenRemoveButton.setOnClickListener(
+                view -> binding.spitzenSlider.setValue(binding.spitzenSlider.getValue() - 1)
+        );
+        binding.spitzenAddButton.setOnClickListener(
+                view -> binding.spitzenSlider.setValue(binding.spitzenSlider.getValue() + 1)
+        );
         binding.scoreDoneButton.setOnClickListener(view -> {
             saveScore();
             findNavController().navigateUp();
@@ -140,19 +133,23 @@ public class ScoreFragment extends Fragment {
     private void handleAnnouncementChips(@NonNull List<Integer> checkedIds) {
         // Schwarz is checked only if Schneider is also checked
         if (checkedIds.contains(R.id.schwarz_announced_chip) &&
-                !binding.schneiderAnnouncedChip.isChecked()) {
-            binding.schneiderAnnouncedChip.setChecked(true);
+                !checkedIds.contains(R.id.schneider_announced_chip)) {
+            binding.announcementsChips.check(R.id.schneider_announced_chip);
+            return;
         }
+
         // Set viewModel data
         viewModel.setSchneiderAnnounced(checkedIds.contains(R.id.schneider_announced_chip));
         viewModel.setSchwarzAnnounced(checkedIds.contains(R.id.schwarz_announced_chip));
+
     }
 
     private void handleWinLevelChips(@NonNull List<Integer> checkedIds) {
         // Schwarz is checked only if Schneider is also checked
         if (checkedIds.contains(R.id.schwarz_chip) &&
-                !binding.schneiderChip.isChecked()) {
-            binding.schneiderChip.setChecked(true);
+                !checkedIds.contains(R.id.schneider_chip)) {
+            binding.winLevelChips.check(R.id.schneider_chip);
+            return;
         }
         viewModel.setHand(checkedIds.contains(R.id.hand_chip));
         viewModel.setOuvert(checkedIds.contains(R.id.ouvert_chip));
@@ -177,7 +174,7 @@ public class ScoreFragment extends Fragment {
 
     // Action if the button gets checked
     private void initializeButtonPlayerActionMap() {
-        buttonPlayerActionMap.put(binding.buttonPasse.getId(), () -> viewModel.setPassed(true));
+        buttonPlayerActionMap.put(binding.buttonPasse.getId(), () -> viewModel.setPasse());
         buttonPlayerActionMap.put(binding.buttonPlayer1.getId(),
                 () -> viewModel.setPlayerPosition(viewModel.getPlayerPositions()[0]));
         buttonPlayerActionMap.put(binding.buttonPlayer2.getId(),
@@ -217,6 +214,7 @@ public class ScoreFragment extends Fragment {
         }
     }
 
+    /** @noinspection DataFlowIssue*/
     private void initializeUI() {
         String[] names = viewModel.getPlayerNames();
         if (names.length != 3) {
@@ -227,19 +225,25 @@ public class ScoreFragment extends Fragment {
         binding.buttonPlayer2.setText(names[1]);
         binding.buttonPlayer3.setText(names[2]);
 
-        SkatScoreCommand command = viewModel.getSkatScoreCommand().getValue();
+        SkatScoreCommand command = viewModel.getScoreCommand().getValue();
         if (command != null) {
             if (command.isPasse()) {
                 binding.toggleGroupSoloPlayer.check(R.id.buttonPasse);
                 binding.spitzenSlider.setValue(1);
-                binding.toggleGroupResult.check(R.id.buttonWon);
-                binding.toggleGroupSuit.check(R.id.buttonClubs);
                 return;
             }
+
+            if (command.isLost()) {
+                binding.toggleGroupResult.check(R.id.buttonLost);
+            } else if (command.isWon()) {
+                binding.toggleGroupResult.check(R.id.buttonWon);
+            } else {
+                binding.toggleGroupResult.check(R.id.buttonOverbid);
+            }
+
             playerPositionCheckButtonMap.get(command.getPlayerPosition()).run();
             suitCheckButtonMap.get(command.getSuit()).run();
             binding.spitzenSlider.setValue(command.getSpitzen());
-            binding.toggleGroupResult.check(command.isWon() ? R.id.buttonWon : R.id.buttonLost);
             binding.handChip.setChecked(command.isHand());
             binding.ouvertChip.setChecked(command.isOuvert());
             binding.schneiderChip.setChecked(command.isSchneider());
@@ -275,17 +279,53 @@ public class ScoreFragment extends Fragment {
         });
         viewModel.isSchneiderSchwarzEnabled.observe(getViewLifecycleOwner(),
                 this::enableSchneiderSchwarzChips);
-        viewModel.isOuvertEnabled.observe(getViewLifecycleOwner(), isEnabled ->  {
-            binding.ouvertChip.setEnabled(isEnabled);
-        });
-        viewModel.spitzenElementsEnabled.observe(getViewLifecycleOwner(), triple -> {
-            binding.spitzenSlider.setEnabled(triple.getFirst());
-            binding.spitzenRemoveButton.setEnabled(triple.getSecond());
-            binding.spitzenAddButton.setEnabled(triple.getThird());
-        });
-        viewModel.isResultEnabled.observe(getViewLifecycleOwner(), isEnabled -> {
+        viewModel.isOuvertEnabled.observe(getViewLifecycleOwner(),
+                isEnabled -> binding.ouvertChip.setEnabled(isEnabled)
+        );
+        viewModel.isSpitzenEnabled.observe(getViewLifecycleOwner(),
+                isEnabled -> binding.spitzenSlider.setEnabled(isEnabled)
+        );
+        viewModel.isIncreaseSpitzenEnabled.observe(getViewLifecycleOwner(),
+                isEnabled -> binding.spitzenAddButton.setEnabled(isEnabled)
+        );
+        viewModel.isDecreaseSpitzenEnabled.observe(getViewLifecycleOwner(),
+                isEnabled -> binding.spitzenRemoveButton.setEnabled(isEnabled)
+        );
+        viewModel.isResultsEnabled.observe(getViewLifecycleOwner(), isEnabled -> {
             binding.buttonWon.setEnabled(isEnabled);
             binding.buttonLost.setEnabled(isEnabled);
+            binding.buttonOverbid.setEnabled(isEnabled);
+        });
+        viewModel.getSkatResult.observe(getViewLifecycleOwner(), skatResult -> {
+            if (skatResult == SkatResult.WON) {
+                binding.toggleGroupResult.check(R.id.buttonWon);
+            } else if (skatResult == SkatResult.LOST) {
+                binding.toggleGroupResult.check(R.id.buttonLost);
+            } else if (skatResult == SkatResult.OVERBID) {
+                binding.toggleGroupResult.check(R.id.buttonOverbid);
+            } else {
+                binding.toggleGroupResult.clearChecked();
+            }
+        });
+        viewModel.getSuit.observe(getViewLifecycleOwner(), skatSuit -> {
+            if (skatSuit == SkatSuit.INVALID) {
+                binding.announcementsChips.clearCheck();
+                binding.winLevelChips.clearCheck();
+                binding.spitzenSlider.setValue(binding.spitzenSlider.getValueFrom());
+                binding.toggleGroupSuit.clearChecked();
+            } else if (skatSuit == SkatSuit.CLUBS) {
+                binding.toggleGroupSuit.check(R.id.buttonClubs);
+            } else if (skatSuit == SkatSuit.SPADES) {
+                binding.toggleGroupSuit.check(R.id.buttonSpades);
+            } else if (skatSuit == SkatSuit.HEARTS) {
+                binding.toggleGroupSuit.check(R.id.buttonHearts);
+            } else if (skatSuit == SkatSuit.DIAMONDS) {
+                binding.toggleGroupSuit.check(R.id.buttonDiamonds);
+            } else if (skatSuit == SkatSuit.NULL) {
+                binding.toggleGroupSuit.check(R.id.buttonNull);
+            } else if (skatSuit == SkatSuit.GRAND) {
+                binding.toggleGroupSuit.check(R.id.buttonGrand);
+            }
         });
 
         initializeUI();

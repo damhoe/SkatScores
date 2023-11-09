@@ -5,21 +5,21 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.viewmodel.CreationExtras;
 
-import com.damhoe.scoresheetskat.player.application.ports.in.GetPlayersUseCase;
-import com.damhoe.scoresheetskat.player.application.ports.in.ManagePlayerUseCase;
+import com.damhoe.scoresheetskat.player.application.ports.in.GetPlayerUseCase;
+import com.damhoe.scoresheetskat.player.application.ports.in.UpdatePlayerUseCase;
 
 import javax.inject.Inject;
 
 class SelectPlayerVMFactory implements ViewModelProvider.Factory {
 
-   private final GetPlayersUseCase getPlayersUseCase;
-   private final ManagePlayerUseCase managePlayerUseCase;
+   private final GetPlayerUseCase getPlayerUseCase;
+   private final UpdatePlayerUseCase updatePlayerUseCase;
 
    @Inject
-   SelectPlayerVMFactory(GetPlayersUseCase getPlayersUseCase,
-                         ManagePlayerUseCase managePlayerUseCase) {
-      this.getPlayersUseCase = getPlayersUseCase;
-      this.managePlayerUseCase = managePlayerUseCase;
+   SelectPlayerVMFactory(GetPlayerUseCase getPlayerUseCase,
+                         UpdatePlayerUseCase updatePlayerUseCase) {
+      this.getPlayerUseCase = getPlayerUseCase;
+      this.updatePlayerUseCase = updatePlayerUseCase;
    }
 
    /** @noinspection unchecked*/
@@ -27,7 +27,7 @@ class SelectPlayerVMFactory implements ViewModelProvider.Factory {
    @Override
    public <T extends ViewModel> T create(@NonNull Class<T> modelClass, @NonNull CreationExtras extras) {
       if (modelClass == SelectPlayerViewModel.class) {
-         return (T) new SelectPlayerViewModel(managePlayerUseCase, getPlayersUseCase);
+         return (T) new SelectPlayerViewModel(getPlayerUseCase);
       }
       throw new RuntimeException("This factory required SelectPlayerViewModel class");
    }
@@ -37,7 +37,7 @@ class SelectPlayerVMFactory implements ViewModelProvider.Factory {
    @Override
    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
       if (modelClass == SelectPlayerViewModel.class) {
-         return (T) new SelectPlayerViewModel(managePlayerUseCase, getPlayersUseCase);
+         return (T) new SelectPlayerViewModel(getPlayerUseCase);
       }
       throw new RuntimeException("This factory required SelectPlayerViewModel class");
    }

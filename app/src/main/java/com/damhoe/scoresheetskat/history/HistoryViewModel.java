@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.damhoe.scoresheetskat.game.application.ports.in.LoadGameUseCase;
-import com.damhoe.scoresheetskat.game.domain.GamePreview;
+import com.damhoe.scoresheetskat.game.domain.SkatGamePreview;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,8 +17,8 @@ public class HistoryViewModel extends ViewModel {
 
     private final LoadGameUseCase loadGameUseCase;
 
-    private final MutableLiveData<List<GamePreview>> lastMonthGames = new MutableLiveData<>();
-    private final MutableLiveData<List<GamePreview>> oldGames = new MutableLiveData<>();
+    private final MutableLiveData<List<SkatGamePreview>> lastMonthGames = new MutableLiveData<>();
+    private final MutableLiveData<List<SkatGamePreview>> oldGames = new MutableLiveData<>();
 
     @Inject
     public HistoryViewModel(LoadGameUseCase loadGameUseCase) {
@@ -26,17 +26,17 @@ public class HistoryViewModel extends ViewModel {
         initData();
     }
 
-    LiveData<List<GamePreview>> getOldGames() {
+    LiveData<List<SkatGamePreview>> getOldGames() {
         return oldGames;
     }
 
-    LiveData<List<GamePreview>> getLastMonthGames() {
+    LiveData<List<SkatGamePreview>> getLastMonthGames() {
         return lastMonthGames;
     }
 
     public void initData() {
-        List<GamePreview> previews = new ArrayList<>();
-        GamePreview p = new GamePreview();
+        List<SkatGamePreview> previews = new ArrayList<>();
+        SkatGamePreview p = new SkatGamePreview();
         p.setDate(Calendar.getInstance().getTime());
         p.setGameId(1234L);
         p.setFinished(false);

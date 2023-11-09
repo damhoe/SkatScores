@@ -1,9 +1,9 @@
 package com.damhoe.scoresheetskat.score.domain;
 
 public abstract class Score {
+   protected long id;
    protected int playerPosition;
    protected long gameId;
-   protected int index;
    public abstract int toPoints();
 
    public long getGameId() {
@@ -18,11 +18,12 @@ public abstract class Score {
       return playerPosition;
    }
 
-   public int getIndex() {
-      return index;
+   public long getId() {
+      return id;
    }
 
-   public void setIndex(int index) {
-      this.index = index;
+   public void setId(long id) {
+      this.id = id;
    }
+
 }

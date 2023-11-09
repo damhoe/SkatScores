@@ -1,100 +1,61 @@
 package com.damhoe.scoresheetskat.score.adapter.in.ui;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.score.application.ports.in.CUDScoreUseCase;
+import com.damhoe.scoresheetskat.score.application.ports.in.CreateScoreUseCase;
 import com.damhoe.scoresheetskat.score.domain.ScoreRequest;
+import com.damhoe.scoresheetskat.score.domain.SkatResult;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 import com.damhoe.scoresheetskat.score.domain.SkatScoreCommand;
 import com.damhoe.scoresheetskat.score.domain.SkatSuit;
 
-import kotlin.Triple;
-
 public class ScoreViewModel extends ViewModel {
-    private final CUDScoreUseCase cudScoreUseCase;
-    private long scoreToUpdateId = -1L;
+    private final CreateScoreUseCase createScoreUseCase;
 
     private final String[] playerNames;
     private final int[] playerPositions;
+    private final long scoreToUpdateId; // optional
 
-    private final MutableLiveData<SkatScoreCommand> createSkatScoreCommand =
-            new MutableLiveData<>();
+    private final MutableLiveData<SkatScoreCommand> scoreCommand = new MutableLiveData<>();
 
-    final LiveData<Boolean> isValidCommand =
-            Transformations.map(createSkatScoreCommand, SkatScoreCommand::isValid);
-
-    final LiveData<Boolean> isMinSpitzen =
-            Transformations.map(createSkatScoreCommand, SkatScoreCommand::isMinSpitzen);
-
-    final LiveData<Boolean> isMaxSpitzen =
-            Transformations.map(createSkatScoreCommand, SkatScoreCommand::isMaxSpitzen);
-
-    final LiveData<Boolean> isResultEnabled =
-            Transformations.map(createSkatScoreCommand, SkatScoreCommand::isResultEnabled);
-
-    final LiveData<Boolean> isSuitsEnabled = Transformations.map(
-            createSkatScoreCommand, SkatScoreCommand::isSuitsEnabled);
-
-    final LiveData<Boolean> isSpitzenEnabled = Transformations.map(
-            createSkatScoreCommand, SkatScoreCommand::isSpitzenEnabled);
-
-    final LiveData<Boolean> isOuvertEnabled = Transformations.map(
-            createSkatScoreCommand, SkatScoreCommand::isOuvertEnabled);
-
-    final LiveData<Boolean> isSchneiderSchwarzEnabled = Transformations.map(
-            createSkatScoreCommand, SkatScoreCommand::isSchneiderSchwarzEnabled);
-
-    final LiveData<Boolean> isHandEnabled = Transformations.map(
-            createSkatScoreCommand, SkatScoreCommand::isHandEnabled);
-
-    final LiveData<Boolean> isSchneiderAnnounced = Transformations.map(
-            createSkatScoreCommand, SkatScoreCommand::isSchneiderAnnounced);
-
-    final MediatorLiveData<Triple<Boolean, Boolean, Boolean>> spitzenElementsEnabled =
-            new MediatorLiveData<>();
+    LiveData<Boolean> isResultsEnabled = Transformations.map(scoreCommand,
+            cmd -> ScoreUIElementsStateManager.fromCommand(cmd).isResultsEnabled());
+    LiveData<Boolean> isSuitsEnabled = Transformations.map(scoreCommand,
+            cmd -> ScoreUIElementsStateManager.fromCommand(cmd).isSuitsEnabled());
+    LiveData<Boolean> isSpitzenEnabled = Transformations.map(scoreCommand,
+            cmd -> ScoreUIElementsStateManager.fromCommand(cmd).isSpitzenEnabled());
+    LiveData<Boolean> isIncreaseSpitzenEnabled = Transformations.map(scoreCommand,
+            cmd -> ScoreUIElementsStateManager.fromCommand(cmd).isIncreaseSpitzenEnabled());
+    LiveData<Boolean> isDecreaseSpitzenEnabled = Transformations.map(scoreCommand,
+            cmd -> ScoreUIElementsStateManager.fromCommand(cmd).isDecreaseSpitzenEnabled());
+    LiveData<Boolean> isOuvertEnabled = Transformations.map(scoreCommand,
+            cmd -> ScoreUIElementsStateManager.fromCommand(cmd).isOuvertEnabled());
+    LiveData<Boolean> isSchneiderSchwarzEnabled = Transformations.map(scoreCommand,
+            cmd -> ScoreUIElementsStateManager.fromCommand(cmd).isSchneiderSchwarzEnabled());
+    LiveData<Boolean> isHandEnabled = Transformations.map(scoreCommand,
+            cmd -> ScoreUIElementsStateManager.fromCommand(cmd).isHandEnabled());
+    LiveData<SkatResult> getSkatResult =
+            Transformations.map(scoreCommand, SkatScoreCommand::getResult);
+    LiveData<SkatSuit> getSuit = Transformations.map(scoreCommand, SkatScoreCommand::getSuit);
 
     public ScoreViewModel(Builder builder) {
-        cudScoreUseCase = builder.cudScoreUseCase;
+        createScoreUseCase = builder.createScoreUseCase;
         playerNames = builder.playerNames;
         playerPositions = builder.playerPositions;
-        createSkatScoreCommand.setValue(builder.command);
+        scoreCommand.setValue(builder.command);
         scoreToUpdateId = builder.scoreToUpdateId;
-        spitzenElementsEnabled.addSource(isSpitzenEnabled, isSpitzenEnabled -> {
-            if (isSpitzenEnabled) {
-                boolean sliderEnabled = true;
-                boolean removeButtonEnabled = Boolean.FALSE.equals(isMinSpitzen.getValue());
-                boolean addButtonEnabled = Boolean.FALSE.equals(isMaxSpitzen.getValue());
-                spitzenElementsEnabled.postValue(
-                        new Triple<>(sliderEnabled, removeButtonEnabled, addButtonEnabled));
-            }
-            spitzenElementsEnabled.postValue(new Triple<>(false, false, false));
-        });
-        spitzenElementsEnabled.addSource(isMinSpitzen, isMinSpitzen -> {
-            if (Boolean.FALSE.equals(isSpitzenEnabled.getValue())) {
-                spitzenElementsEnabled.postValue(new Triple<>(false, false, false));
-                return;
-            }
-            spitzenElementsEnabled.postValue(new Triple<>(
-                    true, !isMinSpitzen, Boolean.FALSE.equals(isMaxSpitzen.getValue())));
-        });
-        spitzenElementsEnabled.addSource(isMaxSpitzen, isMaxSpitzen -> {
-            if (Boolean.FALSE.equals(isSpitzenEnabled.getValue())) {
-                spitzenElementsEnabled.postValue(new Triple<>(false, false, false));
-                return;
-            }
-            spitzenElementsEnabled.postValue(new Triple<>(
-                    true, Boolean.FALSE.equals(isMinSpitzen.getValue()), !isMaxSpitzen));
-        });
+    }
+
+    public LiveData<SkatScoreCommand> getScoreCommand() {
+        return scoreCommand;
     }
 
     public SkatScore createScore() {
-        Result<SkatScore> scoreResult = cudScoreUseCase
-                .createScore(createSkatScoreCommand.getValue());
+        Result<SkatScore> scoreResult = createScoreUseCase.createScore(scoreCommand.getValue());
         if (scoreResult.isFailure()) {
             return null;
         }
@@ -111,125 +72,134 @@ public class ScoreViewModel extends ViewModel {
 
 
     public SkatScore updateScore() {
-        Result<SkatScore> scoreResult = cudScoreUseCase
-                .updateScore(scoreToUpdateId, createSkatScoreCommand.getValue());
+        Result<SkatScore> scoreResult = createScoreUseCase
+                .updateScore(scoreToUpdateId, scoreCommand.getValue());
         if (scoreResult.isFailure()) {
             return null;
         }
         return scoreResult.getValue();
     }
 
-    public LiveData<SkatScoreCommand> getSkatScoreCommand() {
-        return createSkatScoreCommand;
-    }
-
     public void setHand(boolean isHand) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setHand(isHand);
-            createSkatScoreCommand.postValue(command);
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            skatScoreCommand.setHand(isHand);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
     public void setSchneider(boolean isSchneider) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setSchneider(isSchneider);
-            createSkatScoreCommand.postValue(command);
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            skatScoreCommand.setSchneider(isSchneider);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
     public void setSchneiderAnnounced(boolean isSchneiderAnnounced) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setSchneiderAnnounced(isSchneiderAnnounced);
-            createSkatScoreCommand.postValue(command);
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            skatScoreCommand.setSchneiderAnnounced(isSchneiderAnnounced);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
     public void setSchwarz(boolean isSchwarz) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setSchwarz(isSchwarz);
-            createSkatScoreCommand.postValue(command);
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            skatScoreCommand.setSchwarz(isSchwarz);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
     public void setSchwarzAnnounced(boolean isSchwarzAnnounced) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setSchneiderAnnounced(isSchwarzAnnounced);
-            createSkatScoreCommand.postValue(command);
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            skatScoreCommand.setSchwarzAnnounced(isSchwarzAnnounced);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
     public void setOuvert(boolean isOuvert) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setOuvert(isOuvert);
-            createSkatScoreCommand.postValue(command);
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            skatScoreCommand.setOuvert(isOuvert);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
-    public void setWon(boolean isWon) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setWon(isWon);
-            createSkatScoreCommand.postValue(command);
+    public void setResult(SkatResult result) {
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            if (skatScoreCommand.getResult() == SkatResult.OVERBID) {
+                skatScoreCommand.setSuit(SkatSuit.CLUBS);
+                skatScoreCommand.setSpitzen(1);
+            }
+            if (result == SkatResult.OVERBID) {
+                skatScoreCommand.setSuit(SkatSuit.INVALID);
+                skatScoreCommand.resetSpitzen();
+                skatScoreCommand.resetWinLevels();
+            }
+            skatScoreCommand.setResult(result);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
     public void setSpitzen(int spitzen) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setSpitzen(spitzen);
-            createSkatScoreCommand.postValue(command);
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            skatScoreCommand.setSpitzen(spitzen);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
     public void setSuit(SkatSuit suit) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setSuit(suit);
-            createSkatScoreCommand.postValue(command);
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            skatScoreCommand.setSuit(suit);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
     public void setPlayerPosition(int position) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setPlayerPosition(position);
-            if (position >= 0) {
-                command.setPasse(false);
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
+            if (skatScoreCommand.getResult() == SkatResult.PASSE) {
+                skatScoreCommand.setResult(SkatResult.WON);
+                skatScoreCommand.setSuit(SkatSuit.CLUBS);
+                skatScoreCommand.setSpitzen(1);
             }
-            createSkatScoreCommand.postValue(command);
+            skatScoreCommand.setPlayerPosition(position);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
-    public void setPassed(boolean isPassed) {
-        SkatScoreCommand command = createSkatScoreCommand.getValue();
-        if (command != null) {
-            command.setPasse(isPassed);
+    public void setPasse() {
+        SkatScoreCommand skatScoreCommand = scoreCommand.getValue();
+        if (skatScoreCommand != null) {
             // If passed set player position to invalid value
-            if (isPassed) {
-                command.setPlayerPosition(-1);
-            }
-            createSkatScoreCommand.postValue(command);
+            skatScoreCommand.setSuit(SkatSuit.INVALID);
+            skatScoreCommand.resetWinLevels();
+            skatScoreCommand.resetSpitzen();
+            skatScoreCommand.setPlayerPosition(-1);
+            skatScoreCommand.setResult(SkatResult.PASSE);
+            scoreCommand.postValue(skatScoreCommand);
         }
     }
 
     public static class Builder {
-        private final CUDScoreUseCase cudScoreUseCase;
+        private final CreateScoreUseCase createScoreUseCase;
         private SkatScoreCommand command = new SkatScoreCommand();
         private String[] playerNames;
         private int[] playerPositions;
         private long scoreToUpdateId = -1L;
 
-        public Builder(CUDScoreUseCase cudScoreUseCase) {
-            this.cudScoreUseCase = cudScoreUseCase;
+        public Builder(CreateScoreUseCase createScoreUseCase) {
+            this.createScoreUseCase = createScoreUseCase;
         }
 
         public Builder setRequest(ScoreRequest request) {
+            command.setGameId(request.getGameId());
             playerNames = request.getPlayerNames();
             playerPositions = request.getPlayerPositions();
             return this;

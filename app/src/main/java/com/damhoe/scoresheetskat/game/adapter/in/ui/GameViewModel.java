@@ -6,6 +6,9 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.damhoe.scoresheetskat.base.Result;
+import com.damhoe.scoresheetskat.game.application.ports.in.AddScoreToGameUseCase;
+import com.damhoe.scoresheetskat.game.application.ports.in.CreateGameUseCase;
+import com.damhoe.scoresheetskat.game.application.ports.in.LoadGameUseCase;
 import com.damhoe.scoresheetskat.game.domain.Game;
 import com.damhoe.scoresheetskat.game.domain.GameSettings;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
@@ -19,11 +22,26 @@ import java.util.List;
 public abstract class GameViewModel<TGame extends Game<TSettings, TScore>,
         TSettings extends GameSettings, TScore extends Score> extends ViewModel {
 
+    protected final CreateGameUseCase mCreateGameUseCase;
+    protected final LoadGameUseCase mLoadGameUseCase;
+    protected final AddScoreToGameUseCase mAddScoreToGameUseCase;
+
     private final MutableLiveData<TGame> game = new MutableLiveData<>();
     private final LiveData<String> title = Transformations.map(game, Game::getTitle);
     private final LiveData<List<Player>> players = Transformations.map(game, Game::getPlayers);
     private final LiveData<TSettings> settings = Transformations.map(game, Game::getSettings);
     private final LiveData<List<TScore>> scores = Transformations.map(game, Game::getScores);
+
+    protected GameViewModel(
+            CreateGameUseCase createGameUseCase,
+            LoadGameUseCase loadGameUseCase,
+            AddScoreToGameUseCase addScoreToGameUseCase
+    ) {
+        mCreateGameUseCase = createGameUseCase;
+        mLoadGameUseCase = loadGameUseCase;
+        mAddScoreToGameUseCase = addScoreToGameUseCase;
+    }
+
 
     public LiveData<TGame> getGame() {
         return game;
@@ -37,13 +55,7 @@ public abstract class GameViewModel<TGame extends Game<TSettings, TScore>,
         return players;
     }
 
-    public void updatePlayers(List<Player> players) {
-        TGame game = getGame().getValue();
-        if (game != null) {
-            game.setPlayers(players);
-            setGame(game);
-        }
-    }
+    public abstract void updatePlayers(List<Player> players);
 
     public LiveData<List<TScore>> getScores() {
         return scores;

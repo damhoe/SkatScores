@@ -2,6 +2,7 @@ package com.damhoe.scoresheetskat.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,12 +23,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
+import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.databinding.FragmentHomeBinding;
 import com.damhoe.scoresheetskat.game.adapter.in.ui.shared.GamePreviewAdapter;
 import com.damhoe.scoresheetskat.game.adapter.in.ui.shared.GamePreviewItemClickListener;
-import com.damhoe.scoresheetskat.game.domain.GamePreview;
+import com.damhoe.scoresheetskat.game.domain.SkatGame;
+import com.damhoe.scoresheetskat.game.domain.SkatGamePreview;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
-import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
@@ -69,6 +71,7 @@ public class HomeFragment extends Fragment implements GamePreviewItemClickListen
         binding.openGamesRecycler.setAdapter(adapter);
         binding.openGamesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.openGamesRecycler.addItemDecoration(new GamePreviewAdapter.ItemDecoration(16));
+        adapter.setGamePreviews(viewModel.getUnfinishedGames().getValue());
         return binding.getRoot();
     }
 
@@ -85,7 +88,7 @@ public class HomeFragment extends Fragment implements GamePreviewItemClickListen
         InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
 
         //NavigationUI.setupWithNavController(binding.toolbar, findNavController());
-        viewModel.getOpenGames().observe(getViewLifecycleOwner(), gamePreviews -> {
+        viewModel.getUnfinishedGames().observe(getViewLifecycleOwner(), gamePreviews -> {
             if (gamePreviews.size() == 0) {
                 binding.welcomeText.setText(getString(R.string.welcome_text));
                 return;
@@ -166,10 +169,19 @@ public class HomeFragment extends Fragment implements GamePreviewItemClickListen
     }
 
     @Override
-    public void notifyItemClicked(GamePreview gamePreview) {
+    public void notifySelect(SkatGamePreview skatGamePreview) {
         // Navigate to game using gameId
-        Snackbar.make(requireView(),
-                "Navigate to game with id: " + gamePreview.getGameId(),
-                Snackbar.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putLong("gameId", skatGamePreview.getGameId());
+        findNavController().navigate(R.id.action_home_to_navigation_game, bundle);
+    }
+
+    @Override
+    public void notifyDelete(SkatGamePreview skatGamePreview) {
+        Result<SkatGame> result = viewModel.deleteGame(skatGamePreview.getGameId());
+
+        if (result.isFailure()) {
+            Log.d("Unexpected behavior", result.getMessage());
+        }
     }
 }

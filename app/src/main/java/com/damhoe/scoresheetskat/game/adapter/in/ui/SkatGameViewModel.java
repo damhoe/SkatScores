@@ -17,11 +17,9 @@ import com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand;
 import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 
-public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, SkatScore> {
+import java.util.List;
 
-   private final CreateGameUseCase createGameUseCase;
-   private final LoadGameUseCase loadGameUseCase;
-   private final AddScoreToGameUseCase addScoreToGameUseCase;
+public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, SkatScore> {
 
    private final MediatorLiveData<Pair<Integer, Integer>> currentRoundInfo = new MediatorLiveData<>();
 
@@ -30,18 +28,18 @@ public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, Ska
    public final LiveData<int[]> lossOfOthersBonus = Transformations.map(getGame(), SkatGame::calculateLossOfOthersBonus);
 
    final LiveData<Integer> dealerPosition = Transformations.map(getGame(), skatGame -> {
-      int firstDealerPosition = skatGame.getFirstDealerPosition();
+      int firstDealerPosition = skatGame.getStartDealerPosition();
       int currentRound = skatGame.getCurrentRound();
       int playerCount = skatGame.getPlayers().size();
       return (firstDealerPosition - 1 + currentRound) % playerCount;
    });
 
-   public SkatGameViewModel(CreateGameUseCase createGameUseCase,
-                            LoadGameUseCase loadGameUseCase,
-                            AddScoreToGameUseCase addScoreToGameUseCase) {
-      this.createGameUseCase = createGameUseCase;
-      this.loadGameUseCase = loadGameUseCase;
-      this.addScoreToGameUseCase = addScoreToGameUseCase;
+   public SkatGameViewModel(
+           CreateGameUseCase createGameUseCase,
+           LoadGameUseCase loadGameUseCase,
+           AddScoreToGameUseCase addScoreToGameUseCase
+   ) {
+      super(createGameUseCase, loadGameUseCase, addScoreToGameUseCase);
       currentRoundInfo.addSource(getGame(), game -> {
          if (game != null) {
             int currentRound = game.getCurrentRound();
@@ -51,13 +49,25 @@ public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, Ska
       });
    }
 
+   @Override
+   public void updatePlayers(List<Player> players) {
+      SkatGame game = getGame().getValue();
+      if (game != null) {
+         game.setPlayers(players);
+         setGame(game);
+      }
+
+      // Persist changes
+      mCreateGameUseCase.updateSkatGame(game);
+   }
+
    public LiveData<Pair<Integer, Integer>> getCurrentRoundInfo() {
       return currentRoundInfo;
    }
 
    @Override
    public void initialize(long gameId) {
-      SkatGame game = loadGameUseCase.getGame(gameId).getValue();
+      SkatGame game = mLoadGameUseCase.getGame(gameId).getValue();
       game.start();
       setGame(game);
    }
@@ -68,7 +78,7 @@ public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, Ska
          throw new IllegalArgumentException(
                  "Expected SkatGameCommand but got: " + command.getClass());
       }
-      Result<SkatGame> result = createGameUseCase.createSkatGame((SkatGameCommand) command);
+      Result<SkatGame> result = mCreateGameUseCase.createSkatGame((SkatGameCommand) command);
       if (result.isFailure()) {
          // TODO
       }
@@ -85,14 +95,14 @@ public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, Ska
    @Override
    public void addScore(SkatScore score) {
       SkatGame skatGame = getGame().getValue();
-      addScoreToGameUseCase.addScoreToGame(skatGame, score);
+      mAddScoreToGameUseCase.addScoreToGame(skatGame, score);
       setGame(skatGame);
    }
 
    @Override
    public Result<SkatScore> removeLastScore() {
       SkatGame skatGame = getGame().getValue();
-      Result<SkatScore> result = addScoreToGameUseCase.removeLastScore(skatGame);
+      Result<SkatScore> result = mAddScoreToGameUseCase.removeLastScore(skatGame);
       if (result.isSuccess()) {
          setGame(skatGame);
       }

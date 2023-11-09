@@ -1,12 +1,18 @@
 package com.damhoe.scoresheetskat.player.domain;
 
+import android.content.res.Resources;
+
 import androidx.annotation.NonNull;
+
+import com.damhoe.scoresheetskat.R;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 public class Player {
+
+    public static final String DUMMY_PATTERN = "^(Player|Spieler)(\\s\\d+|in\\s\\d+)$";
 
     private long ID;
     private String name;
@@ -60,6 +66,27 @@ public class Player {
 
     public void setGameCount(int gameCount) {
         this.gameCount = gameCount;
+    }
+
+    public boolean isDummy() {
+        return name.matches(DUMMY_PATTERN);
+    }
+
+    public static boolean isDummyName(String name) {
+        return name.matches(DUMMY_PATTERN);
+    }
+
+    public static Player createDummy(int number) {
+        String name = Resources.getSystem().getString(R.string.dummy_player_name);
+        return new Player(name + " " + number);
+    }
+
+    public static Player createDummy(String name) {
+        if (!isDummyName(name)) {
+            throw new IllegalArgumentException(
+                    "It is not allowed to create dummy player with custom names: " + name);
+        }
+        return new Player(name);
     }
 
     @NonNull

@@ -9,7 +9,7 @@ import com.damhoe.scoresheetskat.game.adapter.in.ui.GameFragment;
 import com.damhoe.scoresheetskat.persistance.DbHelper;
 import com.damhoe.scoresheetskat.player.PlayerModule;
 import com.damhoe.scoresheetskat.player.adapter.in.ui.PlayerDetailsFragment;
-import com.damhoe.scoresheetskat.player.adapter.in.ui.PlayersFragment;
+import com.damhoe.scoresheetskat.player.adapter.in.ui.PlayerFragment;
 import com.damhoe.scoresheetskat.score.ScoreModule;
 import com.damhoe.scoresheetskat.score.adapter.in.ui.ScoreFragment;
 
@@ -28,6 +28,6 @@ public interface ApplicationComponent {
  void inject(ScoreFragment scoreFragment);
  void inject(HomeFragment homeFragment);
  void inject(HistoryFragment historyFragment);
- void inject(PlayersFragment playersFragment);
+ void inject(PlayerFragment playerFragment);
  void inject(PlayerDetailsFragment playerDetailsFragment);
 }

@@ -1,4 +1,13 @@
 <resources>
+
+    <style name="Theme.App.SplashTheme" parent="Theme.App">
+        <item name="android:windowSplashScreenAnimatedIcon">
+            @drawable/ic_splash_logo
+        </item>
+        <item name="android:windowSplashScreenBackground">?attr/colorSurface</item>
+    </style>
+
+
     <style name="Theme.ScoreSheetSkat" parent="Theme.App">
         <item name="textAppearanceHeadlineSmall">@style/TextAppearance.App.HeadlineSmall</item>
         <item name="textAppearanceHeadlineMedium">@style/TextAppearance.App.HeadlineMedium</item>

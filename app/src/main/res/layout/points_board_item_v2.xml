@@ -2,11 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="52dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:background="?attr/colorSurfaceBright"
+    android:background="?attr/colorSurfaceVariant"
     android:foreground="?selectableItemBackground">
 
     <TextView

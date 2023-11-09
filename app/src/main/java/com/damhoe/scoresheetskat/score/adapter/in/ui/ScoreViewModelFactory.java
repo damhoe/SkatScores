@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.viewmodel.CreationExtras;
 
 import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.score.application.ports.in.CUDScoreUseCase;
-import com.damhoe.scoresheetskat.score.application.ports.in.LoadScoreUseCase;
+import com.damhoe.scoresheetskat.score.application.ports.in.CreateScoreUseCase;
+import com.damhoe.scoresheetskat.score.application.ports.in.GetScoreUseCase;
 import com.damhoe.scoresheetskat.score.domain.ScoreRequest;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
 
@@ -15,15 +15,17 @@ import javax.inject.Inject;
 
 public class ScoreViewModelFactory implements ViewModelProvider.Factory {
 
-   private final CUDScoreUseCase cudScoreUseCase;
-   private final LoadScoreUseCase loadScoreUseCase;
+   private final CreateScoreUseCase createScoreUseCase;
+   private final GetScoreUseCase getScoreUseCase;
    private ScoreRequest scoreRequest;
 
    @Inject
-   public ScoreViewModelFactory(CUDScoreUseCase cudScoreUseCase,
-                                LoadScoreUseCase loadScoreUseCase) {
-      this.cudScoreUseCase = cudScoreUseCase;
-      this.loadScoreUseCase = loadScoreUseCase;
+   public ScoreViewModelFactory(
+           CreateScoreUseCase createScoreUseCase,
+           GetScoreUseCase getScoreUseCase
+   ) {
+      this.createScoreUseCase = createScoreUseCase;
+      this.getScoreUseCase = getScoreUseCase;
    }
 
    public void setScoreRequest(ScoreRequest scoreRequest) {
@@ -39,15 +41,15 @@ public class ScoreViewModelFactory implements ViewModelProvider.Factory {
       }
 
       if (scoreRequest.getScoreId() == -1L) {
-         return (T) new ScoreViewModel.Builder(cudScoreUseCase)
+         return (T) new ScoreViewModel.Builder(createScoreUseCase)
                  .setRequest(scoreRequest)
                  .build();
       }
 
-      Result<SkatScore> scoreResult = loadScoreUseCase.loadScore(scoreRequest.getScoreId());
+      Result<SkatScore> scoreResult = getScoreUseCase.getScore(scoreRequest.getScoreId());
 
       if (scoreResult.isSuccess()) {
-         return (T) new ScoreViewModel.Builder(cudScoreUseCase)
+         return (T) new ScoreViewModel.Builder(createScoreUseCase)
                  .setRequest(scoreRequest)
                  .fromScore(scoreResult.getValue())
                  .build();
@@ -66,15 +68,15 @@ public class ScoreViewModelFactory implements ViewModelProvider.Factory {
       }
 
       if (scoreRequest.getScoreId() == -1) {
-         return (T) new ScoreViewModel.Builder(cudScoreUseCase)
+         return (T) new ScoreViewModel.Builder(createScoreUseCase)
                  .setRequest(scoreRequest)
                  .build();
       }
 
-      Result<SkatScore> scoreResult = loadScoreUseCase.loadScore(scoreRequest.getScoreId());
+      Result<SkatScore> scoreResult = getScoreUseCase.getScore(scoreRequest.getScoreId());
 
       if (scoreResult.isSuccess()) {
-         return (T) new ScoreViewModel.Builder(cudScoreUseCase)
+         return (T) new ScoreViewModel.Builder(createScoreUseCase)
                  .setRequest(scoreRequest)
                  .fromScore(scoreResult.getValue())
                  .build();

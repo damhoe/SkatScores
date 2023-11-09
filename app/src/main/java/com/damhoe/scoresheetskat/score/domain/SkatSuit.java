@@ -7,5 +7,18 @@ public enum SkatSuit {
  SPADES,
  HEARTS,
  DIAMONDS,
- OVERBID
+ INVALID;
+
+ public int asInteger() {
+  return ordinal();
+ }
+
+ public static SkatSuit fromInteger(int value) {
+  for (SkatSuit suit: SkatSuit.values()) {
+   if (suit.ordinal() == value) {
+    return suit;
+   }
+  }
+  return SkatSuit.CLUBS; // default
+ }
 }

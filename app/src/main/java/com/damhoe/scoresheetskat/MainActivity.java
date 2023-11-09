@@ -1,34 +1,19 @@
 package com.damhoe.scoresheetskat;
 
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.res.ConfigurationHelper;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.os.LocaleListCompat;
 import androidx.core.view.WindowCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
-import androidx.navigation.NavHost;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import com.damhoe.scoresheetskat.app.app_settings.ConfigManager;
 import com.damhoe.scoresheetskat.databinding.ActivityMainBinding;
-
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,15 +38,14 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
 
-        ConfigManager configManager = new ConfigManager(this);
+        // ConfigManager configManager = new ConfigManager(this);
 
         // UI mode
-        String uiMode = sharedPreferences.getString("ui_mode", "");
+        //String uiMode = sharedPreferences.getString("ui_mode", "");
         //configManager.setUiMode(uiMode);
 
         // System Locale
-        String language = sharedPreferences.getString("language", "");
-        Locale.setDefault(Locale.forLanguageTag(language));
+        //String language = sharedPreferences.getString("language", "");
         //configManager.setLocale(language);
     }
 

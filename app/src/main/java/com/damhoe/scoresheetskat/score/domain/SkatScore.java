@@ -1,19 +1,20 @@
 package com.damhoe.scoresheetskat.score.domain;
 
+import com.damhoe.scoresheetskat.score.Constant;
+import com.damhoe.scoresheetskat.score.application.SkatScoreToPointsConverter;
+
 import java.util.UUID;
 
 public class SkatScore extends Score {
-   private long id;
-   private final int spitzen; // negative values if missing
+   private final int spitzen; // negative value if missing
    private final SkatSuit suit; // Clubs, Diamonds, Hears, Spades, Null, Grand
+   private final SkatResult result; // Won, Lost, Overbid, Passe
    private final boolean hand;
    private final boolean schneider;
    private final boolean schneiderAnnounced;
    private final boolean schwarz;
    private final boolean schwarzAnnounced;
    private final boolean ouvert;
-   private final boolean isWon;
-   private final boolean isPasse;
 
    public SkatScore(SkatScoreCommand command) {
       id = UUID.randomUUID().getMostSignificantBits();
@@ -23,19 +24,20 @@ public class SkatScore extends Score {
       schneider = command.isSchneider();
       schwarz = command.isSchwarz();
       ouvert = command.isOuvert();
-      isWon = command.isWon();
+      result = command.getResult();
       schneiderAnnounced = command.isSchneiderAnnounced();
       schwarzAnnounced = command.isSchwarzAnnounced();
       gameId = command.getGameId();
       playerPosition = command.getPlayerPosition();
-      index = command.getIndex();
-      isPasse = command.isPasse();
    }
 
    @Override
    public int toPoints() {
-      if (isPasse) {
+      if (isPasse()) {
          return 0;
+      }
+      if (isOverbid()) {
+         return -50;
       }
       if (suit == SkatSuit.NULL) {
          return SkatScoreToPointsConverter.convertNullScore(this);
@@ -70,8 +72,12 @@ public class SkatScore extends Score {
       return ouvert;
    }
 
+   public SkatResult getResult() {
+      return result;
+   }
+
    public boolean isWon() {
-      return isWon;
+      return SkatResult.WON.equals(result);
    }
 
    public boolean isSchneiderAnnounced() {
@@ -82,15 +88,9 @@ public class SkatScore extends Score {
       return schwarzAnnounced;
    }
 
-   public long getId() {
-      return id;
-   }
-
-   public void setId(long id) {
-      this.id = id;
-   }
-
    public boolean isPasse() {
-      return isPasse;
+      return playerPosition == Constant.PASSE_PLAYER_POSITION;
    }
+
+   public boolean isOverbid() { return SkatResult.OVERBID.equals(getResult()); }
 }
