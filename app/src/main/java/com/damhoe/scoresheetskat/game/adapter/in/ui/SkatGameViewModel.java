@@ -1,7 +1,5 @@
 package com.damhoe.scoresheetskat.game.adapter.in.ui;
 
-import android.util.Pair;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Transformations;
@@ -10,18 +8,16 @@ import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.game.application.ports.in.AddScoreToGameUseCase;
 import com.damhoe.scoresheetskat.game.application.ports.in.CreateGameUseCase;
 import com.damhoe.scoresheetskat.game.application.ports.in.LoadGameUseCase;
+import com.damhoe.scoresheetskat.game.domain.GameRunStateInfo;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
 import com.damhoe.scoresheetskat.game.domain.SkatSettings;
 import com.damhoe.scoresheetskat.game_setup.domain.GameCommand;
 import com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand;
-import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
-
-import java.util.List;
 
 public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, SkatScore> {
 
-   private final MediatorLiveData<Pair<Integer, Integer>> currentRoundInfo = new MediatorLiveData<>();
+   private final MediatorLiveData<GameRunStateInfo> runStateInfo = new MediatorLiveData<>();
 
    public final LiveData<int[]> totalPoints = Transformations.map(getGame(), SkatGame::calculateTotalPoints);
    public final LiveData<int[]> winBonus = Transformations.map(getGame(), SkatGame::calculateWinBonus);
@@ -40,29 +36,15 @@ public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, Ska
            AddScoreToGameUseCase addScoreToGameUseCase
    ) {
       super(createGameUseCase, loadGameUseCase, addScoreToGameUseCase);
-      currentRoundInfo.addSource(getGame(), game -> {
-         if (game != null) {
-            int currentRound = game.getCurrentRound();
-            int totalRounds = game.getSettings().getNumberOfRounds();
-            this.currentRoundInfo.setValue(new Pair<>(currentRound, totalRounds));
-         }
+      runStateInfo.addSource(getGame(), game -> {
+         int currentRound = game.getCurrentRound();
+         int totalRounds = game.getSettings().getNumberOfRounds();
+         runStateInfo.postValue(new GameRunStateInfo(totalRounds, currentRound, game.isFinished()));
       });
    }
 
-   @Override
-   public void updatePlayers(List<Player> players) {
-      SkatGame game = getGame().getValue();
-      if (game != null) {
-         game.setPlayers(players);
-         setGame(game);
-      }
-
-      // Persist changes
-      mCreateGameUseCase.updateSkatGame(game);
-   }
-
-   public LiveData<Pair<Integer, Integer>> getCurrentRoundInfo() {
-      return currentRoundInfo;
+   public LiveData<GameRunStateInfo> getGameRunStateInfo() {
+      return runStateInfo;
    }
 
    @Override

@@ -6,27 +6,30 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.damhoe.scoresheetskat.statistics.domain.ProgressInfo;
+
 public class StatisticsViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<ProgressInfo> overallProgress = new MutableLiveData<>();
+    private final MutableLiveData<ProgressInfo> thisYearProgress = new MutableLiveData<>();
+    private final MutableLiveData<ProgressInfo> thisMonthProgress = new MutableLiveData<>();
 
-    // First number gives the total number of games
-    // Second number gives the number of open games
-    private final MutableLiveData<Pair<Integer, Integer>> numberOfGames = new MutableLiveData<>();
-    private final MutableLiveData<Pair<Integer, Integer>> numberOfGamesYear = new MutableLiveData<>();
-    private final MutableLiveData<Pair<Integer, Integer>> numberOfGamesMonth = new MutableLiveData<>();
-
-    public StatisticsViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
-
-        // Reload data from repositories
-        numberOfGames.setValue(new Pair<>(10, 2));
-        numberOfGamesMonth.setValue(new Pair<>(3, 2));
-        numberOfGamesYear.setValue(new Pair<>(8, 2));
+    public LiveData<ProgressInfo> getOverallProgress() {
+        return overallProgress;
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<ProgressInfo> getThisYearProgress() {
+        return thisYearProgress;
+    }
+
+    public LiveData<ProgressInfo> getThisMonthProgress() {
+        return thisMonthProgress;
+    }
+
+    public StatisticsViewModel() {
+        // Reload data from repositories
+        thisMonthProgress.setValue(new ProgressInfo(2, 2));
+        thisYearProgress.setValue(new ProgressInfo(11, 4));
+        overallProgress.setValue(new ProgressInfo(12, 4));
     }
 }

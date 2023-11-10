@@ -100,19 +100,26 @@ class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldPlayers.get(oldItemPosition).getID() == newPlayers.get(newItemPosition).getID();
+            return oldPlayers.get(oldItemPosition).getId()
+                    == newPlayers.get(newItemPosition).getId();
         }
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldPlayers.get(oldItemPosition).equals(newPlayers.get(newItemPosition));
+            return oldPlayers.get(oldItemPosition).getName()
+                    .equals(newPlayers.get(newItemPosition).getName());
         }
     }
 
     static class ItemDecoration extends RecyclerView.ItemDecoration {
 
         @Override
-        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        public void getItemOffsets(
+                @NonNull Rect outRect,
+                @NonNull View view,
+                @NonNull RecyclerView parent,
+                @NonNull RecyclerView.State state
+        ) {
             outRect.top = 4;
             outRect.bottom = 4;
             //super.getItemOffsets(outRect, view, parent, state);

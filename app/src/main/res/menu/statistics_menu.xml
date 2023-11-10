@@ -5,17 +5,10 @@
     tools:ignore="AlwaysShowAction">
 
     <item
-        android:id="@+id/statistics"
-        android:icon="@drawable/ic_bar_chart_24dp"
+        android:id="@+id/history"
+        android:title="@string/title_history"
         app:showAsAction="always"
-        android:title="@string/title_statistics"
-        />
-
-    <item
-        android:id="@+id/players"
-        android:title="@string/title_users"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_people_24dp" />
+        android:icon="@drawable/ic_history_24dp" />
 
     <item android:id="@+id/home"
         android:title="@string/menu_home"

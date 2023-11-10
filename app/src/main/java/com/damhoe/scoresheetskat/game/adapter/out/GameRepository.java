@@ -17,8 +17,7 @@ import com.damhoe.scoresheetskat.game.domain.SkatGamePreview;
 import com.damhoe.scoresheetskat.game.domain.SkatSettings;
 import com.damhoe.scoresheetskat.player.application.ports.in.GetPlayerUseCase;
 import com.damhoe.scoresheetskat.player.domain.Player;
-import com.damhoe.scoresheetskat.score.application.ports.in.GetScoreUseCase;
-import com.damhoe.scoresheetskat.score.domain.SkatScore;
+import com.damhoe.scoresheetskat.score.application.ports.in.CreateScoreUseCase;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,27 +29,30 @@ import javax.inject.Singleton;
 
 @Singleton
 public class GameRepository implements GamePort {
-   private final GetScoreUseCase mGetScoreUseCase;
    private final GetPlayerUseCase mGetPlayerUseCase;
+   private final CreateScoreUseCase mCreateScoreUseCase;
    private final GamePersistenceAdapter mGameAdapter;
    private final PlayerMatchPersistenceAdapter mPlayerMatchAdapter;
    private final SettingsPersistenceAdapter mSettingsPersistenceAdapter;
+   private final GameMapper mGameMapper;
 
    private final MutableLiveData<List<SkatGamePreview>> skatGamePreviews = new MutableLiveData<>();
 
    @Inject
    public GameRepository(
-           GetScoreUseCase getScoreUseCase,
            GetPlayerUseCase getPlayerUseCase,
+           CreateScoreUseCase createScoreUseCase,
            GamePersistenceAdapter gameAdapter,
            PlayerMatchPersistenceAdapter playerMatchAdapter,
-           SettingsPersistenceAdapter settingsPersistenceAdapter
+           SettingsPersistenceAdapter settingsPersistenceAdapter,
+           GameMapper gameMapper
    ) {
-      mGetScoreUseCase = getScoreUseCase;
       mGetPlayerUseCase = getPlayerUseCase;
+      this.mCreateScoreUseCase = createScoreUseCase;
       mGameAdapter = gameAdapter;
       mPlayerMatchAdapter = playerMatchAdapter;
       mSettingsPersistenceAdapter = settingsPersistenceAdapter;
+      mGameMapper = gameMapper;
 
       // Load data
       refreshGamePreviews();
@@ -70,7 +72,7 @@ public class GameRepository implements GamePort {
 
       // Save players
       for (int k = 0; k < game.getPlayers().size(); k++) {
-         long playerId = game.getPlayers().get(k).getID();
+         long playerId = game.getPlayers().get(k).getId();
 
          if (mPlayerMatchAdapter.isValidPlayerId(playerId)) {
             PlayerMatchDTO playerMatch =
@@ -93,6 +95,8 @@ public class GameRepository implements GamePort {
       mSettingsPersistenceAdapter.deleteSettings(skatGame.getSettings().getId());
       // Delete player matches
       mPlayerMatchAdapter.deletePlayerMatchesForGame(skatGame.getId());
+      // Delete scores
+      mCreateScoreUseCase.deleteScoresForGame(skatGame.getId());
       // Delete game
       mGameAdapter.deleteGame(skatGame.getId());
 
@@ -112,10 +116,10 @@ public class GameRepository implements GamePort {
       // Update settings
       SkatSettingsDTO settingsDTO =
               SettingsMapper.mapSkatSettingsToSkatSettingsDTO(game.getSettings());
-      long settingsId = mSettingsPersistenceAdapter.updateSettings(settingsDTO);
+      int result = mSettingsPersistenceAdapter.updateSettings(settingsDTO);
 
       // Update game
-      SkatGameDTO dto = GameMapper.mapSkatGameToSkatGameDTO(game, settingsId);
+      SkatGameDTO dto = GameMapper.mapSkatGameToSkatGameDTO(game, game.getSettings().getId());
       mGameAdapter.updateGame(dto);
 
       // Update players
@@ -123,7 +127,7 @@ public class GameRepository implements GamePort {
       // because they can also become invalid during the update process
       mPlayerMatchAdapter.deletePlayerMatchesForGame(game.getId());
       for (int k = 0; k < game.getPlayers().size(); k++) {
-         long playerId = game.getPlayers().get(k).getID();
+         long playerId = game.getPlayers().get(k).getId();
          if (mPlayerMatchAdapter.isValidPlayerId(playerId)) {
             PlayerMatchDTO playerMatch =
                     new PlayerMatchDTO(game.getId(), playerId, k);
@@ -155,8 +159,12 @@ public class GameRepository implements GamePort {
 
       // Transform the data to game previews
       List<SkatGamePreview> previewList = gameDtoList.stream()
-              .map(dto -> GameMapper
-                      .mapToPreview(dto, loadPlayersForGame(dto.getId(), 3)))
+              .map(dto -> mGameMapper.mapToPreview(
+                      dto,
+                      SettingsMapper.mapSkatSettingsDTOToSkatSettings(
+                              mSettingsPersistenceAdapter.getSettings(dto.getId()).getValue()),
+                      loadPlayersForGame(dto.getId(), 3)
+              ))
               .collect(Collectors.toList());
 
       skatGamePreviews.postValue(previewList);
@@ -186,16 +194,7 @@ public class GameRepository implements GamePort {
       List<Player> players = loadPlayersForGame(skatGameDTO.getId(), 3); // TODO change hardcoded number of players
 
       // Map data to skat game
-      SkatGame skatGame = GameMapper.mapSkatGameDTOToSkatGame(skatGameDTO, skatSettings, players);
-
-      // Add Scores
-      List<SkatScore> scores = mGetScoreUseCase.getScores(skatGame.getId());
-      skatGame.start();
-      for (int i = 0; i < scores.size(); i++) {
-         skatGame.addScore(scores.get(i));
-      }
-
-      return skatGame;
+      return mGameMapper.mapSkatGameDTOToSkatGame(skatGameDTO, skatSettings, players);
    }
 
    /**
@@ -253,7 +252,7 @@ public class GameRepository implements GamePort {
            Game.RunState state
    ) {
       return previews.stream()
-              .filter(x -> x.getGameId() > 0) // TODO include run state
+              .filter(x -> x.getProgressInfo().isFinished() == (state == Game.RunState.FINISHED))
               .collect(Collectors.toList());
    }
 }

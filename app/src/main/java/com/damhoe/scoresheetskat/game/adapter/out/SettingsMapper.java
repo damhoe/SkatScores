@@ -9,7 +9,7 @@ public class SettingsMapper {
       SkatSettingsDTO settingsDTO = new SkatSettingsDTO();
       settingsDTO.setNumberOfRounds(settings.getNumberOfRounds());
       settingsDTO.setScoringType(settings.isTournamentScoring() ? 1 : 0);
-      settingsDTO.setId(-1);
+      settingsDTO.setId(settings.getId());
       return settingsDTO;
    }
 

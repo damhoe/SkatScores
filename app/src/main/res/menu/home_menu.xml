@@ -15,7 +15,7 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/navigation_statistics"
+        android:id="@+id/statistics"
         android:icon="@drawable/ic_bar_chart_24dp"
         app:showAsAction="always"
         android:title="@string/title_statistics" />

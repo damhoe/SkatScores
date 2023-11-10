@@ -86,6 +86,10 @@ public abstract class Game<TSettings extends GameSettings, TScore extends Score>
         runState = RunState.FINISHED;
     }
 
+    public void resume() {
+        runState = RunState.RUNNING;
+    }
+
     public boolean isRunning() {
         return runState == RunState.RUNNING;
     }

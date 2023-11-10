@@ -5,17 +5,23 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.viewmodel.CreationExtras;
 
+import com.damhoe.scoresheetskat.game.application.ports.in.CreateGameUseCase;
 import com.damhoe.scoresheetskat.game.application.ports.in.LoadGameUseCase;
 
 import javax.inject.Inject;
 
 public class HistoryViewModelFactory implements ViewModelProvider.Factory {
 
-   private final LoadGameUseCase loadGameUseCase;
+   private final LoadGameUseCase mLoadGameUseCase;
+   private final CreateGameUseCase mCreateGameUseCase;
 
    @Inject
-   public HistoryViewModelFactory(LoadGameUseCase loadGameUseCase) {
-      this.loadGameUseCase = loadGameUseCase;
+   public HistoryViewModelFactory(
+           LoadGameUseCase loadGameUseCase,
+           CreateGameUseCase createGameUseCase
+   ) {
+      mLoadGameUseCase = loadGameUseCase;
+      mCreateGameUseCase = createGameUseCase;
    }
 
 
@@ -24,7 +30,7 @@ public class HistoryViewModelFactory implements ViewModelProvider.Factory {
    @Override
    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
       if (modelClass == HistoryViewModel.class) {
-         return (T) new HistoryViewModel(loadGameUseCase);
+         return (T) new HistoryViewModel(mLoadGameUseCase, mCreateGameUseCase);
       }
       throw new RuntimeException("Invalid model class for HistoryViewModelFactory: " + modelClass);
    }
@@ -35,7 +41,7 @@ public class HistoryViewModelFactory implements ViewModelProvider.Factory {
    public <T extends ViewModel> T create(@NonNull Class<T> modelClass,
                                          @NonNull CreationExtras extras) {
       if (modelClass == HistoryViewModel.class) {
-         return (T) new HistoryViewModel(loadGameUseCase);
+         return (T) new HistoryViewModel(mLoadGameUseCase, mCreateGameUseCase);
       }
       throw new RuntimeException("Invalid model class for HistoryViewModelFactory: " + modelClass);
    }

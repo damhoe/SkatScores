@@ -1,65 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingStart="24dp"
-    android:paddingEnd="24dp"
-    android:paddingBottom="16dp"
-    android:paddingTop="32dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/title_text_input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:startIconDrawable="@drawable/ic_title_black_24dp"
-        app:endIconDrawable="@drawable/ic_cancel_black_24dp"
-        app:endIconMode="clear_text"
-        style="@style/Widget.App.TextInputLayout">
+        tools:context=".game_setup.adapter.in.ui.GameSetupFragment">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/title_edit_text"
+        <TextView
+            android:id="@+id/list_name_title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_list_name"
+            android:background="@android:color/transparent"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/list_name_text_input"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            app:endIconDrawable="@drawable/ic_cancel_black_24dp"
+            app:endIconMode="clear_text"
+            android:layout_marginTop="8dp"
+            app:counterMaxLength="20"
+            app:counterEnabled="true"
+            app:errorEnabled="true"
+            app:errorTextColor="?attr/colorError"
+            style="@style/Widget.App.TextInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/list_name_title_view"
+            app:layout_constraintStart_toStartOf="@id/list_name_title_view">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/list_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                android:focusedByDefault="false"
+                tools:text="New List 88"
+                android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/scoring_settings_title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_scoring_settings"
+            android:background="@android:color/transparent"
+            android:paddingTop="24dp"
+            android:paddingBottom="8dp"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            app:layout_constraintStart_toStartOf="@id/list_name_text_input"
+            app:layout_constraintTop_toBottomOf="@id/list_name_text_input"/>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/scoring_settings_rg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:focusedByDefault="false"
-            tools:text="My first skat round"
-            android:textSize="18sp" />
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="8dp"
+            app:singleSelection="true"
+            app:checkedButton="@id/tournament_scoring_rb"
+            app:selectionRequired="true"
+            app:layout_constraintStart_toStartOf="@id/scoring_settings_title_view"
+            app:layout_constraintTop_toBottomOf="@id/scoring_settings_title_view">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/simple_scoring_rb"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/option_simple_scoring"/>
 
-    <RadioGroup
-        android:id="@+id/scoring_settings_rg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/radio_group_background"
-        app:layout_constraintTop_toBottomOf="@id/title_text_input"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="horizontal">
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:id="@+id/tournament_scoring_rb"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/option_tournament_scoring" />
 
-        <RadioButton
-            android:id="@+id/simple_scoring_rb"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/rounds_setting_title_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/GameSettingsRadioButton"
-            android:checked="true"
-            android:text="@string/option_simple_scoring"
-            android:button="@android:color/transparent"/>
+            android:text="@string/title_rounds_settings"
+            android:background="@android:color/transparent"
+            android:paddingTop="24dp"
+            android:paddingBottom="8dp"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            app:layout_constraintStart_toStartOf="@id/scoring_settings_title_view"
+            app:layout_constraintTop_toBottomOf="@+id/scoring_settings_rg"/>
 
-        <RadioButton
-            android:id="@+id/tournament_scoring_rb"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <TextView
+            android:id="@+id/number_of_rounds_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/GameSettingsRadioButton"
-            android:text="@string/option_tournament_scoring"
-            android:button="@android:color/transparent"/>
+            tools:text="12"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingTop="24dp"
+            android:layout_marginStart="24dp"
+            android:fontFamily="@font/rubik_medium"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            app:layout_constraintTop_toTopOf="@id/rounds_setting_title_view"
+            app:layout_constraintBottom_toBottomOf="@id/rounds_setting_title_view"
+            app:layout_constraintStart_toEndOf="@id/rounds_setting_title_view"/>
 
-    </RadioGroup>
+        <com.google.android.material.slider.Slider
+            android:id="@+id/rounds_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Slider"
+            android:layout_marginTop="8dp"
+            android:stepSize="3"
+            android:valueFrom="3"
+            android:valueTo="36"
+            android:value="12"
+            app:labelBehavior="floating"
+            android:contentDescription="@string/description_number_of_rounds"
+            app:layout_constraintTop_toBottomOf="@id/number_of_rounds_text"
+            app:layout_constraintStart_toStartOf="@id/rounds_setting_title_view"
+            app:layout_constraintEnd_toEndOf="@id/number_of_rounds_text"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/start_dealer_title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_start_dealer"
+            android:background="@android:color/transparent"
+            android:paddingTop="24dp"
+            android:paddingBottom="8dp"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            app:layout_constraintStart_toStartOf="@id/scoring_settings_title_view"
+            app:layout_constraintTop_toBottomOf="@id/rounds_slider"/>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleGroupStartDealer"
+            android:layout_width="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            app:checkedButton="@id/buttonPlayer1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/start_dealer_title_view"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonPlayer1"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                tools:text="Player 1"
+                tools:ignore="VisualLintButtonSize" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonPlayer2"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                tools:text="Player 2"
+                tools:ignore="VisualLintButtonSize" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonPlayer3"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                tools:text="Player 3"
+                tools:ignore="VisualLintButtonSize" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

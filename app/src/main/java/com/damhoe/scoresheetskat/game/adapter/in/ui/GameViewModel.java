@@ -55,7 +55,43 @@ public abstract class GameViewModel<TGame extends Game<TSettings, TScore>,
         return players;
     }
 
-    public abstract void updatePlayers(List<Player> players);
+    public void updatePlayers(List<Player> players) {
+        TGame mGame = getGame().getValue();
+        if (mGame != null) {
+            mGame.setPlayers(players);
+            setGame(mGame);
+        }
+
+        // Persist changes
+        mCreateGameUseCase.updateSkatGame((SkatGame) mGame);
+    }
+
+    public void updateTitle(String newTitle) {
+        TGame mGame = game.getValue();
+        if (mGame != null) {
+            mGame.setTitle(newTitle);
+            game.postValue(mGame);
+
+            // Persist changes
+            mCreateGameUseCase.updateSkatGame((SkatGame) mGame);
+        }
+    }
+
+    public void updateSettings(TSettings newSettings) {
+        TGame mGame = game.getValue();
+        if (mGame != null) {
+            mGame.setSettings(newSettings);
+            game.postValue(mGame);
+
+            // Persist changes
+            mCreateGameUseCase.updateSkatGame((SkatGame) mGame);
+        }
+    }
+
+    public void updateGame(TGame updatedGame) {
+        game.postValue(updatedGame);
+        mCreateGameUseCase.updateSkatGame((SkatGame) updatedGame);
+    }
 
     public LiveData<List<TScore>> getScores() {
         return scores;

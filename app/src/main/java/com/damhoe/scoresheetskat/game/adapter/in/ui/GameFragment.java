@@ -24,6 +24,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Pair;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,9 +38,11 @@ import android.widget.Button;
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.base.Result;
+import com.damhoe.scoresheetskat.databinding.DialogGameSettingsBinding;
 import com.damhoe.scoresheetskat.databinding.FragmentGameV2Binding;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator.MessageType;
+import com.damhoe.scoresheetskat.game.domain.GameRunStateInfo;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
 import com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand;
 import com.damhoe.scoresheetskat.score.adapter.in.ui.SharedScoreResponseViewModel;
@@ -51,6 +54,7 @@ import com.damhoe.scoresheetskat.game.domain.SkatSettings;
 import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.slider.Slider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -128,12 +132,19 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         final Observer<SkatGame> gameObserver = this::updatePoints;
         viewModel.getGame().observe(getViewLifecycleOwner(), gameObserver);
 
-        final Observer<Pair<Integer, Integer>> currentRoundObserver =
-                roundPair -> binding.currentRoundText.setText(
-                        String.format(Locale.getDefault(),
-                                "%d / %d", roundPair.first, roundPair.second)
+        viewModel.getGameRunStateInfo().observe(getViewLifecycleOwner(), gameRunStateInfo -> {
+            String text;
+            if (gameRunStateInfo.isFinished()) {
+                text = "Finished";
+            } else {
+                text = String.format(Locale.getDefault(),
+                        "%d/%d",
+                        gameRunStateInfo.getCurrentRound(),
+                        gameRunStateInfo.getRoundsCount()
                 );
-        viewModel.getCurrentRoundInfo().observe(getViewLifecycleOwner(), currentRoundObserver);
+            }
+            binding.currentRoundText.setText(text);
+        });
 
         viewModel.dealerPosition.observe(getViewLifecycleOwner(), dealerPosition -> {
             if (dealerPosition == 0) {
@@ -232,7 +243,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
             public boolean onMenuItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.game_edit) {
-                    showEditDealerDialog();
+                    showGameSettingsDialog();
                 } else if (itemId == R.id.game_show_chart) {
                     Snackbar.make(binding.bottomSumView.getRoot(),
                                     "This feature is not implemented yet.",
@@ -247,23 +258,111 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     }
 
     private void showGameSettingsDialog() {
-//        @SuppressLint("InflateParams")
-//        View scoringView = getLayoutInflater().inflate(R.layout.dialog_scoring, null);
-//        RadioGroup scoringRadioGroup = (RadioGroup) scoringView.findViewById(R.id.scoring_settings_rg);
-//        scoringRadioGroup.check(viewModel.isTournamentScoring().getValue() ?
-//                R.id.tournament_scoring_rb : R.id.simple_scoring_rb);
-//
-//        new MaterialAlertDialogBuilder(requireContext())
-//                .setTitle(R.string.message_scoring_dialog)
-//                .setView(scoringView)
-//                .setPositiveButton("Save", (dialogInterface, i) -> {
-//                    int buttonId = scoringRadioGroup.getCheckedRadioButtonId();
-//                    viewModel.setTournamentScoring(buttonId != R.id.simple_scoring_rb);
-//                    dialogInterface.dismiss();
-//                })
-//                .setNegativeButton("Cancel", ((d, i) -> d.cancel()))
-//                .create()
-//                .show();
+        DialogGameSettingsBinding dialogBinding =
+                DataBindingUtil.inflate(
+                        getLayoutInflater(),
+                        R.layout.dialog_game_settings,
+                        null,
+                        false
+                );
+
+        // Initialize values
+        dialogBinding.listNameEditText.setText(viewModel.getTitle().getValue());
+
+        List<Player> players = viewModel.getPlayers().getValue();
+        if (players != null && players.size() == 3) {
+            dialogBinding.buttonPlayer1.setText(players.get(0).getName());
+            dialogBinding.buttonPlayer2.setText(players.get(1).getName());
+            dialogBinding.buttonPlayer3.setText(players.get(2).getName());
+        }
+
+        SkatGame skatGame = viewModel.getGame().getValue();
+        if (skatGame == null) {
+            return;
+        }
+
+        // Create a map for (position, buttonId)
+        SparseIntArray startDealerMap = new SparseIntArray();
+        startDealerMap.put(0, R.id.buttonPlayer1);
+        startDealerMap.put(1, R.id.buttonPlayer2);
+        startDealerMap.put(2, R.id.buttonPlayer3);
+        dialogBinding.toggleGroupStartDealer.check(
+                startDealerMap.get(skatGame.getStartDealerPosition(), R.id.buttonPlayer1));
+
+        SkatSettings settings = skatGame.getSettings();
+
+        dialogBinding.numberOfRoundsText.setText(
+                String.valueOf(settings.getNumberOfRounds()));
+        dialogBinding.roundsSlider.setValue(settings.getNumberOfRounds());
+
+        dialogBinding.scoringSettingsRg.check(settings.isTournamentScoring() ?
+                R.id.tournament_scoring_rb : R.id.simple_scoring_rb);
+
+        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.message_scoring_dialog)
+                .setView(dialogBinding.getRoot())
+                .setPositiveButton("Save", (dialogInterface, i) -> {
+                    Editable editable = dialogBinding.listNameEditText.getText();
+                    String title = editable != null ?
+                            editable.toString() : viewModel.getTitle().getValue();
+
+                    settings.setNumberOfRounds((int) dialogBinding.roundsSlider.getValue());
+                    settings.setTournamentScoring(dialogBinding.tournamentScoringRb.isChecked());
+
+                    int checkedButton = dialogBinding.toggleGroupStartDealer.getCheckedButtonId();
+                    int startDealerPosition = startDealerMap
+                            .keyAt(startDealerMap.indexOfValue(checkedButton));
+
+                    skatGame.setStartDealerPosition(startDealerPosition);
+                    skatGame.setTitle(title);
+                    skatGame.setSettings(settings);
+                    viewModel.updateGame(skatGame);
+                    dialogInterface.dismiss();
+                })
+                .setNegativeButton("Cancel", ((d, i) -> d.cancel()))
+                .create();
+
+        // Add listeners
+        dialogBinding.listNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Ignore.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Ignore.
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int counterMaxLength = dialogBinding.listNameTextInput.getCounterMaxLength();
+                int length = s.length();
+                if (length > counterMaxLength) {
+                    s.replace(counterMaxLength, length, "");
+                }
+
+                String title = s.toString().trim();
+
+                // Set error if invalid title
+                dialogBinding.listNameTextInput.setError(
+                        title.isEmpty() ? "Please enter a valid title!" : null
+                );
+
+                // Disable positive button if error exists
+                Button buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                buttonPositive.setEnabled( dialogBinding.listNameTextInput.getError() == null );
+            }
+        });
+
+        dialogBinding.roundsSlider.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                dialogBinding.numberOfRoundsText.setText(String.valueOf((int) value));
+            }
+        });
+
+        dialog.show();
     }
 
     private void initializeUI() {
@@ -357,16 +456,6 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
     private void setupNavigation() {
         // Empty.
-    }
-
-    private void showEditDealerDialog() {
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Who was dealer in the first round?")
-                //.setView()
-                .setNegativeButton("Cancel", (d, i) -> d.cancel())
-                .setPositiveButton("Save", (d, i) -> d.dismiss())
-                .create()
-                .show();
     }
 
     @SuppressLint("InflateParams")

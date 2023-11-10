@@ -52,6 +52,11 @@ public class ScoreRepository implements CreateScorePort, GetScoresPort {
    }
 
    @Override
+   public void deleteScoresForGame(long gameId) {
+      persistenceAdapter.deleteScoresForGame(gameId);
+   }
+
+   @Override
    public List<SkatScore> getScores(long gameId) {
       return persistenceAdapter.getScoresForGame(gameId).stream()
               .map(ScoreDto::toScore)

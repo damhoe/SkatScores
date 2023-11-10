@@ -1,55 +1,62 @@
 package com.damhoe.scoresheetskat.history;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.damhoe.scoresheetskat.base.Result;
+import com.damhoe.scoresheetskat.game.application.ports.in.CreateGameUseCase;
 import com.damhoe.scoresheetskat.game.application.ports.in.LoadGameUseCase;
+import com.damhoe.scoresheetskat.game.domain.SkatGame;
 import com.damhoe.scoresheetskat.game.domain.SkatGamePreview;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 public class HistoryViewModel extends ViewModel {
 
-    private final LoadGameUseCase loadGameUseCase;
+    private final LoadGameUseCase mLoadGameUseCase;
+    private final CreateGameUseCase mCreateGameUseCase;
 
-    private final MutableLiveData<List<SkatGamePreview>> lastMonthGames = new MutableLiveData<>();
-    private final MutableLiveData<List<SkatGamePreview>> oldGames = new MutableLiveData<>();
+    Date oldestDate;
+    Date firstOfMonth;
 
     @Inject
-    public HistoryViewModel(LoadGameUseCase loadGameUseCase) {
-        this.loadGameUseCase = loadGameUseCase;
-        initData();
+    public HistoryViewModel(
+            LoadGameUseCase loadGameUseCase,
+            CreateGameUseCase createGameUseCase
+    ) {
+        mLoadGameUseCase = loadGameUseCase;
+        mCreateGameUseCase = createGameUseCase;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 1);
+        oldestDate = calendar.getTime();
+
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 1);
+        firstOfMonth = calendar.getTime();
     }
 
     LiveData<List<SkatGamePreview>> getOldGames() {
-        return oldGames;
+        return Transformations.map(mLoadGameUseCase.getGamesSince(oldestDate),
+                allGames -> allGames.stream()
+                        .filter(preview -> preview.getDate().before(firstOfMonth))
+                        .collect(Collectors.toList())
+        );
     }
 
     LiveData<List<SkatGamePreview>> getLastMonthGames() {
-        return lastMonthGames;
+        return mLoadGameUseCase.getGamesSince(firstOfMonth);
     }
 
-    public void initData() {
-        List<SkatGamePreview> previews = new ArrayList<>();
-        SkatGamePreview p = new SkatGamePreview();
-        p.setDate(Calendar.getInstance().getTime());
-        p.setGameId(1234L);
-        p.setFinished(false);
-        p.setTitle("My game 1");
-        List<String> names = new ArrayList<>();
-        names.add("Hans");
-        names.add("Marie H.");
-        names.add("Nele");
-        p.setPlayerNames(names);
-        previews.add(p);
-        previews.add(p);
-        previews.add(p);
-        lastMonthGames.setValue(previews);
-        oldGames.setValue(previews);
+    public Result<SkatGame> deleteGame(long id) {
+        return mCreateGameUseCase.deleteSkatGame(id);
     }
 }

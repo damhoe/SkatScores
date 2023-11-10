@@ -32,7 +32,7 @@ public class Player {
         return name;
     }
 
-    public long getID() {
+    public long getId() {
         return ID;
     }
 

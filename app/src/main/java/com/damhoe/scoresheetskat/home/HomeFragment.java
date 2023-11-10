@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment implements GamePreviewItemClickListen
                     findNavController().navigate(R.id.action_home_to_settings);
                     return true;
                 }
-                return false; //TopLevelFragment.this.onMenuItemSelected(menuItem);
+                return false;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
@@ -156,6 +156,9 @@ public class HomeFragment extends Fragment implements GamePreviewItemClickListen
                 } else if (menuItem.getItemId() == R.id.history) {
                     findNavController().navigate(R.id.action_home_to_history);
                     return true;
+                } else if (menuItem.getItemId() == R.id.statistics) {
+                    findNavController().navigate(R.id.action_home_to_statistics);
+                    return true;
                 } else if (menuItem.getItemId() == R.id.menu_help) {
                     findNavController().navigate(R.id.action_home_to_help);
                     return true;
@@ -173,7 +176,7 @@ public class HomeFragment extends Fragment implements GamePreviewItemClickListen
         // Navigate to game using gameId
         Bundle bundle = new Bundle();
         bundle.putLong("gameId", skatGamePreview.getGameId());
-        findNavController().navigate(R.id.action_home_to_navigation_game, bundle);
+        findNavController().navigate(R.id.action_home_to_game, bundle);
     }
 
     @Override

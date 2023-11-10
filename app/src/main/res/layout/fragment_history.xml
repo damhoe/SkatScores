@@ -87,8 +87,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:alpha="0.6"
-                    android:text="No unfinished games found."
-                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                    android:text="You didn't play any games this month."
+                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/monthly_games_title" />
@@ -98,9 +98,10 @@
                     android:id="@+id/monthly_games_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="100dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:paddingBottom="16dp"
+                    android:paddingBottom="8dp"
                     app:layout_constraintTop_toBottomOf="@id/monthly_games_title"
                     android:overScrollMode="never"
                     tools:listitem="@layout/item_game_preview"
@@ -112,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:text="Last month and before"
@@ -126,8 +127,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:alpha="0.6"
-                    android:text="No unfinished games found."
-                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                    android:text="You didn't play any games at this time."
+                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/older_games_title" />
@@ -144,7 +145,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:overScrollMode="never"
                     tools:listitem="@layout/item_game_preview"
-                    tools:itemCount="1"
+                    tools:itemCount="0"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -166,7 +167,7 @@
             android:layout_height="wrap_content"
             app:layout_anchor="@id/bottom_app_bar"
             android:src="@drawable/ic_add_black_24dp"
-            android:contentDescription="Primary top level add action"
+            android:contentDescription="@string/description_new_game"
             style="@style/Widget.Material3.FloatingActionButton.Secondary"
             />
 

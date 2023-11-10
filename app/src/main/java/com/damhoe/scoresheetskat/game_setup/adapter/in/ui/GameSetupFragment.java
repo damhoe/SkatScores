@@ -21,7 +21,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentGameSetupBinding;
 import com.damhoe.scoresheetskat.game.Constants;
@@ -136,7 +135,7 @@ public class GameSetupFragment extends Fragment {
             SkatGameCommand command = viewModel.getSkatGameCommand().getValue();
             Bundle bundle = new Bundle();
             bundle.putParcelable("gameCommand", command);
-            findNavController().navigate(R.id.action_navigation_new_game_to_navigation_game, bundle);
+            findNavController().navigate(R.id.action_new_game_to_game, bundle);
         });
     }
 
@@ -182,7 +181,7 @@ public class GameSetupFragment extends Fragment {
     }
 
     private void setUpRoundsSeekbar() {
-        binding.roundsSeekbar.addOnChangeListener((slider, numberOfRounds, fromUser) ->
+        binding.roundsSlider.addOnChangeListener((slider, numberOfRounds, fromUser) ->
                 viewModel.updateNumberOfRounds((int) numberOfRounds));
     }
 
@@ -219,7 +218,7 @@ public class GameSetupFragment extends Fragment {
         binding.scoringSettingsRg.check(
                 isTournamentScoring? R.id.tournament_scoring_rb : R.id.simple_scoring_rb
         );
-        binding.roundsSeekbar.setValue(viewModel.getNumberOfRounds().getValue());
+        binding.roundsSlider.setValue(viewModel.getNumberOfRounds().getValue());
     }
 
     private int calculateSeekbarPosition(int value, Integer[] allowedValues) {

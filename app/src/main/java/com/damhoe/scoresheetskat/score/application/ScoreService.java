@@ -51,4 +51,9 @@ public class ScoreService implements CreateScoreUseCase, GetScoreUseCase {
     public Result<SkatScore> deleteScore(long id) {
         return Result.success(createScorePort.deleteScore(id));
     }
+
+    @Override
+    public void deleteScoresForGame(long gameId) {
+        createScorePort.deleteScoresForGame(gameId);
+    }
 }

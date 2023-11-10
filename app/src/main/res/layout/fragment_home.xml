@@ -130,12 +130,16 @@
 
                 <TextView
                     android:id="@+id/label_unfinished_games"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:padding="36dp"
                     android:layout_marginTop="16dp"
                     android:alpha="0.6"
-                    android:text="No unfinished games found."
-                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                    android:textAlignment="center"
+                    android:text="We didn't find any games\n that can be continued."
+                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title_unfinished_games" />
@@ -152,6 +156,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:overScrollMode="never"
                     tools:listitem="@layout/item_game_preview"
+                    tools:itemCount="0"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

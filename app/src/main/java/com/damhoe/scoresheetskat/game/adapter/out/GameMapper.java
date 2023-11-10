@@ -1,10 +1,13 @@
 package com.damhoe.scoresheetskat.game.adapter.out;
 
 import com.damhoe.scoresheetskat.game.adapter.out.models.SkatGameDTO;
+import com.damhoe.scoresheetskat.game.domain.GameRunStateInfo;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
 import com.damhoe.scoresheetskat.game.domain.SkatGamePreview;
 import com.damhoe.scoresheetskat.game.domain.SkatSettings;
 import com.damhoe.scoresheetskat.player.domain.Player;
+import com.damhoe.scoresheetskat.score.application.ports.in.GetScoreUseCase;
+import com.damhoe.scoresheetskat.score.domain.SkatScore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,9 +15,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public final class GameMapper {
+import javax.inject.Inject;
 
-   public static SkatGame mapSkatGameDTOToSkatGame(
+public class GameMapper {
+
+   private final GetScoreUseCase mGetScoreUseCase;
+
+   @Inject
+   public GameMapper(GetScoreUseCase getScoreUseCase) {
+      mGetScoreUseCase = getScoreUseCase;
+   }
+
+   public SkatGame mapSkatGameDTOToSkatGame(
            SkatGameDTO skatGameDTO,
            SkatSettings skatSettings,
            List<Player> players
@@ -29,6 +41,13 @@ public final class GameMapper {
 
       game.setId(skatGameDTO.getId());
 
+      // Add Scores
+      List<SkatScore> scores = mGetScoreUseCase.getScores(game.getId());
+      game.start();
+      for (int i = 0; i < scores.size(); i++) {
+         game.addScore(scores.get(i));
+      }
+
       try {
          game.setCreatedAt(createSimpleDateFormat().parse(skatGameDTO.getCreatedAt()));
       } catch (Exception e) {
@@ -37,15 +56,23 @@ public final class GameMapper {
       return game;
    }
 
-   public static SkatGamePreview mapToPreview(
+   public SkatGamePreview mapToPreview(
            SkatGameDTO skatGameDTO,
+           SkatSettings settings,
            List<Player> players
    ) {
       SkatGamePreview skatGamePreview = new SkatGamePreview();
       skatGamePreview.setGameId(skatGameDTO.getId());
       skatGamePreview.setTitle(skatGameDTO.getTitle());
       skatGamePreview.setPlayerNames(getPlayerNames(players));
-      skatGamePreview.setFinished(false);
+
+      // Add Scores
+      List<SkatScore> scores = mGetScoreUseCase.getScores(skatGameDTO.getId());
+      int scoreCount = scores.size();
+      int roundsCount = settings.getNumberOfRounds();
+      skatGamePreview.setProgressInfo(
+              new GameRunStateInfo(roundsCount, scoreCount + 1,
+                      roundsCount == scoreCount));
 
       try {
          skatGamePreview.setDate(createSimpleDateFormat().parse(skatGameDTO.getCreatedAt()));

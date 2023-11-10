@@ -74,7 +74,7 @@
                     android:text="@string/title_spitzen"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toggleGroupResult" />
+                    app:layout_constraintTop_toBottomOf="@id/toggleGroupSpecialSuit" />
 
                 <TextView
                     android:id="@+id/spitzen_label"
@@ -100,7 +100,7 @@
                     android:text="@string/title_suit"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spitzen_slider" />
+                    app:layout_constraintTop_toBottomOf="@id/toggleGroupResult" />
 
                 <TextView
                     android:id="@+id/announcements_title"
@@ -113,7 +113,7 @@
                     android:text="@string/title_announcements"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toggleGroupSpecialSuit" />
+                    app:layout_constraintTop_toBottomOf="@id/spitzen_slider" />
 
                 <TextView
                     android:id="@+id/win_levels_title"

@@ -3,7 +3,6 @@ package com.damhoe.scoresheetskat.history;
 import androidx.core.view.MenuProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
@@ -29,8 +28,6 @@ import com.damhoe.scoresheetskat.game.adapter.in.ui.shared.GamePreviewItemClickL
 import com.damhoe.scoresheetskat.game.domain.SkatGamePreview;
 import com.damhoe.scoresheetskat.game.adapter.in.ui.shared.GamePreviewAdapter;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -78,6 +75,9 @@ public class HistoryFragment extends Fragment implements GamePreviewItemClickLis
         binding.olderGamesRv.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.olderGamesRv.addItemDecoration(new GamePreviewAdapter.ItemDecoration(16));
 
+        binding.addButton.setOnClickListener(view ->
+                findNavController().navigate(R.id.action_history_to_game_setup));
+
         return binding.getRoot();
     }
 
@@ -124,9 +124,9 @@ public class HistoryFragment extends Fragment implements GamePreviewItemClickLis
                     return true;
                 } else if (menuItem.getItemId() == R.id.players) {
                     findNavController().navigate(R.id.action_history_to_players);
-                } // TODO else if (menuItem.getItemId() == R.id.statistics) {
-                    // findNavController().navigate(R.id.);
-                //}
+                } else if (menuItem.getItemId() == R.id.statistics) {
+                    findNavController().navigate(R.id.action_history_to_statistics);
+                }
                 return false;
             }
         });
@@ -138,11 +138,13 @@ public class HistoryFragment extends Fragment implements GamePreviewItemClickLis
 
     @Override
     public void notifyDelete(SkatGamePreview skatGamePreview) {
-
+        mViewModel.deleteGame(skatGamePreview.getGameId());
     }
 
     @Override
     public void notifySelect(SkatGamePreview skatGamePreview) {
-
+        Bundle bundle = new Bundle();
+        bundle.putLong("gameId", skatGamePreview.getGameId());
+        findNavController().navigate(R.id.action_history_to_game, bundle);
     }
 }

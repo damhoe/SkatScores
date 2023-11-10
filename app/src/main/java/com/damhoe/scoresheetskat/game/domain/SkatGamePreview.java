@@ -1,8 +1,5 @@
 package com.damhoe.scoresheetskat.game.domain;
 
-import com.damhoe.scoresheetskat.player.domain.Player;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,8 +7,8 @@ public class SkatGamePreview {
    private String title;
    private Date date;
    private List<String> playerNames;
-   private boolean isFinished;
    private long gameId;
+   private GameRunStateInfo gameRunStateInfo;
 
    public String getTitle() {
       return title;
@@ -37,19 +34,19 @@ public class SkatGamePreview {
       this.playerNames = playerNames;
    }
 
-   public boolean isFinished() {
-      return isFinished;
-   }
-
-   public void setFinished(boolean finished) {
-      isFinished = finished;
-   }
-
    public long getGameId() {
       return gameId;
    }
 
    public void setGameId(long gameId) {
       this.gameId = gameId;
+   }
+
+   public GameRunStateInfo getProgressInfo() {
+      return gameRunStateInfo;
+   }
+
+   public void setProgressInfo(GameRunStateInfo gameRunStateInfo) {
+      this.gameRunStateInfo = gameRunStateInfo;
    }
 }

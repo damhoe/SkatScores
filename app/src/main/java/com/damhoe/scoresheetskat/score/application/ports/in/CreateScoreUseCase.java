@@ -8,4 +8,5 @@ public interface CreateScoreUseCase {
  Result<SkatScore> createScore(SkatScoreCommand command);
  Result<SkatScore> updateScore(long id, SkatScoreCommand command);
  Result<SkatScore> deleteScore(long id);
+ void deleteScoresForGame(long gameId);
 }

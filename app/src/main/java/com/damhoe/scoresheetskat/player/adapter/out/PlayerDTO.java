@@ -1,6 +1,10 @@
 package com.damhoe.scoresheetskat.player.adapter.out;
 
-import java.util.Date;
+import com.damhoe.scoresheetskat.player.domain.Player;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 class PlayerDTO {
     private long id;
@@ -38,5 +42,36 @@ class PlayerDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Player asPlayer(int gameCount) {
+        Player player = new Player("");
+        player.setID(getId());
+        player.setName(getName());
+        player.setGameCount(gameCount);
+        try {
+            player.setCreatedAt(createSimpleDateFormat().parse(getCreatedAt()));
+            player.setUpdatedAt(createSimpleDateFormat().parse(getUpdatedAt()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return player;
+    }
+
+    public static PlayerDTO fromPlayer(Player player) {
+        PlayerDTO playerDTO = new PlayerDTO();
+        playerDTO.setId(player.getId());
+        playerDTO.setName(player.getName());
+        playerDTO.setCreatedAt(getCurrentTimeStamp());
+        playerDTO.setUpdatedAt(getCurrentTimeStamp());
+        return playerDTO;
+    }
+
+    private static SimpleDateFormat createSimpleDateFormat() {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    }
+
+    private static String getCurrentTimeStamp() {
+        return createSimpleDateFormat().format(Calendar.getInstance().getTime());
     }
 }

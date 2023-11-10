@@ -62,12 +62,24 @@ public class SkatGame extends Game<SkatSettings, SkatScore> {
    public void addScore(SkatScore score) {
       super.addScore(score);
       currentRound += 1;
+      if (currentRound > settings.getNumberOfRounds()) {
+         finish();
+      }
+   }
+
+   @Override
+   public void finish() {
+      super.finish();
+      currentRound = settings.getNumberOfRounds();
    }
 
    @Override
    public SkatScore removeLastScore() {
-      if (currentRound > 1)
+      if (isFinished()) {
+         resume();
+      } else if (currentRound > 1) {
          currentRound -= 1;
+      }
       return super.removeLastScore();
    }
 }

@@ -1,5 +1,6 @@
 package com.damhoe.scoresheetskat.game.adapter.in.ui.shared;
 
+import android.annotation.SuppressLint;
 import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class GamePreviewAdapter extends RecyclerView.Adapter<GamePreviewAdapter.GamePreviewViewHolder> {
+public class GamePreviewAdapter extends
+        RecyclerView.Adapter<GamePreviewAdapter.GamePreviewViewHolder> {
 
    private final GamePreviewItemClickListener mPreviewClickListener;
    private final List<SkatGamePreview> mPreviews;
@@ -49,6 +51,7 @@ public class GamePreviewAdapter extends RecyclerView.Adapter<GamePreviewAdapter.
       );
    }
 
+   @SuppressLint("DefaultLocale")
    @Override
    public void onBindViewHolder(@NonNull GamePreviewViewHolder holder, int position) {
       SkatGamePreview preview = mPreviews.get(position);
@@ -57,7 +60,14 @@ public class GamePreviewAdapter extends RecyclerView.Adapter<GamePreviewAdapter.
       holder.date.setText(
               new SimpleDateFormat("LLL, d yyyy", Locale.getDefault())
                       .format(preview.getDate()));
-      holder.round.setText("11/12"); // TODO
+
+      if (preview.getProgressInfo().isFinished()) {
+         holder.round.setText("Finished");
+      } else {
+         int currentRound = preview.getProgressInfo().getCurrentRound();
+         int roundsCount = preview.getProgressInfo().getRoundsCount();
+         holder.round.setText(String.format("%d/%d", currentRound, roundsCount));
+      }
       holder.buttonContinue.setOnClickListener(view -> mPreviewClickListener.notifySelect(preview));
       holder.buttonDelete.setOnClickListener(view -> mPreviewClickListener.notifyDelete(preview));
    }

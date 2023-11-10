@@ -16,36 +16,39 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class PlayerRepository implements CreatePlayerPort, GetPlayerPort, UpdatePlayerPort {
 
    private final PlayerPersistenceAdapter mPersistenceAdapter;
-   private final PlayerMapper mMapper;
 
-   private final MutableLiveData<List<PlayerDTO>> players = new MutableLiveData<>();
+   private final MutableLiveData<List<Player>> players = new MutableLiveData<>();
 
    @Inject
-   PlayerRepository(PlayerPersistenceAdapter persistenceAdapter, PlayerMapper mapper) {
+   PlayerRepository(PlayerPersistenceAdapter persistenceAdapter) {
       mPersistenceAdapter = persistenceAdapter;
-      mMapper = mapper;
 
       // Load data
-      players.setValue(persistenceAdapter.loadAllPlayers());
+      players.setValue(
+              persistenceAdapter.loadAllPlayers().stream()
+                      .map(playerDTO -> {
+                         int gameCount = mPersistenceAdapter.getGameCount(playerDTO.getId());
+                         return playerDTO.asPlayer(gameCount);
+                      })
+                      .collect(Collectors.toList())
+      );
    }
 
    @Override
    public Player createPlayer(String name) {
       Player player = new Player(name);
-      PlayerDTO playerDTO = mMapper.mapPlayerToPlayerDTO(player);
+      PlayerDTO playerDTO = PlayerDTO.fromPlayer(player);
       long id = mPersistenceAdapter.insertPlayer(playerDTO);
       player.setID(id);
 
       // Update player list
-      List<PlayerDTO> currentPlayers = players.getValue();
-      if (currentPlayers != null) {
-         currentPlayers.add(playerDTO);
-         players.postValue(currentPlayers);
-      }
+      refreshPlayersFromRepository();
 
       return player;
    }
@@ -58,51 +61,42 @@ public class PlayerRepository implements CreatePlayerPort, GetPlayerPort, Update
       }
 
       // Update player list
-      List<PlayerDTO> currentPlayers = players.getValue();
-      if (currentPlayers != null) {
-         currentPlayers.removeIf(player -> player.getId() == id);
-         players.postValue(currentPlayers);
-      }
+      refreshPlayersFromRepository();
 
       int gameCount = mPersistenceAdapter.getGameCount(id);
-      return mMapper.mapToPlayer(result.getValue(), gameCount);
+      return result.getValue().asPlayer(gameCount);
    }
 
    @Override
    public Player getPlayer(long id) {
-      Result<PlayerDTO> result = mPersistenceAdapter.getPlayer(id);
-      if (result.isFailure()) {
-         throw new Resources.NotFoundException(result.getMessage());
+      Result<PlayerDTO> getPlayerResult = mPersistenceAdapter.getPlayer(id);
+      if (getPlayerResult.isFailure()) {
+         throw new Resources.NotFoundException(getPlayerResult.getMessage());
       }
       int gameCount = mPersistenceAdapter.getGameCount(id);
-      return mMapper.mapToPlayer(result.getValue(), gameCount);
+      return getPlayerResult.getValue().asPlayer(gameCount);
    }
 
    @Override
    public LiveData<List<Player>> getPlayersLiveData() {
-      return Transformations.map(players,
-              playerDtoList -> playerDtoList.stream()
-                      .map(dto -> {
-                         int gameCount = mPersistenceAdapter.getGameCount(dto.getId());
-                         return mMapper.mapToPlayer(dto, gameCount);
-                      })
-                      .collect(Collectors.toList()));
+      return players;
    }
 
-   /** @noinspection DataFlowIssue*/
    @Override
    public List<Player> getPlayers() {
-      return players.getValue().stream()
-              .map(dto -> {
-                 int gameCount = mPersistenceAdapter.getGameCount(dto.getId());
-                 return mMapper.mapToPlayer(dto, gameCount);
-              })
-              .collect(Collectors.toList());
+      return players.getValue();
    }
 
    @Override
    public void refreshPlayersFromRepository() {
-      players.postValue(mPersistenceAdapter.loadAllPlayers());
+      players.postValue(
+              mPersistenceAdapter.loadAllPlayers().stream()
+                      .map(playerDTO -> {
+                         int gameCount = mPersistenceAdapter.getGameCount(playerDTO.getId());
+                         return playerDTO.asPlayer(gameCount);
+                      })
+                      .collect(Collectors.toList())
+      );
    }
 
    @Override
@@ -110,24 +104,12 @@ public class PlayerRepository implements CreatePlayerPort, GetPlayerPort, Update
       Player player = getPlayer(id);
       player.setName(newName);
       // Convert to database model
-      PlayerDTO dto = mMapper.mapPlayerToPlayerDTO(player);
+      PlayerDTO dto = PlayerDTO.fromPlayer(player);
       // Persist changes
       boolean isSuccess = mPersistenceAdapter.updatePlayer(dto) == 1;
 
       // Update player list
-      List<PlayerDTO> currentPlayers = players.getValue();
-      if (isSuccess && currentPlayers != null) {
-
-         // Replace old player with updated version
-         for (int i = 0; i < currentPlayers.size(); i++) {
-            if (currentPlayers.get(i).getId() == id) {
-               currentPlayers.set(i, dto);
-               break;
-            }
-         }
-
-         players.postValue(currentPlayers);
-      }
+      refreshPlayersFromRepository();
 
       return player;
    }

@@ -6,4 +6,5 @@ public interface CreateScorePort {
     SkatScore saveScore(SkatScore score);
     SkatScore updateScore(SkatScore score);
     SkatScore deleteScore(long id);
+    void deleteScoresForGame(long gameId);
 }

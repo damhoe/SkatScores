@@ -180,6 +180,20 @@ public class ScorePersistenceAdapter {
         }
     }
 
+    public void deleteScoresForGame(long gameId) {
+        try {
+            SQLiteDatabase db = mDbHelper.getReadableDatabase();
+            db.execSQL(
+                    "DELETE FROM " + DbHelper.SCORE_TABLE_NAME
+                            + " WHERE " + DbHelper.SCORE_COLUMN_GAME_ID + " =? ",
+                    new String[] { gameId + "" }
+            );
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
+    }
+
     @SuppressLint("Range")
     @NonNull
     private static ScoreDto cursorToScoreDto(Cursor cursor) {

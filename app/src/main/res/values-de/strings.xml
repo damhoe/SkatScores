@@ -1,12 +1,12 @@
 <!-- values-de/strings.xml -->
 <resources>
     <string name="title_statistics">Statistik</string>
-    <string name="title_new_game" translatable="false">Neue Liste</string>
+    <string name="title_new_game">Neue Liste</string>
     <string name="title_settings">Einstellungen</string>
     <string name="title_help">Hilfe</string>
     <string name="title_history">Verlauf</string>
     <string name="title_users">Spieler</string>
-    <string name="title_home">Meine Spiele</string>
+    <string name="title_home">Home</string>
     <string name="title_scoring_settings">Wertungsmodus</string>
     <string name="title_rounds_settings">Anzahl Runden</string>
     <string name="title_general_settings">Allgemein</string>
@@ -76,4 +76,6 @@
     <string name="description_diamonds">Karo</string>
     <string name="text_info_no_players">Erstelle Spieler*innenprofile für deine Listen.</string>
     <string name="description_create_new_profile">Erstelle ein neues Profil.</string>
+    <string name="title_start_dealer">Wer gibt zuerst?</string>
+    <string name="description_number_of_rounds">Anzahl der Runden</string>
 </resources>

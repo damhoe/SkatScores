@@ -43,7 +43,7 @@ class PlayerViewModel extends ViewModel {
     }
 
     public Result<Player> removePlayer(Player player) {
-        return getPlayerUseCase.deletePlayer(player.getID());
+        return getPlayerUseCase.deletePlayer(player.getId());
     }
 
     public boolean isExistentName(String name) {
@@ -51,6 +51,7 @@ class PlayerViewModel extends ViewModel {
     }
 
     public Result<Player> updatePlayer(Player player) {
-        return updatePlayerUseCase.renamePlayer(player.getID(), player.getName());
+        selectedPlayer.postValue(player);
+        return updatePlayerUseCase.renamePlayer(player.getId(), player.getName());
     }
 }
