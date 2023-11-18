@@ -31,7 +31,9 @@ import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentPlayersBinding;
 import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
+import com.damhoe.scoresheetskat.shared_ui.utils.LayoutMargins;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -39,7 +41,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PlayerFragment extends Fragment implements NotifyItemClickListener {
+public class PlayersFragment extends Fragment implements NotifyItemClickListener {
 
     private FragmentPlayersBinding binding;
     private PlayerViewModel viewModel;
@@ -62,8 +64,6 @@ public class PlayerFragment extends Fragment implements NotifyItemClickListener 
         binding.playerRecyclerView.setAdapter(playerAdapter);
         binding.playerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.playerRecyclerView.addItemDecoration(new PlayerAdapter.ItemDecoration());
-
-        addMenu();
 
         return binding.getRoot();
     }
@@ -157,6 +157,19 @@ public class PlayerFragment extends Fragment implements NotifyItemClickListener 
         InsetsManager.applyStatusBarInsets(binding.appbarLayout);
         InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
 
+        // Load default button margins for resource values
+        int bottomMargin =
+                (int) getResources().getDimension(R.dimen.fab_above_bottom_nav_margin_bottom);
+        int rightMargin =
+                (int) getResources().getDimension(R.dimen.fab_margin_right);
+        LayoutMargins margins = new LayoutMargins(
+                0,
+                0,
+                rightMargin,
+                bottomMargin
+        );
+        InsetsManager.applyNavigationBarInsets(binding.addButton, margins);
+
         binding.addButton.setOnClickListener(v -> {
             buildStartAddPlayerDialog();
         });
@@ -173,31 +186,9 @@ public class PlayerFragment extends Fragment implements NotifyItemClickListener 
         });
     }
 
-    private void addMenu() {
-        /*
-         * Bottom app bar menu
-         */
-        binding.bottomAppBar.addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menu.clear();
-                menuInflater.inflate(R.menu.players_menu, menu);
-            }
-
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if (menuItem.getItemId() == R.id.navigation_home) {
-                    findNavController().navigateUp();
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
-
     @Override
     public void notifyItemClick(Player player, int position) {
         viewModel.selectPlayer(player);
-        findNavController().navigate(R.id.action_playersFragment_to_player_details);
+        findNavController().navigate(R.id.action_players_to_player_details);
     }
 }

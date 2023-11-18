@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_nav_graph_full"
+    app:startDestination="@id/game_setup">
+
+    <include app:graph="@navigation/game_nav_graph" />
+
+    <fragment
+        android:id="@+id/game_setup"
+        android:name="com.damhoe.scoresheetskat.game_setup.adapter.in.ui.GameSetupFragment"
+        tools:layout="@layout/fragment_game_setup">
+        <argument
+            android:name="ShowBottomAppBar"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_new_game_to_game"
+            app:destination="@id/game_nav_graph"
+            app:exitAnim="@anim/exit_to_bottom"
+            app:enterAnim="@anim/zoom_fade_in"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"/>
+    </fragment>
+
+</navigation>

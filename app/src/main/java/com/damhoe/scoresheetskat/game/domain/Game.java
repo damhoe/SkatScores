@@ -14,7 +14,6 @@ import java.util.UUID;
 public abstract class Game<TSettings extends GameSettings, TScore extends Score> {
 
     public enum RunState {
-        INITIALIZED,
         RUNNING,
         FINISHED
     }
@@ -33,8 +32,8 @@ public abstract class Game<TSettings extends GameSettings, TScore extends Score>
         this.settings = settings;
         id = UUID.randomUUID().getMostSignificantBits();
         createdAt = Calendar.getInstance().getTime();
-        runState = RunState.INITIALIZED;
         scores = new ArrayList<>();
+        start();
     }
 
     public void addScore(TScore score) {
@@ -90,16 +89,8 @@ public abstract class Game<TSettings extends GameSettings, TScore extends Score>
         runState = RunState.RUNNING;
     }
 
-    public boolean isRunning() {
-        return runState == RunState.RUNNING;
-    }
-
     public boolean isFinished() {
         return runState == RunState.FINISHED;
-    }
-
-    public RunState getRunState() {
-        return runState;
     }
 
     public void setTitle(String title) {

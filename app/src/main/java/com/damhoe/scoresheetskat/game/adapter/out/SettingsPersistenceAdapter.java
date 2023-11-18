@@ -7,12 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.game.adapter.out.models.SkatSettingsDTO;
-import com.damhoe.scoresheetskat.persistance.DbHelper;
+import com.damhoe.scoresheetskat.persistence.DbHelper;
 
 import javax.inject.Inject;
 
-import static com.damhoe.scoresheetskat.persistance.Utility.getIntFromCursor;
-import static com.damhoe.scoresheetskat.persistance.Utility.getLongFromCursor;
+import static com.damhoe.scoresheetskat.persistence.Utility.getIntFromCursor;
+import static com.damhoe.scoresheetskat.persistence.Utility.getLongFromCursor;
 
 public class SettingsPersistenceAdapter {
    private final DbHelper dbHelper;

@@ -1,13 +1,17 @@
 package com.damhoe.scoresheetskat;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.core.view.WindowCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
@@ -15,8 +19,13 @@ import androidx.preference.PreferenceManager;
 import com.damhoe.scoresheetskat.app.app_settings.ConfigManager;
 import com.damhoe.scoresheetskat.databinding.ActivityMainBinding;
 
+import java.util.Locale;
+
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity {
 
+    @Inject
     public ApplicationComponent appComponent;
     public ActivityMainBinding binding;
 
@@ -32,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        NavHostFragment navHostFragment = (NavHostFragment)
+                getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        NavigationUI.setupWithNavController(binding.bottomNavView, navController);
     }
 
     private void loadSharedPreferences() {
@@ -47,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
         // System Locale
         //String language = sharedPreferences.getString("language", "");
         //configManager.setLocale(language);
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("de"));
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
     public AppBarConfiguration getAppBarConfiguration() {

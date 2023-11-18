@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.game.adapter.out.models.SkatGameDTO;
-import com.damhoe.scoresheetskat.persistance.DbHelper;
+import com.damhoe.scoresheetskat.persistence.DbHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static com.damhoe.scoresheetskat.persistance.Utility.getIntFromCursor;
-import static com.damhoe.scoresheetskat.persistance.Utility.getLongFromCursor;
-import static com.damhoe.scoresheetskat.persistance.Utility.getStringFromCursor;
+import static com.damhoe.scoresheetskat.persistence.Utility.getIntFromCursor;
+import static com.damhoe.scoresheetskat.persistence.Utility.getLongFromCursor;
+import static com.damhoe.scoresheetskat.persistence.Utility.getStringFromCursor;
 
 @Singleton
 public class GamePersistenceAdapter {

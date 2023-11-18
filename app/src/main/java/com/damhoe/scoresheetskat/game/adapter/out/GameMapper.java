@@ -43,7 +43,6 @@ public class GameMapper {
 
       // Add Scores
       List<SkatScore> scores = mGetScoreUseCase.getScores(game.getId());
-      game.start();
       for (int i = 0; i < scores.size(); i++) {
          game.addScore(scores.get(i));
       }
@@ -70,9 +69,13 @@ public class GameMapper {
       List<SkatScore> scores = mGetScoreUseCase.getScores(skatGameDTO.getId());
       int scoreCount = scores.size();
       int roundsCount = settings.getNumberOfRounds();
-      skatGamePreview.setProgressInfo(
-              new GameRunStateInfo(roundsCount, scoreCount + 1,
-                      roundsCount == scoreCount));
+      skatGamePreview.setGameRunStateInfo(
+              new GameRunStateInfo(
+                      roundsCount,
+                      scoreCount + 1,
+                      roundsCount == scoreCount
+              )
+      );
 
       try {
          skatGamePreview.setDate(createSimpleDateFormat().parse(skatGameDTO.getCreatedAt()));

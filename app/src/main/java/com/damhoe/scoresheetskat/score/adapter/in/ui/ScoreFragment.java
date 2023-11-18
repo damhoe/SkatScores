@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentScoreBinding;
+import com.damhoe.scoresheetskat.game.GameActivity;
 import com.damhoe.scoresheetskat.score.domain.ScoreEvent;
 import com.damhoe.scoresheetskat.score.domain.ScoreEventType;
 import com.damhoe.scoresheetskat.score.domain.ScoreRequest;
@@ -54,7 +55,7 @@ public class ScoreFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        ((MainActivity) requireActivity()).appComponent.inject(this);
+        ((GameActivity) requireActivity()).getAppComponent().inject(this);
         super.onCreate(savedInstanceState);
 
         ScoreRequest scoreRequest = requireArguments().getParcelable("scoreRequest");
@@ -201,17 +202,7 @@ public class ScoreFragment extends Fragment {
         suitCheckButtonMap.put(SkatSuit.DIAMONDS, () -> binding.toggleGroupSuit.check(binding.buttonDiamonds.getId()));
         suitCheckButtonMap.put(SkatSuit.GRAND, () -> binding.toggleGroupSpecialSuit.check(binding.buttonGrand.getId()));
         suitCheckButtonMap.put(SkatSuit.NULL, () -> binding.toggleGroupSpecialSuit.check(binding.buttonNull.getId()));
-    }
-
-    private void showOrHideCheckedIcon(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-        if (isChecked) {
-            ((MaterialButton) group.findViewById(checkedId)).setIcon(
-                    ResourcesCompat.getDrawable(getResources(),
-                            R.drawable.ic_done_black_24dp, null));
-        }
-        else {
-            ((MaterialButton) group.findViewById(checkedId)).setIcon(null);
-        }
+        suitCheckButtonMap.put(SkatSuit.INVALID, () -> binding.toggleGroupSpecialSuit.clearChecked());
     }
 
     /** @noinspection DataFlowIssue*/
@@ -260,9 +251,7 @@ public class ScoreFragment extends Fragment {
 
         // Setup navigation
         NavController navController = findNavController();
-        AppBarConfiguration appBarConfiguration =
-                ((MainActivity)requireActivity()).getAppBarConfiguration();
-        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.toolbar, navController);
 
         // Set insets
         InsetsManager.applyStatusBarInsets(binding.appbarLayout);

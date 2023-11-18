@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 
 import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.persistance.DbHelper;
+import com.damhoe.scoresheetskat.game.adapter.out.models.PlayerMatchDTO;
+import com.damhoe.scoresheetskat.persistence.DbHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,19 @@ class PlayerPersistenceAdapter {
                 new String[] { id + "" });
             PlayerDTO deletedPlayer = getResult.getValue();
             return Result.success(deletedPlayer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    protected void deletePlayerMatches(long id) {
+        try {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            db.execSQL(
+                    "DELETE FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
+                            + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID +  " = ?",
+                    new String[] { id + "" });
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

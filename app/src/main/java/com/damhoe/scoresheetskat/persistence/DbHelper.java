@@ -1,4 +1,4 @@
-package com.damhoe.scoresheetskat.persistance;
+package com.damhoe.scoresheetskat.persistence;
 
 import android.content.Context;
 import android.database.SQLException;

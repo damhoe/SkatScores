@@ -252,7 +252,7 @@ public class GameRepository implements GamePort {
            Game.RunState state
    ) {
       return previews.stream()
-              .filter(x -> x.getProgressInfo().isFinished() == (state == Game.RunState.FINISHED))
+              .filter(x -> x.getGameRunStateInfo().isFinished() == (state == Game.RunState.FINISHED))
               .collect(Collectors.toList());
    }
 }

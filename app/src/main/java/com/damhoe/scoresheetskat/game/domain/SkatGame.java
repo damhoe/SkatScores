@@ -41,8 +41,8 @@ public class SkatGame extends Game<SkatSettings, SkatScore> {
 
    @Override
    public void start() {
-      currentRound = 1;
       super.start();
+      currentRound = 1;
    }
 
    public int[] calculateTotalPoints() {
@@ -70,16 +70,28 @@ public class SkatGame extends Game<SkatSettings, SkatScore> {
    @Override
    public void finish() {
       super.finish();
-      currentRound = settings.getNumberOfRounds();
+   }
+
+   @Override
+   public void setSettings(SkatSettings settings) {
+      super.setSettings(settings);
+      if (currentRound > settings.getNumberOfRounds()) {
+         finish();
+      } else {
+         resume();
+      }
    }
 
    @Override
    public SkatScore removeLastScore() {
-      if (isFinished()) {
-         resume();
-      } else if (currentRound > 1) {
+      if (currentRound > 1) {
          currentRound -= 1;
       }
+
+      if (currentRound <= settings.getNumberOfRounds()) {
+         resume();
+      }
+
       return super.removeLastScore();
    }
 }

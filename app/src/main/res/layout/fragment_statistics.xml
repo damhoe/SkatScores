@@ -31,13 +31,6 @@
                 app:titleEnabled="true"
                 app:expandedTitleMarginBottom="20dp">
 
-                <View
-                    android:layout_width="48dp"
-                    android:layout_height="6dp"
-                    android:layout_gravity="bottom|start"
-                    android:layout_marginStart="16dp"
-                    android:background="?attr/colorSecondaryContainer"
-                    app:layout_collapseMode="parallax" />
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
@@ -256,25 +249,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
-
-        <com.google.android.material.bottomappbar.BottomAppBar
-            style="@style/Widget.App.BottomAppBar"
-            android:id="@+id/bottom_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:elevation="0dp"
-            app:menu="@menu/statistics_menu" />
-
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/addButton"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_anchor="@id/bottom_app_bar"-->
-<!--            android:src="@drawable/ic_add_black_24dp"-->
-<!--            android:contentDescription="@string/description_new_game"-->
-<!--            style="@style/Widget.Material3.FloatingActionButton.Secondary"-->
-<!--            />-->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

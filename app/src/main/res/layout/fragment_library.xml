@@ -31,20 +31,12 @@
                 app:expandedTitleMarginBottom="20dp"
                 >
 
-                <View
-                    android:layout_width="48dp"
-                    android:layout_height="6dp"
-                    android:layout_gravity="bottom|start"
-                    android:layout_marginStart="16dp"
-                    android:background="?attr/colorSecondaryContainer"
-                    app:layout_collapseMode="parallax" />
-
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
                     app:layout_collapseMode="pin"
-                    app:title="@string/title_home">
+                    app:title="@string/title_library">
 
                 </com.google.android.material.appbar.MaterialToolbar>
 
@@ -57,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
-            android:paddingBottom="100dp"
+            android:paddingBottom="164dp"
             android:clipToPadding="false"
             android:translationZ="-1dp"
             android:contentDescription="Scroll view that contains main content"
@@ -67,119 +59,117 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-                tools:context=".home.HomeFragment">
+                tools:context=".home.LibraryFragment">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_welcome"
-                    android:layout_width="match_parent"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_filter"
+                    style="@style/Widget.Material3.Button.IconButton.Outlined"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_edit_24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="32dp"
-                    style="@style/Widget.Material3.CardView.Filled"
-                    app:cardBackgroundColor="?colorPrimaryContainer"
-                    app:cardCornerRadius="12dp"
-                    android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    app:cardUseCompatPadding="true"
-                    >
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="24dp">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/icon_welcome"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginTop="8dp"
-                            app:srcCompat="@drawable/ic_lightbulb_24dp"
-                            app:tint="?colorOnPrimaryContainer"
-                            app:layout_constraintTop_toTopOf="@id/welcome_text"
-                            app:layout_constraintStart_toStartOf="parent"
-                            />
-
-                        <TextView
-                            android:id="@+id/welcome_text"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/welcome_text"
-                            android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                            android:textColor="?colorOnPrimaryContainer"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/icon_welcome"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </androidx.cardview.widget.CardView>
+                    android:contentDescription="@string/title_filter"
+                    android:visibility="gone"
+                    />
 
                 <TextView
-                    android:id="@+id/title_unfinished_games"
+                    android:id="@+id/this_month_games_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="42dp"
+                    android:layout_marginTop="24dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="Games to be continued"
+                    android:text="@string/label_this_month"
                     android:textAppearance="@style/TextAppearance.App.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/card_welcome" />
+                    app:layout_constraintTop_toBottomOf="@id/button_filter" />
 
                 <TextView
-                    android:id="@+id/label_unfinished_games"
-                    android:layout_width="0dp"
+                    android:id="@+id/this_month_no_games"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:padding="36dp"
                     android:layout_marginTop="16dp"
                     android:alpha="0.6"
-                    android:textAlignment="center"
-                    android:text="We didn't find any games\n that can be continued."
+                    android:text="@string/text_this_month_no_games"
                     android:textAppearance="@style/TextAppearance.App.BodyLarge"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title_unfinished_games" />
+                    app:layout_constraintTop_toBottomOf="@id/this_month_games_title" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/open_games_recycler"
+                    android:id="@+id/this_month_games_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="100dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingBottom="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/this_month_games_title"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/item_game_preview"
+                    tools:itemCount="1"
+                    />
+
+                <TextView
+                    android:id="@+id/older_games_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/label_older"
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/this_month_games_rv" />
+
+                <TextView
+                    android:id="@+id/older_no_games"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:alpha="0.6"
+                    android:text="@string/text_older_no_games"
+                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/older_games_title" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/older_games_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:paddingBottom="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/title_unfinished_games"
+                    app:layout_constraintTop_toBottomOf="@id/older_games_title"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:overScrollMode="never"
                     tools:listitem="@layout/item_game_preview"
                     tools:itemCount="0"
+                    android:contentDescription="@string/description_older_games"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.bottomappbar.BottomAppBar
-            style="@style/Widget.App.BottomAppBar"
-            android:id="@+id/bottom_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:elevation="0dp"
-            app:menu="@menu/home_menu" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_anchor="@id/bottom_app_bar"
-            android:src="@drawable/ic_add_black_24dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin_right"
+            android:layout_marginBottom="@dimen/fab_above_bottom_nav_margin_bottom"
+            app:icon="@drawable/ic_add_24dp"
+            android:text="@string/title_new_game"
             android:contentDescription="Primary top level add action"
-            style="@style/Widget.Material3.FloatingActionButton.Secondary"
+            style="@style/Widget.Material3.FloatingActionButton.Primary"
             />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

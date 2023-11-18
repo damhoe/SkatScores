@@ -5,7 +5,6 @@
     <string name="title_settings">Einstellungen</string>
     <string name="title_help">Hilfe</string>
     <string name="title_history">Verlauf</string>
-    <string name="title_users">Spieler</string>
     <string name="title_home">Home</string>
     <string name="title_scoring_settings">Wertungsmodus</string>
     <string name="title_rounds_settings">Anzahl Runden</string>
@@ -18,7 +17,7 @@
     <string name="title_list_name">List name</string>
     <string name="description_start">Beginne die neue Liste</string>
     <string name="title_about">Info</string>
-    <string name="title_players">Spieler</string>
+    <string name="title_players">Spieler*innen</string>
     <string name="label_new_game_button">Neues Spiel</string>
     <string name="title_category_languages">Sprachen</string>
     <string name="title_category_general">General</string>
@@ -78,4 +77,24 @@
     <string name="description_create_new_profile">Erstelle ein neues Profil.</string>
     <string name="title_start_dealer">Wer gibt zuerst?</string>
     <string name="description_number_of_rounds">Anzahl der Runden</string>
+    <string name="description_new_game">Erstelle eine neue LIste.</string>
+    <string name="menu_home">Home</string>
+    <string name="title_this_year_progress">Jahr</string>
+    <string name="title_overall_progress">Allgemein</string>
+    <string name="title_this_month_progress">Monat</string>
+    <string name="menu_edit_score">Bearbeiten</string>
+    <string name="menu_delete_score">Löschen</string>
+    <string name="menu_show_details">Details</string>
+    <string name="passe_text">Es wurde eingepasst.</string>
+    <string name="overbid_text">Es wurde überreizt.</string>
+    <string name="won_text">Gewonnen</string>
+    <string name="lost_text">Verloren</string>
+    <string name="title_library">Bibliothek</string>
+    <string name="title_continue">Fortsetzen</string>
+    <string name="label_this_month">Dieser Monat</string>
+    <string name="label_older">Vor letztem Monat</string>
+    <string name="text_older_no_games">Du hast noch keine Listen gespielt.</string>
+    <string name="text_this_month_no_games">Du hast noch keine Listen gespielt.</string>
+    <string name="title_filter">Filter</string>
+    <string name="title_players_short">Spieler*</string>
 </resources>

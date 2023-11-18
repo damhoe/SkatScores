@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentStatisticsBinding;
@@ -64,22 +65,15 @@ public class StatisticsFragment extends Fragment {
         /*
          * Bottom app bar menu
          */
-        binding.bottomAppBar.addMenuProvider(new MenuProvider() {
+        binding.toolbar.addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menu.clear();
-                menuInflater.inflate(R.menu.statistics_menu, menu);
+                menuInflater.inflate(R.menu.options_menu, menu);
             }
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if (menuItem.getItemId() == R.id.home) {
-                    findNavController().navigateUp();
-                    return true;
-                } else if (menuItem.getItemId() == R.id.history) {
-                    findNavController().navigate(R.id.action_statistics_to_history);
-                    return true;
-                }
                 return false;
             }
         });

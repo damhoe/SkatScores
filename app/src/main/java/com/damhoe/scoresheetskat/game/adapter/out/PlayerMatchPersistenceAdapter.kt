@@ -1,183 +1,169 @@
-package com.damhoe.scoresheetskat.game.adapter.out;
+package com.damhoe.scoresheetskat.game.adapter.out
 
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.database.Cursor
+import com.damhoe.scoresheetskat.base.Result
+import com.damhoe.scoresheetskat.game.adapter.out.models.PlayerMatchDTO
+import com.damhoe.scoresheetskat.persistence.DbHelper
+import javax.inject.Inject
 
-import androidx.annotation.NonNull;
+class PlayerMatchPersistenceAdapter @Inject constructor(private val dbHelper: DbHelper) {
+    /** @noinspection UnusedReturnValue
+     */
+    fun insertPlayerMatch(playerMatch: PlayerMatchDTO): Long {
+        return try {
+            val db = dbHelper.writableDatabase
+            val contentValues = ContentValues()
+            contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_GAME_ID, playerMatch.gameId)
+            contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID, playerMatch.playerId)
+            contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_POSITION, playerMatch.position)
+            db.insert(DbHelper.PLAYER_MATCH_TABLE_NAME, null, contentValues)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
 
-import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.game.adapter.out.models.PlayerMatchDTO;
-import com.damhoe.scoresheetskat.persistance.DbHelper;
+    @SuppressLint("Range")
+    protected fun getPlayerMatch(id: Long): Result<PlayerMatchDTO> {
+        var cursor: Cursor? = null
+        return try {
+            val db = dbHelper.readableDatabase
+            cursor = db.rawQuery(
+                "SELECT * FROM "
+                        + DbHelper.PLAYER_MATCH_TABLE_NAME
+                        + " WHERE "
+                        + DbHelper.PLAYER_MATCH_COLUMN_ID + " = ? ", arrayOf(id.toString())
+            )
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                val player = cursorToPlayerMatchDTO(cursor)
+                Result.success(player)
+            } else {
+                Result.failure("PlayerMatch with id $id does not exist")
+            }
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+            throw e
+        } finally {
+            cursor?.close()
+        }
+    }
 
-import java.util.ArrayList;
-import java.util.List;
+    protected fun updatePlayerMatch(playerMatch: PlayerMatchDTO): Int {
+        return try {
+            val db = dbHelper.writableDatabase
+            val contentValues = ContentValues()
+            contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_GAME_ID, playerMatch.gameId)
+            contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID, playerMatch.playerId)
+            contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_POSITION, playerMatch.position)
+            val whereClause = DbHelper.PLAYER_MATCH_COLUMN_ID + " = ? "
+            db.update(
+                DbHelper.PLAYER_MATCH_TABLE_NAME,
+                contentValues,
+                whereClause,
+                arrayOf(playerMatch.id.toString())
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
 
-import javax.inject.Inject;
-
-public class PlayerMatchPersistenceAdapter {
-   private final DbHelper dbHelper;
-
-   @Inject
-   public PlayerMatchPersistenceAdapter(DbHelper dbHelper) {
-      this.dbHelper = dbHelper;
-   }
-
-   /** @noinspection UnusedReturnValue*/
-   protected long insertPlayerMatch(PlayerMatchDTO playerMatch) {
-      try {
-         SQLiteDatabase db = dbHelper.getWritableDatabase();
-         ContentValues contentValues = new ContentValues();
-         contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_GAME_ID, playerMatch.getGameId());
-         contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID, playerMatch.getPlayerId());
-         contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_POSITION, playerMatch.getPosition());
-         return db.insert(DbHelper.PLAYER_MATCH_TABLE_NAME, null, contentValues);
-      } catch (Exception e) {
-         e.printStackTrace();
-         throw e;
-      }
-   }
-
-   @SuppressLint("Range")
-   protected Result<PlayerMatchDTO> getPlayerMatch(long id) {
-      Cursor cursor = null;
-      try {
-         SQLiteDatabase db = dbHelper.getReadableDatabase();
-         cursor = db.rawQuery(
-                 "SELECT * FROM "
-                         + DbHelper.PLAYER_MATCH_TABLE_NAME
-                         + " WHERE "
-                         + DbHelper.PLAYER_MATCH_COLUMN_ID + " = ? ",
-                 new String[] {String.valueOf(id)});
-         if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            PlayerMatchDTO player = cursorToPlayerMatchDTO(cursor);
-            return Result.success(player);
-         } else {
-            return Result.failure("PlayerMatch with id " + id + " does not exist");
-         }
-
-      } catch (NullPointerException e) {
-         e.printStackTrace();
-         throw e;
-      } finally {
-         if (cursor != null) {
-            cursor.close();
-         }
-      }
-   }
-
-   protected int updatePlayerMatch(PlayerMatchDTO playerMatch) {
-      try {
-         SQLiteDatabase db = dbHelper.getWritableDatabase();
-         ContentValues contentValues = new ContentValues();
-         contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_GAME_ID, playerMatch.getGameId());
-         contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID, playerMatch.getPlayerId());
-         contentValues.put(DbHelper.PLAYER_MATCH_COLUMN_POSITION, playerMatch.getPosition());
-         String whereClause = DbHelper.PLAYER_MATCH_COLUMN_ID + " = ? ";
-         return db.update(DbHelper.PLAYER_MATCH_TABLE_NAME, contentValues, whereClause,
-                 new String[] { String.valueOf(playerMatch.getId()) });
-      } catch (Exception e) {
-         e.printStackTrace();
-         throw e;
-      }
-   }
-
-   protected Result<PlayerMatchDTO> deletePlayerMatch(long id) {
-      try {
-         SQLiteDatabase db = dbHelper.getWritableDatabase();
-         Result<PlayerMatchDTO> getResult = getPlayerMatch(id);
-         if (getResult.isFailure()) {
-            return Result.failure("PlayerMatch with id " + id + " was not deleted because it did not exist");
-         }
-         db.execSQL(
-                 "DELETE FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
-                         + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_ID +  " = ?",
-                 new String[] { id + "" });
-         PlayerMatchDTO deletedPlayer = getResult.getValue();
-         return Result.success(deletedPlayer);
-      } catch (Exception e) {
-         e.printStackTrace();
-         throw e;
-      }
-   }
-
-   protected boolean isValidPlayerId(long playerId) {
-      Cursor cursor = null;
-      try {
-         SQLiteDatabase db = dbHelper.getReadableDatabase();
-         cursor = db.rawQuery(
-                 "SELECT * FROM " + DbHelper.PLAYER_TABLE_NAME
-                         + " WHERE " + DbHelper.PLAYER_COLUMN_ID + " = ? ",
-                 new String[] {String.valueOf(playerId)});
-         return cursor.getCount() > 0;
-      } catch (NullPointerException e) {
-         e.printStackTrace();
-         throw e;
-      } finally {
-         if (cursor != null) {
-            cursor.close();
-         }
-      }
-   }
-
-   protected Result<List<PlayerMatchDTO>> deletePlayerMatchesForGame(long gameId) {
-      try {
-         SQLiteDatabase db = dbHelper.getWritableDatabase();
-         List<PlayerMatchDTO> matches = loadPlayerMatches(gameId);
-         if (matches.size() > 0) {
+    protected fun deletePlayerMatch(id: Long): Result<PlayerMatchDTO> {
+        return try {
+            val db = dbHelper.writableDatabase
+            val getResult = getPlayerMatch(id)
+            if (getResult.isFailure) {
+                return Result.failure("PlayerMatch with id $id was not deleted because it did not exist")
+            }
             db.execSQL(
+                "DELETE FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
+                        + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_ID + " = ?",
+                arrayOf(id.toString() + "")
+            )
+            val deletedPlayer = getResult.value
+            Result.success(deletedPlayer)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
+    fun isValidPlayerId(playerId: Long): Boolean {
+        var cursor: Cursor? = null
+        return try {
+            val db = dbHelper.readableDatabase
+            cursor = db.rawQuery(
+                "SELECT * FROM " + DbHelper.PLAYER_TABLE_NAME
+                        + " WHERE " + DbHelper.PLAYER_COLUMN_ID + " = ? ",
+                arrayOf(playerId.toString())
+            )
+            cursor.count > 0
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+            throw e
+        } finally {
+            cursor?.close()
+        }
+    }
+
+    fun deletePlayerMatchesForGame(gameId: Long): Result<List<PlayerMatchDTO>> {
+        return try {
+            val db = dbHelper.writableDatabase
+            val matches = loadPlayerMatches(gameId)
+            if (matches.size > 0) {
+                db.execSQL(
                     "DELETE FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
-                            + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_GAME_ID +  " = ?",
-                    new String[] { gameId + "" });
-         }
-         return Result.success(matches);
-      } catch (Exception e) {
-         e.printStackTrace();
-         throw e;
-      }
-   }
+                            + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_GAME_ID + " = ?",
+                    arrayOf(gameId.toString() + "")
+                )
+            }
+            Result.success(matches)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
 
-   protected List<PlayerMatchDTO> loadPlayerMatches(long gameId) {
-      Cursor cursor = null;
-      List<PlayerMatchDTO> matches = new ArrayList<>();
-      try {
-         SQLiteDatabase db = dbHelper.getReadableDatabase();
-         cursor = db.rawQuery(
-                 "SELECT * FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
-                         + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_GAME_ID + " = ? ",
-                 new String[] { gameId + "" });
-         cursor.moveToFirst();
-         while (!cursor.isAfterLast()) {
-            PlayerMatchDTO playerMatch = cursorToPlayerMatchDTO(cursor);
-            matches.add(playerMatch);
-            cursor.moveToNext();
-         }
-         return matches;
-      } catch (NullPointerException e) {
-         e.printStackTrace();
-         throw e;
-      } finally {
-         if (cursor != null) {
-            cursor.close();
-         }
-      }
-   }
+    fun loadPlayerMatches(gameId: Long): List<PlayerMatchDTO> {
+        var cursor: Cursor? = null
+        val matches: MutableList<PlayerMatchDTO> = ArrayList()
+        return try {
+            val db = dbHelper.readableDatabase
+            cursor = db.rawQuery(
+                "SELECT * FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
+                        + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_GAME_ID + " = ? ",
+                arrayOf(gameId.toString() + "")
+            )
+            cursor.moveToFirst()
+            while (!cursor.isAfterLast) {
+                val playerMatch = cursorToPlayerMatchDTO(cursor)
+                matches.add(playerMatch)
+                cursor.moveToNext()
+            }
+            matches
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+            throw e
+        } finally {
+            cursor?.close()
+        }
+    }
 
-   @SuppressLint("Range")
-   @NonNull
-   private static PlayerMatchDTO cursorToPlayerMatchDTO(Cursor cursor) {
-      int idIndex = cursor.getColumnIndex(DbHelper.PLAYER_MATCH_COLUMN_ID);
-      int gameIdIndex = cursor.getColumnIndex(DbHelper.PLAYER_MATCH_COLUMN_GAME_ID);
-      int playerIdIndex = cursor.getColumnIndex(DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID);
-      int positionIndex = cursor.getColumnIndex(DbHelper.PLAYER_MATCH_COLUMN_POSITION);
-
-      long id = cursor.getLong(idIndex);
-      long gameId = cursor.getLong(gameIdIndex);
-      long playerId = cursor.getLong(playerIdIndex);
-      int position = cursor.getInt(positionIndex);
-
-      return new PlayerMatchDTO(id, gameId, playerId, position);
-   }
+    companion object {
+        @SuppressLint("Range")
+        private fun cursorToPlayerMatchDTO(cursor: Cursor?): PlayerMatchDTO {
+            val idIndex = cursor!!.getColumnIndex(DbHelper.PLAYER_MATCH_COLUMN_ID)
+            val gameIdIndex = cursor.getColumnIndex(DbHelper.PLAYER_MATCH_COLUMN_GAME_ID)
+            val playerIdIndex = cursor.getColumnIndex(DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID)
+            val positionIndex = cursor.getColumnIndex(DbHelper.PLAYER_MATCH_COLUMN_POSITION)
+            val id = cursor.getLong(idIndex)
+            val gameId = cursor.getLong(gameIdIndex)
+            val playerId = cursor.getLong(playerIdIndex)
+            val position = cursor.getInt(positionIndex)
+            return PlayerMatchDTO(id, gameId, playerId, position)
+        }
+    }
 }

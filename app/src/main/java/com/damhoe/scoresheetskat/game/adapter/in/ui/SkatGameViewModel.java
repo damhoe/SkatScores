@@ -50,7 +50,6 @@ public class SkatGameViewModel extends GameViewModel<SkatGame, SkatSettings, Ska
    @Override
    public void initialize(long gameId) {
       SkatGame game = mLoadGameUseCase.getGame(gameId).getValue();
-      game.start();
       setGame(game);
    }
 

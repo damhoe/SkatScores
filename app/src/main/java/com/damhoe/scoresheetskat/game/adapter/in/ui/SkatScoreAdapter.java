@@ -24,12 +24,12 @@ import java.util.List;
 public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.SkatScoreViewHolder> {
    private final IScoreActionListener mListener;
    private final List<SkatScore> mScores;
-   private int numberOfRounds;
+
+   private int selectedItem = -1;
 
    public SkatScoreAdapter(IScoreActionListener listener) {
       mScores = new ArrayList<>();
       mListener = listener;
-      numberOfRounds = 0;
    }
 
    public void setScores(List<SkatScore> newScores) {
@@ -55,10 +55,6 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
       return -1;
    }
 
-   public void setNumberOfRounds(int newNumberOfRounds) {
-      numberOfRounds = newNumberOfRounds;
-   }
-
    @NonNull
    @Override
    public SkatScoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -69,6 +65,7 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
 
    @Override
    public void onBindViewHolder(@NonNull SkatScoreViewHolder holder, int position) {
+      holder.itemView.setSelected(false);
       holder.roundsText.setText(String.valueOf(position + 1));
 
       if (position >= mScores.size()) {
@@ -88,10 +85,13 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
       holder.points2Text.setText(makeScoreString(pointsArray[1]));
       holder.points3Text.setText(makeScoreString(pointsArray[2]));
 
-      holder.itemView.setOnLongClickListener(view -> {
-         showPopupMenu(view.getContext(), view, position);
+      holder.itemView.setSelected(selectedItem == position);
+
+      holder.itemView.setOnClickListener(view -> {
+         deselectItem();
+         selectItem(position);
          Log.d("Score Event", "Item clicked at position " + position);
-         return true;
+         showPopupMenu(view.getContext(), view, position);
       });
    }
 
@@ -100,6 +100,17 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
          return "-";
       }
       return String.valueOf(points);
+   }
+
+   private void deselectItem() {
+      int item = selectedItem;
+      selectedItem = -1;
+      notifyItemChanged(item);
+   }
+
+   private void selectItem(int position) {
+      selectedItem = position;
+      notifyItemChanged(position);
    }
 
    @Override
@@ -130,6 +141,7 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
       menu.setForceShowIcon(true);
 
       menu.setOnMenuItemClickListener(item -> {
+         deselectItem();
          switch (item.getItemId()) {
             case R.id.delete:
                Log.d("Menu item clicked", "Delete menu item.");
@@ -146,6 +158,10 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
             default:
                return false;
          }
+      });
+
+      menu.setOnDismissListener(menu1 -> {
+         deselectItem();
       });
 
       // Show popup menu

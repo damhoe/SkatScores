@@ -61,11 +61,11 @@ public class GamePreviewAdapter extends
               new SimpleDateFormat("LLL, d yyyy", Locale.getDefault())
                       .format(preview.getDate()));
 
-      if (preview.getProgressInfo().isFinished()) {
+      if (preview.getGameRunStateInfo().isFinished()) {
          holder.round.setText("Finished");
       } else {
-         int currentRound = preview.getProgressInfo().getCurrentRound();
-         int roundsCount = preview.getProgressInfo().getRoundsCount();
+         int currentRound = preview.getGameRunStateInfo().getCurrentRound();
+         int roundsCount = preview.getGameRunStateInfo().getRoundsCount();
          holder.round.setText(String.format("%d/%d", currentRound, roundsCount));
       }
       holder.buttonContinue.setOnClickListener(view -> mPreviewClickListener.notifySelect(preview));

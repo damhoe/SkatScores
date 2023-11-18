@@ -5,18 +5,13 @@
     tools:ignore="AlwaysShowAction" >
 
     <item android:id="@+id/game_edit"
-        android:icon="@drawable/ic_build_24dp"
+        android:icon="@drawable/ic_settings_24dp"
         android:title="Change settings"
         app:showAsAction="always" />
 
     <item android:id="@+id/game_show_chart"
         android:icon="@drawable/ic_chart_24dp"
         android:title="Chart"
-        app:showAsAction="always" />
-
-    <item android:id="@+id/home"
-        android:icon="@drawable/ic_return_24dp"
-        android:title="Home"
         app:showAsAction="always" />
 
 </menu>

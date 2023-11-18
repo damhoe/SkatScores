@@ -42,11 +42,11 @@ public class SkatGamePreview {
       this.gameId = gameId;
    }
 
-   public GameRunStateInfo getProgressInfo() {
+   public GameRunStateInfo getGameRunStateInfo() {
       return gameRunStateInfo;
    }
 
-   public void setProgressInfo(GameRunStateInfo gameRunStateInfo) {
+   public void setGameRunStateInfo(GameRunStateInfo gameRunStateInfo) {
       this.gameRunStateInfo = gameRunStateInfo;
    }
 }

@@ -56,9 +56,12 @@ public class PlayerRepository implements CreatePlayerPort, GetPlayerPort, Update
    @Override
    public Player deletePlayer(long id) {
       Result<PlayerDTO> result = mPersistenceAdapter.deletePlayer(id);
+
       if (result.isFailure()) {
          throw new Resources.NotFoundException(result.getMessage());
       }
+
+      mPersistenceAdapter.deletePlayerMatches(id);
 
       // Update player list
       refreshPlayersFromRepository();

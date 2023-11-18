@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_player_name_exists">Ein/e Spieler/in mit diesem Namen existiert bereits.</string>
+    <string name="error_player_name_exists">Ein/e Spieler*in mit diesem Namen existiert bereits.</string>
 </resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/library"
+        android:title="@string/title_library"
+        android:icon="@drawable/ic_library_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/players"
+        android:title="@string/title_players_short"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_people_24dp" />
+
+    <item
+        android:id="@+id/statistics"
+        android:title="@string/title_statistics"
+        android:icon="@drawable/ic_bar_chart_24dp"
+        app:showAsAction="ifRoom" />
+
+</menu>

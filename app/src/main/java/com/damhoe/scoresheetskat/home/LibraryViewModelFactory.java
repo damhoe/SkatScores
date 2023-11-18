@@ -10,13 +10,13 @@ import com.damhoe.scoresheetskat.game.application.ports.in.LoadGameUseCase;
 
 import javax.inject.Inject;
 
-public class HomeViewModelFactory implements ViewModelProvider.Factory {
+public class LibraryViewModelFactory implements ViewModelProvider.Factory {
 
    final LoadGameUseCase mLoadGameUseCase;
    final CreateGameUseCase mCreateGameUseCase;
 
    @Inject
-   public HomeViewModelFactory(
+   public LibraryViewModelFactory(
            LoadGameUseCase loadGameUseCase,
            CreateGameUseCase createGameUseCase
    ) {
@@ -28,19 +28,19 @@ public class HomeViewModelFactory implements ViewModelProvider.Factory {
    @NonNull
    @Override
    public <T extends ViewModel> T create(@NonNull Class<T> modelClass, @NonNull CreationExtras extras) {
-      if (modelClass == HomeViewModel.class) {
-         return (T) new HomeViewModel(mLoadGameUseCase, mCreateGameUseCase);
+      if (modelClass == LibraryViewModel.class) {
+         return (T) new LibraryViewModel(mLoadGameUseCase, mCreateGameUseCase);
       }
-      throw new IllegalArgumentException("HomeViewModelFactory needs to be called with type HomeViewModel class.");
+      throw new IllegalArgumentException("LibraryViewModelFactory needs to be called with type LibraryViewModel class.");
    }
 
    /** @noinspection unchecked*/
    @NonNull
    @Override
    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-      if (modelClass == HomeViewModel.class) {
-         return (T) new HomeViewModel(mLoadGameUseCase, mCreateGameUseCase);
+      if (modelClass == LibraryViewModel.class) {
+         return (T) new LibraryViewModel(mLoadGameUseCase, mCreateGameUseCase);
       }
-      throw new IllegalArgumentException("HomeViewModelFactory needs to be called with type HomeViewModel class.");
+      throw new IllegalArgumentException("LibraryViewModelFactory needs to be called with type LibraryViewModel class.");
    }
 }

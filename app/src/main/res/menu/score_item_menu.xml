@@ -4,23 +4,23 @@
     <group android:id="@+id/group_info">
         <item
             android:id="@+id/edit"
-            android:title="Edit"
-            app:showAsAction="always"
+            android:title="@string/menu_edit_score"
+            app:showAsAction="ifRoom"
             android:icon="@drawable/ic_edit_24dp"
             />
 
         <item
             android:id="@+id/delete"
-            android:title="Delete"
-            app:showAsAction="always"
-            android:icon="@drawable/ic_delete_black_24dp"
+            android:title="@string/menu_delete_score"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_delete_24dp"
             />
 
         <item
             android:id="@+id/details"
-            android:title="Details"
+            android:title="@string/menu_show_details"
             app:showAsAction="ifRoom"
-            android:icon="@drawable/ic_info_black_24dp"
+            android:icon="@drawable/ic_info_24dp"
             />
     </group>
 </menu>

@@ -1,4 +1,4 @@
-package com.damhoe.scoresheetskat.history;
+package com.damhoe.scoresheetskat.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-public class HistoryViewModel extends ViewModel {
+public class LibraryViewModel extends ViewModel {
 
     private final LoadGameUseCase mLoadGameUseCase;
     private final CreateGameUseCase mCreateGameUseCase;
@@ -26,7 +26,7 @@ public class HistoryViewModel extends ViewModel {
     Date firstOfMonth;
 
     @Inject
-    public HistoryViewModel(
+    public LibraryViewModel(
             LoadGameUseCase loadGameUseCase,
             CreateGameUseCase createGameUseCase
     ) {
@@ -54,6 +54,10 @@ public class HistoryViewModel extends ViewModel {
 
     LiveData<List<SkatGamePreview>> getLastMonthGames() {
         return mLoadGameUseCase.getGamesSince(firstOfMonth);
+    }
+
+    LiveData<List<SkatGamePreview>> getUnfinishedGames() {
+        return mLoadGameUseCase.getUnfinishedGames();
     }
 
     public Result<SkatGame> deleteGame(long id) {

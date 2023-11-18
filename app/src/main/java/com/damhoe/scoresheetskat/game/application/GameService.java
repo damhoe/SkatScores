@@ -39,6 +39,8 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
         // Validation
         // Add score to game
         skatGame.addScore(score);
+
+        crudGamePort.refreshGamePreviews();
     }
 
     @Override
@@ -54,6 +56,8 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
         if (deleteResult.isFailure()) {
             return Result.failure("Failed to remove score from game: " + deleteResult.getMessage());
         }
+
+        crudGamePort.refreshGamePreviews();
         return Result.success(skatGame.getScores().remove(count-1));
     }
 

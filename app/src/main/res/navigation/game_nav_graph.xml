@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_nav_graph"
+    app:startDestination="@id/game">
+
+    <fragment
+        android:id="@+id/game"
+        android:name="com.damhoe.scoresheetskat.game.adapter.in.ui.GameFragment"
+        tools:layout="@layout/fragment_game_v2" >
+
+        <argument
+            android:name="ShowBottomAppBar"
+            android:defaultValue="false" />
+
+        <argument
+            android:name="gameCommand"
+            app:argType="com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+        <argument
+            android:name="gameId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+
+        <action
+            android:id="@+id/action_game_to_score"
+            app:destination="@id/score"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/score"
+        android:name="com.damhoe.scoresheetskat.score.adapter.in.ui.ScoreFragment"
+        tools:layout="@layout/fragment_score" >
+
+        <argument
+            android:name="ShowBottomAppBar"
+            android:defaultValue="false" />
+
+        <argument
+            android:name="scoreRequest"
+            app:argType="com.damhoe.scoresheetskat.score.domain.ScoreRequest"
+            app:nullable="false"/>
+
+    </fragment>
+
+</navigation>

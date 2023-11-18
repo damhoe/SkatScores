@@ -131,7 +131,7 @@
                 app:layout_constraintTop_toTopOf="@id/button_stats"
                 android:layout_marginStart="8dp"
                 android:text="Delete"
-                app:icon="@drawable/ic_delete_black_24dp"
+                app:icon="@drawable/ic_delete_24dp"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

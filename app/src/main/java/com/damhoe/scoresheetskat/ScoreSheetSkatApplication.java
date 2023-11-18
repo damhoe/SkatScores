@@ -13,4 +13,8 @@ public class ScoreSheetSkatApplication extends Application {
               .applicationModule(new ApplicationModule(this))
               .build();
    }
+
+   public ApplicationComponent getAppComponent() {
+      return appComponent;
+   }
 }

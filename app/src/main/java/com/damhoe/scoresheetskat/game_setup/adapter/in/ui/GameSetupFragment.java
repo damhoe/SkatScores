@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NavUtils;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -69,11 +70,9 @@ public class GameSetupFragment extends Fragment {
         InsetsManager.applyNavigationBarInsets(binding.startButton, defaultMargins);
         InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
 
-        // Setup toolbar
-        NavController navController = findNavController();
-        AppBarConfiguration appBarConfiguration =
-                new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
+        // Setup back navigation
+        binding.backButton.setOnClickListener(view1 ->
+                NavUtils.navigateUpFromSameTask(requireActivity()));
 
         viewModel = new GameSetupViewModel();
         binding.setViewModel(viewModel);

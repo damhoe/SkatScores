@@ -1,6 +1,8 @@
 package com.damhoe.scoresheetskat.game.adapter.in.ui;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NavUtils;
 import androidx.core.view.MenuProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -40,9 +42,10 @@ import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.databinding.DialogGameSettingsBinding;
 import com.damhoe.scoresheetskat.databinding.FragmentGameV2Binding;
+import com.damhoe.scoresheetskat.databinding.FragmentLibraryBinding;
+import com.damhoe.scoresheetskat.game.GameActivity;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator.MessageType;
-import com.damhoe.scoresheetskat.game.domain.GameRunStateInfo;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
 import com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand;
 import com.damhoe.scoresheetskat.score.adapter.in.ui.SharedScoreResponseViewModel;
@@ -87,7 +90,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
     @Override
     public void onAttach(@NonNull Context context) {
-        ((MainActivity) requireActivity()).appComponent.inject(this);
+        ((GameActivity) requireActivity()).getAppComponent().inject(this);
         super.onAttach(context);
     }
 
@@ -170,23 +173,15 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         };
         viewModel.getPlayers().observe(getViewLifecycleOwner(), playerObserver);
 
-        final Observer<SkatSettings> settingsObserver = new Observer<SkatSettings>() {
-            @Override
-            public void onChanged(SkatSettings skatSettings) {
-                int visibilityWinLossBonus = skatSettings
-                        .isTournamentScoring() ? View.VISIBLE : View.GONE;
-                binding.winsLossesBonusView.getRoot().setVisibility(visibilityWinLossBonus);
-                binding.lostGamesBonusView.getRoot().setVisibility(visibilityWinLossBonus);
-                binding.middleDivider.setVisibility(visibilityWinLossBonus);
-                SkatGame game = viewModel.getGame().getValue();
-                if (game != null)
-                    updatePoints(game);
-
-                if (scoreAdapter != null) {
-                    scoreAdapter.setNumberOfRounds(skatSettings.getNumberOfRounds());
-                    scoreAdapter.notifyItemRangeChanged(0, scoreAdapter.getItemCount());
-                }
-            }
+        final Observer<SkatSettings> settingsObserver = skatSettings -> {
+            int visibilityWinLossBonus = skatSettings
+                    .isTournamentScoring() ? View.VISIBLE : View.GONE;
+            binding.bottomSumView.lostContainer.setVisibility(visibilityWinLossBonus);
+            binding.bottomSumView.soloContainer.setVisibility(visibilityWinLossBonus);
+            binding.bottomSumView.divider.setVisibility(visibilityWinLossBonus);
+            SkatGame game = viewModel.getGame().getValue();
+            if (game != null)
+                updatePoints(game);
         };
         viewModel.getSettings().observe(getViewLifecycleOwner(), settingsObserver);
 
@@ -214,14 +209,14 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
         viewModel.totalPoints.observe(getViewLifecycleOwner(), this::displayTotalPoints);
         viewModel.winBonus.observe(getViewLifecycleOwner(), ints -> {
-            binding.winsLossesBonusView.points1Text.setText(String.valueOf(ints[0]));
-            binding.winsLossesBonusView.points2Text.setText(String.valueOf(ints[1]));
-            binding.winsLossesBonusView.points3Text.setText(String.valueOf(ints[2]));
+            binding.bottomSumView.solo1Text.setText(String.valueOf(ints[0]));
+            binding.bottomSumView.solo2Text.setText(String.valueOf(ints[1]));
+            binding.bottomSumView.solo3Text.setText(String.valueOf(ints[2]));
         });
         viewModel.lossOfOthersBonus.observe(getViewLifecycleOwner(), ints -> {
-            binding.lostGamesBonusView.points1Text.setText(String.valueOf(ints[0]));
-            binding.lostGamesBonusView.points2Text.setText(String.valueOf(ints[1]));
-            binding.lostGamesBonusView.points3Text.setText(String.valueOf(ints[2]));
+            binding.bottomSumView.lost1Text.setText(String.valueOf(ints[0]));
+            binding.bottomSumView.lost2Text.setText(String.valueOf(ints[1]));
+            binding.bottomSumView.lost3Text.setText(String.valueOf(ints[2]));
         });
     }
 
@@ -249,7 +244,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
                                     "This feature is not implemented yet.",
                                     Snackbar.LENGTH_SHORT)
                             .show();
-                } else if (itemId == R.id.home) {
+                } else if (itemId == R.id.library) {
                     findNavController().navigateUp();
                 }
                 return true;
@@ -359,6 +354,12 @@ public class GameFragment extends Fragment implements IScoreActionListener {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 dialogBinding.numberOfRoundsText.setText(String.valueOf((int) value));
+
+                int currentRound = viewModel.getGameRunStateInfo().getValue().getCurrentRound();
+
+                // Disable positive button if error exists
+                Button buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                buttonPositive.setEnabled( (int) value >= currentRound - 1);
             }
         });
 
@@ -407,8 +408,14 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
     @Override
     public void notifyDetails(SkatScore skatScore) {
+
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Score details")
+                .setMessage(
+                        new SkatScore.TextMaker(requireContext())
+                                .setupWithSkatScore(skatScore)
+                                .make()
+                )
                 .setPositiveButton("Got it", ((dialogInterface, i) -> dialogInterface.dismiss()))
                 .create()
                 .show();
@@ -456,6 +463,16 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
     private void setupNavigation() {
         // Empty.
+        binding.returnButton.setOnClickListener(view -> {
+            NavUtils.navigateUpFromSameTask(requireActivity());
+        });
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                NavUtils.navigateUpFromSameTask(requireActivity());
+            }
+        });
     }
 
     @SuppressLint("InflateParams")
