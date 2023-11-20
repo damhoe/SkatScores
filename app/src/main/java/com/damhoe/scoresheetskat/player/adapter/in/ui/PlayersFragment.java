@@ -1,30 +1,24 @@
 package com.damhoe.scoresheetskat.player.adapter.in.ui;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.MenuProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
@@ -33,7 +27,6 @@ import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
 import com.damhoe.scoresheetskat.shared_ui.utils.LayoutMargins;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -58,7 +51,6 @@ public class PlayersFragment extends Fragment implements NotifyItemClickListener
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_players, container, false);
-        View root = binding.getRoot();
 
         PlayerAdapter playerAdapter = new PlayerAdapter(this);
         binding.playerRecyclerView.setAdapter(playerAdapter);
@@ -74,10 +66,10 @@ public class PlayersFragment extends Fragment implements NotifyItemClickListener
         TextInputLayout inputLayout = layout.findViewById(R.id.input_name);
 
         AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Create player")
+                .setTitle(getString(R.string.dialog_title_create_player))
                 .setView(layout)
-                .setNegativeButton("Cancel", (d, i) -> d.cancel())
-                .setPositiveButton("Create", (d, i) -> {
+                .setNegativeButton(getString(R.string.dialog_title_button_cancel), (d, i) -> d.cancel())
+                .setPositiveButton(getString(R.string.dialog_title_button_create), (d, i) -> {
                     if (inputLayout.getError() != null) {
                         return;
                     }
@@ -109,12 +101,12 @@ public class PlayersFragment extends Fragment implements NotifyItemClickListener
 
                 // Show error if empty name
                 if (s.toString().trim().isEmpty()) {
-                    inputLayout.setError("Name is required!");
+                    inputLayout.setError(getString(R.string.error_name_required));
                 }
 
                 // Show error if name is not unique
                 if (viewModel.isExistentName(s.toString().trim())) {
-                    inputLayout.setError("This name already exists.");
+                    inputLayout.setError(getString(R.string.error_name_exists_already));
                 }
 
                 int maxLength = inputLayout.getCounterMaxLength();
@@ -130,12 +122,7 @@ public class PlayersFragment extends Fragment implements NotifyItemClickListener
             }
         });
 
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
-            }
-        });
+        dialog.setOnShowListener(dialogInterface -> dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
         dialog.show();
     }
 
@@ -170,17 +157,17 @@ public class PlayersFragment extends Fragment implements NotifyItemClickListener
         );
         InsetsManager.applyNavigationBarInsets(binding.addButton, margins);
 
-        binding.addButton.setOnClickListener(v -> {
-            buildStartAddPlayerDialog();
-        });
+        binding.addButton.setOnClickListener(v -> buildStartAddPlayerDialog());
 
 
         viewModel = new ViewModelProvider(requireActivity(), viewModelFactory).get(PlayerViewModel.class);
-        viewModel.getPlayers().observe(getViewLifecycleOwner(), new Observer<List<Player>>() {
-            /** @noinspection DataFlowIssue*/
+        viewModel.getPlayers().observe(getViewLifecycleOwner(), new Observer<>() {
+            /**
+             * @noinspection DataFlowIssue
+             */
             @Override
             public void onChanged(List<Player> players) {
-                ((PlayerAdapter)binding.playerRecyclerView.getAdapter()).setPlayers(players);
+                ((PlayerAdapter) binding.playerRecyclerView.getAdapter()).setPlayers(players);
                 binding.playerRecyclerView.invalidate();
             }
         });

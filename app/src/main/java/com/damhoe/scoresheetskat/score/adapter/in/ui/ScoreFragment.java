@@ -1,6 +1,5 @@
 package com.damhoe.scoresheetskat.score.adapter.in.ui;
 
-import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,14 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.databinding.FragmentScoreBinding;
 import com.damhoe.scoresheetskat.game.GameActivity;
@@ -31,9 +28,6 @@ import com.damhoe.scoresheetskat.score.domain.SkatScoreCommand;
 import com.damhoe.scoresheetskat.score.domain.SkatSuit;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
 import com.damhoe.scoresheetskat.shared_ui.utils.LayoutMargins;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.button.MaterialButtonToggleGroup;
-import com.google.android.material.chip.ChipGroup;
 
 import java.util.HashMap;
 import java.util.List;
@@ -262,30 +256,30 @@ public class ScoreFragment extends Fragment {
         InsetsManager.applyNavigationBarInsets(binding.scoreDoneButton, defaultMargins);
         InsetsManager.applyNavigationBarInsets(binding.content);
 
-        viewModel.isSuitsEnabled.observe(getViewLifecycleOwner(), this::enableSuitButtons);
-        viewModel.isHandEnabled.observe(getViewLifecycleOwner(), isEnabled -> {
+        viewModel.isSuitsEnabled().observe(getViewLifecycleOwner(), this::enableSuitButtons);
+        viewModel.isHandEnabled().observe(getViewLifecycleOwner(), isEnabled -> {
             binding.handChip.setEnabled(isEnabled);
         });
-        viewModel.isSchneiderSchwarzEnabled.observe(getViewLifecycleOwner(),
+        viewModel.isSchneiderSchwarzEnabled().observe(getViewLifecycleOwner(),
                 this::enableSchneiderSchwarzChips);
-        viewModel.isOuvertEnabled.observe(getViewLifecycleOwner(),
+        viewModel.isOuvertEnabled().observe(getViewLifecycleOwner(),
                 isEnabled -> binding.ouvertChip.setEnabled(isEnabled)
         );
-        viewModel.isSpitzenEnabled.observe(getViewLifecycleOwner(),
+        viewModel.isSpitzenEnabled().observe(getViewLifecycleOwner(),
                 isEnabled -> binding.spitzenSlider.setEnabled(isEnabled)
         );
-        viewModel.isIncreaseSpitzenEnabled.observe(getViewLifecycleOwner(),
+        viewModel.isIncreaseSpitzenEnabled().observe(getViewLifecycleOwner(),
                 isEnabled -> binding.spitzenAddButton.setEnabled(isEnabled)
         );
-        viewModel.isDecreaseSpitzenEnabled.observe(getViewLifecycleOwner(),
+        viewModel.isDecreaseSpitzenEnabled().observe(getViewLifecycleOwner(),
                 isEnabled -> binding.spitzenRemoveButton.setEnabled(isEnabled)
         );
-        viewModel.isResultsEnabled.observe(getViewLifecycleOwner(), isEnabled -> {
+        viewModel.isResultsEnabled().observe(getViewLifecycleOwner(), isEnabled -> {
             binding.buttonWon.setEnabled(isEnabled);
             binding.buttonLost.setEnabled(isEnabled);
             binding.buttonOverbid.setEnabled(isEnabled);
         });
-        viewModel.getSkatResult.observe(getViewLifecycleOwner(), skatResult -> {
+        viewModel.getSkatResult().observe(getViewLifecycleOwner(), skatResult -> {
             if (skatResult == SkatResult.WON) {
                 binding.toggleGroupResult.check(R.id.buttonWon);
             } else if (skatResult == SkatResult.LOST) {
@@ -296,7 +290,7 @@ public class ScoreFragment extends Fragment {
                 binding.toggleGroupResult.clearChecked();
             }
         });
-        viewModel.getSuit.observe(getViewLifecycleOwner(), skatSuit -> {
+        viewModel.getSuit().observe(getViewLifecycleOwner(), skatSuit -> {
             if (skatSuit == SkatSuit.INVALID) {
                 binding.announcementsChips.clearCheck();
                 binding.winLevelChips.clearCheck();
@@ -339,13 +333,13 @@ public class ScoreFragment extends Fragment {
     }
 
     public void saveScore() {
-        SkatScore score;
+        SkatScore score = null;
         switch (eventType) {
             case CREATE:
                 score = viewModel.createScore();
                 break;
             case UPDATE:
-                score = viewModel.updateScore();
+                viewModel.updateScore();
                 break;
             default:
                 score = null;

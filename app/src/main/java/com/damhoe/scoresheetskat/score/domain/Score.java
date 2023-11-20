@@ -18,6 +18,10 @@ public abstract class Score {
       return playerPosition;
    }
 
+   public void setPlayerPosition(int playerPosition) {
+      this.playerPosition = playerPosition;
+   }
+
    public long getId() {
       return id;
    }

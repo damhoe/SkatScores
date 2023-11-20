@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-class PlayerDTO {
+public class PlayerDTO {
     private long id;
     private String name;
     private String createdAt;

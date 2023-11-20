@@ -1,8 +1,8 @@
 package com.damhoe.scoresheetskat.base;
 
 public class Result<T> {
-   private final T value;
-   private final String message;
+   public final T value;
+   public final String message;
 
    public Result(T value, String errorMessage) {
       this.value = value;

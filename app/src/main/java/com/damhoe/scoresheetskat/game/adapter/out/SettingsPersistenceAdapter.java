@@ -87,7 +87,7 @@ public class SettingsPersistenceAdapter {
                  "DELETE FROM " + DbHelper.SETTINGS_TABLE_NAME
                          + " WHERE " + DbHelper.SETTINGS_COLUMN_ID +  " = ?",
                  new String[] { id + "" });
-         SkatSettingsDTO deletedSettings = getResult.getValue();
+         SkatSettingsDTO deletedSettings = getResult.value;
          return Result.success(deletedSettings);
       } catch (Exception e) {
          e.printStackTrace();

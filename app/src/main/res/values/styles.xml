@@ -2,6 +2,10 @@
 <resources>
 
     <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+        <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
@@ -49,8 +53,9 @@
     </style>
 
     <style name="Theme.App.Dark" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
         <item name="textAppearanceLargePopupMenu">@style/TextAppearance.App.Subtitle</item>
@@ -61,13 +66,13 @@
         <item name="colorOnPrimary">@color/primary_900</item>
         <item name="colorPrimaryContainer">@color/primary_300</item>
         <item name="colorOnPrimaryContainer">@color/primary_900</item>
-        <item name="colorSecondary">@color/secondary_500</item>
+        <item name="colorSecondary">@color/secondary_300</item>
         <item name="colorOnSecondary">@color/secondary_50</item>
         <item name="colorSecondaryContainer">@color/secondary_500</item>
         <item name="colorOnSecondaryContainer">@color/secondary_100</item>
         <item name="colorTertiary">@color/tertiary_600</item>
         <item name="colorOnTertiary">@color/tertiary_50</item>
-        <item name="colorTertiaryContainer">@color/tertiary_900d</item>
+        <item name="colorTertiaryContainer">@color/tertiary_900</item>
         <item name="colorOnTertiaryContainer">@color/tertiary_50</item>
         <item name="colorError">@color/error_100</item>
         <item name="colorErrorContainer">@color/error_900</item>
@@ -84,11 +89,11 @@
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
         <item name="colorOnSurfaceLight">@color/primary_400</item>
-        <item name="colorSurfaceContainer">@color/neutral_900</item>
+        <item name="colorSurfaceContainer">@color/primary_900</item>
         <item name="colorSurfaceContainerHigh">@color/neutral_500</item>
-        <item name="colorSurfaceContainerLow">@color/neutral_600</item>
+        <item name="colorSurfaceContainerLow">@color/secondary_500</item>
         <item name="colorSurfaceContainerHighest">@color/neutral_300</item>
-        <item name="colorSurfaceContainerLowest">@color/neutral_900</item>
+        <item name="colorSurfaceContainerLowest">@color/secondary_500</item>
         <item name="colorSurfaceBright">@color/primary_800</item>
         <item name="colorControlNormal">@color/primary_100</item>
         <item name="colorCategorySubtitle">@color/tertiary_200</item>

@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Player name"
+        android:hint="@string/hint_player_name"
         app:errorEnabled="true"
         app:counterEnabled="true"
         app:counterMaxLength="15"

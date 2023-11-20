@@ -3,6 +3,7 @@ package com.damhoe.scoresheetskat.game.application;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import com.damhoe.scoresheetskat.KotlinResultWrapper;
 import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.game.application.ports.in.AddScoreToGameUseCase;
 import com.damhoe.scoresheetskat.game.application.ports.in.CreateGameUseCase;
@@ -51,11 +52,9 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
         }
         // Get score
         SkatScore lastScore = skatGame.getScores().get(count-1);
+
         // Delete score
-        Result<SkatScore> deleteResult = createScoreUseCase.deleteScore(lastScore.getId());
-        if (deleteResult.isFailure()) {
-            return Result.failure("Failed to remove score from game: " + deleteResult.getMessage());
-        }
+        KotlinResultWrapper.Companion.deleteScore(createScoreUseCase, lastScore.getId());
 
         crudGamePort.refreshGamePreviews();
         return Result.success(skatGame.getScores().remove(count-1));

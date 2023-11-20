@@ -5,7 +5,7 @@ import android.content.Context;
 import com.damhoe.scoresheetskat.game.GameActivity;
 import com.damhoe.scoresheetskat.game.GameModule;
 import com.damhoe.scoresheetskat.game.adapter.in.ui.GameFragment;
-import com.damhoe.scoresheetskat.home.LibraryFragment;
+import com.damhoe.scoresheetskat.library.LibraryFragment;
 import com.damhoe.scoresheetskat.persistence.DbHelper;
 import com.damhoe.scoresheetskat.player.PlayerModule;
 import com.damhoe.scoresheetskat.player.adapter.in.ui.PlayerDetailsFragment;

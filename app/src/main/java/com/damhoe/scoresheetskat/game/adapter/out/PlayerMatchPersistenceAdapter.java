@@ -96,7 +96,7 @@ public class PlayerMatchPersistenceAdapter {
                  "DELETE FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
                          + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_ID +  " = ?",
                  new String[] { id + "" });
-         PlayerMatchDTO deletedPlayer = getResult.getValue();
+         PlayerMatchDTO deletedPlayer = getResult.value;
          return Result.success(deletedPlayer);
       } catch (Exception e) {
          e.printStackTrace();

@@ -6,7 +6,8 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.Material3.CardView.Elevated"
+        app:cardBackgroundColor="?colorSurfaceContainer"
+        style="@style/Widget.Material3.CardView.Filled"
         >
 
         <LinearLayout

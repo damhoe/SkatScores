@@ -1,4 +1,4 @@
-package com.damhoe.scoresheetskat.home;
+package com.damhoe.scoresheetskat.library;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

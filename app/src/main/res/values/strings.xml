@@ -16,7 +16,7 @@
     <string name="title_number_of_players">Number of players</string>
     <string name="title_list_name">List name</string>
     <string name="description_start">Start the new list</string>
-    <string name="title_about">About</string>
+    <string name="title_about">About this app</string>
     <string name="title_players">Players</string>
     <string name="label_new_game_button">New game</string>
     <string name="title_category_languages">Languages</string>
@@ -51,19 +51,19 @@
 
     <string name="german">German</string>
     <string name="english">English</string>
-    <string name="pref_language_german_value" translatable="false">de</string>
-    <string name="pref_language_english_value" translatable="false">en</string>
+    <string name="german_preference_value" translatable="false">de</string>
+    <string name="english_preference_value" translatable="false">en</string>
 
     <string name="mode_night_title">Dark</string>
     <string name="mode_day_title">Light</string>
     <string name="mode_system_title">System default</string>
-    <string name="pref_uiMode_day_value" translatable="false">day</string>
-    <string name="pref_uiMode_night_value" translatable="false">night</string>
-    <string name="pref_uiMode_system_value" translatable="false">system</string>
+    <string name="day_theme_preference_value" translatable="false">day</string>
+    <string name="night_theme_preference_value" translatable="false">night</string>
+    <string name="system_theme_preference_value" translatable="false">system</string>
     <string name="dummy_player_name">Player</string>
-    <string name="template_game_count_long">played %d games</string>
-    <string name="template_created_at">created at %s</string>
-    <string name="template_updated_at">last updated at %s</string>
+    <string name="template_game_count_long">Played %d games</string>
+    <string name="template_created_at">Created at %s</string>
+    <string name="template_updated_at">Last updated at %s</string>
     <string name="label_overbid">Overbid</string>
     <string name="label_lost">Lost</string>
     <string name="label_won">Won</string>
@@ -116,4 +116,30 @@
     <string name="title_filter">Filter</string>
     <string name="description_older_games" translatable="false">List of games that are older than this month.</string>
     <string name="title_players_short">Players</string>
+    <string name="language_preference_title">Language</string>
+    <string name="theme_preference_title">Theme</string>
+    <string name="system_preference_category_title">System</string>
+    <string name="behavior_preference_category_title">Behavior</string>
+    <string name="badge_preference_title">Show unfinished games as badge</string>
+    <string name="other_preference_category_title">Other</string>
+    <string name="about_preference_title">About this app</string>
+    <string name="hint_player_name">Name</string>
+    <string name="dialog_title_create_player">Create player</string>
+    <string name="dialog_title_button_cancel">Cancel</string>
+    <string name="dialog_title_button_create">Create</string>
+    <string name="error_name_required">Name is required!</string>
+    <string name="error_name_exists_already">This name already exists.</string>
+    <string name="dialog_title_button_save">Save</string>
+    <string name="error_valid_title_required">Please enter a valid title!</string>
+    <string name="dialog_title_edit_players">Edit players</string>
+    <string name="dialog_title_button_got_it">Got it</string>
+    <string name="dialog_title_score_details">Score details</string>
+    <string name="dialog_title_edit_player_name">Change name</string>
+    <string name="label_finished">Finished</string>
+    <string name="title_button_delete">Delete</string>
+    <string name="title_button_player_statistics">View stats</string>
+    <string name="theme_preference_key">ui_mode</string>
+    <string name="badge_preference_key">unfinished_as_badge</string>
+    <string name="about_preference_key">about</string>
+    <string name="language_preference_key">language</string>
 </resources>

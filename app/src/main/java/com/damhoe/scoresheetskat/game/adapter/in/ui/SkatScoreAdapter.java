@@ -196,6 +196,10 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
 
    public static class ItemDecoration extends RecyclerView.ItemDecoration {
 
+      public ItemDecoration() {
+
+      }
+
       @Override
       public void getItemOffsets(
               @NonNull Rect outRect,

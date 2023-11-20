@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.damhoe.scoresheetskat.R;
+import com.damhoe.scoresheetskat.base.DateConverter;
 import com.damhoe.scoresheetskat.player.domain.Player;
 
 import java.text.SimpleDateFormat;
@@ -50,8 +51,8 @@ class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>
     public void onBindViewHolder(@NonNull PlayerAdapter.PlayerViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Player player = players.get(position);
         holder.name.setText(player.getName());
-        holder.createdAt.setText(new SimpleDateFormat("dd. MMM yyyy", Locale.getDefault()).format(player.getCreatedAt()));
-        holder.numberGames.setText(String.format("%d Games", player.getGameCount()));
+        holder.createdAt.setText(DateConverter.toAppLocaleString(player.getCreatedAt()));
+        holder.numberGames.setText(String.format(Locale.getDefault(), "%d Games", player.getGameCount()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

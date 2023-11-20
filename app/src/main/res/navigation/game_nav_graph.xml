@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/game"
         android:name="com.damhoe.scoresheetskat.game.adapter.in.ui.GameFragment"
-        tools:layout="@layout/fragment_game_v2" >
+        tools:layout="@layout/fragment_game" >
 
         <argument
             android:name="ShowBottomAppBar"

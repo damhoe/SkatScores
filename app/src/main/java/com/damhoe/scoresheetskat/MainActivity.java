@@ -1,8 +1,8 @@
 package com.damhoe.scoresheetskat;
 
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -16,10 +16,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
-import com.damhoe.scoresheetskat.app.app_settings.ConfigManager;
+import com.damhoe.scoresheetskat.app.app_settings.ThemeProvider;
 import com.damhoe.scoresheetskat.databinding.ActivityMainBinding;
-
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -52,18 +50,22 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
 
-        // ConfigManager configManager = new ConfigManager(this);
-
         // UI mode
-        //String uiMode = sharedPreferences.getString("ui_mode", "");
-        //configManager.setUiMode(uiMode);
+        String theme = sharedPreferences.getString(
+                getString(R.string.theme_preference_key),
+                getString(R.string.day_theme_preference_value)
+        );
+        AppCompatDelegate.setDefaultNightMode(new ThemeProvider(this).getTheme(theme));
 
         // System Locale
-        //String language = sharedPreferences.getString("language", "");
-        //configManager.setLocale(language);
+        String language = sharedPreferences.getString(
+                getString(R.string.language_preference_key),
+                getString(R.string.german_preference_value)
+        );
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("de"));
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        Log.d("Loaded Preference", "UI mode: " + theme);
+        Log.d("Loaded Preference", "Language: " + language);
     }
 
     public AppBarConfiguration getAppBarConfiguration() {

@@ -1,6 +1,7 @@
 package com.damhoe.scoresheetskat.game.adapter.in.ui.shared;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.damhoe.scoresheetskat.ApplicationComponent;
+import com.damhoe.scoresheetskat.ApplicationContext;
 import com.damhoe.scoresheetskat.R;
+import com.damhoe.scoresheetskat.base.DateConverter;
 import com.damhoe.scoresheetskat.game.domain.SkatGamePreview;
 import com.google.android.material.button.MaterialButton;
 
@@ -51,22 +56,20 @@ public class GamePreviewAdapter extends
       );
    }
 
-   @SuppressLint("DefaultLocale")
    @Override
    public void onBindViewHolder(@NonNull GamePreviewViewHolder holder, int position) {
       SkatGamePreview preview = mPreviews.get(position);
       holder.title.setText(preview.getTitle());
       holder.playerNames.setText(String.join(", ", preview.getPlayerNames()));
-      holder.date.setText(
-              new SimpleDateFormat("LLL, d yyyy", Locale.getDefault())
-                      .format(preview.getDate()));
+      holder.date.setText(DateConverter.toAppLocaleStringFullMonth(preview.getDate()));
 
       if (preview.getGameRunStateInfo().isFinished()) {
-         holder.round.setText("Finished");
+         holder.round.setText("finished"); // R.string.label_finished
       } else {
          int currentRound = preview.getGameRunStateInfo().getCurrentRound();
          int roundsCount = preview.getGameRunStateInfo().getRoundsCount();
-         holder.round.setText(String.format("%d/%d", currentRound, roundsCount));
+         holder.round.setText(String.format(Locale.getDefault(),
+                 "%d/%d", currentRound, roundsCount));
       }
       holder.buttonContinue.setOnClickListener(view -> mPreviewClickListener.notifySelect(preview));
       holder.buttonDelete.setOnClickListener(view -> mPreviewClickListener.notifyDelete(preview));
@@ -87,12 +90,12 @@ public class GamePreviewAdapter extends
 
       public GamePreviewViewHolder(@NonNull View item) {
          super(item);
-         title = (TextView) item.findViewById(R.id.title);
-         playerNames = (TextView) item.findViewById(R.id.players);
-         round = (TextView) item.findViewById(R.id.rounds);
-         date = (TextView) item.findViewById(R.id.date);
-         buttonContinue = (MaterialButton) item.findViewById(R.id.button_continue);
-         buttonDelete = (MaterialButton) item.findViewById(R.id.button_delete);
+         title = item.findViewById(R.id.title);
+         playerNames = item.findViewById(R.id.players);
+         round = item.findViewById(R.id.rounds);
+         date = item.findViewById(R.id.date);
+         buttonContinue = item.findViewById(R.id.button_continue);
+         buttonDelete = item.findViewById(R.id.button_delete);
       }
    }
 

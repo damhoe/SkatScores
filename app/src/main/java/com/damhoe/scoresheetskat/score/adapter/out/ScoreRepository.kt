@@ -1,74 +1,41 @@
-package com.damhoe.scoresheetskat.score.adapter.out;
+package com.damhoe.scoresheetskat.score.adapter.out
 
-import android.content.res.Resources;
-
-import androidx.lifecycle.MutableLiveData;
-
-import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.score.application.ports.out.CreateScorePort;
-import com.damhoe.scoresheetskat.score.application.ports.out.GetScoresPort;
-import com.damhoe.scoresheetskat.score.domain.SkatScore;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import com.damhoe.scoresheetskat.score.application.ports.out.CreateScorePort
+import com.damhoe.scoresheetskat.score.application.ports.out.GetScoresPort
+import com.damhoe.scoresheetskat.score.domain.SkatScore
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-public class ScoreRepository implements CreateScorePort, GetScoresPort {
-   private final ScorePersistenceAdapter persistenceAdapter;
+class ScoreRepository @Inject constructor(private val persistenceAdapter: ScorePersistenceAdapter) :
+    CreateScorePort, GetScoresPort {
 
-   @Inject
-   public ScoreRepository(ScorePersistenceAdapter adapter) {
-      this.persistenceAdapter = adapter;
-   }
+    override fun saveScore(score: SkatScore): Result<SkatScore> =
+        ScoreDto.fromScore(score).let { scoreDto ->
+            persistenceAdapter.insertScore(scoreDto).mapCatching {
+                score.apply { id = it }
+            }
+        }
 
-   @Override
-   public SkatScore saveScore(SkatScore score) {
-      // Convert to database model
-      ScoreDto scoreDto = ScoreDto.fromScore(score);
-      long id = persistenceAdapter.insertScore(scoreDto);
-      score.setId(id);
-      return score;
-   }
+    override fun updateScore(score: SkatScore): Result<Unit> =
+        ScoreDto.fromScore(score).let { scoreDto ->
+            persistenceAdapter.updateScore(scoreDto)
+        }
 
-   @Override
-   public SkatScore updateScore(SkatScore score) {
-      Result<ScoreDto> updateResult = persistenceAdapter.updateScore(ScoreDto.fromScore(score));
-      if (updateResult.isFailure()) {
-         throw new Resources.NotFoundException(updateResult.getMessage());
-      }
-      return updateResult.getValue().toScore();
-   }
+    override fun deleteScore(id: Long): Result<SkatScore> =
+        persistenceAdapter.deleteScore(id).mapCatching {
+            it.toScore()
+        }
 
-   @Override
-   public SkatScore deleteScore(long id) {
-      Result<ScoreDto> deleteResult = persistenceAdapter.deleteScore(id);
-      if (deleteResult.isFailure()) {
-         throw new Resources.NotFoundException(deleteResult.getMessage());
-      }
-      return deleteResult.getValue().toScore();
-   }
+    // Returns number of deleted games
+    override fun deleteScoresForGame(gameId: Long): Result<Int> =
+        persistenceAdapter.deleteScoresForGame(gameId)
 
-   @Override
-   public void deleteScoresForGame(long gameId) {
-      persistenceAdapter.deleteScoresForGame(gameId);
-   }
+    override fun getScores(gameId: Long): Result<List<SkatScore>> =
+        persistenceAdapter.getScoresForGame(gameId).mapCatching { scoreDtoList ->
+            scoreDtoList.map { it.toScore() }
+        }
 
-   @Override
-   public List<SkatScore> getScores(long gameId) {
-      return persistenceAdapter.getScoresForGame(gameId).stream()
-              .map(ScoreDto::toScore)
-              .collect(Collectors.toList());
-   }
-
-   @Override
-   public SkatScore getScore(long id) {
-      Result<ScoreDto> getResult = persistenceAdapter.getScore(id);
-      if (getResult.isFailure()) {
-         throw new Resources.NotFoundException(getResult.getMessage());
-      }
-      return getResult.getValue().toScore();
-   }
+    override fun getScore(id: Long): Result<SkatScore> =
+        persistenceAdapter.getScore(id).mapCatching { it.toScore() }
 }

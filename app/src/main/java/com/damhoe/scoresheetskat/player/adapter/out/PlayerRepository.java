@@ -4,7 +4,6 @@ import android.content.res.Resources;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.player.application.ports.out.CreatePlayerPort;
@@ -58,7 +57,7 @@ public class PlayerRepository implements CreatePlayerPort, GetPlayerPort, Update
       Result<PlayerDTO> result = mPersistenceAdapter.deletePlayer(id);
 
       if (result.isFailure()) {
-         throw new Resources.NotFoundException(result.getMessage());
+         throw new Resources.NotFoundException(result.message);
       }
 
       mPersistenceAdapter.deletePlayerMatches(id);
@@ -67,17 +66,17 @@ public class PlayerRepository implements CreatePlayerPort, GetPlayerPort, Update
       refreshPlayersFromRepository();
 
       int gameCount = mPersistenceAdapter.getGameCount(id);
-      return result.getValue().asPlayer(gameCount);
+      return result.value.asPlayer(gameCount);
    }
 
    @Override
    public Player getPlayer(long id) {
       Result<PlayerDTO> getPlayerResult = mPersistenceAdapter.getPlayer(id);
       if (getPlayerResult.isFailure()) {
-         throw new Resources.NotFoundException(getPlayerResult.getMessage());
+         throw new Resources.NotFoundException(getPlayerResult.message);
       }
       int gameCount = mPersistenceAdapter.getGameCount(id);
-      return getPlayerResult.getValue().asPlayer(gameCount);
+      return getPlayerResult.value.asPlayer(gameCount);
    }
 
    @Override

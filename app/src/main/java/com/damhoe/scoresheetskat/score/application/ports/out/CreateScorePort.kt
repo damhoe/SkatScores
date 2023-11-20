@@ -1,10 +1,10 @@
-package com.damhoe.scoresheetskat.score.application.ports.out;
+package com.damhoe.scoresheetskat.score.application.ports.out
 
-import com.damhoe.scoresheetskat.score.domain.SkatScore;
+import com.damhoe.scoresheetskat.score.domain.SkatScore
 
-public interface CreateScorePort {
-    SkatScore saveScore(SkatScore score);
-    SkatScore updateScore(SkatScore score);
-    SkatScore deleteScore(long id);
-    void deleteScoresForGame(long gameId);
+interface CreateScorePort {
+    fun saveScore(score: SkatScore): Result<SkatScore>
+    fun updateScore(score: SkatScore): Result<Unit>
+    fun deleteScore(id: Long): Result<SkatScore>
+    fun deleteScoresForGame(gameId: Long): Result<Int>
 }

@@ -1,4 +1,4 @@
-package com.damhoe.scoresheetskat.home;
+package com.damhoe.scoresheetskat.library;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -188,7 +188,7 @@ public class LibraryFragment extends Fragment implements GamePreviewItemClickLis
         Result<SkatGame> result = viewModel.deleteGame(skatGamePreview.getGameId());
 
         if (result.isFailure()) {
-            Log.d("Unexpected behavior", result.getMessage());
+            Log.d("Unexpected behavior", result.message);
         }
     }
 }

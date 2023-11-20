@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.damhoe.scoresheetskat.KotlinResultWrapper;
 import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.game.adapter.out.models.PlayerMatchDTO;
 import com.damhoe.scoresheetskat.game.adapter.out.models.SkatGameDTO;
@@ -96,7 +97,7 @@ public class GameRepository implements GamePort {
       // Delete player matches
       mPlayerMatchAdapter.deletePlayerMatchesForGame(skatGame.getId());
       // Delete scores
-      mCreateScoreUseCase.deleteScoresForGame(skatGame.getId());
+      KotlinResultWrapper.Companion.deleteScoresForGame(mCreateScoreUseCase, skatGame.getId());
       // Delete game
       mGameAdapter.deleteGame(skatGame.getId());
 
@@ -162,7 +163,7 @@ public class GameRepository implements GamePort {
               .map(dto -> mGameMapper.mapToPreview(
                       dto,
                       SettingsMapper.mapSkatSettingsDTOToSkatSettings(
-                              mSettingsPersistenceAdapter.getSettings(dto.getId()).getValue()),
+                              mSettingsPersistenceAdapter.getSettings(dto.getId()).value),
                       loadPlayersForGame(dto.getId(), 3)
               ))
               .collect(Collectors.toList());
@@ -174,19 +175,19 @@ public class GameRepository implements GamePort {
    public SkatGame getGame(long id) {
       Result<SkatGameDTO> gameResult = mGameAdapter.getGame(id);
       if (gameResult.isFailure()) {
-         throw new Resources.NotFoundException(gameResult.getMessage());
+         throw new Resources.NotFoundException(gameResult.message);
       }
 
-      SkatGameDTO skatGameDTO = gameResult.getValue();
+      SkatGameDTO skatGameDTO = gameResult.value;
 
       // Load settings
       Result<SkatSettingsDTO> settingsResult =
               mSettingsPersistenceAdapter.getSettings(skatGameDTO.getSettingsId());
       if (settingsResult.isFailure()) {
-         throw new Resources.NotFoundException(settingsResult.getMessage());
+         throw new Resources.NotFoundException(settingsResult.message);
       }
       SkatSettings skatSettings =
-              SettingsMapper.mapSkatSettingsDTOToSkatSettings(settingsResult.getValue());
+              SettingsMapper.mapSkatSettingsDTOToSkatSettings(settingsResult.value);
 
       // Load players
       // If no player is saved for a specific position
@@ -226,7 +227,7 @@ public class GameRepository implements GamePort {
             );
          }
 
-         Player player = mGetPlayerUseCase.getPlayer(match.getPlayerId()).getValue();
+         Player player = mGetPlayerUseCase.getPlayer(match.getPlayerId()).value;
          players.set(position, player);
       }
 

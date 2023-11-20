@@ -2,11 +2,13 @@ package com.damhoe.scoresheetskat.player.adapter.in.ui;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,6 +25,7 @@ import android.view.ViewGroup;
 
 import com.damhoe.scoresheetskat.MainActivity;
 import com.damhoe.scoresheetskat.R;
+import com.damhoe.scoresheetskat.base.DateConverter;
 import com.damhoe.scoresheetskat.databinding.FragmentPlayerDetailsBinding;
 import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
@@ -58,15 +61,12 @@ public class PlayerDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_player_details, container, false);
-        binding.buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Player player = viewModel.getSelectedPlayer().getValue();
-                if (player != null) {
-                    viewModel.removePlayer(player);
-                }
-                findNavController().navigateUp();
+        binding.buttonDelete.setOnClickListener(view -> {
+            Player player = viewModel.getSelectedPlayer().getValue();
+            if (player != null) {
+                viewModel.removePlayer(player);
             }
+            findNavController().navigateUp();
         });
         binding.editName.setOnClickListener(view -> buildStartAddPlayerDialog());
         return binding.getRoot();
@@ -84,10 +84,10 @@ public class PlayerDetailsFragment extends Fragment {
         TextInputLayout inputLayout = layout.findViewById(R.id.input_name);
 
         AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Change name")
+                .setTitle(getString(R.string.dialog_title_edit_player_name))
                 .setView(layout)
-                .setNegativeButton("Cancel", (d, i) -> d.cancel())
-                .setPositiveButton("Save", (d, i) -> {
+                .setNegativeButton(getString(R.string.dialog_title_button_cancel), (d, i) -> d.cancel())
+                .setPositiveButton(getString(R.string.dialog_title_button_save), (d, i) -> {
                     if (inputLayout.getError() != null) {
                         return;
                     }
@@ -123,12 +123,12 @@ public class PlayerDetailsFragment extends Fragment {
 
                 // Show error if empty name
                 if (trimmed.isEmpty()) {
-                    inputLayout.setError("Name is required!");
+                    inputLayout.setError(getString(R.string.error_name_required));
                 }
 
                 // Show error if name is not unique
                 if (viewModel.isExistentName(trimmed) && !trimmed.equals(player.getName())) {
-                    inputLayout.setError("This name already exists.");
+                    inputLayout.setError(getString(R.string.error_player_name_exists));
                 }
 
                 int maxLength = inputLayout.getCounterMaxLength();
@@ -176,16 +176,12 @@ public class PlayerDetailsFragment extends Fragment {
         String updatedAtTemplate = getString(R.string.template_updated_at);
 
         binding.name.setText(player.getName());
+
         binding.created.setText(String.format(createdAtTemplate,
-                new SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-                        .format(player.getCreatedAt())
-                )
-        );
+                DateConverter.toAppLocaleString(player.getCreatedAt())
+        ));
         binding.updated.setText(String.format(updatedAtTemplate,
-                new SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-                        .format(player.getUpdatedAt())
-                )
-        );
+                DateConverter.toAppLocaleString(player.getUpdatedAt())));
         binding.numberGames.setText(String.format(gameCountTemplate, player.getGameCount()));
     }
 

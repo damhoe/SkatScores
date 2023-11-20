@@ -1,59 +1,33 @@
-package com.damhoe.scoresheetskat.score.application;
+package com.damhoe.scoresheetskat.score.application
 
-import com.damhoe.scoresheetskat.base.Result;
-import com.damhoe.scoresheetskat.score.application.ports.in.CreateScoreUseCase;
-import com.damhoe.scoresheetskat.score.application.ports.in.GetScoreUseCase;
-import com.damhoe.scoresheetskat.score.application.ports.out.CreateScorePort;
-import com.damhoe.scoresheetskat.score.application.ports.out.GetScoresPort;
-import com.damhoe.scoresheetskat.score.domain.SkatScore;
-import com.damhoe.scoresheetskat.score.domain.SkatScoreCommand;
+import com.damhoe.scoresheetskat.score.application.ports.`in`.CreateScoreUseCase
+import com.damhoe.scoresheetskat.score.application.ports.`in`.GetScoreUseCase
+import com.damhoe.scoresheetskat.score.application.ports.out.CreateScorePort
+import com.damhoe.scoresheetskat.score.application.ports.out.GetScoresPort
+import com.damhoe.scoresheetskat.score.domain.SkatScore
+import com.damhoe.scoresheetskat.score.domain.SkatScoreCommand
+import javax.inject.Inject
 
-import java.util.List;
+class ScoreService @Inject constructor(
+    private val getScoresPort: GetScoresPort,
+    private val createScorePort: CreateScorePort
+) : CreateScoreUseCase, GetScoreUseCase {
 
-import javax.inject.Inject;
+    override fun createScore(command: SkatScoreCommand): Result<SkatScore> =
+        SkatScore(command).let { createScorePort.saveScore(it) }
 
-public class ScoreService implements CreateScoreUseCase, GetScoreUseCase {
+    override fun getScores(gameId: Long): Result<List<SkatScore>> = getScoresPort.getScores(gameId)
 
-    private final GetScoresPort getScoresPort;
-    private final CreateScorePort createScorePort;
+    override fun getScore(id: Long): Result<SkatScore> = getScoresPort.getScore(id)
 
-    @Inject
-    ScoreService(GetScoresPort getScoresPort, CreateScorePort createScorePort) {
-        this.getScoresPort = getScoresPort;
-        this.createScorePort = createScorePort;
-    }
+    override fun updateScore(id: Long, command: SkatScoreCommand): Result<Unit> =
+        SkatScore(command).let {
+            it.id = id
+            createScorePort.updateScore(it)
+        }
 
-    @Override
-    public Result<SkatScore> createScore(SkatScoreCommand command) {
-        SkatScore score = new SkatScore(command);
-        score = createScorePort.saveScore(score);
-        return Result.success(score);
-    }
+    override fun deleteScore(id: Long): Result<SkatScore> = createScorePort.deleteScore(id)
 
-    @Override
-    public List<SkatScore> getScores(long gameId) {
-        return getScoresPort.getScores(gameId);
-    }
-
-    @Override
-    public Result<SkatScore> getScore(long id) {
-        return Result.success(getScoresPort.getScore(id));
-    }
-
-    @Override
-    public Result<SkatScore> updateScore(long id, SkatScoreCommand command) {
-        SkatScore score = new SkatScore(command);
-        score.setId(id);
-        return Result.success(createScorePort.updateScore(score));
-    }
-
-    @Override
-    public Result<SkatScore> deleteScore(long id) {
-        return Result.success(createScorePort.deleteScore(id));
-    }
-
-    @Override
-    public void deleteScoresForGame(long gameId) {
-        createScorePort.deleteScoresForGame(gameId);
-    }
+    override fun deleteScoresForGame(gameId: Long): Result<Int> =
+        createScorePort.deleteScoresForGame(gameId)
 }

@@ -1,5 +1,6 @@
 package com.damhoe.scoresheetskat.game.adapter.out;
 
+import com.damhoe.scoresheetskat.KotlinResultWrapper;
 import com.damhoe.scoresheetskat.game.adapter.out.models.SkatGameDTO;
 import com.damhoe.scoresheetskat.game.domain.GameRunStateInfo;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
@@ -42,7 +43,7 @@ public class GameMapper {
       game.setId(skatGameDTO.getId());
 
       // Add Scores
-      List<SkatScore> scores = mGetScoreUseCase.getScores(game.getId());
+      List<SkatScore> scores = KotlinResultWrapper.Companion.getScores(mGetScoreUseCase, skatGameDTO.getId());
       for (int i = 0; i < scores.size(); i++) {
          game.addScore(scores.get(i));
       }
@@ -66,7 +67,7 @@ public class GameMapper {
       skatGamePreview.setPlayerNames(getPlayerNames(players));
 
       // Add Scores
-      List<SkatScore> scores = mGetScoreUseCase.getScores(skatGameDTO.getId());
+      List<SkatScore> scores = KotlinResultWrapper.Companion.getScores(mGetScoreUseCase, skatGameDTO.getId());
       int scoreCount = scores.size();
       int roundsCount = settings.getNumberOfRounds();
       skatGamePreview.setGameRunStateInfo(
@@ -111,5 +112,4 @@ public class GameMapper {
       }
       return names;
    }
-
 }

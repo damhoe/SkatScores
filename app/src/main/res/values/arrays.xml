@@ -7,8 +7,8 @@
     </string-array>
 
     <string-array name="app_languages_values">
-        <item>@string/pref_language_german_value</item>
-        <item>@string/pref_language_english_value</item>
+        <item>@string/german_preference_value</item>
+        <item>@string/english_preference_value</item>
     </string-array>
 
     <string-array name="ui_modes">
@@ -18,9 +18,9 @@
     </string-array>
 
     <string-array name="ui_modes_values">
-        <item>@string/pref_uiMode_day_value</item>
-        <item>@string/pref_uiMode_night_value</item>
-        <item>@string/pref_uiMode_system_value</item>
+        <item>@string/day_theme_preference_value</item>
+        <item>@string/night_theme_preference_value</item>
+        <item>@string/system_theme_preference_value</item>
     </string-array>
 
     <integer-array name="allowed_rounds">

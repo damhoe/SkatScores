@@ -1,27 +1,9 @@
 package com.damhoe.scoresheetskat.game.adapter.in.ui;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.NavUtils;
-import androidx.core.view.MenuProvider;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -37,27 +19,40 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
-import com.damhoe.scoresheetskat.MainActivity;
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NavUtils;
+import androidx.core.view.MenuProvider;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.damhoe.scoresheetskat.R;
 import com.damhoe.scoresheetskat.base.Result;
 import com.damhoe.scoresheetskat.databinding.DialogGameSettingsBinding;
-import com.damhoe.scoresheetskat.databinding.FragmentGameV2Binding;
-import com.damhoe.scoresheetskat.databinding.FragmentLibraryBinding;
+import com.damhoe.scoresheetskat.databinding.FragmentGameBinding;
 import com.damhoe.scoresheetskat.game.GameActivity;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator;
 import com.damhoe.scoresheetskat.game.application.PlayerSelectionValidator.MessageType;
 import com.damhoe.scoresheetskat.game.domain.SkatGame;
+import com.damhoe.scoresheetskat.game.domain.SkatSettings;
 import com.damhoe.scoresheetskat.game_setup.domain.SkatGameCommand;
+import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.score.adapter.in.ui.SharedScoreResponseViewModel;
 import com.damhoe.scoresheetskat.score.domain.ScoreEvent;
 import com.damhoe.scoresheetskat.score.domain.ScoreEventType;
 import com.damhoe.scoresheetskat.score.domain.ScoreRequest;
 import com.damhoe.scoresheetskat.score.domain.SkatScore;
-import com.damhoe.scoresheetskat.game.domain.SkatSettings;
-import com.damhoe.scoresheetskat.player.domain.Player;
 import com.damhoe.scoresheetskat.shared_ui.utils.InsetsManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.slider.Slider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -66,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -78,7 +74,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     private SkatGameViewModel viewModel;
     private SelectPlayerViewModel selectPlayerViewModel;
     private SharedScoreResponseViewModel scoreResponseViewModel;
-    private FragmentGameV2Binding binding;
+    private FragmentGameBinding binding;
     private PlayerSelectionValidator playerValidator = new PlayerSelectionValidator();
     private SkatScoreAdapter scoreAdapter;
 
@@ -101,7 +97,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game_v2, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false);
         setUpEditScoreButton();
         setUpEditPlayersButton();
         setUpRecyclerView();
@@ -296,7 +292,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.message_scoring_dialog)
                 .setView(dialogBinding.getRoot())
-                .setPositiveButton("Save", (dialogInterface, i) -> {
+                .setPositiveButton(getString(R.string.dialog_title_button_save), (dialogInterface, i) -> {
                     Editable editable = dialogBinding.listNameEditText.getText();
                     String title = editable != null ?
                             editable.toString() : viewModel.getTitle().getValue();
@@ -314,7 +310,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
                     viewModel.updateGame(skatGame);
                     dialogInterface.dismiss();
                 })
-                .setNegativeButton("Cancel", ((d, i) -> d.cancel()))
+                .setNegativeButton(getString(R.string.dialog_title_button_cancel), ((d, i) -> d.cancel()))
                 .create();
 
         // Add listeners
@@ -341,7 +337,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
                 // Set error if invalid title
                 dialogBinding.listNameTextInput.setError(
-                        title.isEmpty() ? "Please enter a valid title!" : null
+                        title.isEmpty() ? getString(R.string.error_valid_title_required) : null
                 );
 
                 // Disable positive button if error exists
@@ -350,17 +346,14 @@ public class GameFragment extends Fragment implements IScoreActionListener {
             }
         });
 
-        dialogBinding.roundsSlider.addOnChangeListener(new Slider.OnChangeListener() {
-            @Override
-            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                dialogBinding.numberOfRoundsText.setText(String.valueOf((int) value));
+        dialogBinding.roundsSlider.addOnChangeListener((slider, value, fromUser) -> {
+            dialogBinding.numberOfRoundsText.setText(String.valueOf((int) value));
 
-                int currentRound = viewModel.getGameRunStateInfo().getValue().getCurrentRound();
+            int currentRound = Objects.requireNonNull(viewModel.getGameRunStateInfo().getValue()).getCurrentRound();
 
-                // Disable positive button if error exists
-                Button buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                buttonPositive.setEnabled( (int) value >= currentRound - 1);
-            }
+            // Disable positive button if error exists
+            Button buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            buttonPositive.setEnabled( (int) value >= currentRound - 1);
         });
 
         dialog.show();
@@ -395,13 +388,13 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     public void notifyDelete() {
         Result<SkatScore> deleteResult = viewModel.removeLastScore();
         if (deleteResult.isFailure()) {
-            Snackbar.make(requireView(), deleteResult.getMessage(), Snackbar.LENGTH_SHORT)
+            Snackbar.make(requireView(), deleteResult.message, Snackbar.LENGTH_SHORT)
                     .setAction("GOT IT", view -> onDestroy())
                     .show();
             return;
         }
         if (scoreAdapter != null) {
-            int position = scoreAdapter.getPosition(deleteResult.getValue().getId());
+            int position = scoreAdapter.getPosition(deleteResult.value.getId());
             scoreAdapter.notifyItemRemoved(position);
         }
     }
@@ -410,13 +403,13 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     public void notifyDetails(SkatScore skatScore) {
 
         new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Score details")
+                .setTitle(getString(R.string.dialog_title_score_details))
                 .setMessage(
                         new SkatScore.TextMaker(requireContext())
                                 .setupWithSkatScore(skatScore)
                                 .make()
                 )
-                .setPositiveButton("Got it", ((dialogInterface, i) -> dialogInterface.dismiss()))
+                .setPositiveButton(getString(R.string.dialog_title_button_got_it), ((dialogInterface, i) -> dialogInterface.dismiss()))
                 .create()
                 .show();
     }
@@ -463,9 +456,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
     private void setupNavigation() {
         // Empty.
-        binding.returnButton.setOnClickListener(view -> {
-            NavUtils.navigateUpFromSameTask(requireActivity());
-        });
+        binding.returnButton.setOnClickListener(view -> NavUtils.navigateUpFromSameTask(requireActivity()));
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
@@ -506,9 +497,9 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
         AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
                 .setView(contentView)
-                .setTitle("Edit Players")
-                .setNegativeButton("Cancel", (d, i) -> d.cancel())
-                .setPositiveButton("Save", (d, i) -> {
+                .setTitle(getString(R.string.dialog_title_edit_players))
+                .setNegativeButton(getString(R.string.dialog_title_button_cancel), (d, i) -> d.cancel())
+                .setPositiveButton(getString(R.string.dialog_title_button_save), (d, i) -> {
                     String name1 = editPlayer1.getText().toString().trim();
                     String name2 = editPlayer2.getText().toString().trim();
                     String name3 = editPlayer3.getText().toString().trim();
@@ -547,7 +538,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         if (playerResult.isFailure()) {
             return Player.createDummy(0);
         }
-        return playerResult.getValue();
+        return playerResult.value;
     }
 
     private void addTextChangeListener(

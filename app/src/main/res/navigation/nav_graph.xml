@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/library"
-        android:name="com.damhoe.scoresheetskat.home.LibraryFragment"
+        android:name="com.damhoe.scoresheetskat.library.LibraryFragment"
         tools:layout="@layout/fragment_library">
         <action
             android:id="@+id/action_library_to_settings"
@@ -21,10 +21,7 @@
             android:id="@+id/action_library_to_gameActivity"
             app:destination="@id/gameActivity"
             app:enterAnim="@anim/enter_from_bottom"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/exit_to_bottom"
-            />
+            app:exitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment

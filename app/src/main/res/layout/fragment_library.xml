@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-                tools:context=".home.LibraryFragment">
+                tools:context=".library.LibraryFragment">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_filter"
@@ -78,7 +78,7 @@
                     android:id="@+id/this_month_games_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="24dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
@@ -105,8 +105,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="100dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:paddingBottom="8dp"
                     app:layout_constraintTop_toBottomOf="@id/this_month_games_title"
                     android:overScrollMode="never"
@@ -118,7 +118,7 @@
                     android:id="@+id/older_games_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
@@ -144,8 +144,8 @@
                     android:id="@+id/older_games_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:paddingBottom="16dp"
                     app:layout_constraintTop_toBottomOf="@id/older_games_title"
                     app:layout_constraintBottom_toBottomOf="parent"

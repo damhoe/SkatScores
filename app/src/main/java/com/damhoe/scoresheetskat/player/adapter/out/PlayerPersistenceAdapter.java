@@ -42,11 +42,11 @@ class PlayerPersistenceAdapter {
         try {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(
-                    "SELECT * FROM "
-                            + DbHelper.PLAYER_TABLE_NAME
-                            + " WHERE "
-                            + DbHelper.PLAYER_COLUMN_ID + " = ? ",
-                    new String[] {String.valueOf(playerId)});
+                "SELECT * FROM "
+                        + DbHelper.PLAYER_TABLE_NAME
+                        + " WHERE "
+                        + DbHelper.PLAYER_COLUMN_ID + " = ? ",
+                new String[] {String.valueOf(playerId)});
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 PlayerDTO player = cursorToPlayerDTO(cursor);
@@ -73,7 +73,7 @@ class PlayerPersistenceAdapter {
             contentValues.put(DbHelper.PLAYER_COLUMN_UPDATED_AT, player.getUpdatedAt());
             String whereClause = DbHelper.PLAYER_COLUMN_ID + " = ? ";
             return db.update(DbHelper.PLAYER_TABLE_NAME, contentValues, whereClause,
-                    new String[] { String.valueOf(player.getId()) });
+                new String[] { String.valueOf(player.getId()) });
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
@@ -103,9 +103,9 @@ class PlayerPersistenceAdapter {
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.execSQL(
-                    "DELETE FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
-                            + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID +  " = ?",
-                    new String[] { id + "" });
+                "DELETE FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
+                        + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID +  " = ?",
+                new String[] { id + "" });
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
@@ -117,8 +117,8 @@ class PlayerPersistenceAdapter {
         try {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery("SELECT * FROM " + DbHelper.PLAYER_MATCH_TABLE_NAME
-                            + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID + " = ?",
-                    new String[] { playerId + "" });
+                    + " WHERE " + DbHelper.PLAYER_MATCH_COLUMN_PLAYER_ID + " = ?",
+                new String[] { playerId + "" });
             return cursor.getCount();
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -136,8 +136,8 @@ class PlayerPersistenceAdapter {
         try {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(
-                    "SELECT * FROM " + DbHelper.PLAYER_TABLE_NAME,
-                    null);
+                "SELECT * FROM " + DbHelper.PLAYER_TABLE_NAME,
+                null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 PlayerDTO player = cursorToPlayerDTO(cursor);

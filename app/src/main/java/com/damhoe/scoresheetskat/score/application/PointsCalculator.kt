@@ -1,104 +1,45 @@
-package com.damhoe.scoresheetskat.score.application;
+package com.damhoe.scoresheetskat.score.application
 
-import com.damhoe.scoresheetskat.score.Constant;
-import com.damhoe.scoresheetskat.score.domain.SkatScore;
+import com.damhoe.scoresheetskat.score.Constant
+import com.damhoe.scoresheetskat.score.domain.SkatScore
+import com.damhoe.scoresheetskat.score.domain.SkatSuit
 
-public final class SkatScoreToPointsConverter {
+class PointsCalculator(private val score: SkatScore) {
 
-   public static int convertSuitScore(SkatScore score) {
-      int spielwert = calculateSpielwert(score);
-      int points;
-      switch (score.getSuit()) {
-         case CLUBS:
-            points = spielwert * Constant.POINTS_CLUBS;
-            break;
-         case HEARTS:
-            points = spielwert * Constant.POINTS_HEARTS;
-            break;
-         case DIAMONDS:
-            points = spielwert * Constant.POINTS_DIAMONDS;
-            break;
-         case SPADES:
-            points = spielwert * Constant.POINTS_SPADES;
-            break;
-         default:
-            throw new IllegalArgumentException("Invalid suit: " + score.getSuit());
-      }
-      return points;
-   }
+    fun calculatePoints(): Int = when {
+        score.isPasse -> 0
+        score.isOverbid -> -50
+        else -> calculatePlayedGamePoints()
+    }
 
-   private static int calculateSpielwert(SkatScore score) {
-      return new SpielwertBuilder(score)
-              .addHand()
-              .addOuvert()
-              .addSchneider()
-              .addSchwarz()
-              .build();
-   }
+    private fun calculatePlayedGamePoints(): Int = when (score.suit) {
+        SkatSuit.NULL -> calculateNullPoints()
+        else -> calculateTrumpGamePoints()
+    }
 
-   public static int convertGrandScore(SkatScore score) {
-      int spielwert = calculateSpielwert(score);
-      return spielwert * Constant.POINTS_GRAND;
-   }
+    private fun calculateNullPoints(): Int = when {
+        score.isHand && score.isOuvert -> Constant.POINTS_NULL_OUVERT_HAND
+        score.isHand -> Constant.POINTS_NULL_HAND
+        score.isOuvert -> Constant.POINTS_NULL_OUVERT
+        else -> Constant.POINTS_NULL
+    }.let { if (score.isWon) it else -2 * it }
 
-   public static int convertNullScore(SkatScore score) {
-      int multiplier = score.isWon() ? 1 : -2;
-      if (score.isHand()) {
-         if (score.isOuvert()) {
-            return multiplier * Constant.POINTS_NULL_OUVERT_HAND;
-         }
-         return multiplier * Constant.POINTS_NULL_HAND;
-      }
-      if (score.isOuvert()) {
-         return multiplier * Constant.POINTS_NULL_OUVERT;
-      }
-      return multiplier * Constant.POINTS_NULL;
-   }
+    private fun calculateTrumpGamePoints(): Int = when (score.suit) {
+        SkatSuit.CLUBS -> Constant.POINTS_CLUBS
+        SkatSuit.HEARTS -> Constant.POINTS_HEARTS
+        SkatSuit.DIAMONDS -> Constant.POINTS_DIAMONDS
+        SkatSuit.SPADES -> Constant.POINTS_SPADES
+        SkatSuit.GRAND -> Constant.POINTS_GRAND
+        else -> throw IllegalArgumentException("Invalid suit: ${score.suit}")
+    }.let { spielwert * it }
 
-   static class SpielwertBuilder {
-      private int winLevels;
-      private final SkatScore score;
-
-      SpielwertBuilder(SkatScore score) {
-         winLevels = 0;
-         this.score = score;
-      }
-
-      SpielwertBuilder addHand() {
-         if (score.isHand())
-            winLevels += 1;
-         return this;
-      }
-
-      SpielwertBuilder addOuvert() {
-         if (score.isOuvert()) {
-            winLevels += 1;
-         }
-         return this;
-      }
-
-      SpielwertBuilder addSchneider() {
-         if (score.isSchneider()) {
-            winLevels += 1;
-            if (score.isSchneiderAnnounced())
-               winLevels += 1;
-         }
-         return this;
-      }
-
-      SpielwertBuilder addSchwarz() {
-         if (score.isSchwarz()) {
-            winLevels += 1;
-            if (score.isSchwarzAnnounced())
-               winLevels += 1;
-         }
-         return this;
-      }
-
-      int build() {
-         int lossFactor = score.isWon() ? 1 : -2;
-         int value = Math.abs(score.getSpitzen()) + 1 + winLevels;
-         return value * lossFactor;
-      }
-   }
+    private var spielwert: Int = listOf(
+        score.isHand,
+        score.isOuvert,
+        score.isSchneider,
+        score.isSchneiderAnnounced,
+        score.isSchwarz,
+        score.isSchwarzAnnounced
+    ).count{ it }.let { (score.spitzen + 1 + it) }
+        .let { if (score.isWon) it else -2 * it }
 }

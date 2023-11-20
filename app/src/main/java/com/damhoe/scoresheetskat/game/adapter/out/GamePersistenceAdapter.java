@@ -96,7 +96,7 @@ public class GamePersistenceAdapter {
                     "DELETE FROM " + DbHelper.GAME_TABLE_NAME
                             + " WHERE " + DbHelper.GAME_COLUMN_ID +  " = ?",
                     new String[] { id + "" });
-            SkatGameDTO deletedGame = getResult.getValue();
+            SkatGameDTO deletedGame = getResult.value;
             return Result.success(deletedGame);
         } catch (Exception e) {
             e.printStackTrace();

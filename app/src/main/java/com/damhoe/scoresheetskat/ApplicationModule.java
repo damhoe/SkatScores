@@ -3,6 +3,8 @@ package com.damhoe.scoresheetskat;
 import android.app.Application;
 import android.content.Context;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -11,6 +13,7 @@ public class ApplicationModule {
 
    private final Application mApplication;
 
+   @Singleton
    protected ApplicationModule(Application app) {
       mApplication = app;
    }
