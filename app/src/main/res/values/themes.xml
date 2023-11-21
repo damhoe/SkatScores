@@ -5,7 +5,7 @@
     </style>
 
 
-    <style name="Theme.ScoreSheetSkat" parent="Theme.App">
+    <style name="Theme.SkatScores" parent="Theme.App">
         <item name="textAppearanceHeadlineSmall">@style/TextAppearance.App.HeadlineSmall</item>
         <item name="textAppearanceHeadlineMedium">@style/TextAppearance.App.HeadlineMedium</item>
         <item name="textAppearanceHeadlineLarge">@style/TextAppearance.App.HeadlineLarge</item>

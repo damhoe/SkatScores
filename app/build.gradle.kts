@@ -6,10 +6,10 @@ plugins {
 }
 
 android {
-    namespace = "com.damhoe.scoresheetskat"
+    namespace = "com.damhoe.skatscores"
 
     defaultConfig {
-        applicationId = "com.damhoe.scoresheetskat"
+        applicationId = "com.damhoe.skatscores"
         compileSdk = 34
         minSdk = 30
         targetSdk = 34

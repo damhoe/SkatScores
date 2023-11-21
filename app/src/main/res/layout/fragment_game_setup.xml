@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.damhoe.scoresheetskat.game_setup.adapter.in.ui.GameSetupViewModel" />
+            type="com.damhoe.skatscores.game_setup.adapter.in.ui.GameSetupViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/library"
-        android:name="com.damhoe.scoresheetskat.library.LibraryFragment"
+        android:name="com.damhoe.skatscores.library.LibraryFragment"
         tools:layout="@layout/fragment_library">
         <action
             android:id="@+id/action_library_to_settings"
@@ -20,13 +20,12 @@
         <action
             android:id="@+id/action_library_to_gameActivity"
             app:destination="@id/gameActivity"
-            app:enterAnim="@anim/enter_from_bottom"
-            app:exitAnim="@anim/fade_out" />
+            app:enterAnim="@anim/enter_from_bottom" />
     </fragment>
 
     <fragment
         android:id="@+id/app_settings"
-        android:name="com.damhoe.scoresheetskat.app.app_settings.SettingsFragment"
+        android:name="com.damhoe.skatscores.app.app_settings.SettingsFragment"
         tools:layout="@layout/fragment_settings">
         <argument
             android:name="ShowBottomAppBar"
@@ -38,16 +37,16 @@
 
     <fragment
         android:id="@+id/player_details"
-        android:name="com.damhoe.scoresheetskat.player.adapter.in.ui.PlayerDetailsFragment"
+        android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerDetailsFragment"
         tools:layout="@layout/fragment_player_details"/>
     <fragment
         android:id="@+id/about"
-        android:name="com.damhoe.scoresheetskat.app.about.AboutFragment"
+        android:name="com.damhoe.skatscores.app.about.AboutFragment"
         tools:layout="@layout/fragment_about"
         />
     <fragment
         android:id="@+id/players"
-        android:name="com.damhoe.scoresheetskat.player.adapter.in.ui.PlayersFragment"
+        android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayersFragment"
         tools:layout="@layout/fragment_players">
         <action
             android:id="@+id/action_players_to_player_details"
@@ -61,12 +60,12 @@
 
     <fragment
         android:id="@+id/statistics"
-        android:name="com.damhoe.scoresheetskat.statistics.adapter.ui.StatisticsFragment"
+        android:name="com.damhoe.skatscores.statistics.adapter.ui.StatisticsFragment"
         tools:layout="@layout/fragment_statistics"/>
 
     <activity
         android:id="@+id/gameActivity"
-        android:name="com.damhoe.scoresheetskat.game.GameActivity"
+        android:name="com.damhoe.skatscores.game.GameActivity"
         android:label="activity_game"
         tools:layout="@layout/activity_game" >
         <argument

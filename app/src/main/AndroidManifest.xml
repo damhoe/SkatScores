@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name=".ScoreSheetSkatApplication"
+        android:name=".SkatScoresApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher_scoresheet_skat"
+        android:icon="@mipmap/ic_launcher_skat_scores"
         android:label="@string/app_name"
         android:localeConfig="@xml/locale_config"
-        android:roundIcon="@mipmap/ic_launcher_scoresheet_skat_round"
+        android:roundIcon="@mipmap/ic_launcher_skat_scores_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.App.SplashTheme"
         android:windowSoftInputMode="adjustResize"
@@ -16,7 +16,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.ScoreSheetSkat">
+            android:theme="@style/Theme.SkatScores">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,8 +26,9 @@
         <activity
             android:name=".game.GameActivity"
             android:exported="false"
-            android:theme="@style/Theme.ScoreSheetSkat"
-            android:parentActivityName=".MainActivity" >
+            android:theme="@style/Theme.SkatScores"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTask">
             <!-- Parent activity meta-data to support API level 4+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

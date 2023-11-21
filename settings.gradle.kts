@@ -7,5 +7,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "ScoreSheet Skat"
+rootProject.name = "Skat Scores"
 include(":app")

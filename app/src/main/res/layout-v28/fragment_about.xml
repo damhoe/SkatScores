@@ -48,7 +48,7 @@
                 android:layout_height="104dp"
                 app:shapeAppearance="@style/RoundImageViewShape"
                 android:backgroundTint="?colorSecondaryContainer"
-                app:srcCompat="@mipmap/ic_launcher_scoresheet_skat"
+                app:srcCompat="@mipmap/ic_launcher_skat_scores"
                 app:layout_constraintBottom_toTopOf="@id/title"
                 app:layout_constraintStart_toStartOf="@id/title"
                 app:layout_constraintEnd_toEndOf="@id/title"
