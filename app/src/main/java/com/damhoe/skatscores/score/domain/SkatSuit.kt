@@ -1,24 +1,18 @@
-package com.damhoe.skatscores.score.domain;
+package com.damhoe.skatscores.score.domain
 
-public enum SkatSuit {
- GRAND,
- NULL,
- CLUBS,
- SPADES,
- HEARTS,
- DIAMONDS,
- INVALID;
+enum class SkatSuit {
+    GRAND, NULL, CLUBS, SPADES, HEARTS, DIAMONDS, INVALID;
 
- public int asInteger() {
-  return ordinal();
- }
+    fun asInteger() = ordinal
 
- public static SkatSuit fromInteger(int value) {
-  for (SkatSuit suit: SkatSuit.values()) {
-   if (suit.ordinal() == value) {
-    return suit;
-   }
-  }
-  return SkatSuit.CLUBS; // default
- }
+    companion object {
+        fun fromInteger(value: Int): SkatSuit {
+            for (suit in values()) {
+                if (suit.ordinal == value) {
+                    return suit
+                }
+            }
+            return CLUBS // default
+        }
+    }
 }

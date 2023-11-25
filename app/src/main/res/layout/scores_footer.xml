@@ -32,7 +32,7 @@
                     android:fontFamily="@font/rubik_medium"
                     android:textAlignment="textEnd"
                     android:textAppearance="@style/TextAppearance.App.BodySmall"
-                    android:text="x50"
+                    android:text="@string/points_solo_label"
                     />
 
                 <TextView
@@ -92,7 +92,7 @@
                     android:fontFamily="@font/rubik_medium"
                     android:textAlignment="textEnd"
                     android:textAppearance="@style/TextAppearance.App.BodySmall"
-                    android:text="x40"
+                    android:text="@string/points_lost_label"
                     />
 
                 <TextView
@@ -161,7 +161,7 @@
                     android:textAppearance="@style/TextAppearance.App.BodySmall"
                     android:textColor="?colorOnSurface"
                     android:fontFamily="@font/rubik_medium"
-                    android:text="Points"
+                    android:text="@string/points_label"
                     />
 
                 <TextView

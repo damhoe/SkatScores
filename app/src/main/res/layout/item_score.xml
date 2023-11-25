@@ -12,13 +12,14 @@
         android:id="@+id/round_text"
         android:layout_width="@dimen/points_board_first_label_width"
         android:layout_height="wrap_content"
-        android:textAlignment="textEnd"
+        android:fontFamily="@font/rubik_medium"
+        android:maxLines="1"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:maxLines="1"
+        android:textAlignment="textEnd"
         android:textAppearance="@style/TextAppearance.App.BodyMedium"
-        android:fontFamily="@font/rubik_medium"
         android:textColor="?colorOnSurfaceLight"
+        tools:ignore="TextContrastCheck"
         tools:text="18" />
 
     <TextView

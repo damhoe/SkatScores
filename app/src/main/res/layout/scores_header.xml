@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:baselineAligned="false">
 
             <FrameLayout
                 android:layout_width="@dimen/points_board_first_label_width"
@@ -32,6 +33,7 @@
                     android:layout_gravity="end"
                     style="@style/Widget.Material3.Button.IconButton"
                     app:icon="@drawable/ic_edit_24dp"
+                    android:contentDescription="@string/description_edit_players_of_game"
                     />
             </FrameLayout>
 
@@ -56,7 +58,8 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    tools:text="Damian withalongname"/>
+                    tools:text="Damian withalongname"
+                    tools:ignore="VisualLintOverlap" />
 
                 <View
                     android:id="@+id/indicator1"
@@ -96,7 +99,8 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    tools:text="Paul"/>
+                    tools:text="Paul"
+                    tools:ignore="VisualLintOverlap" />
 
                 <View
                     android:id="@+id/indicator2"
@@ -136,7 +140,8 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    tools:text="Damian"/>
+                    tools:text="Damian"
+                    tools:ignore="VisualLintOverlap" />
 
                 <View
                     android:id="@+id/indicator3"

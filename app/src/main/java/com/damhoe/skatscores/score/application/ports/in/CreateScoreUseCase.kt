@@ -5,7 +5,7 @@ import com.damhoe.skatscores.score.domain.SkatScoreCommand
 
 interface CreateScoreUseCase {
     fun createScore(command: SkatScoreCommand): Result<SkatScore>
-    fun updateScore(id: Long, command: SkatScoreCommand): Result<Unit>
+    fun updateScore(id: Long, command: SkatScoreCommand): Result<SkatScore>
     fun deleteScore(id: Long): Result<SkatScore>
     fun deleteScoresForGame(gameId: Long): Result<Int>
 }

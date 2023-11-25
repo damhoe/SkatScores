@@ -22,7 +22,7 @@ import java.util.Locale;
 class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder> {
 
     private final NotifyItemClickListener listener;
-    private List<Player> players;
+    private final List<Player> players;
 
     public PlayerAdapter(NotifyItemClickListener listener) {
         this.listener = listener;

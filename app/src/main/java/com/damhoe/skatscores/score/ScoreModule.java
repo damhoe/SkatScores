@@ -13,11 +13,11 @@ import dagger.Module;
 @Module
 public abstract class ScoreModule {
    @Binds
-   abstract CreateScoreUseCase bindCUDScoreUseCase(ScoreService scoreService);
+   abstract CreateScoreUseCase bindCreateScoreUseCase(ScoreService scoreService);
    @Binds
-   abstract GetScoreUseCase bindLoadScoreUseCase(ScoreService scoreService);
+   abstract GetScoreUseCase bindGetScoreUseCase(ScoreService scoreService);
    @Binds
-   abstract CreateScorePort bindCUDScorePort(ScoreRepository scoreRepository);
+   abstract CreateScorePort bindCreateScorePort(ScoreRepository scoreRepository);
    @Binds
    abstract GetScoresPort bindGetScoresPort(ScoreRepository scoreRepository);
 }

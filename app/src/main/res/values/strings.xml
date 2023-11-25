@@ -138,8 +138,13 @@
     <string name="label_finished">Finished</string>
     <string name="title_button_delete">Delete</string>
     <string name="title_button_player_statistics">View stats</string>
-    <string name="theme_preference_key">ui_mode</string>
-    <string name="badge_preference_key">unfinished_as_badge</string>
-    <string name="about_preference_key">about</string>
-    <string name="language_preference_key">language</string>
+    <string name="theme_preference_key" translatable="false">ui_mode</string>
+    <string name="badge_preference_key" translatable="false">unfinished_as_badge</string>
+    <string name="about_preference_key" translatable="false">about</string>
+    <string name="language_preference_key" translatable="false">language</string>
+    <string name="points_lost_label">x40</string>
+    <string name="points_solo_label">x50</string>
+    <string name="points_label">Points</string>
+    <string name="description_edit_players_of_game">Edit players of game</string>
+    <string name="description_delete_game">Delete game</string>
 </resources>

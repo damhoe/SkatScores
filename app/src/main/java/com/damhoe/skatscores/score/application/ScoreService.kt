@@ -20,10 +20,10 @@ class ScoreService @Inject constructor(
 
     override fun getScore(id: Long): Result<SkatScore> = getScoresPort.getScore(id)
 
-    override fun updateScore(id: Long, command: SkatScoreCommand): Result<Unit> =
-        SkatScore(command).let {
-            it.id = id
-            createScorePort.updateScore(it)
+    override fun updateScore(id: Long, command: SkatScoreCommand): Result<SkatScore> =
+        SkatScore(command).let { score ->
+            score.id = id
+            createScorePort.updateScore(score).map { score }
         }
 
     override fun deleteScore(id: Long): Result<SkatScore> = createScorePort.deleteScore(id)

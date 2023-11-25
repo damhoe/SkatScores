@@ -64,10 +64,10 @@ class SkatScore : Score {
         }
 
         fun make(): String {
-            if (mScore!!.isPasse) {
+            if (mScore.isPasse) {
                 return makePasseText()
             }
-            if (mScore!!.isOverbid) {
+            if (mScore.isOverbid) {
                 return makeOverbidText()
             }
             addResultText()
@@ -89,37 +89,37 @@ class SkatScore : Score {
         }
 
         private fun addResultText() {
-            text += mContext.getString(if (mScore!!.isWon) R.string.won_text else R.string.lost_text)
+            text += mContext.getString(if (mScore.isWon) R.string.won_text else R.string.lost_text)
             addEmptyLine()
         }
 
         /** @noinspection DataFlowIssue
          */
         private fun addSpielText() {
-            if (SkatSuit.NULL == mScore!!.suit) {
-                text += mContext.getString(suitTextResourceIdMap[mScore!!.suit]!!)
+            if (SkatSuit.NULL == mScore.suit) {
+                text += mContext.getString(suitTextResourceIdMap[mScore.suit]!!)
                 addEmptyLine()
                 return
             }
-            text += mContext.getString(suitTextResourceIdMap[mScore!!.suit]!!)
+            text += mContext.getString(suitTextResourceIdMap[mScore.suit]!!)
             addSpaces()
             text += mContext.getString(R.string.title_spitzen)
             addSpaces()
-            text += mScore!!.spitzen.toString()
+            text += mScore.spitzen.toString()
             addEmptyLine()
         }
 
         /** @noinspection SameParameterValue
          */
         private fun addSchneiderSchwarz(isBehindText: Boolean): Boolean {
-            if (mScore!!.isSchwarz) {
+            if (mScore.isSchwarz) {
                 if (isBehindText) {
                     addComma()
                 }
                 text += mContext.getString(R.string.label_schwarz)
                 return true
             }
-            if (mScore!!.isSchneider) {
+            if (mScore.isSchneider) {
                 if (isBehindText) {
                     addComma()
                 }
@@ -130,19 +130,19 @@ class SkatScore : Score {
         }
 
         private fun addAnnouncements() {
-            if (mScore!!.isSchwarzAnnounced) {
+            if (mScore.isSchwarzAnnounced) {
                 text += mContext.getString(R.string.label_schwarz_announced)
                 addEmptyLine()
                 return
             }
-            if (mScore!!.isSchneiderAnnounced) {
+            if (mScore.isSchneiderAnnounced) {
                 text += mContext.getString(R.string.label_schneider_announced)
                 addEmptyLine()
             }
         }
 
         private fun addHand(isBehindText: Boolean): Boolean {
-            if (mScore!!.isHand) {
+            if (mScore.isHand) {
                 if (isBehindText) {
                     addComma()
                 }
@@ -153,7 +153,7 @@ class SkatScore : Score {
         }
 
         private fun addOuvert(isBehindText: Boolean): Boolean {
-            if (mScore!!.isOuvert) {
+            if (mScore.isOuvert) {
                 if (isBehindText) {
                     addComma()
                 }

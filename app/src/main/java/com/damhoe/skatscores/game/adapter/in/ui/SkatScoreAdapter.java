@@ -59,7 +59,7 @@ public class SkatScoreAdapter extends RecyclerView.Adapter<SkatScoreAdapter.Skat
    @Override
    public SkatScoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
       View itemView = LayoutInflater.from(parent.getContext())
-              .inflate(R.layout.points_board_item_v2, parent, false);
+              .inflate(R.layout.item_score, parent, false);
       return new SkatScoreViewHolder(itemView);
    }
 

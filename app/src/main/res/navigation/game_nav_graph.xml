@@ -8,48 +8,37 @@
     <fragment
         android:id="@+id/game"
         android:name="com.damhoe.skatscores.game.adapter.in.ui.GameFragment"
-        tools:layout="@layout/fragment_game" >
-
+        tools:layout="@layout/fragment_game">
         <argument
-            android:name="ShowBottomAppBar"
-            android:defaultValue="false" />
-
-        <argument
-            android:name="gameCommand"
+            android:name="GameCommand"
             app:argType="com.damhoe.skatscores.game_setup.domain.SkatGameCommand"
             app:nullable="true"
             android:defaultValue="@null" />
-
         <argument
-            android:name="gameId"
+            android:name="GameId"
             app:argType="long"
             android:defaultValue="-1L" />
-
         <action
             android:id="@+id/action_game_to_score"
             app:destination="@id/score"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            />
-
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <fragment
         android:id="@+id/score"
         android:name="com.damhoe.skatscores.score.adapter.in.ui.ScoreFragment"
-        tools:layout="@layout/fragment_score" >
-
+        tools:layout="@layout/fragment_score">
         <argument
-            android:name="ShowBottomAppBar"
-            android:defaultValue="false" />
-
+            android:name="CreateScoreRequest"
+            app:argType="com.damhoe.skatscores.score.domain.CreateScoreRequest"
+            app:nullable="true" />
         <argument
-            android:name="scoreRequest"
-            app:argType="com.damhoe.skatscores.score.domain.ScoreRequest"
-            app:nullable="false"/>
-
+            android:name="UpdateScoreRequest"
+            app:argType="com.damhoe.skatscores.score.domain.UpdateScoreRequest"
+            app:nullable="true" />
     </fragment>
 
 </navigation>

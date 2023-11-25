@@ -295,8 +295,9 @@
 
     <style name="Theme.App.SubtitleLightMedium" parent="Widget.AppCompat.TextView">
         <item name="android:textAppearance">@style/TextAppearance.App.TitleMedium</item>
-        <item name="fontFamily">@font/rubik_medium</item>
-        <item name="android:textColor">?colorOnSurfaceLight</item>
+        <item name="fontFamily">@font/rubik_bold</item>
+        <item name="android:alpha">0.5</item>
+        <item name="android:textColor">?colorOnSurfaceVariant</item>
     </style>
 
     <style name="Theme.App.SubtitleLightSmall" parent="Widget.AppCompat.TextView">

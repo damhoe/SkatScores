@@ -161,7 +161,7 @@ public class GameSetupFragment extends Fragment {
 
     private void setUpNumberOfPlayersSpinner() {
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(requireContext(),
-                R.layout.text_input_list_item, Constants.ALLOWED_NUMBER_OF_PLAYERS);
+                R.layout.item_text_input_dropdown, Constants.ALLOWED_NUMBER_OF_PLAYERS);
         binding.numberOfPlayersSpinner.setAdapter(adapter);
         binding.numberOfPlayersSpinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {

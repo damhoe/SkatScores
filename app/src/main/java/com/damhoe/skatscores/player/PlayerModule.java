@@ -14,13 +14,13 @@ import dagger.Module;
 @Module
 public abstract class PlayerModule {
    @Binds
-   abstract UpdatePlayerUseCase bindManagePlayerUseCase(PlayerService playerService);
+   abstract UpdatePlayerUseCase bindUpdatePlayerUseCase(PlayerService playerService);
    @Binds
    abstract GetPlayerUseCase bindGetPlayersUseCase(PlayerService playerService);
    @Binds
    abstract CreatePlayerPort bindCreatePlayerPort(PlayerRepository playerRepository);
    @Binds
-   abstract GetPlayerPort bindLoadPlayerPort(PlayerRepository playerRepository);
+   abstract GetPlayerPort bindGetPlayerPort(PlayerRepository playerRepository);
    @Binds
    abstract UpdatePlayerPort bindUpdatePlayerPort(PlayerRepository playerRepository);
 }

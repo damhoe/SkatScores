@@ -90,7 +90,7 @@
                     android:id="@+id/list_name_text_input"
                     android:layout_width="240dp"
                     android:layout_height="wrap_content"
-                    app:endIconDrawable="@drawable/ic_cancel_black_24dp"
+                    app:endIconDrawable="@drawable/ic_cancel_24dp"
                     app:endIconMode="clear_text"
                     style="@style/Widget.App.TextInputLayout"
                     app:layout_constraintTop_toBottomOf="@id/list_name_title_view"

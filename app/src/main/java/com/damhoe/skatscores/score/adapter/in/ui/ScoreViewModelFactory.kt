@@ -5,19 +5,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.damhoe.skatscores.score.application.ports.`in`.CreateScoreUseCase
 import com.damhoe.skatscores.score.application.ports.`in`.GetScoreUseCase
+import com.damhoe.skatscores.score.domain.CreateScoreRequest
 import com.damhoe.skatscores.score.domain.ScoreRequest
+import com.damhoe.skatscores.score.domain.SkatScoreCommand
+import com.damhoe.skatscores.score.domain.UpdateScoreRequest
+import java.lang.NullPointerException
 import javax.inject.Inject
 
 class ScoreViewModelFactory @Inject constructor(
-    private val createScoreUseCase: CreateScoreUseCase,
-    private val getScoreUseCase: GetScoreUseCase
+    val createScoreUseCase: CreateScoreUseCase,
+    val getScoreUseCase: GetScoreUseCase
 ) : ViewModelProvider.Factory {
 
-    private lateinit var scoreRequest: ScoreRequest
+    private var scoreRequest: ScoreRequest? = null
 
-    fun setScoreRequest(scoreRequest: ScoreRequest) {
-        this.scoreRequest = scoreRequest
+    fun setCreateRequest(request: CreateScoreRequest) {
+        scoreRequest = request
     }
+
+    fun setUpdateRequest(request: UpdateScoreRequest) {
+        scoreRequest = request
+    }
+
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -25,34 +34,36 @@ class ScoreViewModelFactory @Inject constructor(
             "Only ScoreViewModel allowed in factory method."
         }
 
-        return ScoreViewModel.Builder(createScoreUseCase)
-            .setRequest(scoreRequest)
-            .apply {
-                if (scoreRequest.scoreId != -1L) {
-                    getScoreUseCase.getScore(scoreRequest.scoreId).onSuccess {
-                        fromScore(it)
-                    }
+        return (scoreRequest?.let {
+            var scoreId: Long? = null
+            val scoreCommand = when (scoreRequest) {
+                is CreateScoreRequest -> {
+                    val gameId = (scoreRequest as CreateScoreRequest).gameId
+                    SkatScoreCommand().apply { this.gameId = gameId }
                 }
+
+                is UpdateScoreRequest -> {
+                    scoreId = (scoreRequest as UpdateScoreRequest).scoreId
+                    val score = getScoreUseCase.getScore(scoreId).getOrThrow()
+                    SkatScoreCommand.fromSkatScore(score)
+                }
+
+                else -> throw UnsupportedOperationException(
+                    "Unsupported ScoreRequest type: ${it.javaClass}")
             }
-            .build() as T
+
+            ScoreViewModel(
+                createScoreUseCase = createScoreUseCase,
+                names = it.names,
+                positions = it.positions,
+                skatScoreCommand = scoreCommand,
+                scoreId = scoreId
+            )
+        } ?: throw NullPointerException("Score request has not been initialized")) as T
     }
 
 
-    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        require(modelClass == ScoreViewModel::class.java) {
-            "Only ScoreViewModel allowed in factory method."
-        }
-
-        return ScoreViewModel.Builder(createScoreUseCase)
-            .setRequest(scoreRequest)
-            .apply {
-                if (scoreRequest.scoreId != -1L) {
-                    getScoreUseCase.getScore(scoreRequest.scoreId).onSuccess {
-                        fromScore(it)
-                    }
-                }
-            }
-            .build() as T
+        return create(modelClass)
     }
 }

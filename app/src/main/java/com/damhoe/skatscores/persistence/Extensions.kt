@@ -2,7 +2,7 @@ package com.damhoe.skatscores.persistence
 
 import android.database.Cursor
 
-const val COLUMN_NOT_FOUND_INDEX = -1;
+const val COLUMN_NOT_FOUND_INDEX = -1
 
 fun Cursor.getLongOrDefault(columnName: String, defaultValue: Long) =
     getColumnIndex(columnName).let {
