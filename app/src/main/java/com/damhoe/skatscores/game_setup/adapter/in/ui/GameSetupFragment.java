@@ -69,8 +69,7 @@ public class GameSetupFragment extends Fragment {
         InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
 
         // Setup back navigation
-        binding.backButton.setOnClickListener(view1 ->
-                NavUtils.navigateUpFromSameTask(requireActivity()));
+        binding.backButton.setOnClickListener(view1 -> requireActivity().finish());
 
         viewModel = new GameSetupViewModel();
         binding.setViewModel(viewModel);
@@ -161,7 +160,7 @@ public class GameSetupFragment extends Fragment {
 
     private void setUpNumberOfPlayersSpinner() {
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(requireContext(),
-                R.layout.text_input_list_item, Constants.ALLOWED_NUMBER_OF_PLAYERS);
+                R.layout.item_popup_list, Constants.ALLOWED_NUMBER_OF_PLAYERS);
         binding.numberOfPlayersSpinner.setAdapter(adapter);
         binding.numberOfPlayersSpinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
@@ -187,7 +186,7 @@ public class GameSetupFragment extends Fragment {
             if (isChecked) {
                 ((MaterialButton) group.findViewById(checkedId)).setIcon(
                         ResourcesCompat.getDrawable(getResources(),
-                                R.drawable.ic_done_black_24dp, null));
+                                R.drawable.ic_done_24dp, null));
 
                 if (checkedId == R.id.simple_scoring_rb) {
                     viewModel.updateScoring(false);

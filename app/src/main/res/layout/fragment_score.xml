@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/description_lower_spitzen"
-                    app:icon="@drawable/ic_remove_black_24dp"
+                    app:icon="@drawable/ic_remove_24dp"
                     app:layout_constraintBottom_toBottomOf="@id/spitzen_slider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/spitzen_slider" />
@@ -424,7 +424,7 @@
             android:layout_marginBottom="@dimen/fab_margin_bottom"
             android:layout_marginEnd="@dimen/fab_margin_right"
             android:text="@string/title_done"
-            app:icon="@drawable/ic_done_black_24dp"
+            app:icon="@drawable/ic_done_24dp"
             android:textStyle="bold"
             android:contentDescription="@string/description_score_done" />
 

@@ -473,7 +473,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         assert currentPlayers != null;
         List<Player> allPlayers = selectPlayerViewModel.getAllPlayers();
 
-        View contentView = getLayoutInflater().inflate(R.layout.dialog_player_names, null);
+        View contentView = getLayoutInflater().inflate(R.layout.dialog_select_players, null);
         TextInputLayout input1 = contentView.findViewById(R.id.player1_input);
         TextInputLayout input2 = contentView.findViewById(R.id.player2_input);
         TextInputLayout input3 = contentView.findViewById(R.id.player3_input);
@@ -490,7 +490,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         editPlayer3.setSelection(editPlayer3.getText().length());
 
         ArrayAdapter<Player> adapter =
-                new ArrayAdapter<>(requireContext(), R.layout.text_input_list_item, allPlayers);
+                new ArrayAdapter<>(requireContext(), R.layout.item_popup_list, allPlayers);
         editPlayer1.setAdapter(adapter);
         editPlayer2.setAdapter(adapter);
         editPlayer3.setAdapter(adapter);

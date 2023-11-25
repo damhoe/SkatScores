@@ -61,7 +61,7 @@ public class PlayersFragment extends Fragment implements NotifyItemClickListener
     }
 
     private void buildStartAddPlayerDialog() {
-        View layout = getLayoutInflater().inflate(R.layout.dialog_edit_player_name, null);
+        View layout = getLayoutInflater().inflate(R.layout.dialog_edit_name, null);
         TextInputEditText editText = layout.findViewById(R.id.edit_name);
         TextInputLayout inputLayout = layout.findViewById(R.id.input_name);
 

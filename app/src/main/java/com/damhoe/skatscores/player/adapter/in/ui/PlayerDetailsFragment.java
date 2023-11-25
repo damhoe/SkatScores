@@ -69,7 +69,7 @@ public class PlayerDetailsFragment extends Fragment {
     }
 
     private void buildStartAddPlayerDialog() {
-        View layout = getLayoutInflater().inflate(R.layout.dialog_edit_player_name, null);
+        View layout = getLayoutInflater().inflate(R.layout.dialog_edit_name, null);
         TextInputEditText editText = layout.findViewById(R.id.edit_name);
         Player player = viewModel.getSelectedPlayer().getValue();
         if (player == null) {

@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:baselineAligned="false">
 
             <FrameLayout
                 android:layout_width="@dimen/points_board_first_label_width"
