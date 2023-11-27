@@ -1,6 +1,6 @@
 package com.damhoe.skatscores.score.adapter.out
 
-import com.damhoe.skatscores.score.domain.SkatResult
+import com.damhoe.skatscores.score.domain.SkatOutcome
 import com.damhoe.skatscores.score.domain.SkatScore
 import com.damhoe.skatscores.score.domain.SkatSuit
 
@@ -33,7 +33,7 @@ data class ScoreDto(
         isSchwarz = schwarz == 1
         isSchwarzAnnounced = schwarzAnnounced == 1
         isOuvert = ouvert == 1
-        result = SkatResult.fromInteger(this@ScoreDto.result)
+        outcome = SkatOutcome.fromInteger(this@ScoreDto.result)
     }
 
     companion object {
@@ -49,7 +49,7 @@ data class ScoreDto(
             schwarz = if (skatScore.isSchwarz) 1 else 0
             schwarzAnnounced = if (skatScore.isSchwarzAnnounced) 1 else 0
             ouvert = if (skatScore.isOuvert) 1 else 0
-            result = skatScore.result.asInteger()
+            result = skatScore.outcome.asInteger()
         }
     }
 }

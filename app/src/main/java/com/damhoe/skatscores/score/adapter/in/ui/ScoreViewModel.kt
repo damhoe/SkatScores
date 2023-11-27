@@ -5,23 +5,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import com.damhoe.skatscores.score.application.ports.`in`.CreateScoreUseCase
-import com.damhoe.skatscores.score.domain.ScoreRequest
-import com.damhoe.skatscores.score.domain.SkatResult
+import com.damhoe.skatscores.score.domain.SkatOutcome
 import com.damhoe.skatscores.score.domain.SkatScore
 import com.damhoe.skatscores.score.domain.SkatScoreCommand
 import com.damhoe.skatscores.score.domain.SkatSuit
 import java.lang.IllegalArgumentException
 
-class ScoreViewModel(builder: Builder) : ViewModel() {
-    private val createScoreUseCase: CreateScoreUseCase = builder.createScoreUseCase
-    val playerNames: Array<String> = builder.playerNames
-    val playerPositions: IntArray = builder.playerPositions
-    private val scoreToUpdateId: Long = builder.scoreToUpdateId // optional
+class ScoreViewModel(
+    private val createScoreUseCase: CreateScoreUseCase,
+    val playerNames: List<String>,
+    val playerPositions: List<Int>,
+    private val scoreToUpdateId: Long = -1L, // optional
+    scoreCommandVal: SkatScoreCommand = SkatScoreCommand()
+) : ViewModel() {
     private val scoreCommand: MutableLiveData<SkatScoreCommand> =
         MutableLiveData<SkatScoreCommand>()
 
     init {
-        scoreCommand.value = builder.command
+        this.scoreCommand.value = scoreCommandVal
     }
 
     var isResultsEnabled: LiveData<Boolean> =
@@ -64,8 +65,8 @@ class ScoreViewModel(builder: Builder) : ViewModel() {
             ScoreUIElementsStateManager.fromCommand(cmd).isHandEnabled
         }
 
-    var skatResult: LiveData<SkatResult> =
-        scoreCommand.map<SkatScoreCommand, SkatResult> { obj: SkatScoreCommand -> obj.result }
+    var skatResult: LiveData<SkatOutcome> =
+        scoreCommand.map<SkatScoreCommand, SkatOutcome> { obj: SkatScoreCommand -> obj.outcome }
 
     var suit: LiveData<SkatSuit> =
         scoreCommand.map<SkatScoreCommand, SkatSuit> { obj: SkatScoreCommand -> obj.suit }
@@ -78,7 +79,7 @@ class ScoreViewModel(builder: Builder) : ViewModel() {
         scoreCommand.value?.let { createScoreUseCase.createScore(it).getOrThrow() }
             ?: throw IllegalArgumentException("Score command is null");
 
-    fun updateScore(): Unit =
+    fun updateScore(): SkatScore =
         scoreCommand.value?.let{
             createScoreUseCase.updateScore(scoreToUpdateId, it).getOrThrow()
         } ?: throw IllegalArgumentException("Score command is null")
@@ -114,17 +115,17 @@ class ScoreViewModel(builder: Builder) : ViewModel() {
         scoreCommand.postValue(it)
     }
 
-    fun setResult(result: SkatResult) = scoreCommand.value?.let {
+    fun setResult(result: SkatOutcome) = scoreCommand.value?.let {
         scoreCommand.postValue(it.apply {
-            if (it.result == SkatResult.OVERBID) {
+            if (it.outcome == SkatOutcome.OVERBID) {
                 it.suit = SkatSuit.CLUBS
                 it.spitzen = 1
-            } else if (result == SkatResult.OVERBID) {
+            } else if (result == SkatOutcome.OVERBID) {
                 it.suit = SkatSuit.INVALID
                 resetSpitzen()
                 resetWinLevels()
             }
-            it.result = result
+            it.outcome = result
         })
     }
 
@@ -138,8 +139,8 @@ class ScoreViewModel(builder: Builder) : ViewModel() {
 
     fun setPlayerPosition(position: Int) = scoreCommand.value?.let { currentScore ->
         val updatedScore = currentScore.copy(playerPosition = position).apply {
-            if (result == SkatResult.PASSE) {
-                result = SkatResult.WON
+            if (outcome == SkatOutcome.PASSE) {
+                outcome = SkatOutcome.WON
                 suit = SkatSuit.CLUBS
                 spitzen = 1
             }
@@ -149,37 +150,10 @@ class ScoreViewModel(builder: Builder) : ViewModel() {
 
     fun setPasse() = scoreCommand.value?.let { currentScore ->
         val updatedScore = currentScore.copy(
-            result = SkatResult.PASSE,
+            outcome = SkatOutcome.PASSE,
             suit = SkatSuit.INVALID,
             playerPosition = -1
         ).apply { resetSpitzen(); resetWinLevels() }
         scoreCommand.postValue(updatedScore)
-    }
-
-    class Builder(createScoreUseCase: CreateScoreUseCase) {
-        val createScoreUseCase: CreateScoreUseCase
-        var command: SkatScoreCommand = SkatScoreCommand()
-        lateinit var playerNames: Array<String>
-        lateinit var playerPositions: IntArray
-        var scoreToUpdateId = -1L
-
-        init {
-            this.createScoreUseCase = createScoreUseCase
-        }
-
-        fun setRequest(request: ScoreRequest): Builder {
-            command.gameId = request.gameId
-            playerNames = request.playerNames
-            playerPositions = request.playerPositions
-            return this
-        }
-
-        fun fromScore(score: SkatScore): Builder {
-            command = SkatScoreCommand.fromSkatScore(score)
-            scoreToUpdateId = score.id
-            return this
-        }
-
-        fun build() = ScoreViewModel(this)
     }
 }

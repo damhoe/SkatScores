@@ -5,7 +5,7 @@ import com.damhoe.skatscores.score.Constant
 data class SkatScoreCommand(
     var spitzen: Int = 1,
     var suit: SkatSuit = SkatSuit.INVALID, // Clubs, Diamonds, Hears, Spades, Null, Grand
-    var result: SkatResult = SkatResult.PASSE, // Won, Lost, Overbid, Passe
+    var outcome: SkatOutcome = SkatOutcome.PASSE, // Won, Lost, Overbid, Passe
     var isHand: Boolean = false,
     var isSchneider: Boolean = false,
     var isSchneiderAnnounced: Boolean = false,
@@ -32,11 +32,11 @@ data class SkatScoreCommand(
     val isPasse: Boolean
         get() = playerPosition == Constant.PASSE_PLAYER_POSITION
     val isWon: Boolean
-        get() = SkatResult.WON == result
+        get() = SkatOutcome.WON == outcome
     val isOverbid: Boolean
-        get() = SkatResult.OVERBID == result
+        get() = SkatOutcome.OVERBID == outcome
     val isLost: Boolean
-        get() = SkatResult.LOST == result
+        get() = SkatOutcome.LOST == outcome
 
     fun resetWinLevels() {
         isHand = false
@@ -55,15 +55,15 @@ data class SkatScoreCommand(
         fun fromSkatScore(score: SkatScore) = SkatScoreCommand().apply {
             isHand = score.isHand
             isOuvert = score.isOuvert
-            result = score.result
+            outcome = score.outcome
             isSchneider = score.isSchneider
             isSchwarz = score.isSchwarz
             suit = score.suit
             spitzen = score.spitzen
             isSchneiderAnnounced = score.isSchneiderAnnounced
             isSchwarzAnnounced = score.isSchwarzAnnounced
-            playerPosition = score.getPlayerPosition()
-            gameId = score.getGameId()
+            playerPosition = score.playerPosition
+            gameId = score.gameId
         }
     }
 }

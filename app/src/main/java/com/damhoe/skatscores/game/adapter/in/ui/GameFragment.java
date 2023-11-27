@@ -45,11 +45,11 @@ import com.damhoe.skatscores.game.domain.SkatGame;
 import com.damhoe.skatscores.game.domain.SkatSettings;
 import com.damhoe.skatscores.game_setup.domain.SkatGameCommand;
 import com.damhoe.skatscores.player.domain.Player;
-import com.damhoe.skatscores.score.adapter.in.ui.SharedScoreResponseViewModel;
-import com.damhoe.skatscores.score.domain.ScoreEvent;
-import com.damhoe.skatscores.score.domain.ScoreEventType;
-import com.damhoe.skatscores.score.domain.ScoreRequest;
+import com.damhoe.skatscores.score.adapter.in.ui.ScoreResultViewModel;
+import com.damhoe.skatscores.score.domain.CreateScoreRequest;
+import com.damhoe.skatscores.score.domain.ScoreResult;
 import com.damhoe.skatscores.score.domain.SkatScore;
+import com.damhoe.skatscores.score.domain.UpdateScoreRequest;
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -72,7 +72,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     SelectPlayerVMFactory selectPlayerVMFactory;
     private SkatGameViewModel viewModel;
     private SelectPlayerViewModel selectPlayerViewModel;
-    private SharedScoreResponseViewModel scoreResponseViewModel;
+    private ScoreResultViewModel scoreResultViewModel;
     private FragmentGameBinding binding;
     private PlayerSelectionValidator playerValidator = new PlayerSelectionValidator();
     private SkatScoreAdapter scoreAdapter;
@@ -180,27 +180,26 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         };
         viewModel.getSettings().observe(getViewLifecycleOwner(), settingsObserver);
 
-        final Observer<ScoreEvent> scoreEventObserver = scoreEvent -> {
-            SkatScore score = scoreEvent.getScore();
-            Log.d("ScoreEvent", "New score is added, id: " + score.getId());
-            if (scoreEvent.getEventType() == ScoreEventType.CREATE) {
-                viewModel.addScore(scoreEvent.getScore());
+        final Observer<ScoreResult> scoreResultObserver = scoreResult -> {
+            if (scoreResult instanceof ScoreResult.Create createResult) {
+                Log.d("ScoreEvent", "New score is added, id: " + createResult.getScore().getId());
+                viewModel.addScore(createResult.getScore());
                 if (scoreAdapter != null) {
                     scoreAdapter.notifyItemInserted(scoreAdapter.getItemCount() - 1);
                 }
-            }
-            else {
-                Log.d("ScoreEvent", "Score was updated, id: " + score.getId());
-                viewModel.updateScore(scoreEvent.getScore());
+            } else {
+                ScoreResult.Update updateResult = (ScoreResult.Update)scoreResult;
+                Log.d("ScoreEvent", "Score was updated, id: " + updateResult.getScore().getId());
+                viewModel.updateScore(updateResult.getScore());
                 if (scoreAdapter != null) {
-                    int position = scoreAdapter.getPosition(score.getId());
+                    int position = scoreAdapter.getPosition(updateResult.getScore().getId());
                     if (position >= 0) {
                         scoreAdapter.notifyItemChanged(position);
                     }
                 }
             }
         };
-        scoreResponseViewModel.getScoreEvent().observe(getViewLifecycleOwner(), scoreEventObserver);
+        scoreResultViewModel.getScoreResult().observe(getViewLifecycleOwner(), scoreResultObserver);
 
         viewModel.totalPoints.observe(getViewLifecycleOwner(), this::displayTotalPoints);
         viewModel.winBonus.observe(getViewLifecycleOwner(), ints -> {
@@ -419,23 +418,27 @@ public class GameFragment extends Fragment implements IScoreActionListener {
         if (players == null) {
             throw new RuntimeException("Players are null when score request is created.");
         }
-        ScoreRequest scoreRequest = new ScoreRequest.Builder()
-                .setPlayerNames(
-                        players.get(0).getName(),
-                        players.get(1).getName(),
-                        players.get(2).getName())
-                .setPlayerPositions(0, 1, 2)
-                .setScoreId(skatScore.getId())
-                .build();
+
+        List<String> names = new ArrayList<>();
+        names.add(players.get(0).getName());
+        names.add(players.get(1).getName());
+        names.add(players.get(2).getName());
+
+        List<Integer> positions = new ArrayList<>();
+        positions.add(0);
+        positions.add(1);
+        positions.add(2);
+
+        UpdateScoreRequest scoreRequest = new UpdateScoreRequest(skatScore.getId(), names, positions);
         Bundle bundle = new Bundle();
-        bundle.putParcelable("scoreRequest", scoreRequest);
+        bundle.putParcelable("UpdateScoreRequest", scoreRequest);
         findNavController().navigate(R.id.action_game_to_score, bundle);
     }
 
     private void setupViewModel() {
         viewModel = new ViewModelProvider(this, viewModelFactory).get(SkatGameViewModel.class);
-        scoreResponseViewModel = new ViewModelProvider(requireActivity()).get(SharedScoreResponseViewModel.class);
-        scoreResponseViewModel.reset();
+        scoreResultViewModel = new ViewModelProvider(requireActivity()).get(ScoreResultViewModel.class);
+        scoreResultViewModel.reset();
 
         // Get arguments and initialize the game
         SkatGameCommand command = GameFragmentArgs.fromBundle(requireArguments()).getGameCommand();
@@ -613,15 +616,20 @@ public class GameFragment extends Fragment implements IScoreActionListener {
 
             SkatGame game = viewModel.getGame().getValue();
             long gameId = game != null ? game.getId() : -1L;
-            ScoreRequest scoreRequest = new ScoreRequest.Builder()
-                    .setGameId(gameId)
-                    .setPlayerNames(players.get(0).getName(),
-                            players.get(1).getName(),
-                            players.get(2).getName())
-                    .setPlayerPositions(0, 1, 2)
-                    .build();
+
+            List<String> names = new ArrayList<>();
+            names.add(players.get(0).getName());
+            names.add(players.get(1).getName());
+            names.add(players.get(2).getName());
+
+            List<Integer> positions = new ArrayList<>();
+            positions.add(0);
+            positions.add(1);
+            positions.add(2);
+
+            CreateScoreRequest request = new CreateScoreRequest(gameId, names, positions);
             Bundle bundle = new Bundle();
-            bundle.putParcelable("scoreRequest", scoreRequest);
+            bundle.putParcelable("CreateScoreRequest", request);
             findNavController().navigate(R.id.action_game_to_score, bundle);
         });
     }

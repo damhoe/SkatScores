@@ -7,6 +7,8 @@ import com.damhoe.skatscores.score.application.ports.out.GetScoresPort
 import com.damhoe.skatscores.score.domain.SkatScore
 import com.damhoe.skatscores.score.domain.SkatScoreCommand
 import javax.inject.Inject
+import kotlin.Result.Companion.failure
+import kotlin.Result.Companion.success
 
 class ScoreService @Inject constructor(
     private val getScoresPort: GetScoresPort,
@@ -20,10 +22,9 @@ class ScoreService @Inject constructor(
 
     override fun getScore(id: Long): Result<SkatScore> = getScoresPort.getScore(id)
 
-    override fun updateScore(id: Long, command: SkatScoreCommand): Result<Unit> =
-        SkatScore(command).let {
-            it.id = id
-            createScorePort.updateScore(it)
+    override fun updateScore(id: Long, command: SkatScoreCommand): Result<SkatScore> =
+        SkatScore(command).apply { this.id = id }.let { score ->
+            createScorePort.updateScore(score).map { score }
         }
 
     override fun deleteScore(id: Long): Result<SkatScore> = createScorePort.deleteScore(id)

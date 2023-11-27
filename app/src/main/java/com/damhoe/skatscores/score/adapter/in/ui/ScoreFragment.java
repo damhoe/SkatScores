@@ -19,13 +19,14 @@ import android.view.ViewGroup;
 import com.damhoe.skatscores.R;
 import com.damhoe.skatscores.databinding.FragmentScoreBinding;
 import com.damhoe.skatscores.game.GameActivity;
-import com.damhoe.skatscores.score.domain.ScoreEvent;
-import com.damhoe.skatscores.score.domain.ScoreEventType;
+import com.damhoe.skatscores.score.domain.CreateScoreRequest;
 import com.damhoe.skatscores.score.domain.ScoreRequest;
-import com.damhoe.skatscores.score.domain.SkatResult;
+import com.damhoe.skatscores.score.domain.ScoreResult;
+import com.damhoe.skatscores.score.domain.SkatOutcome;
 import com.damhoe.skatscores.score.domain.SkatScore;
 import com.damhoe.skatscores.score.domain.SkatScoreCommand;
 import com.damhoe.skatscores.score.domain.SkatSuit;
+import com.damhoe.skatscores.score.domain.UpdateScoreRequest;
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager;
 import com.damhoe.skatscores.shared_ui.utils.LayoutMargins;
 
@@ -39,8 +40,8 @@ public class ScoreFragment extends Fragment {
     @Inject
     ScoreViewModelFactory viewModelFactory;
     private ScoreViewModel viewModel;
-    private SharedScoreResponseViewModel sharedViewModel;
-    private ScoreEventType eventType;
+    private ScoreResultViewModel sharedViewModel;
+    private ScoreRequest scoreRequest;
     private FragmentScoreBinding binding;
     private final Map<Integer, SkatSuit> buttonSkatSuitMap = new HashMap<>();
     private final Map<Integer, Runnable> buttonPlayerActionMap = new HashMap<>();
@@ -52,16 +53,21 @@ public class ScoreFragment extends Fragment {
         ((GameActivity) requireActivity()).getAppComponent().inject(this);
         super.onCreate(savedInstanceState);
 
-        ScoreRequest scoreRequest = requireArguments().getParcelable("scoreRequest");
-        if (scoreRequest == null) {
-            throw new RuntimeException("Score request should have nonnull value.");
+        CreateScoreRequest createRequest = requireArguments().getParcelable("CreateScoreRequest");
+        UpdateScoreRequest updateRequest = requireArguments().getParcelable("UpdateScoreRequest");
+        if (createRequest != null) {
+            scoreRequest = createRequest;
+            viewModelFactory.setScoreRequest(createRequest);
+        } else if (updateRequest != null) {
+            scoreRequest = updateRequest;
+            viewModelFactory.setScoreRequest(updateRequest);
+        } else {
+            throw new RuntimeException("Non-null score request expected");
         }
 
-        viewModelFactory.setScoreRequest(scoreRequest);
-        eventType = scoreRequest.getScoreId() == -1L ? ScoreEventType.CREATE : ScoreEventType.UPDATE;
         viewModel = viewModelFactory.create(ScoreViewModel.class);
 
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedScoreResponseViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(ScoreResultViewModel.class);
         sharedViewModel.reset();
     }
 
@@ -80,11 +86,11 @@ public class ScoreFragment extends Fragment {
         binding.toggleGroupResult.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
                 if (checkedId == R.id.buttonOverbid) {
-                    viewModel.setResult(SkatResult.OVERBID);
+                    viewModel.setResult(SkatOutcome.OVERBID);
                 } else if (checkedId == R.id.buttonWon){
-                    viewModel.setResult(SkatResult.WON);
+                    viewModel.setResult(SkatOutcome.WON);
                 } else {
-                    viewModel.setResult(SkatResult.LOST);
+                    viewModel.setResult(SkatOutcome.LOST);
                 }
             }
         });
@@ -171,15 +177,15 @@ public class ScoreFragment extends Fragment {
     private void initializeButtonPlayerActionMap() {
         buttonPlayerActionMap.put(binding.buttonPasse.getId(), () -> viewModel.setPasse());
         buttonPlayerActionMap.put(binding.buttonPlayer1.getId(),
-                () -> viewModel.setPlayerPosition(viewModel.getPlayerPositions()[0]));
+                () -> viewModel.setPlayerPosition(viewModel.getPlayerPositions().get(0)));
         buttonPlayerActionMap.put(binding.buttonPlayer2.getId(),
-                () -> viewModel.setPlayerPosition(viewModel.getPlayerPositions()[1]));
+                () -> viewModel.setPlayerPosition(viewModel.getPlayerPositions().get(1)));
         buttonPlayerActionMap.put(binding.buttonPlayer3.getId(),
-                () -> viewModel.setPlayerPosition(viewModel.getPlayerPositions()[2]));
+                () -> viewModel.setPlayerPosition(viewModel.getPlayerPositions().get(2)));
 
-        playerPositionCheckButtonMap.put(viewModel.getPlayerPositions()[0], () -> binding.toggleGroupSoloPlayer.check(binding.buttonPlayer1.getId()));
-        playerPositionCheckButtonMap.put(viewModel.getPlayerPositions()[1], () -> binding.toggleGroupSoloPlayer.check(binding.buttonPlayer2.getId()));
-        playerPositionCheckButtonMap.put(viewModel.getPlayerPositions()[2], () -> binding.toggleGroupSoloPlayer.check(binding.buttonPlayer3.getId()));
+        playerPositionCheckButtonMap.put(viewModel.getPlayerPositions().get(0), () -> binding.toggleGroupSoloPlayer.check(binding.buttonPlayer1.getId()));
+        playerPositionCheckButtonMap.put(viewModel.getPlayerPositions().get(1), () -> binding.toggleGroupSoloPlayer.check(binding.buttonPlayer2.getId()));
+        playerPositionCheckButtonMap.put(viewModel.getPlayerPositions().get(2), () -> binding.toggleGroupSoloPlayer.check(binding.buttonPlayer3.getId()));
     }
 
     private void initializeButtonSkatSuitMap() {
@@ -201,14 +207,14 @@ public class ScoreFragment extends Fragment {
 
     /** @noinspection DataFlowIssue*/
     private void initializeUI() {
-        String[] names = viewModel.getPlayerNames();
-        if (names.length != 3) {
+        List<String> names = viewModel.getPlayerNames();
+        if (names.size() != 3) {
             throw new RuntimeException("Expected 3 player names" +
-                    " in observed LiveData but got " + names.length);
+                    " in observed LiveData but got " + names.size());
         }
-        binding.buttonPlayer1.setText(names[0]);
-        binding.buttonPlayer2.setText(names[1]);
-        binding.buttonPlayer3.setText(names[2]);
+        binding.buttonPlayer1.setText(names.get(0));
+        binding.buttonPlayer2.setText(names.get(1));
+        binding.buttonPlayer3.setText(names.get(2));
 
         SkatScoreCommand command = viewModel.getScoreCommand().getValue();
         if (command != null) {
@@ -280,11 +286,11 @@ public class ScoreFragment extends Fragment {
             binding.buttonOverbid.setEnabled(isEnabled);
         });
         viewModel.getSkatResult().observe(getViewLifecycleOwner(), skatResult -> {
-            if (skatResult == SkatResult.WON) {
+            if (skatResult == SkatOutcome.WON) {
                 binding.toggleGroupResult.check(R.id.buttonWon);
-            } else if (skatResult == SkatResult.LOST) {
+            } else if (skatResult == SkatOutcome.LOST) {
                 binding.toggleGroupResult.check(R.id.buttonLost);
-            } else if (skatResult == SkatResult.OVERBID) {
+            } else if (skatResult == SkatOutcome.OVERBID) {
                 binding.toggleGroupResult.check(R.id.buttonOverbid);
             } else {
                 binding.toggleGroupResult.clearChecked();
@@ -333,19 +339,13 @@ public class ScoreFragment extends Fragment {
     }
 
     public void saveScore() {
-        SkatScore score = null;
-        switch (eventType) {
-            case CREATE:
-                score = viewModel.createScore();
-                break;
-            case UPDATE:
-                viewModel.updateScore();
-                break;
-            default:
-                score = null;
-        }
-        if (score != null) {
-            sharedViewModel.setScoreEvent(new ScoreEvent(score, eventType));
+        SkatScore score;
+        if (scoreRequest instanceof CreateScoreRequest createRequest) {
+            score = viewModel.createScore();
+            sharedViewModel.getScoreResult().postValue(new ScoreResult.Create(score));
+        } else if (scoreRequest instanceof UpdateScoreRequest updateRequest) {
+            score = viewModel.updateScore();
+            sharedViewModel.getScoreResult().postValue(new ScoreResult.Update(score));
         }
     }
 }

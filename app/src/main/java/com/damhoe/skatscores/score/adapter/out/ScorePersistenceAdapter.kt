@@ -118,12 +118,9 @@ class ScorePersistenceAdapter @Inject constructor(private val dbHelper: DbHelper
     }
 
     fun deleteScore(id: Long): Result<ScoreDto> = try {
-        getScore(id).onSuccess {
-            dbHelper.writableDatabase.execSQL(
-                "DELETE FROM ${DbHelper.SCORE_TABLE_NAME} " +
-                        " WHERE ${DbHelper.SCORE_COLUMN_ID} = $id", null
-            )
-        }
+        getScore(id).onSuccess { dbHelper.writableDatabase.delete(DbHelper.SCORE_TABLE_NAME,
+            "${DbHelper.SCORE_COLUMN_ID} = $id", null
+        )}
     } catch (ex: NullPointerException) {
         ex.printStackTrace()
         failure(ex)
