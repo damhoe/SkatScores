@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 style="@style/Widget.App.Toolbar"
-                app:title="Edit score"/>
+                app:title="@string/title_score"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 

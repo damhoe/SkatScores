@@ -18,8 +18,8 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             />
         <action
-            android:id="@+id/action_library_to_gameActivity"
-            app:destination="@id/gameActivity"
+            android:id="@+id/action_library_to_game_activity"
+            app:destination="@id/game_activity"
             app:enterAnim="@anim/enter_from_bottom" />
     </fragment>
 
@@ -27,9 +27,6 @@
         android:id="@+id/app_settings"
         android:name="com.damhoe.skatscores.app.app_settings.SettingsFragment"
         tools:layout="@layout/fragment_settings">
-        <argument
-            android:name="ShowBottomAppBar"
-            android:defaultValue="false" />
         <action
             android:id="@+id/action_app_settings_to_about"
             app:destination="@id/about" />
@@ -38,7 +35,15 @@
     <fragment
         android:id="@+id/player_details"
         android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerDetailsFragment"
-        tools:layout="@layout/fragment_player_details"/>
+        tools:layout="@layout/fragment_player_details">
+        <action
+            android:id="@+id/action_player_details_to_player_statistics"
+            app:destination="@id/player_statistics"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/about"
         android:name="com.damhoe.skatscores.app.about.AboutFragment"
@@ -54,24 +59,21 @@
             app:enterAnim="@anim/zoom_fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
-            />
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
-    <fragment
-        android:id="@+id/statistics"
-        android:name="com.damhoe.skatscores.statistics.adapter.ui.StatisticsFragment"
-        tools:layout="@layout/fragment_statistics"/>
-
     <activity
-        android:id="@+id/gameActivity"
+        android:id="@+id/game_activity"
         android:name="com.damhoe.skatscores.game.GameActivity"
-        android:label="activity_game"
         tools:layout="@layout/activity_game" >
         <argument
             android:name="gameId"
             app:argType="long"
             android:defaultValue="-1L" />
     </activity>
+    <fragment
+        android:id="@+id/player_statistics"
+        android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerStatisticsFragment"
+        tools:layout="@layout/fragment_player_statistics"/>
 
 </navigation>

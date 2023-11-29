@@ -1,4 +1,4 @@
-package com.damhoe.skatscores.statistics.domain;
+package com.damhoe.skatscores.player.domain;
 
 public class ProgressInfo {
    private int gamesCount;

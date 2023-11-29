@@ -2,4 +2,8 @@
 <resources>
     <attr name="colorOnSurfaceLight" format="color" />
     <attr name="colorCategorySubtitle" format="color" />
+
+    <declare-styleable name="GraphView">
+        <attr name="gridColor" format="color" />
+    </declare-styleable>
 </resources>

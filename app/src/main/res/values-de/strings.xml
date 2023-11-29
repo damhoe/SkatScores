@@ -119,4 +119,6 @@
     <string name="label_finished">Beendet</string>
     <string name="title_button_delete">Löschen</string>
     <string name="title_button_player_statistics">Statistik</string>
+    <string name="title_graph">Graph</string>
+    <string name="title_score">Ergebnis</string>
 </resources>

@@ -26,6 +26,13 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right"
             />
+        <action
+            android:id="@+id/action_game_to_graph"
+            app:destination="@id/graph"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popExitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in" />
     </fragment>
 
     <fragment
@@ -41,5 +48,9 @@
             app:argType="com.damhoe.skatscores.score.domain.UpdateScoreRequest"
             app:nullable="true"/>
     </fragment>
+    <fragment
+        android:id="@+id/graph"
+        android:name="com.damhoe.skatscores.game_statistics.GameGraphFragment"
+        tools:layout="@layout/fragment_game_graph" />
 
 </navigation>

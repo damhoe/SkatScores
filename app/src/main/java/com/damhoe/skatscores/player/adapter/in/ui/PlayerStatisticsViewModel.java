@@ -1,12 +1,12 @@
-package com.damhoe.skatscores.statistics.adapter.ui;
+package com.damhoe.skatscores.player.adapter.in.ui;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.damhoe.skatscores.statistics.domain.ProgressInfo;
+import com.damhoe.skatscores.player.domain.ProgressInfo;
 
-public class StatisticsViewModel extends ViewModel {
+public class PlayerStatisticsViewModel extends ViewModel {
 
     private final MutableLiveData<ProgressInfo> overallProgress = new MutableLiveData<>();
     private final MutableLiveData<ProgressInfo> thisYearProgress = new MutableLiveData<>();
@@ -24,7 +24,7 @@ public class StatisticsViewModel extends ViewModel {
         return thisMonthProgress;
     }
 
-    public StatisticsViewModel() {
+    public PlayerStatisticsViewModel() {
         // Reload data from repositories
         thisMonthProgress.setValue(new ProgressInfo(2, 2));
         thisYearProgress.setValue(new ProgressInfo(11, 4));

@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -63,6 +64,11 @@ public class PlayerDetailsFragment extends Fragment {
                 viewModel.removePlayer(player);
             }
             findNavController().navigateUp();
+        });
+        binding.buttonStats.setOnClickListener(view -> {
+            NavDirections directions =
+                    PlayerDetailsFragmentDirections.actionPlayerDetailsToPlayerStatistics();
+            findNavController().navigate(directions);
         });
         binding.editName.setOnClickListener(view -> buildStartAddPlayerDialog());
         return binding.getRoot();
@@ -155,10 +161,7 @@ public class PlayerDetailsFragment extends Fragment {
         InsetsManager.applyNavigationBarInsets(binding.content);
 
         // Setup navigation controller
-        NavController navController = findNavController();
-        AppBarConfiguration appBarConfiguration =
-                ((MainActivity)requireActivity()).getAppBarConfiguration();
-        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.toolbar, findNavController());
 
         viewModel = new ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(PlayerViewModel.class);

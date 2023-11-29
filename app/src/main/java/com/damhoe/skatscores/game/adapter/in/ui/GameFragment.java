@@ -23,6 +23,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NavUtils;
 import androidx.core.view.MenuProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -30,6 +31,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -234,10 +236,9 @@ public class GameFragment extends Fragment implements IScoreActionListener {
                 if (itemId == R.id.game_edit) {
                     showGameSettingsDialog();
                 } else if (itemId == R.id.game_show_chart) {
-                    Snackbar.make(binding.bottomSumView.getRoot(),
-                                    "This feature is not implemented yet.",
-                                    Snackbar.LENGTH_SHORT)
-                            .show();
+                    NavDirections directions =
+                            GameFragmentDirections.actionGameToGraph();
+                    findNavController().navigate(directions);
                 } else if (itemId == R.id.library) {
                     findNavController().navigateUp();
                 }
@@ -457,7 +458,7 @@ public class GameFragment extends Fragment implements IScoreActionListener {
     }
 
     private void setupNavigation() {
-        // Empty.
+        // Back navigation
         binding.returnButton.setOnClickListener(view -> requireActivity().finish());
 
         requireActivity().getOnBackPressedDispatcher()

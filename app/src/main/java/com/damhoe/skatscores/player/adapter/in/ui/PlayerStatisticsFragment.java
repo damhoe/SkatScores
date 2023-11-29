@@ -1,40 +1,36 @@
-package com.damhoe.skatscores.statistics.adapter.ui;
+package com.damhoe.skatscores.player.adapter.in.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.damhoe.skatscores.R;
-import com.damhoe.skatscores.databinding.FragmentStatisticsBinding;
+import com.damhoe.skatscores.databinding.FragmentPlayerStatisticsBinding;
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager;
 
-public class StatisticsFragment extends Fragment {
+public class PlayerStatisticsFragment extends Fragment {
 
-    private StatisticsViewModel viewModel;
-    private FragmentStatisticsBinding binding;
+    private PlayerStatisticsViewModel viewModel;
+    private FragmentPlayerStatisticsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(StatisticsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(PlayerStatisticsViewModel.class);
 
         binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_statistics, container, false);
+                R.layout.fragment_player_statistics, container, false);
         View root = binding.getRoot();
-        addMenu();
         return binding.getRoot();
     }
 
@@ -45,6 +41,8 @@ public class StatisticsFragment extends Fragment {
         // Add insets
         InsetsManager.applyStatusBarInsets(binding.appbarLayout);
         InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
+
+        NavigationUI.setupWithNavController(binding.toolbar, findNavController());
 
         viewModel.getOverallProgress().observe(getViewLifecycleOwner(), progressInfo -> {
             binding.totalLabel.setText(String.valueOf(progressInfo.getGamesCount()));
@@ -57,24 +55,6 @@ public class StatisticsFragment extends Fragment {
         viewModel.getThisMonthProgress().observe(getViewLifecycleOwner(), progressInfo -> {
             binding.monthLabel.setText(String.valueOf(progressInfo.getGamesCount()));
             binding.monthProgressIndicator.setProgress((int) progressInfo.toPercent());
-        });
-    }
-
-    private void addMenu() {
-        /*
-         * Bottom app bar menu
-         */
-        binding.toolbar.addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menu.clear();
-                menuInflater.inflate(R.menu.options_menu, menu);
-            }
-
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                return false;
-            }
         });
     }
 
