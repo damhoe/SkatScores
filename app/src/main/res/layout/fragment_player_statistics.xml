@@ -15,8 +15,7 @@
             style="@style/Widget.App.AppBarLayout"
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -47,13 +46,13 @@
                     android:id="@+id/avatar"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:background="?colorSurfaceVariant"
+                    android:background="?colorPrimary"
                     app:srcCompat="@drawable/ic_avatar_48dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="16dp"
-                    app:tint="?colorOnSurfaceLight"
+                    app:tint="?colorSurfaceVariant"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView"
                     />
 
@@ -61,7 +60,6 @@
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                     app:layout_constraintTop_toBottomOf="@id/avatar"
                     app:layout_constraintStart_toStartOf="@id/avatar"
                     app:layout_constraintEnd_toEndOf="@id/avatar"
@@ -73,8 +71,7 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/rubik_light"
-                    android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
+
                     app:layout_constraintTop_toBottomOf="@id/name"
                     app:layout_constraintStart_toStartOf="@id/avatar"
                     app:layout_constraintEnd_toEndOf="@id/avatar"
@@ -90,7 +87,7 @@
                     android:layout_marginTop="8dp"
                     android:alpha="0.6"
                     android:text="unfinished"
-                    android:textAppearance="@style/TextAppearance.App.BodySmall"
+
                     app:layout_constraintEnd_toStartOf="@id/label_legend_finished"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/card_total" />
@@ -102,7 +99,6 @@
                     android:layout_marginEnd="24dp"
                     android:alpha="0.6"
                     android:text="finished"
-                    android:textAppearance="@style/TextAppearance.App.BodySmall"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/label_legend_unfinished"
                     app:layout_constraintTop_toTopOf="@id/label_legend_unfinished" />
@@ -113,7 +109,7 @@
                     android:layout_height="10dp"
                     android:layout_marginEnd="8dp"
                     android:alpha="0.9"
-                    android:background="?attr/colorTertiaryContainer"
+                    android:background="?attr/colorSecondary"
                     app:layout_constraintBottom_toBottomOf="@id/label_legend_unfinished"
                     app:layout_constraintEnd_toStartOf="@id/label_legend_finished"
                     app:layout_constraintTop_toTopOf="@id/label_legend_unfinished" />
@@ -124,7 +120,7 @@
                     android:layout_height="10dp"
                     android:layout_marginEnd="8dp"
                     android:alpha="0.9"
-                    android:background="?attr/colorTertiary"
+                    android:background="?attr/colorSecondary"
                     app:layout_constraintBottom_toBottomOf="@id/label_legend_unfinished"
                     app:layout_constraintEnd_toStartOf="@id/label_legend_unfinished"
                     app:layout_constraintTop_toTopOf="@id/label_legend_unfinished" />
@@ -148,8 +144,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="16dp"
-                        android:text="@string/title_this_year_progress"
-                        android:textAppearance="@style/TextAppearance.App.TitleSmall" />
+                        android:text="@string/title_this_year_progress" />
 
                     <TextView
                         android:id="@+id/year_label"
@@ -157,7 +152,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:layout_marginBottom="40dp"
-                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
                         android:textStyle="bold"
                         tools:text="6" />
 
@@ -194,8 +188,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="16dp"
-                        android:text="@string/title_this_month_progress"
-                        android:textAppearance="@style/TextAppearance.App.TitleSmall" />
+                        android:text="@string/title_this_month_progress" />
 
                     <TextView
                         android:id="@+id/month_label"
@@ -203,7 +196,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:layout_marginBottom="40dp"
-                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
                         android:textStyle="bold"
                         tools:text="12" />
 
@@ -241,8 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="16dp"
-                        android:text="@string/title_overall_progress"
-                        android:textAppearance="@style/TextAppearance.App.TitleSmall" />
+                        android:text="@string/title_overall_progress" />
 
                     <TextView
                         android:id="@+id/total_label"
@@ -250,7 +241,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:layout_marginBottom="40dp"
-                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
                         android:textStyle="bold"
                         tools:text="12" />
 

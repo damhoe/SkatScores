@@ -12,14 +12,13 @@
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.App.AppBarLayout"
-            android:background="?colorSurfaceVariant">
+            style="?attr/coloredAppBarLayoutStyle">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                style="@style/Widget.App.Toolbar"
+                style="?attr/coloredToolbarStyle"
                 app:title="@string/title_score"/>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -46,7 +45,6 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:text="@string/title_solo_player"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,7 +57,6 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:text="@string/title_result"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/toggleGroupSoloPlayer" />
 
@@ -72,7 +69,6 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:text="@string/title_spitzen"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/toggleGroupSpecialSuit" />
 
@@ -84,8 +80,6 @@
                     android:background="@android:color/transparent"
                     android:padding="8dp"
                     tools:text="1"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                    app:layout_constraintBottom_toBottomOf="@id/spitzen_title"
                     app:layout_constraintStart_toEndOf="@id/spitzen_title"
                     app:layout_constraintTop_toTopOf="@id/spitzen_title" />
 
@@ -98,7 +92,6 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:text="@string/title_suit"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/toggleGroupResult" />
 
@@ -111,7 +104,6 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:text="@string/title_announcements"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/spitzen_slider" />
 
@@ -124,7 +116,6 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:text="@string/title_win_levels"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/announcements_chips" />
 
@@ -168,7 +159,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
                         tools:text="Player 1"
                         tools:ignore="VisualLintButtonSize" />
 
@@ -178,7 +169,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
                         tools:text="Player 2"
                         tools:ignore="VisualLintButtonSize" />
 
@@ -188,7 +179,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
                         tools:text="Player 3"
                         tools:ignore="VisualLintButtonSize" />
 
@@ -199,7 +190,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/label_passe"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
                         tools:ignore="VisualLintButtonSize" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -219,6 +210,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonWon"
                         style="?attr/materialButtonOutlinedStyle"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -229,6 +221,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonLost"
                         style="?attr/materialButtonOutlinedStyle"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -238,6 +231,7 @@
                     <com.google.android.material.button.MaterialButton
                         style="?attr/materialButtonOutlinedStyle"
                         android:id="@+id/buttonOverbid"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -260,44 +254,47 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonClubs"
-                        style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                        style="?attr/materialIconButtonOutlinedStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:contentDescription="@string/description_clubs"
+                        app:iconTint="@color/ic_clubs_color"
                         app:icon="@drawable/clubs"
                         tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonSpades"
-                        style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                        style="?attr/materialIconButtonOutlinedStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:contentDescription="@string/description_spades"
+                        app:iconTint="@color/ic_spades_color"
                         app:icon="@drawable/spades"
                         tools:ignore="VisualLintButtonSize" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonHearts"
-                        style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                        style="?attr/materialIconButtonOutlinedStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:contentDescription="@string/description_hearts"
                         app:icon="@drawable/hearts"
-                        app:iconTint="?colorTertiary"
+                        app:iconTint="@color/ic_hearts_color"
                         tools:ignore="VisualLintButtonSize" />
+
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonDiamonds"
-                        style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                        style="?attr/materialIconButtonOutlinedStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:contentDescription="@string/description_diamonds"
                         app:icon="@drawable/diamonds"
-                        app:iconTint="?colorTertiary"
+                        app:iconTint="@color/ic_diamonds_color"
                         tools:ignore="VisualLintButtonSize" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -307,7 +304,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:checkedButton="@id/buttonWon"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
@@ -346,14 +342,14 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schneider_announced_chip"
-                        style="@style/Widget.Material3.Chip.Suggestion"
+                        style="?attr/chipStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_schneider_announced" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schwarz_announced_chip"
-                        style="@style/Widget.Material3.Chip.Suggestion"
+                        style="?attr/chipStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_schwarz_announced" />
@@ -370,28 +366,28 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/hand_chip"
-                        style="@style/Widget.Material3.Chip.Suggestion"
+                        style="?attr/chipStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_hand" />
+                        android:text="@string/label_hand"
+                        tools:checked="true"/>
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/ouvert_chip"
-                        style="@style/Widget.Material3.Chip.Suggestion"
+                        style="@style/Widget.App.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_ouvert" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schneider_chip"
-                        style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_schneider" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/schwarz_chip"
-                        style="@style/Widget.Material3.Chip.Suggestion"
+                        style="?attr/chipStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_schwarz" />
@@ -417,6 +413,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            style="@style/Widget.App.ExtendedFloatingActionButton.Primary"
             android:id="@+id/score_done_button"
             android:layout_width="wrap_content"
             android:layout_height="56dp"
@@ -425,7 +422,6 @@
             android:layout_marginEnd="@dimen/fab_margin_right"
             android:text="@string/title_done"
             app:icon="@drawable/ic_done_24dp"
-            android:textStyle="bold"
             android:contentDescription="@string/description_score_done" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

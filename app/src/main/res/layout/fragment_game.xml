@@ -15,34 +15,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="80dp"
-            android:background="?attr/colorSurface"
-            >
+            android:background="?attr/colorSurface">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/return_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
                 style="@style/Widget.Material3.Button.IconButton"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:icon="@drawable/ic_close_24dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"/>
+                app:iconTint="?attr/colorOnSurface"
+                app:icon="@drawable/ic_close_24dp" />
 
             <TextView
                 android:id="@+id/game_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="48dp"
-                android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
-                android:fontFamily="@font/rubik_black"
-                tools:text="My skat list 01"
-                />
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="?attr/colorOnSurface"
+                style="@style/Widget.App.TextViewHeadline"
+                tools:text="My skat list 01" />
 
             <TextView
                 android:id="@+id/current_round_text"
@@ -53,8 +52,7 @@
                 app:layout_constraintStart_toStartOf="@id/game_title"
                 app:layout_constraintEnd_toEndOf="@id/game_title"
                 app:layout_constraintTop_toBottomOf="@id/game_title"
-                android:textAppearance="@style/TextAppearance.App.TitleLarge"
-                android:textColor="?colorOnSurfaceLight"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
                 tools:text="12 / 18"
                 />
 
@@ -115,8 +113,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             app:elevation="0dp"
-            style="@style/Widget.App.BottomAppBar"
-            app:backgroundTint="?colorSurface"
             tools:menu="@menu/game_menu"
             />
 

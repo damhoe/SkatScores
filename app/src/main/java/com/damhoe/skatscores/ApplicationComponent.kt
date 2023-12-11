@@ -1,6 +1,8 @@
 package com.damhoe.skatscores
 
 import android.content.Context
+import com.damhoe.skatscores.app.settings.AppSettingsDialogFragment
+import com.damhoe.skatscores.app.settings.AppSettingsViewModel
 import com.damhoe.skatscores.game.GameActivity
 import com.damhoe.skatscores.game.GameModule
 import com.damhoe.skatscores.game.adapter.`in`.ui.GameFragment
@@ -25,7 +27,8 @@ interface ApplicationComponent {
     fun inject(activity: GameActivity)
     fun inject(fragment: GameFragment)
     fun inject(fragment: ScoreFragment)
-    fun inject(fragment: LibraryFragment)
     fun inject(fragment: PlayersFragment)
     fun inject(fragment: PlayerDetailsFragment)
+    fun inject(fragment: LibraryFragment)
+    fun inject(fragment: AppSettingsDialogFragment)
 }

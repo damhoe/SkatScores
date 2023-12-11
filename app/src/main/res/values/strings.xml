@@ -30,7 +30,7 @@
     <string name="message_dialog_rounds">Select number of rounds</string>
     <string name="message_dialog_number_players">Select number of players</string>
     <string name="message_language_dialog">Select language</string>
-    <string name="title_create_new_game">Create a new list</string>
+    <string name="title_game_setup">New list</string>
     <string name="title_start">Start</string>
     <string name="hint_player3">Player 3</string>
     <string name="hint_player2">Player 2</string>
@@ -41,8 +41,6 @@
     <string name="welcome_text_open_games">Hello, you have not finished all of your games.</string>
     <string name="welcome_text">Hello, it\'s time to start a new Skat round!</string>
     <string name="dealer_message">%s is dealer</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="title_new_game_button">New list</string>
     <string name="text_add_player_button">Add player</string>
     <string name="text_about">Version 1.0 (2023)\nCopyright © Geneva 2023\nThis app was developed by Damian Hoedtke.</string>
@@ -145,4 +143,7 @@
     <string name="title_graph">Graph</string>
     <string name="title_score">Edit score</string>
     <string name="title_player_statistics">Statistics</string>
+    <string name="label_lost_points">x40</string>
+    <string name="label_solo_points">x50</string>
+    <string name="label_total_points">Points</string>
 </resources>

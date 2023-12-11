@@ -30,7 +30,7 @@
     <string name="message_dialog_rounds">Select number of rounds</string>
     <string name="message_dialog_number_players">Select number of players</string>
     <string name="message_language_dialog">Select language</string>
-    <string name="title_create_new_game">Create a new list</string>
+    <string name="title_game_setup">New list</string>
     <string name="title_start">Start</string>
     <string name="hint_player3">Player 3</string>
     <string name="hint_player2">Player 2</string>

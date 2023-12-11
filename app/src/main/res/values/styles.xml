@@ -5,157 +5,178 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:fontFamily">@font/clash_grotesk_regular</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="textAppearanceLargePopupMenu">@style/TextAppearance.App.Subtitle</item>
-        <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.App.Subtitle</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="android:listDivider">@drawable/list_divider</item>
         <item name="switchPreferenceCompatStyle">@style/Widget.Material3.CompoundButton.MaterialSwitch</item>
-        <item name="colorPrimary">@color/primary_800</item>
-        <item name="colorOnPrimary">@color/primary_100</item>
-        <item name="colorPrimaryContainer">@color/primary_800</item>
-        <item name="colorOnPrimaryContainer">@color/primary_100</item>
-        <item name="colorSecondary">@color/secondary_300</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <item name="colorSecondaryContainer">@color/secondary_50</item>
-        <item name="colorOnSecondaryContainer">@color/secondary_800</item>
-        <item name="colorTertiary">@color/tertiary_800</item>
-        <item name="colorOnTertiary">@color/tertiary_50</item>
-        <item name="colorTertiaryContainer">@color/tertiary_100</item>
-        <item name="colorOnTertiaryContainer">@color/tertiary_900</item>
-        <item name="colorError">@color/error_900</item>
-        <item name="colorErrorContainer">@color/error_100</item>
-        <item name="colorOnError">@color/error_50</item>
-        <item name="colorOnErrorContainer">@color/error_variant_900</item>
-        <item name="android:colorBackground">@color/neutral_50</item>
-        <item name="colorOnBackground">@color/primary_900</item>
-        <item name="colorSurface">@color/neutral_50</item>
-        <item name="colorOnSurface">@color/primary_900</item>
-        <item name="colorSurfaceVariant">@color/neutral_200</item>
-        <item name="colorOnSurfaceVariant">@color/primary_900</item>
-        <item name="colorOutline">@color/neutral_600</item>
-        <item name="colorOnSurfaceInverse">@color/primary_100</item>
-        <item name="colorSurfaceInverse">@color/primary_800</item>
-        <item name="colorPrimaryInverse">@color/primary_100</item>
-        <item name="colorOnSurfaceLight">@color/primary_200</item>
-        <item name="colorSurfaceContainer">@color/neutral_300</item>
-        <item name="colorSurfaceContainerHigh">@color/neutral_500</item>
-        <item name="colorSurfaceContainerLow">@color/neutral_200</item>
-        <item name="colorSurfaceContainerHighest">@color/neutral_600</item>
-        <item name="colorSurfaceContainerLowest">@color/neutral_100</item>
-        <item name="colorSurfaceBright">@color/neutral_100</item>
-        <item name="colorControlNormal">@color/primary_800</item>
-        <item name="colorCategorySubtitle">@color/tertiary_200</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupButton</item>
+        <item name="materialIconButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupIconButton</item>
+        <item name="chipStyle">@style/Widget.App.Chip.Suggestion</item>
+        <item name="appBarLayoutStyle">@style/Widget.App.AppBarLayout</item>
+        <item name="collapsingToolbarLayoutStyle">@style/Widget.App.CollapsingToolbar</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+        <item name="coloredAppBarLayoutStyle">@style/Widget.App.AppBarLayout.Colored</item>
+        <item name="coloredToolbarStyle">@style/Widget.App.Toolbar.Colored</item>
     </style>
 
     <style name="Theme.App.Dark" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="android:fontFamily">@font/app_font</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
-        <item name="textAppearanceLargePopupMenu">@style/TextAppearance.App.Subtitle</item>
-        <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.App.Subtitle</item>
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="switchPreferenceCompatStyle">@style/Widget.Material3.CompoundButton.MaterialSwitch</item>
-        <item name="colorPrimary">@color/primary_300</item>
-        <item name="colorOnPrimary">@color/primary_900</item>
-        <item name="colorPrimaryContainer">@color/primary_300</item>
-        <item name="colorOnPrimaryContainer">@color/primary_900</item>
-        <item name="colorSecondary">@color/secondary_300</item>
-        <item name="colorOnSecondary">@color/secondary_50</item>
-        <item name="colorSecondaryContainer">@color/secondary_500</item>
-        <item name="colorOnSecondaryContainer">@color/secondary_100</item>
-        <item name="colorTertiary">@color/tertiary_600</item>
-        <item name="colorOnTertiary">@color/tertiary_50</item>
-        <item name="colorTertiaryContainer">@color/tertiary_900</item>
-        <item name="colorOnTertiaryContainer">@color/tertiary_50</item>
-        <item name="colorError">@color/error_100</item>
-        <item name="colorErrorContainer">@color/error_900</item>
-        <item name="colorOnError">@color/error_variant_900</item>
-        <item name="colorOnErrorContainer">@color/error_50</item>
-        <item name="android:colorBackground">@color/primary_900d</item>
-        <item name="colorOnBackground">@color/primary_200</item>
-        <item name="colorSurface">@color/primary_900d</item>
-        <item name="colorOnSurface">@color/primary_200</item>
-        <item name="colorSurfaceVariant">@color/primary_900</item>
-        <item name="colorOnSurfaceVariant">@color/primary_100</item>
-        <item name="colorOutline">@color/neutral_500</item>
-        <item name="colorOnSurfaceInverse">@color/md_theme_dark_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
-        <item name="colorOnSurfaceLight">@color/primary_400</item>
-        <item name="colorSurfaceContainer">@color/primary_900</item>
-        <item name="colorSurfaceContainerHigh">@color/neutral_500</item>
-        <item name="colorSurfaceContainerLow">@color/secondary_500</item>
-        <item name="colorSurfaceContainerHighest">@color/neutral_300</item>
-        <item name="colorSurfaceContainerLowest">@color/secondary_500</item>
-        <item name="colorSurfaceBright">@color/primary_800</item>
-        <item name="colorControlNormal">@color/primary_100</item>
-        <item name="colorCategorySubtitle">@color/tertiary_200</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupButton</item>
+        <item name="materialIconButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupIconButton.Dark</item>
+        <item name="chipStyle">@style/Widget.App.Chip.Suggestion</item>
+        <item name="appBarLayoutStyle">@style/Widget.App.AppBarLayout</item>
+        <item name="collapsingToolbarLayoutStyle">@style/Widget.App.CollapsingToolbar</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView.Dark</item>
+        <item name="coloredAppBarLayoutStyle">@style/Widget.App.AppBarLayout.Colored.Dark</item>
+        <item name="coloredToolbarStyle">@style/Widget.App.Toolbar.Colored.Dark</item>
     </style>
     
     <style name="Widget.App.PopupMenu" parent="@style/Widget.Material3.PopupMenu">
         <item name="android:popupBackground">@drawable/popup_menu_background</item>
     </style>
 
-    <style name="Widget.App.CollapsingToolbar" parent="@style/Widget.Material3.CollapsingToolbar.Medium">
-        <item name="elevation">0dp</item>
+    <!-- Collapsing toolbar -->
+    <style name="Widget.App.CollapsingToolbar" parent="@style/Widget.Material3.CollapsingToolbar">
         <item name="titleEnabled">true</item>
         <item name="android:background">?attr/colorSurface</item>
-        <item name="statusBarScrim">?colorSurfaceVariant</item>
-        <item name="contentScrim">?colorSurfaceVariant</item>
+        <item name="contentScrim">?attr/colorSurfaceVariant</item>
+        <item name="statusBarScrim">?attr/colorSurfaceVariant</item>
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
-        <item name="collapsedTitleTextAppearance">@style/TextAppearance.App.CollapsingToolbar.Collapsed</item>
-        <item name="expandedTitleTextAppearance">@style/TextAppearance.App.CollapsingToolbar.Expanded</item>
+        <item name="collapsedTitleTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="expandedTitleTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.CollapsingToolbar</item>
+        <item name="titleCollapseMode">scale</item>
+        <item name="expandedTitleMarginBottom">20dp</item>
+        <item name="collapsedTitleTextAppearance">
+            @style/TextAppearance.App.CollapsingToolbar.Collapsed
+        </item>
+        <item name="expandedTitleTextAppearance">
+            @style/TextAppearance.App.CollapsingToolbar.Expanded
+        </item>
+    </style>
+    <style name="TextAppearance.App.CollapsingToolbar.Expanded"
+        parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/clash_grotesk_light</item>
+    </style>
+    <style name="TextAppearance.App.CollapsingToolbar.Collapsed"
+        parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/clash_grotesk_medium</item>
+    </style>
+    <style name="ThemeOverlay.App.CollapsingToolbar" parent="">
+        <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
     </style>
 
+    <!-- App bar layout -->
     <style name="Widget.App.AppBarLayout" parent="Widget.Material3.AppBarLayout">
         <item name="android:background">?attr/colorSurface</item>
     </style>
 
     <style name="Widget.App.AppBarLayout.Variant" parent="Widget.Material3.AppBarLayout">
-        <item name="android:background">?colorSurfaceContainer</item>
+        <item name="android:background">?attr/colorSurfaceVariant</item>
     </style>
 
+    <!-- Colored toolbar styling -->
+    <style name="Widget.App.AppBarLayout.Colored" parent="Widget.Material3.AppBarLayout">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored</item>
+    </style>
+    <style name="Widget.App.Toolbar.Colored" parent="Widget.Material3.Toolbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored</item>
+        <item name="titleTextAppearance">@style/TextAppearance.App.ToolbarTitle</item>
+        <item name="titleTextColor">?colorOnPrimaryContainer</item>
+    </style>
+    <style name="ThemeOverlay.App.Toolbar.Colored" parent="">
+        <item name="colorSurface">?attr/colorPrimaryContainer</item>
+        <item name="colorControlNormal">?attr/colorOnPrimaryContainer</item>
+    </style>
+    <style name="TextAppearance.App.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/clash_grotesk_regular</item>
+    </style>
+
+    <style name="Widget.App.AppBarLayout.Colored.Dark" parent="Widget.Material3.AppBarLayout">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored.Dark</item>
+    </style>
+    <style name="Widget.App.Toolbar.Colored.Dark" parent="Widget.App.Toolbar.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored.Dark</item>
+        <item name="titleTextColor">?colorOnPrimaryContainer</item>
+    </style>
+    <style name="ThemeOverlay.App.Toolbar.Colored.Dark" parent="">
+        <item name="colorSurface">?attr/colorPrimaryContainer</item>
+        <item name="colorControlNormal">?attr/colorOnPrimaryContainer</item>
+    </style>
+
+    <!-- Variant toolbar -->
     <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
-        <item name="titleTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="titleTextColor">?attr/colorPrimaryVariant</item>
     </style>
 
     <style name="Widget.App.Toolbar.Variant" parent="Widget.Material3.Toolbar">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Variant</item>
-        <item name="titleTextColor">?attr/colorOnSurface</item>
+        <item name="titleTextColor">?attr/colorControlNormal</item>
     </style>
 
     <style name="ThemeOverlay.App.Toolbar" parent="">
-        <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
     </style>
 
     <style name="ThemeOverlay.App.Toolbar.Variant" parent="">
-        <item name="colorControlNormal">?attr/colorOnSurface</item>
+
     </style>
 
-    <style name="Widget.App.BottomAppBar" parent="Widget.Material3.BottomAppBar">
-        <item name="android:minHeight">80dp</item>
-        <item name="backgroundTint">?attr/colorSurfaceVariant</item>
-        <item name="titleTextColor">?colorOnSurfaceVariant</item>
-    </style>
-
-    <style name="Widget.App.BottomNavView" parent="Widget.Material3.BottomNavigationView">
+    <!-- Bottom navigation bar -->
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="elevation">0dp</item>
-        <item name="itemTextAppearanceActive">@style/TextAppearance.App.NavViewItemActive</item>
-        <item name="itemTextAppearanceInactive">@style/TextAppearance.App.NavViewItemInactive</item>
-        <item name="backgroundTint">?colorSurfaceVariant</item>
+        <item name="itemTextAppearanceInactive">
+            @style/TextAppearance.App.BottomNavigationItemInactive
+        </item>
+        <item name="itemTextAppearanceActive">
+            @style/TextAppearance.App.BottomNavigationItemActive
+        </item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.App.TitleSmallBold</item>
+        <item name="colorSurface">@color/md_theme_light_surfaceVariant</item>
+        <item name="colorOnSurface">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+    </style>
+    <style name="TextAppearance.App.BottomNavigationItemInactive"
+        parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/clash_grotesk_medium</item>
+    </style>
+    <style name="TextAppearance.App.BottomNavigationItemActive"
+        parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/clash_grotesk_semibold</item>
     </style>
 
-    <style name="TextAppearance.App.NavViewItemInactive" parent="TextAppearance.Material3.LabelSmall">
-        <item name="fontFamily">@font/rubik</item>
+    <style name="Widget.App.BottomNavigationView.Dark"
+        parent="Widget.Material3.BottomNavigationView">
+        <item name="elevation">0dp</item>
+        <item name="itemTextAppearanceInactive">
+            @style/TextAppearance.App.BottomNavigationItemInactive
+        </item>
+        <item name="itemTextAppearanceActive">
+            @style/TextAppearance.App.BottomNavigationItemActive
+        </item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView.Dark</item>
     </style>
-
-    <style name="TextAppearance.App.NavViewItemActive" parent="TextAppearance.Material3.LabelSmall">
-        <item name="fontFamily">@font/rubik_medium</item>
+    <style name="ThemeOverlay.App.BottomNavigationView.Dark" parent="">
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.App.TitleSmallBold</item>
+        <item name="colorSurface">@color/md_theme_dark_surfaceVariant</item>
+        <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_dark_onSecondaryContainer</item>
+        <item name="colorSecondaryContainer">@color/md_theme_dark_secondaryContainer</item>
     </style>
 
     <style name="NumberPicker">
@@ -168,9 +189,6 @@
 
     <style name="Widget.App.AutoCompleteTextView" parent="Widget.Material3.AutoCompleteTextView.FilledBox">
 
-    </style>
-
-    <style name="Widget.App.Seekbar" parent="Widget.AppCompat.SeekBar">
     </style>
 
     <style name="Widget.App.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
@@ -191,8 +209,22 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
-    
-    <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.Material3.Button.OutlinedButton">
+
+    <style name="Widget.App.Button" parent="Widget.Material3.Button">
+        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
+        <item name="iconTint">?attr/colorOnPrimaryContainer</item>
+        <item name="fontFamily">@font/clash_grotesk_medium</item>
+    </style>
+
+    <style name="Widget.App.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="fontFamily">@font/clash_grotesk_medium</item>
+    </style>
+
+    <style name="Widget.App.Button.ToggleGroupButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="fontFamily">@font/clash_grotesk_medium</item>
+    </style>
+
+    <style name="Widget.App.Button.ToggleGroupIconButton" parent="Widget.Material3.Button.OutlinedButton">
         <item name="iconPadding">0dp</item>
         <item name="iconGravity">textStart</item>
         <item name="android:minHeight">48dp</item>
@@ -202,113 +234,71 @@
         <item name="android:paddingRight">12dp</item>
     </style>
 
+    <style name="Widget.App.Button.ToggleGroupIconButton.Dark" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+    </style>
+
+    <style name="Widget.App.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+
+    </style>
+    
+    <style name="Widget.App.ExtendedFloatingActionButton.Primary" parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
+    </style>
+
+    <style name="Widget.App.ExtendedFloatingActionButton.Secondary" parent="Widget.Material3.ExtendedFloatingActionButton.Secondary">
+    </style>
+
+    <style name="Widget.App.Chip.Suggestion" parent="Widget.Material3.Chip.Suggestion">
+        <item name="android:textAppearance">@style/TextAppearance.App.Chip</item>
+    </style>
+
+    <style name="TextAppearance.App.Chip" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/clash_grotesk_medium</item>
+    </style>
+
     <style name="ShapeAppearanceOverlay.App.CircularImageView" parent="">
         <item name="cornerSize">50%</item>
     </style>
 
-    <!-- Text appearance -->
-
-    <style name="TextAppearance.App.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
-        <item name="fontFamily">@font/app_font</item>
+    <style name="Widget.App.Slider" parent="Widget.Material3.Slider">
+        <item name="trackColorActive">?attr/colorSecondary</item>
+        <item name="tickColorInactive">?attr/colorSecondaryContainer</item>
+        <item name="thumbColor">?attr/colorSecondary</item>
+        <item name="haloColor">?attr/colorSecondaryContainer</item>
+        <item name="labelStyle">@style/Widget.App.Tooltip</item>
     </style>
 
-    <style name="TextAppearance.App.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
-        <item name="fontFamily">@font/app_font</item>
+    <style name="Widget.App.Tooltip" parent="Widget.Material3.Tooltip">
+        <item name="fontFamily">@font/clash_grotesk_regular</item>
+        <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
+        <item name="backgroundTint">?attr/colorSecondary</item>
     </style>
 
-    <style name="TextAppearance.App.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
-        <item name="fontFamily">@font/app_font</item>
+    <style name="Widget.App.TextViewHeadline" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceHeadlineLarge</item>
+        <item name="android:fontFamily">@font/clash_grotesk_light</item>
     </style>
 
-    <style name="TextAppearance.App.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.Material3.DisplayMedium">
-        <item name="fontFamily">@font/rubik_light</item>
-    </style>
-
-    <style name="TextAppearance.App.CollapsingToolbar.Collapsed" parent="TextAppearance.Material3.TitleLarge">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.CategorySubtitle" parent="TextAppearance.Material3.LabelSmall">
-        <item name="fontFamily">@font/rubik_bold</item>
-    </style>
-
-    <style name="TextAppearance.App.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="TextAppearance.App.BodySmall" parent="TextAppearance.Material3.BodySmall">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-    <style name="TextAppearance.App.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-    <style name="TextAppearance.App.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-    <style name="TextAppearance.App.ItemTitle" parent="TextAppearance.Material3.BodyMedium">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-    <style name="TextAppearance.App.HeadlineCasual" parent="TextAppearance.Material3.HeadlineMedium">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-    <style name="TextAppearance.App.Subtitle" parent="TextAppearance.Material3.ActionBar.Subtitle">
-        <item name="fontFamily">@font/app_font</item>
-    </style>
-
-    <style name="Theme.App.SubtitleLightLarge" parent="Widget.AppCompat.TextView">
-        <item name="android:textAppearance">@style/TextAppearance.App.TitleLarge</item>
-        <item name="fontFamily">@font/rubik_medium</item>
-        <item name="android:textColor">?colorOnSurfaceLight</item>
+    <style name="Widget.App.TextViewLabelBold" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceLabelMedium</item>
+        <item name="fontFamily">@font/clash_grotesk_medium</item>
     </style>
 
     <style name="Theme.App.SubtitleLightMedium" parent="Widget.AppCompat.TextView">
-        <item name="android:textAppearance">@style/TextAppearance.App.TitleMedium</item>
-        <item name="fontFamily">@font/rubik_medium</item>
-        <item name="android:textColor">?colorOnSurfaceLight</item>
+        <item name="android:textAppearance">?textAppearanceTitleMedium</item>
+        <item name="fontFamily">@font/clash_grotesk_medium</item>
+        <item name="android:textColor">?colorPrimaryVariant</item>
     </style>
 
-    <style name="Theme.App.SubtitleLightSmall" parent="Widget.AppCompat.TextView">
-        <item name="android:textAppearance">@style/TextAppearance.App.TitleSmall</item>
-        <item name="fontFamily">@font/rubik_medium</item>
-        <item name="android:textColor">?colorOnSurfaceLight</item>
-    </style>
-
-    <style name="Theme.App.CategorySubtitle" parent="Widget.AppCompat.TextView">
-        <item name="android:textAppearance">@style/TextAppearance.App.CategorySubtitle</item>
-        <item name="fontFamily">@font/rubik_medium</item>
-        <item name="android:textColor">?colorCategorySubtitle</item>
+    <style name="TextAppearance.App.TitleSmallBold"
+        parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/clash_grotesk_semibold</item>
     </style>
 
 </resources>

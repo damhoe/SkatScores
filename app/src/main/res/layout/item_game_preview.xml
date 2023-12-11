@@ -6,13 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
-    style="@style/Widget.Material3.CardView.Filled"
-    app:cardBackgroundColor="?colorSurfaceContainer"
+    style="@style/Widget.Material3.CardView.Outlined"
+
     app:cardCornerRadius="12dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="@+id/title"
         app:layout_constraintTop_toBottomOf="@+id/title">
 
@@ -20,77 +20,77 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="28dp"
             android:layout_marginTop="24dp"
-            android:textAppearance="@style/TextAppearance.App.TitleLarge"
-            android:fontFamily="@font/rubik_light"
+            android:fontFamily="@font/clash_grotesk_light"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall"
+            android:textColor="?colorOnSurfaceVariant"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Skatrunde im Okt." />
 
         <TextView
             android:id="@+id/players"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:textAppearance="@style/TextAppearance.App.BodyMedium"
-            app:layout_constraintStart_toStartOf="@id/title"
-            app:layout_constraintTop_toBottomOf="@id/date"
-            app:layout_constraintBottom_toTopOf="@id/button_continue"
+
             android:textAlignment="center"
-            tools:text="Marlon \t 40 points \nEvi \t 0 points, \nDaniel K. \t -100 points" />
+            android:textColor="?colorOnSurfaceVariant"
+            app:layout_constraintBottom_toBottomOf="@+id/date"
+            app:layout_constraintEnd_toEndOf="@+id/rounds"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/rounds"
+            app:layout_constraintTop_toTopOf="@+id/date"
+            tools:text="Marlon, Evi, Daniel K." />
 
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Theme.App.SubtitleLightMedium"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintStart_toStartOf="@id/title"
-            android:layout_marginTop="8dp"
-            tools:text="8. Oktober 2023" />
+            android:textColor="?colorOnSurfaceVariant"
+            android:layout_marginTop="12dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_continue"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            tools:text="8th October 2023" />
 
         <TextView
             android:id="@+id/rounds"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
-            android:textAppearance="@style/TextAppearance.App.BodyLarge"
+            android:textColor="?colorOnSurfaceVariant"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            app:layout_constraintBottom_toBottomOf="@+id/title"
+            app:layout_constraintTop_toTopOf="@+id/title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/title"
+            android:layout_marginEnd="24dp"
             tools:text="11/12" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.Material3.Button.TextButton"
             android:id="@+id/button_continue"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/players"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:focusedByDefault="false"
             android:text="@string/title_continue"
-            app:backgroundTint="?colorSurfaceContainerLowest"
-            />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.Material3.Button.IconButton"
             android:id="@+id/button_delete"
+            style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/button_continue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/button_continue"
             android:layout_marginEnd="8dp"
             android:focusedByDefault="false"
-            app:backgroundTint="?colorSurfaceContainerLowest"
             app:icon="@drawable/ic_delete_24dp"
-            />
+            app:layout_constraintBottom_toBottomOf="@id/button_continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/button_continue" />
 
         <!--<com.google.android.material.button.MaterialButton
             android:id="@+id/button_continue"

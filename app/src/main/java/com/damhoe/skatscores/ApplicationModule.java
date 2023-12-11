@@ -20,9 +20,12 @@ public class ApplicationModule {
 
    @Provides
    @ApplicationContext
-   Context provideContext() {
+   Context provideAppContext() {
       return mApplication;
    }
+
+   @Provides
+   Context provideContext(Context context) { return mApplication; }
 
    @Provides
    @DatabaseInfo

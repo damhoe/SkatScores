@@ -20,7 +20,7 @@
         app:counterEnabled="true"
         app:counterMaxLength="15"
         app:endIconMode="clear_text"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox">
+        app:hintTextColor="?colorPrimary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_name"
@@ -29,8 +29,7 @@
             android:inputType="text"
             tools:text="Franziska KA"
             style="@style/Widget.Material3.TextInputEditText.FilledBox"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

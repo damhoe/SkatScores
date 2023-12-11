@@ -10,26 +10,12 @@
         android:name="com.damhoe.skatscores.library.LibraryFragment"
         tools:layout="@layout/fragment_library">
         <action
-            android:id="@+id/action_library_to_settings"
-            app:destination="@id/app_settings"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            />
-        <action
             android:id="@+id/action_library_to_game_activity"
             app:destination="@id/game_activity"
             app:enterAnim="@anim/enter_from_bottom" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/app_settings"
-        android:name="com.damhoe.skatscores.app.app_settings.SettingsFragment"
-        tools:layout="@layout/fragment_settings">
         <action
-            android:id="@+id/action_app_settings_to_about"
-            app:destination="@id/about" />
+            android:id="@+id/action_library_to_appSettingsDialogFragment"
+            app:destination="@id/appSettingsDialog" />
     </fragment>
 
     <fragment
@@ -75,5 +61,16 @@
         android:id="@+id/player_statistics"
         android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerStatisticsFragment"
         tools:layout="@layout/fragment_player_statistics"/>
+    <dialog
+        android:id="@+id/appSettingsDialog"
+        android:name="com.damhoe.skatscores.app.settings.AppSettingsDialogFragment"
+        android:label="AppSettingsDialogFragment"
+        tools:layout="@layout/dialog_app_settings">
+        <action
+            android:id="@+id/action_appSettingsDialog_to_about"
+            app:destination="@id/about"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"/>
+    </dialog>
 
 </navigation>

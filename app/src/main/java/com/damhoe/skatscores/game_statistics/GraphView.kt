@@ -118,7 +118,6 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
             Log.d("Scale", "Focus at ($focusX, $focusY)")
             Log.d("Scale", "Focus of viewport at (${viewportFocus.x}, ${viewportFocus.y})")
-
             Log.d("Scale", "x-scale: $scaleX")
 
             val targetWidth: Float = abs(scaleX) * oldWidth

@@ -6,7 +6,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="?colorSurfaceContainer"
+        app:cardBackgroundColor="?attr/colorSurfaceVariant"
         style="@style/Widget.Material3.CardView.Filled">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,17 +22,17 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/Widget.App.TextViewLabelBold"
                     android:id="@+id/solo_label"
                     android:layout_width="@dimen/points_board_first_label_width"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:maxLines="1"
-                    android:textColor="?colorOnSurface"
-                    android:fontFamily="@font/rubik_medium"
                     android:textAlignment="textEnd"
-                    android:textAppearance="@style/TextAppearance.App.BodySmall"
-                    android:text="x50"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:text="@string/label_solo_points"
                     />
 
                 <TextView
@@ -44,7 +44,8 @@
                     android:textAlignment="center"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
                     tools:text="24" />
 
                 <TextView
@@ -56,7 +57,8 @@
                     android:textAlignment="center"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
                     tools:text="0" />
 
                 <TextView
@@ -68,7 +70,8 @@
                     android:textAlignment="center"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
                     tools:text="0" />
 
             </LinearLayout>
@@ -82,17 +85,17 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/Widget.App.TextViewLabelBold"
                     android:id="@+id/lost_label"
                     android:layout_width="@dimen/points_board_first_label_width"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:maxLines="1"
-                    android:textColor="?colorOnSurface"
-                    android:fontFamily="@font/rubik_medium"
                     android:textAlignment="textEnd"
-                    android:textAppearance="@style/TextAppearance.App.BodySmall"
-                    android:text="x40"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:text="@string/label_lost_points"
                     />
 
                 <TextView
@@ -103,8 +106,9 @@
                     android:singleLine="true"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
+                    android:textColor="?colorOnSurfaceVariant"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
                     tools:text="24" />
 
                 <TextView
@@ -115,8 +119,9 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:singleLine="true"
+                    android:textColor="?colorOnSurfaceVariant"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
                     tools:text="0" />
 
                 <TextView
@@ -127,8 +132,9 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:singleLine="true"
+                    android:textColor="?colorOnSurfaceVariant"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
                     tools:text="0" />
 
             </LinearLayout>
@@ -140,6 +146,7 @@
                 app:layout_constraintBottom_toTopOf="@id/points_container"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                app:dividerColor="?colorOutlineVariant"
                 />
 
             <LinearLayout
@@ -151,6 +158,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/Widget.App.TextViewLabelBold"
                     android:id="@+id/total_points_label"
                     android:layout_width="@dimen/points_board_first_label_width"
                     android:layout_height="wrap_content"
@@ -158,24 +166,25 @@
                     android:paddingEnd="0dp"
                     android:maxLines="1"
                     android:textAlignment="textStart"
-                    android:textAppearance="@style/TextAppearance.App.BodySmall"
-                    android:textColor="?colorOnSurface"
-                    android:fontFamily="@font/rubik_medium"
-                    android:text="Points"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:text="@string/label_total_points"
                     />
 
                 <TextView
+                    style="@style/Widget.App.TextViewLabelBold"
                     android:id="@+id/points1_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.2"
                     android:singleLine="true"
                     android:textAlignment="center"
-                    android:fontFamily="@font/rubik_medium"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
                     tools:text="24" />
 
                 <TextView
+                    style="@style/Widget.App.TextViewLabelBold"
                     android:id="@+id/points2_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -184,11 +193,12 @@
                     android:paddingEnd="16dp"
                     android:singleLine="true"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
-                    android:fontFamily="@font/rubik_medium"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
                     tools:text="0" />
 
                 <TextView
+                    style="@style/Widget.App.TextViewLabelBold"
                     android:id="@+id/points3_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -197,8 +207,8 @@
                     android:paddingEnd="16dp"
                     android:singleLine="true"
                     android:textAlignment="center"
-                    android:fontFamily="@font/rubik_medium"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
                     tools:text="230" />
 
             </LinearLayout>

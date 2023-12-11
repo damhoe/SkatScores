@@ -18,10 +18,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_list_name"
-            android:background="@android:color/transparent"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
-            android:textAppearance="@style/TextAppearance.App.TitleMedium"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -45,7 +44,6 @@
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:textAppearance="@style/TextAppearance.App.TitleLarge"
                 android:focusedByDefault="false"
                 tools:text="New List 88"
                 android:textSize="18sp" />
@@ -57,10 +55,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_scoring_settings"
-            android:background="@android:color/transparent"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:paddingTop="24dp"
             android:paddingBottom="8dp"
-            android:textAppearance="@style/TextAppearance.App.TitleMedium"
             app:layout_constraintStart_toStartOf="@id/list_name_text_input"
             app:layout_constraintTop_toBottomOf="@id/list_name_text_input"/>
 
@@ -102,10 +99,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_rounds_settings"
-            android:background="@android:color/transparent"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:paddingTop="24dp"
             android:paddingBottom="8dp"
-            android:textAppearance="@style/TextAppearance.App.TitleMedium"
             app:layout_constraintStart_toStartOf="@id/scoring_settings_title_view"
             app:layout_constraintTop_toBottomOf="@+id/scoring_settings_rg"/>
 
@@ -114,19 +110,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="12"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:gravity="center"
             android:paddingBottom="8dp"
             android:paddingTop="24dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/rubik_medium"
-            android:textAppearance="@style/TextAppearance.App.TitleMedium"
             app:layout_constraintTop_toTopOf="@id/rounds_setting_title_view"
             app:layout_constraintBottom_toBottomOf="@id/rounds_setting_title_view"
             app:layout_constraintStart_toEndOf="@id/rounds_setting_title_view"/>
 
         <com.google.android.material.slider.Slider
             android:id="@+id/rounds_slider"
-            style="@style/Widget.Material3.Slider"
+            style="@style/Widget.App.Slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -146,10 +141,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_start_dealer"
-            android:background="@android:color/transparent"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:paddingTop="24dp"
             android:paddingBottom="8dp"
-            android:textAppearance="@style/TextAppearance.App.TitleMedium"
             app:layout_constraintStart_toStartOf="@id/scoring_settings_title_view"
             app:layout_constraintTop_toBottomOf="@id/rounds_slider"/>
 

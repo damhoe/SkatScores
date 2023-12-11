@@ -9,8 +9,7 @@
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="true"
         android:descendantFocusability="blocksDescendants"
-        tools:context=".player.adapter.in.ui.PlayersFragment"
-        >
+        tools:context=".player.adapter.in.ui.PlayersFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbarLayout"
@@ -19,7 +18,7 @@
             app:elevation="0dp"
             app:layout_behavior=".shared_ui.behaviors.CollapseAppBarBehavior"
             app:liftOnScroll="true"
-            >
+            style="@style/Widget.App.AppBarLayout">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/toolbarLayout"
@@ -27,12 +26,7 @@
                 android:layout_height="?attr/collapsingToolbarLayoutMediumSize"
                 style="@style/Widget.App.CollapsingToolbar"
                 app:layout_behavior=".ui.CollapseAppBarBehavior"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-                android:background="?colorSurface"
-                app:titleCollapseMode="scale"
-                app:titleEnabled="true"
-                app:expandedTitleMarginBottom="20dp"
-                >
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
@@ -73,9 +67,8 @@
                     android:layout_marginTop="36dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
-                    android:text="@string/text_info_no_players"
-                    />
+                    android:textColor="?colorPrimaryVariant"
+                    android:text="@string/text_info_no_players" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/player_recycler_view"
@@ -85,8 +78,7 @@
                     tools:listitem="@layout/item_player"
                     android:nestedScrollingEnabled="true"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:overScrollMode="never"
-                    />
+                    android:overScrollMode="never" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
@@ -100,8 +92,7 @@
             android:layout_marginEnd="@dimen/fab_margin_right"
             android:src="@drawable/ic_person_add_24dp"
             android:contentDescription="@string/description_create_new_profile"
-            style="@style/Widget.Material3.FloatingActionButton.Secondary"
-            />
+            style="@style/Widget.Material3.FloatingActionButton.Primary" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

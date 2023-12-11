@@ -20,8 +20,7 @@
         android:hint="@string/hint_player1"
         app:errorEnabled="true"
         app:counterEnabled="true"
-        app:counterMaxLength="15"
-        style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu">
+        app:counterMaxLength="15">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/player1_edit_text"
@@ -30,7 +29,7 @@
             android:inputType="text"
             android:focusedByDefault="false"
             tools:text="Franziska KA"
-            style="@style/Widget.Material3.TextInputEditText.FilledBox"
+            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
             android:textSize="18sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -46,8 +45,7 @@
         app:errorEnabled="true"
         app:counterEnabled="true"
         app:counterMaxLength="15"
-        android:hint="@string/hint_player2"
-        style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu">
+        android:hint="@string/hint_player2">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/player2_edit_text"
@@ -56,7 +54,7 @@
             android:inputType="text"
             android:focusedByDefault="false"
             tools:text="Damian"
-            style="@style/Widget.App.AutoCompleteTextView"
+            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
             android:textSize="18sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -72,8 +70,7 @@
         app:errorEnabled="true"
         app:counterEnabled="true"
         app:counterMaxLength="15"
-        android:hint="@string/hint_player3"
-        style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu">
+        android:hint="@string/hint_player3">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/player3_edit_text"
@@ -82,7 +79,7 @@
             android:inputType="text"
             android:focusedByDefault="false"
             tools:text="Josua E."
-            style="@style/Widget.App.AutoCompleteTextView"
+            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
             android:textSize="18sp" />
 
     </com.google.android.material.textfield.TextInputLayout>

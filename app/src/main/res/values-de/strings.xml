@@ -30,12 +30,12 @@
     <string name="message_dialog_rounds">Anzahl der Runden</string>
     <string name="message_dialog_number_players">Anzahl der Spieler\'innen</string>
     <string name="message_language_dialog">Sprache</string>
-    <string name="title_create_new_game">Erstelle neue Liste</string>
+    <string name="title_game_setup">Neue Liste</string>
     <string name="title_start">Start</string>
     <string name="hint_player3">Spieler 3</string>
     <string name="hint_player2">Spieler 2</string>
     <string name="hint_player1">Spieler 1</string>
-    <string name="title_done">Ok</string>
+    <string name="title_done">Fertig</string>
     <string name="description_score_done">Punkte wurden fertig eingegeben</string>
     <string name="default_list_title">Liste</string>
     <string name="welcome_text_open_games">Hallo, du hast noch nicht alle Spiele beendet!</string>

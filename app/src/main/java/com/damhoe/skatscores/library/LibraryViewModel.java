@@ -52,8 +52,8 @@ public class LibraryViewModel extends ViewModel {
         );
     }
 
-    LiveData<List<SkatGamePreview>> getLastMonthGames() {
-        return mLoadGameUseCase.getGamesSince(firstOfMonth);
+    LiveData<List<SkatGamePreview>> getGames() {
+        return mLoadGameUseCase.getGamesSince(oldestDate);
     }
 
     LiveData<List<SkatGamePreview>> getUnfinishedGames() {

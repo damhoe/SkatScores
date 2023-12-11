@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="colorOnSurfaceLight" format="color" />
     <attr name="colorCategorySubtitle" format="color" />
+    <!-- Colors of the suit icons -->
+    <attr name="colorClubs" format="color" />
+    <attr name="colorSpades" format="color" />
+    <attr name="colorHearts" format="color" />
+    <attr name="colorDiamonds" format="color" />
+    <attr name="colorSuitDisabled" format="color" />
+
+    <attr name="coloredToolbarStyle" format="reference" />
+    <attr name="coloredAppBarLayoutStyle" format="reference" />
 
     <declare-styleable name="GraphView">
         <attr name="gridColor" format="color" />

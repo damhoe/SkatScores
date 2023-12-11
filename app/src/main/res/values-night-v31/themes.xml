@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.App.SplashTheme" parent="Theme.App.Dark">
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_scoresheet_skat_foreground</item>
         <item name="android:windowSplashScreenBackground">?attr/colorSecondaryContainer</item>
     </style>
 
