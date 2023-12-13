@@ -10,7 +10,7 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="android:listDivider">@drawable/list_divider</item>
-        <item name="switchPreferenceCompatStyle">@style/Widget.Material3.CompoundButton.MaterialSwitch</item>
+        <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
         <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupButton</item>
         <item name="materialIconButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupIconButton</item>
         <item name="chipStyle">@style/Widget.App.Chip.Suggestion</item>
@@ -29,7 +29,7 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
-        <item name="switchPreferenceCompatStyle">@style/Widget.Material3.CompoundButton.MaterialSwitch</item>
+        <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
         <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupButton</item>
         <item name="materialIconButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupIconButton.Dark</item>
         <item name="chipStyle">@style/Widget.App.Chip.Suggestion</item>
@@ -91,11 +91,11 @@
     <style name="Widget.App.Toolbar.Colored" parent="Widget.Material3.Toolbar">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored</item>
         <item name="titleTextAppearance">@style/TextAppearance.App.ToolbarTitle</item>
-        <item name="titleTextColor">?colorOnPrimaryContainer</item>
+        <item name="titleTextColor">?colorOnSurfaceVariant</item>
     </style>
     <style name="ThemeOverlay.App.Toolbar.Colored" parent="">
-        <item name="colorSurface">?attr/colorPrimaryContainer</item>
-        <item name="colorControlNormal">?attr/colorOnPrimaryContainer</item>
+        <item name="colorSurface">?attr/colorSurfaceVariant</item>
+        <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
     </style>
     <style name="TextAppearance.App.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
         <item name="fontFamily">@font/clash_grotesk_regular</item>
@@ -145,10 +145,10 @@
     <style name="ThemeOverlay.App.BottomNavigationView" parent="">
         <item name="textAppearanceTitleSmall">@style/TextAppearance.App.TitleSmallBold</item>
         <item name="colorSurface">@color/md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurface">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnSurface">@color/md_theme_light_onSurfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
-        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
-        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_primaryContainer</item>
     </style>
     <style name="TextAppearance.App.BottomNavigationItemInactive"
         parent="TextAppearance.Material3.LabelMedium">
@@ -175,8 +175,8 @@
         <item name="colorSurface">@color/md_theme_dark_surfaceVariant</item>
         <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>
         <item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant</item>
-        <item name="colorOnSecondaryContainer">@color/md_theme_dark_onSecondaryContainer</item>
-        <item name="colorSecondaryContainer">@color/md_theme_dark_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_dark_onPrimaryContainer</item>
+        <item name="colorSecondaryContainer">@color/md_theme_dark_primaryContainer</item>
     </style>
 
     <style name="NumberPicker">
@@ -210,6 +210,8 @@
         <item name="cornerSize">50%</item>
     </style>
 
+
+    <!-- Button style -->
     <style name="Widget.App.Button" parent="Widget.Material3.Button">
         <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
         <item name="iconTint">?attr/colorOnPrimaryContainer</item>
@@ -248,10 +250,18 @@
 
     </style>
     
-    <style name="Widget.App.ExtendedFloatingActionButton.Primary" parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
+    <style name="Widget.App.ExtendedFloatingActionButton.Primary"
+        parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
+        <item name="android:fontFamily">@font/clash_grotesk_medium</item>
     </style>
 
-    <style name="Widget.App.ExtendedFloatingActionButton.Secondary" parent="Widget.Material3.ExtendedFloatingActionButton.Secondary">
+    <style name="Widget.App.ExtendedFloatingActionButton.Secondary"
+        parent="Widget.Material3.ExtendedFloatingActionButton.Secondary">
+        <item name="android:fontFamily">@font/clash_grotesk_medium</item>
+    </style>
+
+    <style name="Widget.App.TextButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:fontFamily">@font/clash_grotesk_medium</item>
     </style>
 
     <style name="Widget.App.Chip.Suggestion" parent="Widget.Material3.Chip.Suggestion">
@@ -278,6 +288,13 @@
         <item name="fontFamily">@font/clash_grotesk_regular</item>
         <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
         <item name="backgroundTint">?attr/colorSecondary</item>
+    </style>
+
+    <style name="Widget.App.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
+    </style>
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorSurfaceContainerHighest">?attr/colorPrimary</item>
     </style>
 
     <style name="Widget.App.TextViewHeadline" parent="Widget.AppCompat.TextView">

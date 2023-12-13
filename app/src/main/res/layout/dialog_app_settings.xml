@@ -131,12 +131,11 @@
                     android:id="@+id/switchShowAxes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="?materialSwitchStyle"
+                    style="?attr/materialSwitchStyle"
                     app:layout_constraintStart_toEndOf="@id/labelShowAxes"
                     app:layout_constraintBottom_toBottomOf="@id/labelShowAxes"
                     app:layout_constraintTop_toTopOf="@id/labelShowAxes"
-                    android:layout_marginStart="24dp"
-                    />
+                    android:layout_marginStart="24dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

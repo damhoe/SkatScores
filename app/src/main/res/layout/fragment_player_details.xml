@@ -33,13 +33,13 @@
                 android:id="@+id/avatar"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:background="?colorSurfaceVariant"
+                android:background="?colorSecondaryContainer"
                 app:srcCompat="@drawable/ic_avatar_48dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/guideline"
                 android:layout_marginBottom="36dp"
-                app:tint="?colorSecondaryContainer"
+                app:tint="?colorSurface"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -63,7 +63,7 @@
                 android:id="@+id/edit_name"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                style="@style/Widget.Material3.Button.IconButton.Filled"
+                style="@style/Widget.Material3.Button.IconButton.Outlined"
                 app:icon="@drawable/ic_edit_24dp"
                 app:layout_constraintStart_toStartOf="@id/name"
                 app:layout_constraintTop_toBottomOf="@id/name"

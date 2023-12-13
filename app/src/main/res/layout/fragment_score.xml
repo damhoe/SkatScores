@@ -395,6 +395,7 @@
                 </com.google.android.material.chip.ChipGroup>
 
                 <com.google.android.material.slider.Slider
+                    style="@style/Widget.App.Slider"
                     android:id="@+id/spitzen_slider"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
