@@ -11,7 +11,7 @@ import com.damhoe.skatscores.player.domain.Player;
 
 import java.util.List;
 
-class PlayerViewModel extends ViewModel {
+public class PlayerViewModel extends ViewModel {
 
     private final UpdatePlayerUseCase updatePlayerUseCase;
     private final GetPlayerUseCase getPlayerUseCase;

@@ -83,6 +83,26 @@
                     app:layout_constraintStart_toEndOf="@id/spitzen_title"
                     app:layout_constraintTop_toTopOf="@id/spitzen_title" />
 
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/spitzen_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/spitzen_title"
+                    app:layout_constraintBottom_toBottomOf="@id/spitzen_title"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/spitzen_switch_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:background="@android:color/transparent"
+                    android:padding="8dp"
+                    tools:text="Spitzen"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@id/spitzen_switch"
+                    app:layout_constraintTop_toTopOf="@id/spitzen_title" />
+
                 <TextView
                     android:id="@+id/type_title"
                     android:layout_width="wrap_content"
@@ -403,7 +423,7 @@
                     android:stepSize="1"
                     android:value="2"
                     android:valueFrom="1"
-                    android:valueTo="11"
+                    android:valueTo="4"
                     app:labelBehavior="floating"
                     app:layout_constraintEnd_toStartOf="@id/spitzenAddButton"
                     app:layout_constraintStart_toEndOf="@id/spitzenRemoveButton"

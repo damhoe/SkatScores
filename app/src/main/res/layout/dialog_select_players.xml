@@ -11,6 +11,7 @@
     android:paddingTop="32dp">
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:id="@+id/player1_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,6 +36,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:id="@+id/player2_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,6 +62,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:id="@+id/player3_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

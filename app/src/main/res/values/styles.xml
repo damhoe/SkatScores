@@ -88,6 +88,9 @@
     <style name="Widget.App.AppBarLayout.Colored" parent="Widget.Material3.AppBarLayout">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored</item>
     </style>
+    <style name="Widget.App.AppBarLayout.Colored.Dark" parent="Widget.Material3.AppBarLayout">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored.Dark</item>
+    </style>
     <style name="Widget.App.Toolbar.Colored" parent="Widget.Material3.Toolbar">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored</item>
         <item name="titleTextAppearance">@style/TextAppearance.App.ToolbarTitle</item>
@@ -100,17 +103,14 @@
     <style name="TextAppearance.App.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
         <item name="fontFamily">@font/clash_grotesk_regular</item>
     </style>
-
-    <style name="Widget.App.AppBarLayout.Colored.Dark" parent="Widget.Material3.AppBarLayout">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored.Dark</item>
-    </style>
     <style name="Widget.App.Toolbar.Colored.Dark" parent="Widget.App.Toolbar.Colored">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored.Dark</item>
-        <item name="titleTextColor">?colorOnPrimaryContainer</item>
+        <item name="titleTextAppearance">@style/TextAppearance.App.ToolbarTitle</item>
+        <item name="titleTextColor">?colorOnSurfaceVariant</item>
     </style>
     <style name="ThemeOverlay.App.Toolbar.Colored.Dark" parent="">
-        <item name="colorSurface">?attr/colorPrimaryContainer</item>
-        <item name="colorControlNormal">?attr/colorOnPrimaryContainer</item>
+        <item name="colorSurface">?attr/colorSurfaceVariant</item>
+        <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
     </style>
 
     <!-- Variant toolbar -->
@@ -192,8 +192,8 @@
     </style>
 
     <style name="Widget.App.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
-        <item name="trackColor">?attr/colorTertiaryContainer</item>
-        <item name="indicatorColor">?attr/colorTertiary</item>
+        <item name="trackColor">?attr/colorSurfaceVariant</item>
+        <item name="indicatorColor">?attr/colorPrimaryContainer</item>
     </style>
 
     <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">

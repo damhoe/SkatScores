@@ -24,7 +24,7 @@
         </activity>
 
         <activity
-            android:name=".game.GameActivity"
+            android:name=".game.game_home.GameActivity"
             android:exported="false"
             android:theme="@style/Theme.SkatScores"
             android:parentActivityName=".MainActivity"

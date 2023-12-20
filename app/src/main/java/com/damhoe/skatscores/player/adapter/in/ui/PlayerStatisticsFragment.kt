@@ -1,70 +1,93 @@
-package com.damhoe.skatscores.player.adapter.in.ui;
+package com.damhoe.skatscores.player.adapter.`in`.ui
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.ui.NavigationUI.setupWithNavController
+import com.damhoe.skatscores.MainActivity
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.databinding.FragmentPlayerStatisticsBinding
+import com.damhoe.skatscores.player.domain.PlayerStatistics
+import com.damhoe.skatscores.shared_ui.utils.InsetsManager
+import javax.inject.Inject
+import kotlin.math.roundToInt
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
+class PlayerStatisticsFragment : Fragment() {
 
-import com.damhoe.skatscores.R;
-import com.damhoe.skatscores.databinding.FragmentPlayerStatisticsBinding;
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager;
+    @Inject
+    lateinit var statisticsVMFactory: PlayerStatisticsViewModelFactory
+    private val statsViewModel: PlayerStatisticsViewModel by viewModels { statisticsVMFactory }
 
-public class PlayerStatisticsFragment extends Fragment {
+    @Inject
+    lateinit var playerVMFactory: PlayerViewModelFactory
+    private val playerViewModel: PlayerViewModel by viewModels({ requireActivity() }) { playerVMFactory }
 
-    private PlayerStatisticsViewModel viewModel;
-    private FragmentPlayerStatisticsBinding binding;
+    private lateinit var binding: FragmentPlayerStatisticsBinding
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(PlayerStatisticsViewModel.class);
-
-        binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_player_statistics, container, false);
-        View root = binding.getRoot();
-        return binding.getRoot();
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity() as MainActivity).appComponent.inject(this)
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_player_statistics, container, false
+        )
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Add insets
-        InsetsManager.applyStatusBarInsets(binding.appbarLayout);
-        InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
+        InsetsManager.applyStatusBarInsets(binding.appbarLayout)
+        InsetsManager.applyNavigationBarInsets(binding.nestedScrollView)
+        setupWithNavController(binding.toolbar, findNavController())
 
-        NavigationUI.setupWithNavController(binding.toolbar, findNavController());
+        playerViewModel.selectedPlayer.observe(viewLifecycleOwner) {
+            val stats = statsViewModel.loadPlayerStatistics(playerId = it.id)
+            updateUI(it.name, stats)
+        }
 
-        viewModel.getOverallProgress().observe(getViewLifecycleOwner(), progressInfo -> {
-            binding.totalLabel.setText(String.valueOf(progressInfo.getGamesCount()));
-            binding.totalProgressIndicator.setProgress((int) progressInfo.toPercent());
-        });
-        viewModel.getThisYearProgress().observe(getViewLifecycleOwner(), progressInfo -> {
-            binding.yearLabel.setText(String.valueOf(progressInfo.getGamesCount()));
-            binding.yearProgressIndicator.setProgress((int) progressInfo.toPercent());
-        });
-        viewModel.getThisMonthProgress().observe(getViewLifecycleOwner(), progressInfo -> {
-            binding.monthLabel.setText(String.valueOf(progressInfo.getGamesCount()));
-            binding.monthProgressIndicator.setProgress((int) progressInfo.toPercent());
-        });
+        // Init
+        playerViewModel.selectedPlayer.value?.let {
+            val stats = statsViewModel.loadPlayerStatistics(playerId = it.id)
+            updateUI(it.name, stats)
+        }
     }
 
-    private NavController findNavController() {
-        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+    @SuppressLint("SetTextI18n")
+    private fun updateUI(name: String, playerStatistics: PlayerStatistics) {
+        binding.apply {
+            this.name.text = name
+
+            textListCount.text = playerStatistics.listCount.toString()
+            textHandsCount.text = playerStatistics.gamesCount.toString()
+
+            soloIndicator.progress = playerStatistics.soloPercentage.toInt()
+            winsIndicator.progress = playerStatistics.soloWinPercentage.toInt()
+            againstIndicator.progress = playerStatistics.againstWinPercentage.toInt()
+
+            soloText.text = "${playerStatistics.soloPercentage.roundToInt()}%"
+            winsText.text = "${playerStatistics.soloWinPercentage.roundToInt()}%"
+            againstText.text = "${playerStatistics.againstWinPercentage.roundToInt()}%"
+        }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    private fun findNavController(): NavController {
+        return findNavController(requireActivity(), R.id.nav_host_fragment)
     }
 }

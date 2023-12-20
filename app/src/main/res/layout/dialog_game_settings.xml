@@ -11,7 +11,7 @@
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context=".game_setup.adapter.in.ui.GameSetupFragment">
+        tools:context=".game.game_setup.adapter.in.ui.GameSetupFragment">
 
         <TextView
             android:id="@+id/list_name_title_view"

@@ -50,7 +50,7 @@
 
     <activity
         android:id="@+id/game_activity"
-        android:name="com.damhoe.skatscores.game.GameActivity"
+        android:name="com.damhoe.skatscores.game.game_home.GameActivity"
         tools:layout="@layout/activity_game" >
         <argument
             android:name="gameId"

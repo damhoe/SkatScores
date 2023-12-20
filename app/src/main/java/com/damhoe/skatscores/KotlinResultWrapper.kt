@@ -1,13 +1,13 @@
 package com.damhoe.skatscores
 
-import com.damhoe.skatscores.score.application.ports.`in`.CreateScoreUseCase
-import com.damhoe.skatscores.score.application.ports.`in`.GetScoreUseCase
-import com.damhoe.skatscores.score.domain.SkatScore
+import com.damhoe.skatscores.game.score.application.ports.`in`.CreateScoreUseCase
+import com.damhoe.skatscores.game.score.application.ports.`in`.GetScoreUseCase
+import com.damhoe.skatscores.game.score.domain.SkatScore
 
 class KotlinResultWrapper {
 
     companion object {
-        fun getScores( getScoreUseCase: GetScoreUseCase, id: Long): List<SkatScore> =
+        fun getScores(getScoreUseCase: GetScoreUseCase, id: Long): List<SkatScore> =
             getScoreUseCase.getScores(id).getOrThrow()
 
         fun deleteScoresForGame(createScoreUseCase: CreateScoreUseCase, id: Long): Int =

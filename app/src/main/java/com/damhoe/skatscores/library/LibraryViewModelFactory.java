@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.viewmodel.CreationExtras;
 
-import com.damhoe.skatscores.game.application.ports.in.CreateGameUseCase;
-import com.damhoe.skatscores.game.application.ports.in.LoadGameUseCase;
+import com.damhoe.skatscores.game.game_home.application.ports.in.CreateGameUseCase;
+import com.damhoe.skatscores.game.game_home.application.ports.in.LoadGameUseCase;
 
 import javax.inject.Inject;
 

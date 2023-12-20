@@ -30,233 +30,225 @@
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:contentDescription="@string/description_scroll_view_main_content"
             android:overScrollMode="never"
             android:paddingBottom="100dp"
-            android:clipToPadding="false"
             android:translationZ="-1dp"
-            android:contentDescription="@string/description_scroll_view_main_content"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingStart="36dp"
+                android:paddingEnd="36dp"
                 tools:context=".player.adapter.in.ui.PlayerStatisticsFragment">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:background="?colorPrimary"
-                    app:srcCompat="@drawable/ic_avatar_48dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="16dp"
-                    app:tint="?colorSurfaceVariant"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView"
-                    />
 
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/avatar"
-                    app:layout_constraintStart_toStartOf="@id/avatar"
-                    app:layout_constraintEnd_toEndOf="@id/avatar"
                     android:layout_marginTop="8dp"
-                    tools:text="Daniel D."
-                    />
+                    android:textAppearance="?textAppearanceTitleLarge"
+                    app:layout_constraintEnd_toEndOf="@id/avatar"
+                    app:layout_constraintStart_toStartOf="@id/avatar"
+                    app:layout_constraintTop_toBottomOf="@id/avatar"
+                    tools:text="Daniel D." />
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    app:layout_constraintTop_toBottomOf="@id/name"
-                    app:layout_constraintStart_toStartOf="@id/avatar"
-                    app:layout_constraintEnd_toEndOf="@id/avatar"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/title_player_statistics"
-                    />
-
-                <TextView
-                    android:id="@+id/label_legend_unfinished"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
-                    android:alpha="0.6"
-                    android:text="unfinished"
-
-                    app:layout_constraintEnd_toStartOf="@id/label_legend_finished"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/card_total" />
+                    android:text="@string/title_player_statistics"
+                    android:textAppearance="?textAppearanceDisplaySmall"
+                    android:fontFamily="@font/clash_grotesk_light"
+                    app:layout_constraintEnd_toEndOf="@id/avatar"
+                    app:layout_constraintStart_toStartOf="@id/avatar"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/label_legend_finished"
+                    android:id="@+id/titleOverall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    android:alpha="0.6"
-                    android:text="finished"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/label_legend_unfinished"
-                    app:layout_constraintTop_toTopOf="@id/label_legend_unfinished" />
-
-                <View
-                    android:id="@+id/view2"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_marginEnd="8dp"
-                    android:alpha="0.9"
-                    android:background="?attr/colorSecondary"
-                    app:layout_constraintBottom_toBottomOf="@id/label_legend_unfinished"
-                    app:layout_constraintEnd_toStartOf="@id/label_legend_finished"
-                    app:layout_constraintTop_toTopOf="@id/label_legend_unfinished" />
-
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_marginEnd="8dp"
-                    android:alpha="0.9"
-                    android:background="?attr/colorSecondary"
-                    app:layout_constraintBottom_toBottomOf="@id/label_legend_unfinished"
-                    app:layout_constraintEnd_toStartOf="@id/label_legend_unfinished"
-                    app:layout_constraintTop_toTopOf="@id/label_legend_unfinished" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_year"
-                    android:layout_width="0dp"
-                    android:layout_height="142dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:cardBackgroundColor="?attr/colorSurfaceVariant"
-                    app:cardElevation="4dp"
-                    app:layout_constraintEnd_toStartOf="@id/card_month"
-                    app:layout_constraintHorizontal_weight="2"
-                    app:layout_constraintStart_toEndOf="@id/card_total"
-                    app:layout_constraintTop_toTopOf="@id/card_total"
-                    app:strokeWidth="0dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/title_this_year_progress" />
-
-                    <TextView
-                        android:id="@+id/year_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_marginBottom="40dp"
-                        android:textStyle="bold"
-                        tools:text="6" />
-
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:id="@+id/year_progress_indicator"
-                        style="@style/Widget.App.CircularProgressIndicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_marginBottom="16dp"
-                        android:progress="50"
-                        app:indicatorSize="56dp"
-                        app:trackCornerRadius="6dp"
-                        app:trackThickness="6dp" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_month"
-                    android:layout_width="0dp"
-                    android:layout_height="142dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="24dp"
-                    app:cardBackgroundColor="?attr/colorSurfaceVariant"
-                    app:cardElevation="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_weight="2"
-                    app:layout_constraintStart_toEndOf="@id/card_year"
-                    app:layout_constraintTop_toTopOf="@id/card_total"
-                    app:strokeWidth="0dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/title_this_month_progress" />
-
-                    <TextView
-                        android:id="@+id/month_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_marginBottom="40dp"
-                        android:textStyle="bold"
-                        tools:text="12" />
-
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:id="@+id/month_progress_indicator"
-                        style="@style/Widget.App.CircularProgressIndicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_marginBottom="16dp"
-                        android:progress="70"
-                        app:indicatorSize="56dp"
-                        app:trackCornerRadius="6dp"
-                        app:trackThickness="6dp" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_total"
-                    android:layout_width="0dp"
-                    android:layout_height="142dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="252dp"
-                    android:layout_marginEnd="8dp"
-                    app:cardBackgroundColor="?attr/colorSurfaceVariant"
-                    app:cardElevation="4dp"
-                    app:layout_constraintEnd_toStartOf="@id/card_year"
-                    app:layout_constraintHorizontal_weight="2"
+                    android:textAppearance="?textAppearanceTitleMedium"
+                    android:text="Allgemein"
+                    android:layout_marginTop="24dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:strokeWidth="0dp">
+                    app:layout_constraintTop_toBottomOf="@+id/name" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/title_overall_progress" />
+                <TextView
+                    android:id="@+id/labelListCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Anzahl Listen"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/labelHandsCount"
+                    app:layout_constraintTop_toBottomOf="@+id/titleOverall"
+                    tools:layout_editor_absoluteX="92dp" />
 
-                    <TextView
-                        android:id="@+id/total_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_marginBottom="40dp"
-                        android:textStyle="bold"
-                        tools:text="12" />
+                <TextView
+                    android:id="@+id/textListCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="12"
+                    app:layout_constraintTop_toBottomOf="@+id/labelListCount"
+                    app:layout_constraintStart_toStartOf="@+id/labelListCount"
+                    app:layout_constraintEnd_toEndOf="@id/labelListCount" />
 
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:id="@+id/total_progress_indicator"
-                        style="@style/Widget.App.CircularProgressIndicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_marginBottom="16dp"
-                        android:progress="70"
-                        app:indicatorSize="56dp"
-                        app:trackCornerRadius="6dp"
-                        app:trackThickness="6dp" />
+                <TextView
+                    android:id="@+id/labelHandsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Anzahl Spiele"
+                    app:layout_constraintStart_toEndOf="@id/labelListCount"
+                    app:layout_constraintBottom_toBottomOf="@+id/labelListCount"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/textHandsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="123"
+                    app:layout_constraintTop_toBottomOf="@+id/labelHandsCount"
+                    app:layout_constraintStart_toStartOf="@+id/labelHandsCount"
+                    app:layout_constraintEnd_toEndOf="@id/labelHandsCount" />
+
+                <TextView
+                    android:id="@+id/titleQuality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?textAppearanceTitleMedium"
+                    android:text="Qualität"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textListCount"
+                    android:layout_marginTop="24dp"/>
+
+                <TextView
+                    android:id="@+id/labelSolo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Alleinspieler"
+                    android:maxWidth="100dp"
+                    android:textAlignment="center"
+                    app:layout_constraintStart_toStartOf="@id/soloIndicator"
+                    app:layout_constraintEnd_toEndOf="@id/soloIndicator"
+                    app:layout_constraintTop_toBottomOf="@+id/titleQuality" />
+
+                <TextView
+                    android:id="@+id/soloText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23%"
+                    app:layout_constraintTop_toBottomOf="@id/soloIndicator"
+                    app:layout_constraintStart_toStartOf="@id/soloIndicator"
+                    app:layout_constraintEnd_toEndOf="@id/soloIndicator"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/winsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23%"
+                    app:layout_constraintTop_toBottomOf="@id/winsIndicator"
+                    app:layout_constraintStart_toStartOf="@id/winsIndicator"
+                    app:layout_constraintEnd_toEndOf="@id/winsIndicator"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/againstText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23%"
+                    app:layout_constraintTop_toBottomOf="@id/againstIndicator"
+                    app:layout_constraintStart_toStartOf="@id/againstIndicator"
+                    app:layout_constraintEnd_toEndOf="@id/againstIndicator"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/againstLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gegenspiele gewonnen"
+                    android:layout_marginBottom="8dp"
+                    android:maxWidth="100dp"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toTopOf="@id/againstIndicator"
+                    app:layout_constraintStart_toStartOf="@id/againstIndicator"
+                    app:layout_constraintEnd_toEndOf="@id/againstIndicator"
+                    tools:layout_editor_absoluteX="305dp" />
+
+                <TextView
+                    android:id="@+id/winsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Gewonnen"
+                    android:maxWidth="100dp"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toTopOf="@id/winsIndicator"
+                    app:layout_constraintStart_toStartOf="@id/winsIndicator"
+                    app:layout_constraintEnd_toEndOf="@id/winsIndicator" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?colorSurfaceVariant"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView"
+                    app:srcCompat="@drawable/ic_avatar_48dp"
+                    app:tint="?colorSurface" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/soloIndicator"
+                    style="@style/Widget.App.CircularProgressIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:progress="23"
+                    app:indicatorSize="60dp"
+                    app:layout_constraintEnd_toStartOf="@id/winsIndicator"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/labelSolo"
+                    app:trackCornerRadius="0dp"
+                    app:trackThickness="30dp" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/winsIndicator"
+                    style="@style/Widget.App.CircularProgressIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:progress="23"
+                    app:indicatorSize="60dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/soloIndicator"
+                    app:layout_constraintStart_toEndOf="@id/soloIndicator"
+                    app:layout_constraintEnd_toStartOf="@id/againstIndicator"
+                    app:trackCornerRadius="0dp"
+                    app:trackThickness="30dp" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/againstIndicator"
+                    style="@style/Widget.App.CircularProgressIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:progress="23"
+                    app:indicatorSize="60dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/winsIndicator"
+                    app:layout_constraintBottom_toBottomOf="@id/soloIndicator"
+                    app:trackCornerRadius="0dp"
+                    app:trackThickness="30dp" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>

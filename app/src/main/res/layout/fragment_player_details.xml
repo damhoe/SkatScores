@@ -33,7 +33,7 @@
                 android:id="@+id/avatar"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:background="?colorSecondaryContainer"
+                android:background="?colorSurfaceVariant"
                 app:srcCompat="@drawable/ic_avatar_48dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

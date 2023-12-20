@@ -20,18 +20,16 @@ import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.damhoe.skatscores.MainActivity
 import com.damhoe.skatscores.R
-import com.damhoe.skatscores.app.settings.AppSettingsDialogFragment
-import com.damhoe.skatscores.app.settings.AppSettingsViewModel
-import com.damhoe.skatscores.app.settings.SettingsManager
 import com.damhoe.skatscores.databinding.FragmentLibraryBinding
-import com.damhoe.skatscores.game.adapter.`in`.ui.shared.GamePreviewAdapter
-import com.damhoe.skatscores.game.adapter.`in`.ui.shared.GamePreviewItemClickListener
-import com.damhoe.skatscores.game.domain.SkatGamePreview
+import com.damhoe.skatscores.game.game_home.adapter.`in`.ui.shared.GamePreviewAdapter
+import com.damhoe.skatscores.game.game_home.adapter.`in`.ui.shared.GamePreviewItemClickListener
+import com.damhoe.skatscores.game.game_home.domain.SkatGamePreview
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager
 import com.damhoe.skatscores.shared_ui.utils.LayoutMargins
 import javax.inject.Inject
 
-class LibraryFragment: Fragment(), GamePreviewItemClickListener {
+class LibraryFragment: Fragment(),
+    GamePreviewItemClickListener {
 
     @Inject
     lateinit var factory: LibraryViewModelFactory
@@ -57,7 +55,10 @@ class LibraryFragment: Fragment(), GamePreviewItemClickListener {
         setupNewGameButton()
 
         // Setup recycler view
-        gamePreviewAdapter = GamePreviewAdapter(this)
+        gamePreviewAdapter =
+            GamePreviewAdapter(
+                this
+            )
         binding.gamesRv.adapter = gamePreviewAdapter
         binding.gamesRv.layoutManager = LinearLayoutManager(requireContext())
         binding.gamesRv.addItemDecoration(GamePreviewAdapter.ItemDecoration(16))
