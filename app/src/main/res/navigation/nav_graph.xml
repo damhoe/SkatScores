@@ -3,74 +3,78 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@+id/library">
+    app:startDestination="@id/navigation_library">
 
-    <fragment
-        android:id="@+id/library"
-        android:name="com.damhoe.skatscores.library.LibraryFragment"
-        tools:layout="@layout/fragment_library">
-        <action
-            android:id="@+id/action_library_to_game_activity"
-            app:destination="@id/game_activity"
-            app:enterAnim="@anim/enter_from_bottom" />
-        <action
-            android:id="@+id/action_library_to_appSettingsDialogFragment"
-            app:destination="@id/appSettingsDialog" />
-    </fragment>
+    <navigation android:id="@+id/navigation_library"
+        app:startDestination="@id/library">
+        <dialog
+            android:id="@+id/appSettingsDialog"
+            android:name="com.damhoe.skatscores.app.settings.AppSettingsDialogFragment"
+            android:label="AppSettingsDialogFragment"
+            tools:layout="@layout/dialog_app_settings">
+            <action
+                android:id="@+id/action_appSettingsDialog_to_about"
+                app:destination="@id/about"
+                app:popEnterAnim="@android:anim/slide_in_left"
+                app:popExitAnim="@android:anim/slide_out_right" />
+        </dialog>
+        <fragment
+            android:id="@+id/library"
+            android:name="com.damhoe.skatscores.library.LibraryFragment"
+            tools:layout="@layout/fragment_library">
+            <action
+                android:id="@+id/action_library_to_game_activity"
+                app:destination="@id/game_activity"
+                app:enterAnim="@anim/enter_from_bottom" />
+            <action
+                android:id="@+id/action_library_to_appSettingsDialogFragment"
+                app:destination="@id/appSettingsDialog" />
+        </fragment>
+        <activity
+            android:id="@+id/game_activity"
+            android:name="com.damhoe.skatscores.game.game_home.GameActivity"
+            tools:layout="@layout/activity_game">
+            <argument
+                android:name="gameId"
+                android:defaultValue="-1L"
+                app:argType="long" />
+        </activity>
+        <fragment
+            android:id="@+id/about"
+            android:name="com.damhoe.skatscores.app.about.AboutFragment"
+            tools:layout="@layout/fragment_about" />
+    </navigation>
 
-    <fragment
-        android:id="@+id/player_details"
-        android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerDetailsFragment"
-        tools:layout="@layout/fragment_player_details">
-        <action
-            android:id="@+id/action_player_details_to_player_statistics"
-            app:destination="@id/player_statistics"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
-    </fragment>
-    <fragment
-        android:id="@+id/about"
-        android:name="com.damhoe.skatscores.app.about.AboutFragment"
-        tools:layout="@layout/fragment_about"
-        />
-    <fragment
-        android:id="@+id/players"
-        android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayersFragment"
-        tools:layout="@layout/fragment_players">
-        <action
-            android:id="@+id/action_players_to_player_details"
-            app:destination="@id/player_details"
-            app:enterAnim="@anim/zoom_fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
-    </fragment>
-
-    <activity
-        android:id="@+id/game_activity"
-        android:name="com.damhoe.skatscores.game.game_home.GameActivity"
-        tools:layout="@layout/activity_game" >
-        <argument
-            android:name="gameId"
-            app:argType="long"
-            android:defaultValue="-1L" />
-    </activity>
-    <fragment
-        android:id="@+id/player_statistics"
-        android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerStatisticsFragment"
-        tools:layout="@layout/fragment_player_statistics"/>
-    <dialog
-        android:id="@+id/appSettingsDialog"
-        android:name="com.damhoe.skatscores.app.settings.AppSettingsDialogFragment"
-        android:label="AppSettingsDialogFragment"
-        tools:layout="@layout/dialog_app_settings">
-        <action
-            android:id="@+id/action_appSettingsDialog_to_about"
-            app:destination="@id/about"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"/>
-    </dialog>
+    <navigation android:id="@+id/navigation_player"
+        app:startDestination="@id/players">
+        <fragment
+            android:id="@+id/player_statistics"
+            android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerStatisticsFragment"
+            tools:layout="@layout/fragment_player_statistics" />
+        <fragment
+            android:id="@+id/players"
+            android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayersFragment"
+            tools:layout="@layout/fragment_players">
+            <action
+                android:id="@+id/action_players_to_player_details"
+                app:destination="@id/player_details"
+                app:enterAnim="@anim/zoom_fade_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/fade_out" />
+        </fragment>
+        <fragment
+            android:id="@+id/player_details"
+            android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerDetailsFragment"
+            tools:layout="@layout/fragment_player_details">
+            <action
+                android:id="@+id/action_player_details_to_player_statistics"
+                app:destination="@id/player_statistics"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/fade_out" />
+        </fragment>
+    </navigation>
 
 </navigation>

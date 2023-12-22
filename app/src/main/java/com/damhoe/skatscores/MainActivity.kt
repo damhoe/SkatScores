@@ -52,26 +52,6 @@ class MainActivity : AppCompatActivity() {
         setupWithNavController(binding.bottomNavView, navController)
     }
 
-    private fun loadSharedPreferences() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
-        // UI mode
-        val theme = sharedPreferences.getString(
-            getString(R.string.theme_preference_key),
-            getString(R.string.day_theme_preference_value)
-        )
-        AppCompatDelegate.setDefaultNightMode(ThemeProvider(this).getNightMode(theme!!))
-
-        // System Locale
-        val language = sharedPreferences.getString(
-            getString(R.string.language_preference_key),
-            getString(R.string.german_preference_value)
-        )
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("de"))
-        Log.d("Loaded Preference", "UI mode: $theme")
-        Log.d("Loaded Preference", "Language: $language")
-    }
-
     val appBarConfiguration: AppBarConfiguration
         get() = AppBarConfiguration.Builder(findNavController().graph).build()
 
