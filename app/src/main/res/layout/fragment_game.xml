@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="80dp"
-            android:background="?attr/colorSurface">
+            >
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/return_button"
@@ -112,9 +112,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            style="@style/Widget.App.BottomAppBar"
             app:elevation="0dp"
-            tools:menu="@menu/game_menu"
-            />
+            tools:menu="@menu/game_menu"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_score_button"
@@ -122,7 +122,7 @@
             android:layout_height="wrap_content"
             app:layout_anchor="@id/bottom_app_bar"
             android:src="@drawable/ic_add_24dp"
-            style="@style/Widget.Material3.FloatingActionButton.Primary"
+            style="@style/Widget.Material3.FloatingActionButton.Tertiary"
             android:contentDescription="@string/description_new_score" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

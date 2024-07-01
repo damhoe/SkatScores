@@ -146,4 +146,6 @@
     <string name="label_lost_points">x40</string>
     <string name="label_solo_points">x50</string>
     <string name="label_total_points">Points</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

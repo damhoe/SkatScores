@@ -25,6 +25,8 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     @ColorInt
     private val defaultGridColor = MaterialColors.getColor(this, R.attr.colorSurfaceVariant)
     @ColorInt
+    private val defaultTickLabelColor = MaterialColors.getColor(this, R.attr.colorOnSurfaceVariant)
+    @ColorInt
     private val primaryColor = MaterialColors.getColor(this, R.attr.colorPrimary);
 
     @ColorInt
@@ -48,7 +50,8 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
             style.apply {
                 gridColor = this@GraphView.gridColor
-                tickLabelSize = 11f
+                tickLabelSize = 16f
+                tickLabelColor = this@GraphView.defaultTickLabelColor
             }
 
             gridDistanceX = 2f
@@ -90,13 +93,11 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         }
 
     var scorePlot: Plot by Delegates.observable(scorePlotDefault) { _, _, new ->
-
         new.style.apply {
-            lineWidth = 3f
+            lineWidth = 4f
             markerSize = 6f
             gridColor = this@GraphView.gridColor
-            tickLabelSize = 13f
-            tickLabelColor = MaterialColors.getColor(this@GraphView, R.attr.colorOnSurface)
+            tickLabelSize = 16f
             legendColor = MaterialColors.getColor(this@GraphView, R.attr.colorOnSurface)
         }
 

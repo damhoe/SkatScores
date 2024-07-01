@@ -50,15 +50,9 @@ class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>
     public void onBindViewHolder(@NonNull PlayerAdapter.PlayerViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Player player = players.get(position);
         holder.name.setText(player.getName());
-        holder.createdAt.setText(DateConverter.toAppLocaleString(player.getCreatedAt()));
         holder.numberGames.setText(String.format(Locale.getDefault(), "%d Games", player.getGameCount()));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.notifyItemClick(player, position);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> listener.notifyItemClick(player, position));
     }
 
     @Override
@@ -69,13 +63,11 @@ class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>
     static final class PlayerViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView numberGames;
-        TextView createdAt;
 
         public PlayerViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
             numberGames = itemView.findViewById(R.id.number_games);
-            createdAt = itemView.findViewById(R.id.date);
         }
     }
 
@@ -100,26 +92,19 @@ class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldPlayers.get(oldItemPosition).getId()
-                    == newPlayers.get(newItemPosition).getId();
+            return oldPlayers.get(oldItemPosition).getId() == newPlayers.get(newItemPosition).getId();
         }
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldPlayers.get(oldItemPosition).getName()
-                    .equals(newPlayers.get(newItemPosition).getName());
+            return oldPlayers.get(oldItemPosition).getName().equals(newPlayers.get(newItemPosition).getName());
         }
     }
 
     static class ItemDecoration extends RecyclerView.ItemDecoration {
 
         @Override
-        public void getItemOffsets(
-                @NonNull Rect outRect,
-                @NonNull View view,
-                @NonNull RecyclerView parent,
-                @NonNull RecyclerView.State state
-        ) {
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
             outRect.top = 4;
             outRect.bottom = 4;
             //super.getItemOffsets(outRect, view, parent, state);

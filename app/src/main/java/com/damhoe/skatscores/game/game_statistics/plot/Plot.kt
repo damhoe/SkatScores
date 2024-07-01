@@ -11,11 +11,11 @@ import com.damhoe.skatscores.game.game_statistics.presentation.GraphicUtils.dpTo
 class Plot(val bounds: RectF) {
 
     val style: PlotStyle = PlotStyle().apply {
-        markerSize = dpToPx(4f).toFloat()
+        markerSize = dpToPx(3f).toFloat()
         lineWidth = dpToPx(2f).toFloat()
-        gridStrokeWidth = dpToPx(1f).toFloat()
+        gridStrokeWidth = dpToPx(2f).toFloat()
         gridColor = Color.GRAY.hashCode()
-        tickLabelSize = 11f
+        tickLabelSize = 16f
     }
 
     val paint: Paint = Paint()

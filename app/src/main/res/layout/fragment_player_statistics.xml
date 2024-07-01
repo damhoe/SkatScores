@@ -62,7 +62,6 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/title_player_statistics"
                     android:textAppearance="?textAppearanceDisplaySmall"
-                    android:fontFamily="@font/clash_grotesk_light"
                     app:layout_constraintEnd_toEndOf="@id/avatar"
                     app:layout_constraintStart_toStartOf="@id/avatar"
                     app:layout_constraintTop_toTopOf="parent" />

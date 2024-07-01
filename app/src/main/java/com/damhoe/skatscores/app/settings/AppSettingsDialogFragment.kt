@@ -3,7 +3,6 @@ package com.damhoe.skatscores.app.settings
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
@@ -68,7 +67,7 @@ class AppSettingsDialogFragment : DialogFragment() {
             )
 
             dialog = MaterialAlertDialogBuilder(it)
-                .setTitle("Settings")
+                .setTitle(R.string.title_settings)
                 .setView(binding.root)
                 .setPositiveButton("OK") { d, _  -> d.dismiss() }
                 .create()
@@ -78,7 +77,7 @@ class AppSettingsDialogFragment : DialogFragment() {
         // Add listeners
         binding.buttonAbout.setOnClickListener {
             val directions = AppSettingsDialogFragmentDirections
-                .actionAppSettingsDialogToAbout()
+                .actionAppSettingsToAbout()
             findNavController().navigate(directions)
         }
 

@@ -33,13 +33,13 @@
                 android:id="@+id/avatar"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:background="?colorSurfaceVariant"
+                android:background="?attr/colorSurfaceContainer"
                 app:srcCompat="@drawable/ic_avatar_48dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/guideline"
                 android:layout_marginBottom="36dp"
-                app:tint="?colorSurface"
+                app:tint="?attr/colorTertiary"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -102,7 +102,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_stats"
-                style="?attr/materialButtonOutlinedStyle"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -114,6 +114,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_delete"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="@id/number_games"

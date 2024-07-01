@@ -10,14 +10,15 @@ import com.damhoe.skatscores.player.application.ports.in.UpdatePlayerUseCase;
 
 import javax.inject.Inject;
 
-class SelectPlayerVMFactory implements ViewModelProvider.Factory {
+public class SelectPlayerVMFactory implements ViewModelProvider.Factory {
 
    private final GetPlayerUseCase getPlayerUseCase;
    private final UpdatePlayerUseCase updatePlayerUseCase;
 
    @Inject
-   SelectPlayerVMFactory(GetPlayerUseCase getPlayerUseCase,
-                         UpdatePlayerUseCase updatePlayerUseCase) {
+   SelectPlayerVMFactory(
+           GetPlayerUseCase getPlayerUseCase,
+           UpdatePlayerUseCase updatePlayerUseCase) {
       this.getPlayerUseCase = getPlayerUseCase;
       this.updatePlayerUseCase = updatePlayerUseCase;
    }

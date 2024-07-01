@@ -35,7 +35,7 @@ class PlotPainter {
 
     private val legendMarkerPaint = Paint()
 
-    private val dpTickLabelDistance: Float = 5f
+    private val dpTickLabelDistance: Float = 15f
 
     fun initialize(canvas: Canvas, transform: Transform, style: PlotStyle) {
         mCanvas = canvas
@@ -48,8 +48,8 @@ class PlotPainter {
 
     fun drawGrid(
         gridDistanceX: Float = 1f,
-        gridDistanceY: Float = 1f
-    ) {
+        gridDistanceY: Float = 1f)
+    {
         val left = mTransform.viewportOffsetX
         val bottom = mTransform.viewportOffsetY
         val right = left + mTransform.viewportWidth
@@ -70,11 +70,13 @@ class PlotPainter {
 
         val path = Path()
         // Draw borders
-        path.moveTo(pxLeft, pxBottom)
-        path.lineTo(pxLeft, pxTop)
-        path.lineTo(pxRight, pxTop)
-        path.lineTo(pxRight, pxBottom)
-        path.close()
+        //path.moveTo(pxLeft, pxBottom)
+        //path.lineTo(pxLeft, pxTop)
+        //path.lineTo(pxRight, pxTop)
+        //path.lineTo(pxRight, pxBottom)
+        //path.moveTo(pxLeft, pxBottom)
+        //path.lineTo(pxRight, pxBottom)
+        //path.close()
         // Draw horizontal lines
         var y = nextHigherNumberWithDivisor(bottom, gridDistanceY)
 
@@ -101,8 +103,8 @@ class PlotPainter {
         var x = nextHigherNumberWithDivisor(left, gridDistanceX)
         while (x < right) {
             val pxX = mTransform.toPixelX(x)
-            path.moveTo(pxX, pxBottom)
-            path.lineTo(pxX, pxTop)
+            //path.moveTo(pxX, pxBottom)
+            //path.lineTo(pxX, pxTop)
 
             // Tick label
             val tickLabel = String.format("%.0f", x)
@@ -161,7 +163,7 @@ class PlotPainter {
     private fun drawMarkers(data: PlotData, paint: Paint) {
         paint.apply {
             color = data.color
-            style = Paint.Style.FILL
+            style = Paint.Style.STROKE
         }
 
         for (point: PointF in data.points.filter { mTransform.isVisible(it) }) {

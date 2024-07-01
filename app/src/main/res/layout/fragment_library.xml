@@ -7,35 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="true"
-        android:descendantFocusability="blocksDescendants"
-        >
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior=".shared_ui.behaviors.CollapseAppBarBehavior"
-            style="?attr/appBarLayoutStyle">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/toolbarLayout"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/collapsingToolbarLayoutMediumSize"
-                app:layout_behavior=".shared_ui.behaviors.CollapseAppBarBehavior"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:title="@string/title_library">
-
-                </com.google.android.material.appbar.MaterialToolbar>
-
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
+        android:descendantFocusability="blocksDescendants">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
@@ -98,15 +70,17 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            style="@style/Widget.App.ExtendedFloatingActionButton.Primary"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.Material3.FloatingActionButton.Large.Tertiary"
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="@dimen/fab_margin_right"
-            android:layout_marginBottom="@dimen/fab_above_bottom_nav_margin_bottom"
-            app:icon="@drawable/ic_add_24dp"
+            android:layout_marginBottom="@dimen/fab_margin_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_add_24dp"
             android:text="@string/title_new_game"
             android:contentDescription="Primary top level add action" />
 

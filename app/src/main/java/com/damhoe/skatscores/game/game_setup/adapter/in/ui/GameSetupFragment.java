@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -23,7 +22,6 @@ import com.damhoe.skatscores.R;
 import com.damhoe.skatscores.databinding.FragmentGameSetupBinding;
 import com.damhoe.skatscores.game.game_home.Constants;
 import com.damhoe.skatscores.game.game_setup.domain.SkatGameCommand;
-import com.damhoe.skatscores.shared_ui.behaviors.ScrollViewBehaviorHandler;
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager;
 import com.damhoe.skatscores.shared_ui.utils.LayoutMargins;
 import com.google.android.material.button.MaterialButton;
@@ -51,7 +49,7 @@ public class GameSetupFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_game_setup, container, false);
 
-        ScrollViewBehaviorHandler.setupWithExtendedFAB(binding.nestedScrollView, binding.startButton);
+        //ScrollViewBehaviorHandler.setupWithExtendedFAB(binding.nestedScrollView, binding.startButton);
 
         return binding.getRoot();
     }
@@ -61,9 +59,10 @@ public class GameSetupFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         InsetsManager.applyStatusBarInsets(binding.appbarLayout);
-        int marginBottom = getResources().getDimensionPixelSize(R.dimen.fab_margin_bottom);
+        int buttonMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin_bottom);
+
         LayoutMargins defaultMargins =
-                new LayoutMargins(0, 0, 0, marginBottom);
+                new LayoutMargins(buttonMargin, buttonMargin, 0, buttonMargin);
         InsetsManager.applyNavigationBarInsets(binding.startButton, defaultMargins);
         InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
 

@@ -11,36 +11,6 @@
         android:descendantFocusability="blocksDescendants"
         tools:context=".player.adapter.in.ui.PlayersFragment">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:elevation="0dp"
-            app:layout_behavior=".shared_ui.behaviors.CollapseAppBarBehavior"
-            app:liftOnScroll="true"
-            style="@style/Widget.App.AppBarLayout">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/toolbarLayout"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/collapsingToolbarLayoutMediumSize"
-                style="@style/Widget.App.CollapsingToolbar"
-                app:layout_behavior=".ui.CollapseAppBarBehavior"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:title="@string/title_players">
-
-                </com.google.android.material.appbar.MaterialToolbar>
-
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
@@ -84,15 +54,17 @@
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addButton"
+            android:id="@+id/addPlayerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="@dimen/fab_above_bottom_nav_margin_bottom"
             android:layout_marginEnd="@dimen/fab_margin_right"
+            android:layout_marginBottom="@dimen/fab_margin_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_person_add_24dp"
             android:contentDescription="@string/description_create_new_profile"
-            style="@style/Widget.Material3.FloatingActionButton.Primary" />
+            style="@style/Widget.Material3.FloatingActionButton.Large.Primary" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -1,613 +1,773 @@
-package com.damhoe.skatscores.game.game_home.adapter.in.ui;
+package com.damhoe.skatscores.game.game_home.adapter.`in`.ui
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.util.Pair;
-import android.util.SparseIntArray;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.DialogInterface
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.util.Pair
+import android.util.SparseIntArray
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.MenuProvider
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.base.Result
+import com.damhoe.skatscores.databinding.DialogGameSettingsBinding
+import com.damhoe.skatscores.databinding.FragmentGameBinding
+import com.damhoe.skatscores.game.game_home.GameActivity
+import com.damhoe.skatscores.game.game_home.application.PlayerSelectionValidator
+import com.damhoe.skatscores.game.game_home.domain.SkatGame
+import com.damhoe.skatscores.game.game_home.domain.SkatSettings
+import com.damhoe.skatscores.game.game_setup.domain.SkatGameCommand
+import com.damhoe.skatscores.game.score.adapter.`in`.ui.ScoreFragment
+import com.damhoe.skatscores.game.score.domain.ScoreRequest
+import com.damhoe.skatscores.game.score.domain.SkatScore
+import com.damhoe.skatscores.player.domain.Player
+import com.damhoe.skatscores.shared_ui.utils.InsetsManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.slider.Slider
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.android.material.textfield.TextInputLayout
+import java.util.Arrays
+import java.util.Locale
+import java.util.stream.Collectors
+import javax.inject.Inject
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.MenuProvider;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import com.damhoe.skatscores.R;
-import com.damhoe.skatscores.base.Result;
-import com.damhoe.skatscores.databinding.DialogGameSettingsBinding;
-import com.damhoe.skatscores.databinding.FragmentGameBinding;
-import com.damhoe.skatscores.game.game_home.GameActivity;
-import com.damhoe.skatscores.game.game_home.application.PlayerSelectionValidator;
-import com.damhoe.skatscores.game.game_home.application.PlayerSelectionValidator.MessageType;
-import com.damhoe.skatscores.game.game_home.domain.SkatGame;
-import com.damhoe.skatscores.game.game_home.domain.SkatSettings;
-import com.damhoe.skatscores.game.game_setup.domain.SkatGameCommand;
-import com.damhoe.skatscores.game.score.domain.ScoreRequest.CreateScoreRequest;
-import com.damhoe.skatscores.game.score.domain.ScoreRequest.UpdateScoreRequest;
-import com.damhoe.skatscores.game.score.domain.SkatScore;
-import com.damhoe.skatscores.player.domain.Player;
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
-import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
-import static com.damhoe.skatscores.game.score.adapter.in.ui.ScoreFragment.SCORE_REQUEST_KEY;
-
-public class GameFragment extends Fragment implements IScoreActionListener {
+class GameFragment : Fragment(), IScoreActionListener
+{
     @Inject
-    GameViewModelFactory viewModelFactory;
+    lateinit var viewModelFactory: GameViewModelFactory
+    private val viewModel: SkatGameViewModel by viewModels(
+            { requireActivity() }) { viewModelFactory }
+
     @Inject
-    SelectPlayerVMFactory selectPlayerVMFactory;
-    private SkatGameViewModel viewModel;
-    private SelectPlayerViewModel selectPlayerViewModel;
-    private FragmentGameBinding binding;
-    private PlayerSelectionValidator playerValidator = new PlayerSelectionValidator();
-    private SkatScoreAdapter scoreAdapter;
+    lateinit var selectPlayerVMFactory: SelectPlayerVMFactory;
+    private val selectPlayerViewModel: SelectPlayerViewModel by viewModels(
+            { requireActivity() }) { selectPlayerVMFactory }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setupViewModel();
+    private lateinit var binding: FragmentGameBinding
+    private val playerValidator = PlayerSelectionValidator()
+    private lateinit var scoreAdapter: SkatScoreAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+        // Get arguments and initialize the game
+        val command: SkatGameCommand? =
+                GameFragmentArgs.fromBundle(requireArguments())
+                    .getGameCommand()
+        val gameId: Long =
+                GameFragmentArgs.fromBundle(requireArguments())
+                    .getGameId()
+
+        if (gameId != -1L)
+        {
+            viewModel.initialize(gameId)
+        }
+        else {
+            viewModel.initialize(command)
+        }
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        ((GameActivity) requireActivity()).getAppComponent().inject(this);
-        super.onAttach(context);
+    override fun onAttach(context: Context)
+    {
+        (requireActivity() as GameActivity).appComponent.inject(this)
+        super.onAttach(context)
     }
 
-    private NavController findNavController() {
-        return Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+    private fun findNavController() = findNavController(
+            requireActivity(),
+            R.id.nav_host_fragment)
+
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?): View
+    {
+        binding = DataBindingUtil.inflate(
+                inflater,
+                R.layout.fragment_game,
+                container,
+                false)
+        setUpEditScoreButton()
+        setUpEditPlayersButton()
+        setUpRecyclerView()
+        return binding.root
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false);
-        setUpEditScoreButton();
-        setUpEditPlayersButton();
-        setUpRecyclerView();
-        return binding.getRoot();
+    private fun setUpEditPlayersButton()
+    {
+        binding.titleView.buttonEdit.setOnClickListener { showEditPlayerDialog() }
     }
 
-    private void setUpEditPlayersButton() {
-        binding.titleView.buttonEdit.setOnClickListener(view -> showEditPlayerDialog());
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    override fun onViewCreated(
+            view: View,
+            savedInstanceState: Bundle?)
+    {
+        super.onViewCreated(
+                view,
+                savedInstanceState)
 
         // Set insets
-        InsetsManager.applySystemBarInsets(binding.content);
-        InsetsManager.applyNavigationBarInsets(binding.editScoreButton);
-        InsetsManager.applyNavigationBarInsets(binding.bottomAppBar);
+        InsetsManager.applySystemBarInsets(binding.content)
+        InsetsManager.applyNavigationBarInsets(binding.editScoreButton)
+        InsetsManager.applyNavigationBarInsets(binding.bottomAppBar)
 
-
-        setupNavigation();
-        setupObservers();
-        addMenu();
-        initializeUI();
+        setupNavigation()
+        setupObservers()
+        addMenu()
     }
 
-    private void setupObservers() {
-        final Observer<String> titleObserver = this::setTitle;
-        viewModel.getTitle().observe(getViewLifecycleOwner(), titleObserver);
+    private fun setupObservers()
+    {
+        val titleObserver = Observer { title: String -> this.setTitle(title) }
+        viewModel.title.observe(
+                viewLifecycleOwner,
+                titleObserver)
 
-        final Observer<SkatGame> gameObserver = this::updatePoints;
-        viewModel.getGame().observe(getViewLifecycleOwner(), gameObserver);
+        val gameObserver = Observer { game: SkatGame -> this.updatePoints(game) }
+        viewModel.game.observe(
+                viewLifecycleOwner,
+                gameObserver)
 
-        viewModel.getGameRunStateInfo().observe(getViewLifecycleOwner(), gameRunStateInfo -> {
-            String text;
-            if (gameRunStateInfo.isFinished()) {
-                text = "Finished";
-            } else {
-                text = String.format(Locale.getDefault(),
+        viewModel.gameRunStateInfo.observe(
+                viewLifecycleOwner) {
+            val text = if (it.isFinished)
+            {
+                "Finished"
+            }
+            else
+            {
+                String.format(
+                        Locale.getDefault(),
                         "%d/%d",
-                        gameRunStateInfo.getCurrentRound(),
-                        gameRunStateInfo.getRoundsCount()
-                );
+                        it.currentRound,
+                        it.roundsCount
+                )
             }
-            binding.currentRoundText.setText(text);
-        });
+            binding.currentRoundText.text = text
+        }
 
-        viewModel.dealerPosition.observe(getViewLifecycleOwner(), dealerPosition -> {
-            if (dealerPosition == 0) {
-                binding.titleView.indicator1.setAlpha(1.0f);
-                binding.titleView.indicator2.setAlpha(0.0f);
-                binding.titleView.indicator3.setAlpha(0.0f);
-            } else if (dealerPosition == 1) {
-                binding.titleView.indicator1.setAlpha(0.0f);
-                binding.titleView.indicator2.setAlpha(1.0f);
-                binding.titleView.indicator3.setAlpha(0.0f);
-            } else if (dealerPosition == 2) {
-                binding.titleView.indicator1.setAlpha(0.0f);
-                binding.titleView.indicator2.setAlpha(0.0f);
-                binding.titleView.indicator3.setAlpha(1.0f);
-            }
-        });
-
-        final Observer<List<Player>> playerObserver = players -> {
-            // Update player names
-            binding.titleView.name1Text.setText(players.get(0).getName());
-            binding.titleView.name2Text.setText(players.get(1).getName());
-            binding.titleView.name3Text.setText(players.get(2).getName());
-        };
-        viewModel.getPlayers().observe(getViewLifecycleOwner(), playerObserver);
-
-        final Observer<SkatSettings> settingsObserver = skatSettings -> {
-            int visibilityWinLossBonus = skatSettings
-                    .isTournamentScoring() ? View.VISIBLE : View.GONE;
-            binding.bottomSumView.lostContainer.setVisibility(visibilityWinLossBonus);
-            binding.bottomSumView.soloContainer.setVisibility(visibilityWinLossBonus);
-            binding.bottomSumView.divider.setVisibility(visibilityWinLossBonus);
-            SkatGame game = viewModel.getGame().getValue();
-            if (game != null)
-                updatePoints(game);
-        };
-        viewModel.getSettings().observe(getViewLifecycleOwner(), settingsObserver);
-
-        viewModel.totalPoints.observe(getViewLifecycleOwner(), this::displayTotalPoints);
-        viewModel.winBonus.observe(getViewLifecycleOwner(), ints -> {
-            binding.bottomSumView.solo1Text.setText(String.valueOf(ints[0]));
-            binding.bottomSumView.solo2Text.setText(String.valueOf(ints[1]));
-            binding.bottomSumView.solo3Text.setText(String.valueOf(ints[2]));
-        });
-        viewModel.lossOfOthersBonus.observe(getViewLifecycleOwner(), ints -> {
-            binding.bottomSumView.lost1Text.setText(String.valueOf(ints[0]));
-            binding.bottomSumView.lost2Text.setText(String.valueOf(ints[1]));
-            binding.bottomSumView.lost3Text.setText(String.valueOf(ints[2]));
-        });
-    }
-
-    private void displayTotalPoints(int[] totalPoints) {
-        binding.bottomSumView.points1Text.setText(String.valueOf(totalPoints[0]));
-        binding.bottomSumView.points2Text.setText(String.valueOf(totalPoints[1]));
-        binding.bottomSumView.points3Text.setText(String.valueOf(totalPoints[2]));
-    }
-
-    private void addMenu() {
-        binding.bottomAppBar.addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menu.clear();
-                menuInflater.inflate(R.menu.game_menu, menu);
-            }
-
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.game_edit) {
-                    showGameSettingsDialog();
-                } else if (itemId == R.id.game_show_chart) {
-                    NavDirections directions =
-                            GameFragmentDirections.actionGameToGraph();
-                    findNavController().navigate(directions);
-                } else if (itemId == R.id.library) {
-                    findNavController().navigateUp();
+        viewModel.dealerPosition.observe(viewLifecycleOwner) {
+            binding.titleView.apply {
+                when (it)
+                {
+                    0 ->
+                    {
+                        indicator1.alpha = 1.0f
+                        indicator2.alpha = 0.0f
+                        indicator3.alpha = 0.0f
+                    }
+                    1 ->
+                    {
+                        indicator1.alpha = 0.0f
+                        indicator2.alpha = 1.0f
+                        indicator3.alpha = 0.0f
+                    }
+                    2 ->
+                    {
+                        indicator1.alpha = 0.0f
+                        indicator2.alpha = 0.0f
+                        indicator3.alpha = 1.0f
+                    }
                 }
-                return true;
             }
-        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        }
+
+        viewModel.players.observe(
+                viewLifecycleOwner) {
+            binding.titleView.apply {
+                name1Text.text = it[0].name
+                name2Text.text = it[1].name
+                name3Text.text = it[2].name
+            }
+        }
+
+        viewModel.settings.observe(
+                viewLifecycleOwner
+        ) { skatSettings: SkatSettings ->
+            val visibilityWinLossBonus =
+                    if (skatSettings.isTournamentScoring)
+                        View.VISIBLE
+                    else
+                        View.GONE
+            binding.bottomSumView.apply {
+                lostContainer.visibility = visibilityWinLossBonus
+                soloContainer.visibility = visibilityWinLossBonus
+                divider.visibility = visibilityWinLossBonus
+            }
+
+            val game = viewModel.game.value
+            if (game != null) {
+                updatePoints(
+                        game)
+            }
+        }
+
+        viewModel.totalPoints.observe(viewLifecycleOwner) { this.displayTotalPoints(it) }
+
+        viewModel.winBonus.observe(viewLifecycleOwner) {
+            binding.bottomSumView.apply{
+                solo1Text.text = it[0].toString()
+                solo2Text.text = it[1].toString()
+                solo3Text.text = it[2].toString()
+            }
+        }
+        viewModel.lossOfOthersBonus.observe(
+                viewLifecycleOwner) {
+            binding.bottomSumView.apply{
+                lost1Text.text = it[0].toString()
+                lost2Text.text = it[1].toString()
+                lost3Text.text = it[2].toString()
+            }
+        }
     }
 
-    private void showGameSettingsDialog() {
-        DialogGameSettingsBinding dialogBinding =
-                DataBindingUtil.inflate(
-                        getLayoutInflater(),
-                        R.layout.dialog_game_settings,
-                        null,
-                        false
-                );
+    private fun displayTotalPoints(
+            totalPoints: IntArray)
+    {
+        binding.bottomSumView.apply {
+            points1Text.text = totalPoints[0].toString()
+            points2Text.text = totalPoints[1].toString()
+            points3Text.text = totalPoints[2].toString()
+        }
+    }
 
-        // Initialize values
-        dialogBinding.listNameEditText.setText(viewModel.getTitle().getValue());
+    private fun addMenu()
+    {
+        binding.bottomAppBar.addMenuProvider(
+                object : MenuProvider
+                {
+                    override fun onCreateMenu(
+                            menu: Menu,
+                            menuInflater: MenuInflater)
+                    {
+                        menu.clear()
+                        menuInflater.inflate(
+                                R.menu.game_menu,
+                                menu)
+                    }
 
-        List<Player> players = viewModel.getPlayers().getValue();
-        if (players != null && players.size() == 3) {
-            dialogBinding.buttonPlayer1.setText(players.get(0).getName());
-            dialogBinding.buttonPlayer2.setText(players.get(1).getName());
-            dialogBinding.buttonPlayer3.setText(players.get(2).getName());
+                    override fun onMenuItemSelected(
+                            item: MenuItem): Boolean
+                    {
+                        val itemId = item.itemId
+                        if (itemId == R.id.game_edit)
+                        {
+                            showGameSettingsDialog()
+                            return true
+                        }
+                        else if (itemId == R.id.game_show_chart)
+                        {
+                            navigateToGameChart()
+                        }
+                        return true
+                    }
+                },
+                viewLifecycleOwner,
+                Lifecycle.State.RESUMED)
+    }
+
+    private fun navigateToGameChart()
+    {
+        findNavController().navigate(R.id.action_game_to_graph)
+    }
+
+    private fun showGameSettingsDialog()
+    {
+        val dialogBinding: DialogGameSettingsBinding = DataBindingUtil.inflate(
+                layoutInflater,
+                R.layout.dialog_game_settings,
+                null,
+                false)
+
+        dialogBinding.listNameEditText.setText(
+                viewModel.title.value)
+
+        val players = viewModel.players.value
+        if (players != null &&
+                players.size == 3)
+        {
+            dialogBinding.buttonPlayer1.text = players[0].name
+            dialogBinding.buttonPlayer2.text = players[1].name
+            dialogBinding.buttonPlayer3.text = players[2].name
         }
 
-        SkatGame skatGame = viewModel.getGame().getValue();
-        if (skatGame == null) {
-            return;
-        }
+        val skatGame = viewModel.game.value ?: return
 
         // Create a map for (position, buttonId)
-        SparseIntArray startDealerMap = new SparseIntArray();
-        startDealerMap.put(0, R.id.buttonPlayer1);
-        startDealerMap.put(1, R.id.buttonPlayer2);
-        startDealerMap.put(2, R.id.buttonPlayer3);
+        val startDealerMap = SparseIntArray()
+        startDealerMap.put(
+                0,
+                R.id.buttonPlayer1)
+        startDealerMap.put(
+                1,
+                R.id.buttonPlayer2)
+        startDealerMap.put(
+                2,
+                R.id.buttonPlayer3)
+
         dialogBinding.toggleGroupStartDealer.check(
-                startDealerMap.get(skatGame.getStartDealerPosition(), R.id.buttonPlayer1));
+                startDealerMap[
+                        skatGame.startDealerPosition,
+                        R.id.buttonPlayer1])
 
-        SkatSettings settings = skatGame.getSettings();
+        val settings: SkatSettings = skatGame.settings
 
-        dialogBinding.numberOfRoundsText.setText(
-                String.valueOf(settings.getNumberOfRounds()));
-        dialogBinding.roundsSlider.setValue(settings.getNumberOfRounds());
+        dialogBinding.numberOfRoundsText.text = settings.numberOfRounds.toString()
+        dialogBinding.roundsSlider.value = settings.numberOfRounds.toFloat()
 
-        dialogBinding.scoringSettingsRg.check(settings.isTournamentScoring() ?
-                R.id.tournament_scoring_rb : R.id.simple_scoring_rb);
+        dialogBinding.scoringSettingsRg.check(if (settings.isTournamentScoring()) R.id.tournament_scoring_rb else R.id.simple_scoring_rb)
 
-        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.message_scoring_dialog)
-                .setView(dialogBinding.getRoot())
-                .setPositiveButton(getString(R.string.dialog_title_button_save), (dialogInterface, i) -> {
-                    Editable editable = dialogBinding.listNameEditText.getText();
-                    String title = editable != null ?
-                            editable.toString() : viewModel.getTitle().getValue();
+        val dialog: AlertDialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.message_scoring_dialog)
+            .setView(dialogBinding.root)
+            .setPositiveButton(
+                    getString(R.string.dialog_title_button_save)) {
+                dialogInterface: DialogInterface, _: Int ->
+                val editable = dialogBinding.listNameEditText.text
+                val title = editable.toString()
 
-                    settings.setNumberOfRounds((int) dialogBinding.roundsSlider.getValue());
-                    settings.setTournamentScoring(dialogBinding.tournamentScoringRb.isChecked());
+                settings.numberOfRounds = dialogBinding.roundsSlider.value.toInt()
+                settings.isTournamentScoring = dialogBinding.tournamentScoringRb.isChecked
 
-                    int checkedButton = dialogBinding.toggleGroupStartDealer.getCheckedButtonId();
-                    int startDealerPosition = startDealerMap
-                            .keyAt(startDealerMap.indexOfValue(checkedButton));
+                val checkedButton = dialogBinding.toggleGroupStartDealer.checkedButtonId
+                val startDealerPosition = startDealerMap
+                    .keyAt(startDealerMap.indexOfValue(checkedButton))
 
-                    skatGame.setStartDealerPosition(startDealerPosition);
-                    skatGame.setTitle(title);
-                    skatGame.setSettings(settings);
-                    viewModel.updateGame(skatGame);
-                    dialogInterface.dismiss();
-                })
-                .setNegativeButton(getString(R.string.dialog_title_button_cancel), ((d, i) -> d.cancel()))
-                .create();
+                skatGame.startDealerPosition = startDealerPosition
+                skatGame.title = title
+                skatGame.settings = settings
+                viewModel.updateGame(skatGame)
+                dialogInterface.dismiss()
+            }
+            .setNegativeButton(
+                    getString(R.string.dialog_title_button_cancel),
+                    (DialogInterface.OnClickListener {
+                        d: DialogInterface, _: Int -> d.cancel() }))
+            .create()
 
         // Add listeners
-        dialogBinding.listNameEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        dialogBinding.listNameEditText.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int)
+            {
                 // Ignore.
             }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int)
+            {
                 // Ignore.
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                int counterMaxLength = dialogBinding.listNameTextInput.getCounterMaxLength();
-                int length = s.length();
-                if (length > counterMaxLength) {
-                    s.replace(counterMaxLength, length, "");
+            override fun afterTextChanged(s: Editable)
+            {
+                val counterMaxLength = dialogBinding.listNameTextInput.counterMaxLength
+                val length: Int = s.length
+                if (length > counterMaxLength)
+                {
+                    s.replace(
+                            counterMaxLength,
+                            length,
+                            "")
                 }
 
-                String title = s.toString().trim();
+                val title: String =
+                        s.toString()
+                            .trim { it <= ' ' }
 
                 // Set error if invalid title
-                dialogBinding.listNameTextInput.setError(
-                        title.isEmpty() ? getString(R.string.error_valid_title_required) : null
-                );
+                dialogBinding.listNameTextInput.error =
+                        if (title.isEmpty()) getString(R.string.error_valid_title_required) else null
 
                 // Disable positive button if error exists
-                Button buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                buttonPositive.setEnabled( dialogBinding.listNameTextInput.getError() == null );
+                val buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                buttonPositive.isEnabled = dialogBinding.listNameTextInput.error == null
             }
-        });
+        })
 
-        dialogBinding.roundsSlider.addOnChangeListener((slider, value, fromUser) -> {
-            dialogBinding.numberOfRoundsText.setText(String.valueOf((int) value));
-
-            int currentRound = Objects.requireNonNull(viewModel.getGameRunStateInfo().getValue()).getCurrentRound();
+        dialogBinding.roundsSlider.addOnChangeListener(
+                Slider.OnChangeListener {
+                    _: Slider?, value: Float, _: Boolean ->
+            dialogBinding.numberOfRoundsText.text = value.toInt()
+                .toString()
+            val currentRound = viewModel.gameRunStateInfo.value!!.currentRound
 
             // Disable positive button if error exists
-            Button buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-            buttonPositive.setEnabled( (int) value >= currentRound - 1);
-        });
+            val buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+            buttonPositive.isEnabled = value.toInt() >= currentRound - 1
+        })
 
-        dialog.show();
-    }
-
-    private void initializeUI() {
-        // Empty
+        dialog.show()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void updatePoints(SkatGame game) {
+    private fun updatePoints(game: SkatGame)
+    {
         // Set adapter items
-        if (scoreAdapter != null) {
-            List<SkatScore> scores = game.getScores();
-            if (scoreAdapter.getScores() != scores) {
-                scoreAdapter.setScores(scores);
-            }
+        val scores: List<SkatScore> = game.scores
+        if (scoreAdapter.scores !== scores)
+        {
+            scoreAdapter.scores = scores
         }
 
-        ArrayList<Integer> playerPoints = new ArrayList<>();
-        playerPoints.add(0);//game.getIndividualPoints();
-        playerPoints.add(0);//game.getIndividualPoints();
-        playerPoints.add(0);//game.getIndividualPoints();
+        val playerPoints = ArrayList<Int>()
+        playerPoints.add(0) //game.getIndividualPoints();
+        playerPoints.add(0) //game.getIndividualPoints();
+        playerPoints.add(0) //game.getIndividualPoints();
 
         // Bottom sum
-        binding.bottomSumView.points1Text.setText(String.valueOf(playerPoints.get(0)));
-        binding.bottomSumView.points2Text.setText(String.valueOf(playerPoints.get(1)));
-        binding.bottomSumView.points3Text.setText(String.valueOf(playerPoints.get(2)));
+        binding.bottomSumView.points1Text.text =
+                playerPoints[0]
+                    .toString()
+        binding.bottomSumView.points2Text.text =
+                playerPoints[1]
+                    .toString()
+        binding.bottomSumView.points3Text.text =
+                playerPoints[2]
+                    .toString()
     }
 
-    @Override
-    public void notifyDelete() {
-        Result<SkatScore> deleteResult = viewModel.removeLastScore();
-        if (deleteResult.isFailure()) {
-            Snackbar.make(requireView(), deleteResult.message, Snackbar.LENGTH_SHORT)
-                    .setAction("GOT IT", view -> onDestroy())
-                    .show();
-            return;
+    override fun notifyDelete()
+    {
+        val deleteResult: Result<SkatScore> = viewModel.removeLastScore()
+        if (deleteResult.isFailure())
+        {
+            Snackbar.make(
+                    requireView(),
+                    deleteResult.message,
+                    Snackbar.LENGTH_SHORT)
+                .setAction(
+                        "GOT IT",
+                        View.OnClickListener { view: View? -> onDestroy() })
+                .show()
+            return
         }
-        if (scoreAdapter != null) {
-            int position = scoreAdapter.getPosition(deleteResult.value.getId());
-            scoreAdapter.notifyItemRemoved(position);
-        }
+        val position = scoreAdapter.getPosition(deleteResult.value.id)
+        scoreAdapter.notifyItemRemoved(position)
     }
 
-    @Override
-    public void notifyDetails(SkatScore skatScore) {
-
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.dialog_title_score_details))
-                .setMessage(
-                        new SkatScore.TextMaker(requireContext())
-                                .setupWithSkatScore(skatScore)
-                                .make()
-                )
-                .setPositiveButton(getString(R.string.dialog_title_button_got_it), ((dialogInterface, i) -> dialogInterface.dismiss()))
-                .create()
-                .show();
+    override fun notifyDetails(skatScore: SkatScore)
+    {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.dialog_title_score_details))
+            .setMessage(
+                    SkatScore.TextMaker(requireContext())
+                        .setupWithSkatScore(skatScore)
+                        .make()
+            )
+            .setPositiveButton(
+                    getString(R.string.dialog_title_button_got_it),
+                    (DialogInterface.OnClickListener { dialogInterface: DialogInterface, i: Int -> dialogInterface.dismiss() }))
+            .create()
+            .show()
     }
 
-    @Override
-    public void notifyEdit(SkatScore skatScore) {
-        List<Player> players = viewModel.getPlayers().getValue();
-        if (players == null) {
-            throw new RuntimeException("Players are null when score request is created.");
-        }
+    override fun notifyEdit(
+            skatScore: SkatScore)
+    {
+        val players = viewModel!!.players.value
+                ?: throw RuntimeException("Players are null when score request is created.")
 
-        List<String> names = new ArrayList<>();
-        names.add(players.get(0).getName());
-        names.add(players.get(1).getName());
-        names.add(players.get(2).getName());
+        val names: MutableList<String> = ArrayList()
+        names.add(players[0].name)
+        names.add(players[1].name)
+        names.add(players[2].name)
 
-        List<Integer> positions = new ArrayList<>();
-        positions.add(0);
-        positions.add(1);
-        positions.add(2);
+        val positions: MutableList<Int> = ArrayList()
+        positions.add(0)
+        positions.add(1)
+        positions.add(2)
 
-        UpdateScoreRequest scoreRequest = new UpdateScoreRequest(skatScore.getId(), names, positions);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(SCORE_REQUEST_KEY, scoreRequest);
-        findNavController().navigate(R.id.action_game_to_score, bundle);
+        val scoreRequest: ScoreRequest.UpdateScoreRequest =
+                ScoreRequest.UpdateScoreRequest(
+                        skatScore.id,
+                        names,
+                        positions)
+        val bundle = Bundle()
+        bundle.putParcelable(
+                ScoreFragment.Companion.SCORE_REQUEST_KEY,
+                scoreRequest)
+        findNavController().navigate(
+                R.id.action_game_to_score,
+                bundle)
     }
 
-    private void setupViewModel() {
-        viewModel = new ViewModelProvider(requireActivity(), viewModelFactory).get(SkatGameViewModel.class);
-
-        // Get arguments and initialize the game
-        SkatGameCommand command = GameFragmentArgs.fromBundle(requireArguments()).getGameCommand();
-        long gameId = GameFragmentArgs.fromBundle(requireArguments()).getGameId();
-
-        if (gameId != -1) {
-            viewModel.initialize(gameId);
-        } else if (command != null) {
-            viewModel.initialize(command);
-        } else {
-            throw new RuntimeException("GameFragment needs nonnull command or game ID");
-        }
-
-        selectPlayerViewModel = new ViewModelProvider(this, selectPlayerVMFactory)
-                .get(SelectPlayerViewModel.class);
-    }
-
-    private void setupNavigation() {
+    private fun setupNavigation()
+    {
         // Back navigation
-        binding.returnButton.setOnClickListener(view -> requireActivity().finish());
+        binding.returnButton.setOnClickListener { view: View? -> requireActivity().finish() }
 
-        requireActivity().getOnBackPressedDispatcher()
-                .addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        requireActivity().finish();
-                    }
-                });
+        requireActivity().onBackPressedDispatcher
+            .addCallback(
+                    viewLifecycleOwner,
+                    object : OnBackPressedCallback(true)
+                    {
+                        override fun handleOnBackPressed()
+                        {
+                            requireActivity().finish()
+                        }
+                    })
     }
 
     @SuppressLint("InflateParams")
-    private void showEditPlayerDialog() {
+    private fun showEditPlayerDialog()
+    {
         // Get current players and registered players
-        List<Player> currentPlayers = viewModel.getPlayers().getValue();
-        assert currentPlayers != null;
-        List<Player> allPlayers = selectPlayerViewModel.getAllPlayers();
+        val currentPlayers = viewModel.players.value!!
+        val allPlayers = selectPlayerViewModel.allPlayers
 
-        View contentView = getLayoutInflater().inflate(R.layout.dialog_select_players, null);
-        TextInputLayout input1 = contentView.findViewById(R.id.player1_input);
-        TextInputLayout input2 = contentView.findViewById(R.id.player2_input);
-        TextInputLayout input3 = contentView.findViewById(R.id.player3_input);
-        MaterialAutoCompleteTextView editPlayer1 = contentView.findViewById(R.id.player1_edit_text);
-        MaterialAutoCompleteTextView editPlayer2 = contentView.findViewById(R.id.player2_edit_text);
-        MaterialAutoCompleteTextView editPlayer3 = contentView.findViewById(R.id.player3_edit_text);
+        val contentView: View =
+                layoutInflater.inflate(
+                        R.layout.dialog_select_players,
+                        null)
+        val input1: TextInputLayout = contentView.findViewById(
+                R.id.player1_input)
+        val input2: TextInputLayout = contentView.findViewById(
+                R.id.player2_input)
+        val input3: TextInputLayout = contentView.findViewById(
+                R.id.player3_input)
+        val editPlayer1: MaterialAutoCompleteTextView =
+                contentView.findViewById(
+                        R.id.player1_edit_text)
+        val editPlayer2: MaterialAutoCompleteTextView =
+                contentView.findViewById(
+                        R.id.player2_edit_text)
+        val editPlayer3: MaterialAutoCompleteTextView =
+                contentView.findViewById(
+                        R.id.player3_edit_text)
 
         // Set current player names
-        editPlayer1.setText(currentPlayers.get(0).getName());
-        editPlayer1.setSelection(editPlayer1.getText().length());
-        editPlayer2.setText(currentPlayers.get(1).getName());
-        editPlayer2.setSelection(editPlayer2.getText().length());
-        editPlayer3.setText(currentPlayers.get(2).getName());
-        editPlayer3.setSelection(editPlayer3.getText().length());
+        editPlayer1.setText(currentPlayers[0].name)
+        editPlayer1.setSelection(editPlayer1.getText().length)
+        editPlayer2.setText(currentPlayers[1].name)
+        editPlayer2.setSelection(editPlayer2.getText().length)
+        editPlayer3.setText(currentPlayers[2].name)
+        editPlayer3.setSelection(editPlayer3.getText().length)
 
-        ArrayAdapter<Player> adapter =
-                new ArrayAdapter<>(requireContext(), R.layout.item_popup_list, allPlayers);
-        editPlayer1.setAdapter(adapter);
-        editPlayer2.setAdapter(adapter);
-        editPlayer3.setAdapter(adapter);
+        val adapter: ArrayAdapter<Player> = ArrayAdapter<Player>(
+                requireContext(),
+                R.layout.item_popup_list,
+                allPlayers)
+        editPlayer1.setAdapter<ArrayAdapter<Player>>(adapter)
+        editPlayer2.setAdapter<ArrayAdapter<Player>>(adapter)
+        editPlayer3.setAdapter<ArrayAdapter<Player>>(adapter)
 
-        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
-                .setView(contentView)
-                .setTitle(getString(R.string.dialog_title_edit_players))
-                .setNegativeButton(getString(R.string.dialog_title_button_cancel), (d, i) -> d.cancel())
-                .setPositiveButton(getString(R.string.dialog_title_button_save), (d, i) -> {
-                    String name1 = editPlayer1.getText().toString().trim();
-                    String name2 = editPlayer2.getText().toString().trim();
-                    String name3 = editPlayer3.getText().toString().trim();
+        val dialog: AlertDialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(contentView)
+            .setTitle(getString(R.string.dialog_title_edit_players))
+            .setNegativeButton(
+                    getString(R.string.dialog_title_button_cancel)) {
+                d: DialogInterface, _: Int -> d.cancel() }
+            .setPositiveButton(
+                    getString(R.string.dialog_title_button_save)
+            ) { d: DialogInterface, _: Int ->
+                val name1: String =
+                        editPlayer1.getText()
+                            .toString()
+                            .trim { it <= ' ' }
+                val name2: String =
+                        editPlayer2.getText()
+                            .toString()
+                            .trim { it <= ' ' }
+                val name3: String =
+                        editPlayer3.getText()
+                            .toString()
+                            .trim { it <= ' ' }
 
-                    // Map names to players
-                    Player player1 = mapToPlayer(name1);
-                    Player player2 = mapToPlayer(name2);
-                    Player player3 = mapToPlayer(name3);
+                // Map names to players
+                val player1 = mapToPlayer(name1)
+                val player2 = mapToPlayer(name2)
+                val player3 = mapToPlayer(name3)
 
-                    List<Player> newPlayers = Arrays.asList(player1, player2, player3);
-                    viewModel.updatePlayers(newPlayers);
-                    d.dismiss();
-                })
-                .create();
+                val newPlayers =
+                        Arrays.asList(
+                                player1,
+                                player2,
+                                player3)
+                viewModel.updatePlayers(newPlayers)
+                d.dismiss()
+            }
+            .create()
 
         // Add listeners
-        addTextChangeListener(editPlayer1, input1, dialog, 0);
-        addTextChangeListener(editPlayer2, input2, dialog, 1);
-        addTextChangeListener(editPlayer3, input3, dialog, 2);
+        addTextChangeListener(
+                editPlayer1,
+                input1,
+                dialog,
+                0)
+        addTextChangeListener(
+                editPlayer2,
+                input2,
+                dialog,
+                1)
+        addTextChangeListener(
+                editPlayer3,
+                input3,
+                dialog,
+                2)
 
-        if (playerValidator == null) {
-            playerValidator = new PlayerSelectionValidator();
-        }
         playerValidator.initialize(
                 allPlayers,
                 currentPlayers.stream()
-                        .map(Player::getName)
-                        .collect(Collectors.toList())
-        );
+                    .map { obj: Player -> obj.name }
+                    .collect(Collectors.toList())
+        )
 
-        dialog.show();
+        dialog.show()
     }
 
-    private Player mapToPlayer(String name) {
-        Result<Player> playerResult = selectPlayerViewModel.findOrCreatePlayer(name);
-        if (playerResult.isFailure()) {
-            return Player.createDummy(0);
+    private fun mapToPlayer(name: String): Player
+    {
+        val playerResult = selectPlayerViewModel.findOrCreatePlayer(name)
+        if (playerResult.isFailure)
+        {
+            return Player.createDummy(0)
         }
-        return playerResult.value;
+        return playerResult.value
     }
 
-    private void addTextChangeListener(
-            AutoCompleteTextView textView,
-            TextInputLayout inputLayout,
-            AlertDialog dialog,
-            int position
-    ) {
-        textView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    private fun addTextChangeListener(
+            textView: AutoCompleteTextView,
+            inputLayout: TextInputLayout,
+            dialog: AlertDialog,
+            position: Int
+    )
+    {
+        textView.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int)
+            {
                 // Ignore.
             }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int)
+            {
                 // Ignore.
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+            override fun afterTextChanged(s: Editable)
+            {
                 // Reset error
-                inputLayout.setError(null);
-                inputLayout.setHelperText(null);
+                inputLayout.error = null
+                inputLayout.helperText = null
 
                 // Check if the current length exceeds the maximum length
-                int maxLength = inputLayout.getCounterMaxLength();
-                int currentLength = s.length();
-                if (currentLength > maxLength) {
+                val maxLength: Int = inputLayout.getCounterMaxLength()
+                val currentLength: Int = s.length
+                if (currentLength > maxLength)
+                {
                     // Trim the text to the maximum length
-                    s.replace(maxLength, currentLength, "");
+                    s.replace(
+                            maxLength,
+                            currentLength,
+                            "")
                 }
 
-                String name = s.toString().trim();
-                playerValidator.select(position, name);
-                List<Pair<MessageType, String>> messages = playerValidator.validate();
-                MessageType type = messages.get(position).first;
-                String message = messages.get(position).second;
+                val name: String =
+                        s.toString()
+                            .trim { it <= ' ' }
+                playerValidator.select(
+                        position,
+                        name)
+                val messages: List<Pair<PlayerSelectionValidator.MessageType, String>> =
+                        playerValidator.validate()
+                val type: PlayerSelectionValidator.MessageType = messages[position].first
+                val message = messages[position].second
 
-                if (type == MessageType.Error) {
-                    inputLayout.setError(message);
-                } else if (message != null) {
-                    inputLayout.setHelperText(message);
+                if (type == PlayerSelectionValidator.MessageType.Error)
+                {
+                    inputLayout.setError(message)
+                }
+                else if (message != null)
+                {
+                    inputLayout.setHelperText(message)
                 }
 
-                Button buttonSave = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                buttonSave.setEnabled(messages.stream().noneMatch(pair -> pair.first == MessageType.Error));
+                val buttonSave = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                buttonSave.isEnabled = messages
+                    .stream()
+                    .noneMatch { it.first == PlayerSelectionValidator.MessageType.Error }
             }
-        });
+        })
     }
 
-    /** */
-    private void setUpRecyclerView() {
-        binding.scoresRv.setLayoutManager(new LinearLayoutManager(requireContext()));
-        scoreAdapter = new SkatScoreAdapter(this);
-        binding.scoresRv.setAdapter(scoreAdapter);
+    private fun setUpRecyclerView()
+    {
+        binding.scoresRv.layoutManager = LinearLayoutManager(
+                requireContext())
+        scoreAdapter = SkatScoreAdapter(
+                this)
+        binding.scoresRv.adapter = scoreAdapter
         binding.scoresRv.addItemDecoration(
-                new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+                DividerItemDecoration(
+                        requireContext(),
+                        DividerItemDecoration.VERTICAL))
     }
 
-    private void setTitle(String title) {
-        // Set toolbar label
-        binding.gameTitle.setText(title);
+    private fun setTitle(
+            title: String)
+    {
+        binding.gameTitle.text = title
     }
 
-    private void setUpEditScoreButton() {
-        binding.editScoreButton.setOnClickListener(view -> {
-            Log.d("Event", "Edit score button clicked.");
+    private fun setUpEditScoreButton()
+    {
+        binding.editScoreButton.setOnClickListener { view: View? ->
+            Log.d(
+                    "Event",
+                    "Edit score button clicked.")
+            val players = viewModel!!.players.value!!
+            val request: ScoreRequest.CreateScoreRequest = getCreateScoreRequest(players)
+            val bundle = Bundle()
+            bundle.putParcelable(
+                    ScoreFragment.Companion.SCORE_REQUEST_KEY,
+                    request)
+            findNavController().navigate(
+                    R.id.action_game_to_score,
+                    bundle)
+        }
+    }
 
-            List<Player> players = viewModel.getPlayers().getValue();
-            assert players != null;
+    private fun getCreateScoreRequest(
+            players: List<Player>?): ScoreRequest.CreateScoreRequest
+    {
+        val game = viewModel!!.game.value
+        val gameId = game?.id ?: -1L
 
-            SkatGame game = viewModel.getGame().getValue();
-            long gameId = game != null ? game.getId() : -1L;
+        val names: MutableList<String> = ArrayList()
+        names.add(players!![0].name)
+        names.add(players[1].name)
+        names.add(players[2].name)
 
-            List<String> names = new ArrayList<>();
-            names.add(players.get(0).getName());
-            names.add(players.get(1).getName());
-            names.add(players.get(2).getName());
+        val positions: MutableList<Int> = ArrayList()
+        positions.add(0)
+        positions.add(1)
+        positions.add(2)
 
-            List<Integer> positions = new ArrayList<>();
-            positions.add(0);
-            positions.add(1);
-            positions.add(2);
-
-            CreateScoreRequest request = new CreateScoreRequest(gameId, names, positions);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(SCORE_REQUEST_KEY, request);
-            findNavController().navigate(R.id.action_game_to_score, bundle);
-        });
+        return ScoreRequest.CreateScoreRequest(
+                gameId,
+                names,
+                positions)
     }
 }
