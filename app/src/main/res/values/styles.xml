@@ -61,11 +61,9 @@
     </style>
     <style name="TextAppearance.App.CollapsingToolbar.Expanded"
         parent="TextAppearance.Material3.DisplayMedium">
-        <item name="fontFamily">@font/hanken_grotesk_variable</item>
     </style>
     <style name="TextAppearance.App.CollapsingToolbar.Collapsed"
         parent="TextAppearance.Material3.TitleLarge">
-        <item name="fontFamily">@font/hanken_grotesk_variable</item>
     </style>
     <style name="ThemeOverlay.App.CollapsingToolbar" parent="">
         <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
@@ -233,16 +231,13 @@
     
     <style name="Widget.App.ExtendedFloatingActionButton.Primary"
         parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
-        <item name="android:fontFamily">@font/hanken_grotesk_variable</item>
     </style>
 
     <style name="Widget.App.ExtendedFloatingActionButton.Secondary"
         parent="Widget.Material3.ExtendedFloatingActionButton.Secondary">
-        <item name="android:fontFamily">@font/hanken_grotesk_variable</item>
     </style>
 
     <style name="Widget.App.TextButton" parent="Widget.Material3.Button.TextButton">
-        <item name="android:fontFamily">@font/hanken_grotesk_variable</item>
     </style>
 
     <style name="Widget.App.Chip.Suggestion" parent="Widget.Material3.Chip.Suggestion">
@@ -250,7 +245,6 @@
     </style>
 
     <style name="TextAppearance.App.Chip" parent="TextAppearance.Material3.BodySmall">
-        <item name="fontFamily">@font/hanken_grotesk_variable</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.App.CircularImageView" parent="">
@@ -266,7 +260,6 @@
     </style>
 
     <style name="Widget.App.Tooltip" parent="Widget.Material3.Tooltip">
-        <item name="fontFamily">@font/hanken_grotesk_variable</item>
         <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
         <item name="backgroundTint">?attr/colorSecondary</item>
     </style>
@@ -280,23 +273,19 @@
 
     <style name="Widget.App.TextViewHeadline" parent="Widget.AppCompat.TextView">
         <item name="android:textAppearance">?attr/textAppearanceHeadlineLarge</item>
-        <item name="android:fontFamily">@font/hanken_grotesk_variable</item>
     </style>
 
     <style name="Widget.App.TextViewLabelBold" parent="Widget.AppCompat.TextView">
         <item name="android:textAppearance">?attr/textAppearanceLabelMedium</item>
-        <item name="fontFamily">@font/hanken_grotesk_variable</item>
     </style>
 
     <style name="Theme.App.SubtitleLightMedium" parent="Widget.AppCompat.TextView">
         <item name="android:textAppearance">?textAppearanceTitleMedium</item>
-        <item name="fontFamily">@font/hanken_grotesk_variable</item>
         <item name="android:textColor">?colorPrimaryVariant</item>
     </style>
 
     <style name="TextAppearance.App.TitleSmallBold"
         parent="TextAppearance.Material3.TitleSmall">
-        <item name="android:fontFamily">@font/hanken_grotesk_variable</item>
     </style>
 
     <style name="TextAppearance.App.TitleMedium" parent="TextAppearance.Material3.TitleLarge">
