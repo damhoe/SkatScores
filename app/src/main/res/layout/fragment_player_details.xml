@@ -39,7 +39,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/guideline"
                 android:layout_marginBottom="36dp"
-                app:tint="?attr/colorTertiary"
+                app:tint="?attr/colorSurface"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView" />
 
             <androidx.constraintlayout.widget.Guideline

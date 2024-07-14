@@ -198,13 +198,13 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_marginTop="16dp"
-                    android:background="?colorSurfaceVariant"
+                    android:background="?colorSurfaceContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView"
                     app:srcCompat="@drawable/ic_avatar_48dp"
-                    app:tint="?colorSurface" />
+                    app:tint="?colorSurfaceVariant" />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/soloIndicator"

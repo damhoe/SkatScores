@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -328,6 +329,7 @@ class GameFragment : Fragment(), IScoreActionListener
                 R.id.buttonPlayer3)
 
         dialogBinding.toggleGroupStartDealer.check(
+
                 startDealerMap[
                         skatGame.startDealerPosition,
                         R.id.buttonPlayer1])
@@ -342,6 +344,11 @@ class GameFragment : Fragment(), IScoreActionListener
         val dialog: AlertDialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.message_scoring_dialog)
             .setView(dialogBinding.root)
+            .setBackground(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.background_dialog_fragment,
+                    requireActivity().theme))
             .setPositiveButton(
                     getString(R.string.dialog_title_button_save)) {
                 dialogInterface: DialogInterface, _: Int ->
