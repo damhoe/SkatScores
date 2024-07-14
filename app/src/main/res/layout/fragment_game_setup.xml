@@ -65,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wie soll die Liste \nheissen?"
-                    android:textColor="#000"
+                    android:textColor="?attr/colorOnSecondaryContainer"
                     android:textStyle="bold"
                     android:paddingBottom="24dp"
                     android:textAppearance="@style/TextAppearance.App.TitleMedium"
@@ -80,8 +80,6 @@
                     app:endIconDrawable="@drawable/ic_cancel_24dp"
                     app:endIconMode="clear_text"
                     style="@style/Widget.App.TextInputLayout"
-                    app:boxStrokeColor="#fff"
-                    app:boxStrokeErrorColor="#fff"
                     app:layout_constraintTop_toBottomOf="@id/list_name_title_view"
                     app:layout_constraintStart_toStartOf="@id/list_name_title_view">
 
@@ -91,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:focusedByDefault="false"
-                        android:textColor="#fff"
+                        android:textColor="?attr/colorOnSecondaryContainer"
                         tools:text="New List 88"
                         android:textSize="18sp" />
 
@@ -113,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp"
                     android:paddingTop="8dp"
-                    android:text="Players"
+                    android:text="@string/title_player_count_settings"
                     android:textStyle="bold"
                     android:textAppearance="@style/TextAppearance.App.TitleMedium"
                     app:layout_constraintTop_toBottomOf="@id/coloredBackground"

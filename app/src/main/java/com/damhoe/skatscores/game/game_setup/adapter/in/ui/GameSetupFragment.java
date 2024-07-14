@@ -46,11 +46,11 @@ public class GameSetupFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_game_setup, container, false);
-
-        //ScrollViewBehaviorHandler.setupWithExtendedFAB(binding.nestedScrollView, binding.startButton);
-
+        binding = DataBindingUtil.inflate(
+                inflater,
+                R.layout.fragment_game_setup,
+                container,
+                false);
         return binding.getRoot();
     }
 
@@ -61,8 +61,11 @@ public class GameSetupFragment extends Fragment {
         InsetsManager.applyStatusBarInsets(binding.appbarLayout);
         int buttonMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin_bottom);
 
-        LayoutMargins defaultMargins =
-                new LayoutMargins(buttonMargin, buttonMargin, 0, buttonMargin);
+        LayoutMargins defaultMargins = new LayoutMargins(
+                buttonMargin,
+                buttonMargin,
+                buttonMargin,
+                buttonMargin);
         InsetsManager.applyNavigationBarInsets(binding.startButton, defaultMargins);
         InsetsManager.applyNavigationBarInsets(binding.nestedScrollView);
 

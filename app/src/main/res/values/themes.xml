@@ -5,6 +5,7 @@
     </style>
 
     <style name="Theme.SkatScores" parent="Theme.App">
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Colors -->
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>

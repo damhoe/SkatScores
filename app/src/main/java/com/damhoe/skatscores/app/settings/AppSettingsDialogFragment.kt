@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -66,10 +67,17 @@ class AppSettingsDialogFragment : DialogFragment() {
                 false
             )
 
-            dialog = MaterialAlertDialogBuilder(it)
-                .setTitle(R.string.title_settings)
-                .setView(binding.root)
+            dialog = MaterialAlertDialogBuilder(requireContext())
+                .setTitle(
+                    R.string.title_settings)
+                .setView(
+                    binding.root)
                 .setPositiveButton("OK") { d, _  -> d.dismiss() }
+                .setBackground(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.background_dialog_fragment,
+                        requireActivity().theme))
                 .create()
 
         } ?: throw IllegalStateException("Activity can not be null")

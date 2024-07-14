@@ -179,18 +179,14 @@
         parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
         <item name="shapeAppearance">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
-        <item name="colorOutline">#fff</item>
-        <item name="boxStrokeColor">#fff</item>
-        <item name="android:textColor">#fff</item>
         <item name="android:paddingLeft">0dp</item>
     </style>
     
     <style name="ThemeOverlay.App.TextInputLayout" parent="">
         <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputLayout.FilledBox</item>
-        <item name="boxStrokeColor">#fff</item>
-        <item name="colorSurface">#BC9CB0</item>
-        <item name="colorPrimary">#fff</item>
-        <item name="colorOutline">#fff</item>
+        <item name="colorSurface">?attr/colorSecondaryContainer</item>
+        <item name="colorPrimary">?attr/colorSecondary</item>
+        <item name="colorOutline">?attr/colorSecondary</item>
     </style>
 
     <style name="RoundImageViewShape" parent="">
