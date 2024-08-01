@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:fontFamily">@font/app_font</item>
@@ -21,7 +20,6 @@
     </style>
 
     <style name="Theme.App.Dark" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:fontFamily">@font/app_font</item>
@@ -313,7 +311,7 @@
     </style>
 
     <style name="TextAppearance.App.ButtonSmallest" parent="TextAppearance.Material3.BodySmall">
-        <item name="android:textSize">10dp</item>
+        <item name="android:textSize" tools:ignore="SpUsage">10dp</item>
     </style>
 
     <style name="TextAppearance.App.TitleMedium" parent="TextAppearance.Material3.TitleLarge">

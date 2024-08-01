@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp"
                     android:paddingTop="8dp"
-                    android:text="@string/title_player_count_settings"
+                    android:text="@string/settingsPlayerCountTitle"
                     android:textStyle="bold"
                     android:textAppearance="@style/TextAppearance.App.TitleMedium"
                     app:layout_constraintTop_toBottomOf="@id/coloredBackground"

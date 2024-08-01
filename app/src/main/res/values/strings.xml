@@ -140,19 +140,18 @@
     <string name="badge_preference_key" translatable="false">unfinished_as_badge</string>
     <string name="about_preference_key" translatable="false">about</string>
     <string name="language_preference_key" translatable="false">language</string>
-    <string name="title_graph">Graph</string>
-    <string name="title_score">Edit score</string>
-    <string name="title_player_statistics">Statistics</string>
-    <string name="label_lost_points" translatable="false">x40</string>
-    <string name="label_solo_points" translatable="false">x50</string>
-    <string name="label_total_points">Points</string>
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
-    <string name="title_player_count_settings">Wie viele spielen?</string>
-    <string name="player_stats_title_list_count">Anzahl Listen</string>
-    <string name="player_stats_title_overall">Allgemein</string>
-    <string name="player_stats_title_game_count">Anzahl Spiele</string>
+    <string name="graphTitle">Graph</string>
+    <string name="scoreTitle">Edit score</string>
+    <string name="playerStatisticsTitle">Statistics</string>
+    <string name="pointsLostLabel" translatable="false">x40</string>
+    <string name="pointsSoloLabel" translatable="false">x50</string>
+    <string name="pointsTotalLabel">Points</string>
+    <string name="settingsPlayerCountTitle">Wie viele spielen?</string>
+    <string name="playerStatsTitleListCount">Anzahl Listen</string>
+    <string name="playerStatsTitleOverall">Allgemein</string>
+    <string name="playerStatsTitleGameCount">Anzahl Spiele</string>
     <string name="playerStatsTitleQuality">Qualität</string>
-    <string name="player_stats_title_quality_solo">Alleinspieler</string>
-    <string name="player_stats_title_quality_against">Gegenspiele gewonnen</string>
-    <string name="player_stats_title_quality_wins">Gewonnen</string>
+    <string name="playerStatsTitleQualitySolo">Alleinspieler</string>
+    <string name="playerStatsTitleQualityAgainst">Gegenspiele gewonnen</string>
+    <string name="playerStatsTitleQualityWins">Gewonnen</string>
 </resources>

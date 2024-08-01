@@ -32,7 +32,7 @@
                     android:textAlignment="textEnd"
                     android:textColor="?colorOnSurfaceVariant"
                     android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:text="@string/label_solo_points"
+                    android:text="@string/pointsSoloLabel"
                     />
 
                 <TextView
@@ -95,7 +95,7 @@
                     android:textAlignment="textEnd"
                     android:textColor="?colorOnSurfaceVariant"
                     android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:text="@string/label_lost_points"
+                    android:text="@string/pointsLostLabel"
                     />
 
                 <TextView
@@ -168,7 +168,7 @@
                     android:textAlignment="textStart"
                     android:textColor="?colorOnSurfaceVariant"
                     android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:text="@string/label_total_points"
+                    android:text="@string/pointsTotalLabel"
                     />
 
                 <TextView

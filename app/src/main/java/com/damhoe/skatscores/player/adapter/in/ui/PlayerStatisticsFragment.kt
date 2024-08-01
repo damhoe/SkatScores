@@ -74,8 +74,8 @@ class PlayerStatisticsFragment : Fragment() {
         binding.apply {
             this.name.text = name
 
-            textListCount.text = playerStatistics.listCount.toString()
-            textHandsCount.text = playerStatistics.gamesCount.toString()
+            listCountText.text = playerStatistics.listCount.toString()
+            gameCountText.text = playerStatistics.gamesCount.toString()
 
             soloIndicator.progress = playerStatistics.soloPercentage.toInt()
             winsIndicator.progress = playerStatistics.soloWinPercentage.toInt()
