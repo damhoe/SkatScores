@@ -1,7 +1,7 @@
 package com.damhoe.skatscores.game.score.adapter.in.ui;
 
-import com.damhoe.skatscores.game.score.domain.SkatScoreCommand;
-import com.damhoe.skatscores.game.score.domain.SkatSuit;
+import com.damhoe.skatscores.game.domain.score.SkatScoreCommand;
+import com.damhoe.skatscores.game.domain.score.SkatSuit;
 
 class ScoreUIElementsStateManager {
    /**

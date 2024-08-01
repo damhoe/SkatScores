@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".game.game_statistics.presentation.GameGraphFragment">
+    tools:context=".game.adapter.presentation.GameGraphFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.damhoe.skatscores.game.game_statistics.presentation.GraphView
+        <com.damhoe.skatscores.plot.presentation.GraphView
             android:id="@+id/graph_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"

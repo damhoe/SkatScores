@@ -1,6 +1,6 @@
 package com.damhoe.skatscores.game.score.application.ports.out
 
-import com.damhoe.skatscores.game.score.domain.SkatScore
+import com.damhoe.skatscores.game.domain.score.SkatScore
 
 interface CreateScorePort {
     fun saveScore(score: SkatScore): Result<SkatScore>

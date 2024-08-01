@@ -61,10 +61,16 @@ public class DbHelper extends SQLiteOpenHelper {
    public static final String SCORE_COLUMN_OUVERT = "ouvert";
 
    @Inject
-   public DbHelper(@ApplicationContext Context context,
-                   @DatabaseInfo String dbName,
-                   @DatabaseInfo Integer version) {
-      super(context, dbName, null, version);
+   public DbHelper(
+           @ApplicationContext Context context,
+           @DatabaseInfo String dbName,
+           @DatabaseInfo Integer version)
+   {
+      super(
+              context,
+              dbName,
+              null,
+              version);
    }
 
    @Override

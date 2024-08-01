@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/game_setup"
-        android:name="com.damhoe.skatscores.game.game_setup.adapter.in.ui.GameSetupFragment"
+        android:name="com.damhoe.skatscores.game.adapter.presentation.GameSetupFragment"
         tools:layout="@layout/fragment_game_setup">
         <argument
             android:name="ShowBottomAppBar"

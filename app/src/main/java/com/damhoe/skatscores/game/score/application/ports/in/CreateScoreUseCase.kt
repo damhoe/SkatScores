@@ -1,7 +1,7 @@
 package com.damhoe.skatscores.game.score.application.ports.`in`
 
-import com.damhoe.skatscores.game.score.domain.SkatScore
-import com.damhoe.skatscores.game.score.domain.SkatScoreCommand
+import com.damhoe.skatscores.game.domain.score.SkatScore
+import com.damhoe.skatscores.game.domain.score.SkatScoreCommand
 
 interface CreateScoreUseCase {
     fun createScore(command: SkatScoreCommand): Result<SkatScore>

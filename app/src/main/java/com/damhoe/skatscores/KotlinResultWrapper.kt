@@ -2,7 +2,7 @@ package com.damhoe.skatscores
 
 import com.damhoe.skatscores.game.score.application.ports.`in`.CreateScoreUseCase
 import com.damhoe.skatscores.game.score.application.ports.`in`.GetScoreUseCase
-import com.damhoe.skatscores.game.score.domain.SkatScore
+import com.damhoe.skatscores.game.domain.score.SkatScore
 
 class KotlinResultWrapper {
 

@@ -2,10 +2,10 @@ package com.damhoe.skatscores
 
 import android.content.Context
 import com.damhoe.skatscores.app.settings.AppSettingsDialogFragment
-import com.damhoe.skatscores.game.game_home.GameActivity
-import com.damhoe.skatscores.game.game_home.GameModule
-import com.damhoe.skatscores.game.game_home.adapter.`in`.ui.GameFragment
-import com.damhoe.skatscores.game.game_statistics.presentation.GameGraphFragment
+import com.damhoe.skatscores.game.adapter.presentation.GameActivity
+import com.damhoe.skatscores.game.GameModule
+import com.damhoe.skatscores.game.adapter.presentation.GameFragment
+import com.damhoe.skatscores.game.adapter.presentation.GameGraphFragment
 import com.damhoe.skatscores.library.LibraryFragment
 import com.damhoe.skatscores.persistence.DbHelper
 import com.damhoe.skatscores.player.PlayerModule
