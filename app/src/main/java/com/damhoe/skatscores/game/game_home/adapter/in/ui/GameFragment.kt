@@ -334,8 +334,8 @@ class GameFragment : Fragment(), IScoreActionListener
 
         val settings: SkatSettings = skatGame.settings
 
-        dialogBinding.numberOfRoundsText.text = settings.numberOfRounds.toString()
-        dialogBinding.roundsSlider.value = settings.numberOfRounds.toFloat()
+        dialogBinding.roundCountText.text = settings.numberOfRounds.toString()
+        dialogBinding.roundCountSlider.value = settings.numberOfRounds.toFloat()
 
         dialogBinding.scoringSettingsRg.check(if (settings.isTournamentScoring()) R.id.tournament_scoring_rb else R.id.simple_scoring_rb)
 
@@ -353,7 +353,7 @@ class GameFragment : Fragment(), IScoreActionListener
                 val editable = dialogBinding.listNameEditText.text
                 val title = editable.toString()
 
-                settings.numberOfRounds = dialogBinding.roundsSlider.value.toInt()
+                settings.numberOfRounds = dialogBinding.roundCountSlider.value.toInt()
                 settings.isTournamentScoring = dialogBinding.tournamentScoringRb.isChecked
 
                 val checkedButton = dialogBinding.toggleGroupStartDealer.checkedButtonId
@@ -387,7 +387,7 @@ class GameFragment : Fragment(), IScoreActionListener
 
             override fun afterTextChanged(s: Editable)
             {
-                val counterMaxLength = dialogBinding.listNameTextInput.counterMaxLength
+                val counterMaxLength = dialogBinding.listNameInput.counterMaxLength
                 val length: Int = s.length
                 if (length > counterMaxLength)
                 {
@@ -402,19 +402,19 @@ class GameFragment : Fragment(), IScoreActionListener
                             .trim { it <= ' ' }
 
                 // Set error if invalid title
-                dialogBinding.listNameTextInput.error =
+                dialogBinding.listNameInput.error =
                         if (title.isEmpty()) getString(R.string.error_valid_title_required) else null
 
                 // Disable positive button if error exists
                 val buttonPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                buttonPositive.isEnabled = dialogBinding.listNameTextInput.error == null
+                buttonPositive.isEnabled = dialogBinding.listNameInput.error == null
             }
         })
 
-        dialogBinding.roundsSlider.addOnChangeListener(
+        dialogBinding.roundCountSlider.addOnChangeListener(
                 Slider.OnChangeListener {
                     _: Slider?, value: Float, _: Boolean ->
-            dialogBinding.numberOfRoundsText.text = value.toInt()
+            dialogBinding.roundCountText.text = value.toInt()
                 .toString()
             val currentRound = viewModel.gameRunStateInfo.value!!.currentRound
 
@@ -500,7 +500,7 @@ class GameFragment : Fragment(), IScoreActionListener
     override fun notifyEdit(
             skatScore: SkatScore)
     {
-        val players = viewModel!!.players.value
+        val players = viewModel.players.value
                 ?: throw RuntimeException("Players are null when score request is created.")
 
         val names: MutableList<String> = ArrayList()
@@ -520,7 +520,7 @@ class GameFragment : Fragment(), IScoreActionListener
                         positions)
         val bundle = Bundle()
         bundle.putParcelable(
-                ScoreFragment.Companion.SCORE_REQUEST_KEY,
+                ScoreFragment.SCORE_REQUEST_KEY,
                 scoreRequest)
         findNavController().navigate(
                 R.id.action_game_to_score,

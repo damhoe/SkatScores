@@ -7,13 +7,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.text.Editable;
@@ -70,11 +70,11 @@ public class PlayerDetailsFragment extends Fragment {
                     PlayerDetailsFragmentDirections.actionPlayerDetailsToPlayerStatistics();
             findNavController().navigate(directions);
         });
-        binding.editName.setOnClickListener(view -> buildStartAddPlayerDialog());
+        binding.editName.setOnClickListener(view -> showEditPlayerDialog());
         return binding.getRoot();
     }
 
-    private void buildStartAddPlayerDialog() {
+    private void showEditPlayerDialog() {
         View layout = getLayoutInflater().inflate(R.layout.dialog_edit_name, null);
         TextInputEditText editText = layout.findViewById(R.id.edit_name);
         Player player = viewModel.getSelectedPlayer().getValue();
@@ -88,6 +88,11 @@ public class PlayerDetailsFragment extends Fragment {
         AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.dialog_title_edit_player_name))
                 .setView(layout)
+                .setBackground(
+                        ResourcesCompat.getDrawable(
+                                getResources(),
+                                R.drawable.background_dialog_fragment,
+                                requireActivity().getTheme()))
                 .setNegativeButton(getString(R.string.dialog_title_button_cancel), (d, i) -> d.cancel())
                 .setPositiveButton(getString(R.string.dialog_title_button_save), (d, i) -> {
                     if (inputLayout.getError() != null) {

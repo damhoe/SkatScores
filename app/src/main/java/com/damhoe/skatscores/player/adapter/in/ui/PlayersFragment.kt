@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -72,7 +73,7 @@ class PlayersFragment : Fragment(), NotifyItemClickListener
                 view,
                 savedInstanceState)
 
-        binding.addPlayerButton.setOnClickListener { buildStartAddPlayerDialog() }
+        binding.addPlayerButton.setOnClickListener { showAddPlayerDialog() }
 
         viewModel.players.observe(viewLifecycleOwner) {
             with(binding.playerRecyclerView) {
@@ -84,7 +85,7 @@ class PlayersFragment : Fragment(), NotifyItemClickListener
         }
     }
 
-    private fun buildStartAddPlayerDialog()
+    private fun showAddPlayerDialog()
     {
         val layout = layoutInflater.inflate(
                 R.layout.dialog_edit_name,
@@ -101,6 +102,11 @@ class PlayersFragment : Fragment(), NotifyItemClickListener
                             getString(R.string.dialog_title_create_player))
                     .setView(
                             layout)
+                    .setBackground(
+                        ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.background_dialog_fragment,
+                            requireActivity().theme))
                     .setNegativeButton(
                             getString(R.string.dialog_title_button_cancel)) {
                         d: DialogInterface, _: Int -> d.cancel() }

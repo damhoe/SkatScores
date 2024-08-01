@@ -6,13 +6,13 @@
     <string name="title_help">Hilfe</string>
     <string name="title_history">Verlauf</string>
     <string name="title_home">Home</string>
-    <string name="title_scoring_settings">Wertungsmodus</string>
-    <string name="title_rounds_settings">Anzahl Runden</string>
+    <string name="settingsScoringTitle">Wertungsmodus</string>
+    <string name="settingsRoundCountTitle">Anzahl Runden</string>
     <string name="title_general_settings">Allgemein</string>
     <string name="title_settings_language">Sprache</string>
     <string name="label_game_settings">Spieleinstellungen</string>
-    <string name="option_tournament_scoring">Turnier</string>
-    <string name="option_simple_scoring">Einfach</string>
+    <string name="settingsScoringTournament">Turnier</string>
+    <string name="settingsScoringSimple">Einfach</string>
     <string name="title_number_of_players">Number of players</string>
     <string name="title_list_name">List name</string>
     <string name="description_start">Beginne die neue Liste</string>
@@ -31,7 +31,7 @@
     <string name="message_dialog_number_players">Anzahl der Spieler\'innen</string>
     <string name="message_language_dialog">Sprache</string>
     <string name="title_game_setup">Neue Liste</string>
-    <string name="title_start">Start</string>
+    <string name="settingsStartButton">Start</string>
     <string name="hint_player3">Spieler 3</string>
     <string name="hint_player2">Spieler 2</string>
     <string name="hint_player1">Spieler 1</string>
@@ -131,4 +131,6 @@
     <string name="playerStatsTitleQualitySolo">Alleinspieler</string>
     <string name="playerStatsTitleQualityAgainst">Gegenspiele gewonnen</string>
     <string name="playerStatsTitleQualityWins">Gewonnen</string>
+    <string name="settingsListNameTitle">Wie soll die Liste \\nheissen?</string>
+    <string name="settingsRoundCountContentDescription">Wähle die Anzahl der Runden aus.</string>
 </resources>

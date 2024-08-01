@@ -14,7 +14,7 @@
         tools:context=".game.game_setup.adapter.in.ui.GameSetupFragment">
 
         <TextView
-            android:id="@+id/list_name_title_view"
+            android:id="@+id/listNameTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_list_name"
@@ -25,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/list_name_text_input"
+            android:id="@+id/listNameInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:endIconDrawable="@drawable/ic_cancel_24dp"
@@ -36,11 +36,11 @@
             app:errorEnabled="true"
             app:errorTextColor="?attr/colorError"
             style="@style/Widget.App.TextInputLayout"
-            app:layout_constraintTop_toBottomOf="@id/list_name_title_view"
-            app:layout_constraintStart_toStartOf="@id/list_name_title_view">
+            app:layout_constraintTop_toBottomOf="@id/listNameTitle"
+            app:layout_constraintStart_toStartOf="@id/listNameTitle">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/list_name_edit_text"
+                android:id="@+id/listNameEditText"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -51,15 +51,15 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/title_scoring"
+            android:id="@+id/scoringTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_scoring_settings"
+            android:text="@string/settingsScoringTitle"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:paddingTop="24dp"
             android:paddingBottom="8dp"
-            app:layout_constraintStart_toStartOf="@id/list_name_text_input"
-            app:layout_constraintTop_toBottomOf="@id/list_name_text_input"/>
+            app:layout_constraintStart_toStartOf="@id/listNameInput"
+            app:layout_constraintTop_toBottomOf="@id/listNameInput"/>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/scoring_settings_rg"
@@ -71,8 +71,8 @@
             app:singleSelection="true"
             app:checkedButton="@id/tournament_scoring_rb"
             app:selectionRequired="true"
-            app:layout_constraintStart_toStartOf="@id/title_scoring"
-            app:layout_constraintTop_toBottomOf="@id/title_scoring">
+            app:layout_constraintStart_toStartOf="@id/scoringTitle"
+            app:layout_constraintTop_toBottomOf="@id/scoringTitle">
 
             <com.google.android.material.button.MaterialButton
                 style="?attr/materialButtonOutlinedStyle"
@@ -80,7 +80,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/option_simple_scoring"
+                android:text="@string/settingsScoringSimple"
                 tools:ignore="VisualLintButtonSize" />
 
             <com.google.android.material.button.MaterialButton
@@ -89,24 +89,24 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/option_tournament_scoring"
+                android:text="@string/settingsScoringTournament"
                 tools:ignore="VisualLintButtonSize" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
         <TextView
-            android:id="@+id/title_round_count"
+            android:id="@+id/roundCountTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_rounds_settings"
+            android:text="@string/settingsRoundCountTitle"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:paddingTop="24dp"
             android:paddingBottom="8dp"
-            app:layout_constraintStart_toStartOf="@id/title_scoring"
+            app:layout_constraintStart_toStartOf="@id/scoringTitle"
             app:layout_constraintTop_toBottomOf="@+id/scoring_settings_rg"/>
 
         <TextView
-            android:id="@+id/number_of_rounds_text"
+            android:id="@+id/roundCountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="12"
@@ -115,12 +115,12 @@
             android:paddingBottom="8dp"
             android:paddingTop="24dp"
             android:layout_marginStart="24dp"
-            app:layout_constraintTop_toTopOf="@id/title_round_count"
-            app:layout_constraintBottom_toBottomOf="@id/title_round_count"
-            app:layout_constraintStart_toEndOf="@id/title_round_count"/>
+            app:layout_constraintTop_toTopOf="@id/roundCountTitle"
+            app:layout_constraintBottom_toBottomOf="@id/roundCountTitle"
+            app:layout_constraintStart_toEndOf="@id/roundCountTitle"/>
 
         <com.google.android.material.slider.Slider
-            android:id="@+id/rounds_slider"
+            android:id="@+id/roundCountSlider"
             style="@style/Widget.App.Slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
             app:labelBehavior="floating"
             android:layout_marginStart="-12dp"
             android:layout_marginEnd="-12dp"
-            app:layout_constraintTop_toBottomOf="@id/number_of_rounds_text"
+            app:layout_constraintTop_toBottomOf="@id/roundCountText"
             tools:ignore="DuplicateSpeakableTextCheck" />
 
         <TextView
@@ -143,8 +143,8 @@
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:paddingTop="24dp"
             android:paddingBottom="8dp"
-            app:layout_constraintStart_toStartOf="@id/title_scoring"
-            app:layout_constraintTop_toBottomOf="@id/rounds_slider"/>
+            app:layout_constraintStart_toStartOf="@id/scoringTitle"
+            app:layout_constraintTop_toBottomOf="@id/roundCountSlider"/>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/toggleGroupStartDealer"

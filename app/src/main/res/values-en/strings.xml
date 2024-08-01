@@ -6,13 +6,13 @@
     <string name="title_help">Help</string>
     <string name="title_history">History</string>
     <string name="title_home">Home</string>
-    <string name="title_scoring_settings">Scoring</string>
-    <string name="title_rounds_settings">Number of rounds</string>
+    <string name="settingsScoringTitle">Scoring</string>
+    <string name="settingsRoundCountTitle">Number of rounds</string>
     <string name="label_game_settings">Game settings</string>
     <string name="title_settings_language">Language</string>
     <string name="title_general_settings">General</string>
-    <string name="option_tournament_scoring">Tournament</string>
-    <string name="option_simple_scoring">Simple</string>
+    <string name="settingsScoringTournament">Tournament</string>
+    <string name="settingsScoringSimple">Simple</string>
     <string name="title_number_of_players">Number of players</string>
     <string name="title_list_name">List name</string>
     <string name="description_start">Start the new list</string>
@@ -31,7 +31,7 @@
     <string name="message_dialog_number_players">Select number of players</string>
     <string name="message_language_dialog">Select language</string>
     <string name="title_game_setup">New list</string>
-    <string name="title_start">Start</string>
+    <string name="settingsStartButton">Start</string>
     <string name="hint_player3">Player 3</string>
     <string name="hint_player2">Player 2</string>
     <string name="hint_player1">Player 1</string>
@@ -131,4 +131,6 @@
     <string name="playerStatsTitleQualitySolo">Solo</string>
     <string name="playerStatsTitleQualityAgainst">Wins against</string>
     <string name="playerStatsTitleQualityWins">Wins</string>
+    <string name="settingsListNameTitle">Choose a list name!</string>
+    <string name="settingsRoundCountContentDescription">Choose number of rounds.</string>
 </resources>

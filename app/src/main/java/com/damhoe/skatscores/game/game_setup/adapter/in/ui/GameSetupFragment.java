@@ -77,7 +77,7 @@ public class GameSetupFragment extends Fragment {
         final Observer<Integer> numberOfRoundsObserver = numberOfRounds -> {
             Log.d("Observed LiveData change", "Number of rounds changed to " + numberOfRounds);
             // Update text view
-            binding.numberOfRoundsText.setText(String.valueOf(numberOfRounds));
+            binding.roundCountText.setText(String.valueOf(numberOfRounds));
         };
         viewModel.getNumberOfRounds().observe(getViewLifecycleOwner(), numberOfRoundsObserver);
 
@@ -93,7 +93,7 @@ public class GameSetupFragment extends Fragment {
 
         final Observer<String> listNameObserver = name -> {
             Log.d("Observed LiveData change", "New list name: " + name);
-            requireActivity().findViewById(R.id.start_button).setEnabled(!name.isEmpty());
+            requireActivity().findViewById(R.id.startButton).setEnabled(!name.isEmpty());
         };
         viewModel.getTitle().observe(getViewLifecycleOwner(), listNameObserver);
 
@@ -157,7 +157,7 @@ public class GameSetupFragment extends Fragment {
     }
 
     private void setUpRoundsSeekbar() {
-        binding.roundsSlider.addOnChangeListener((slider, numberOfRounds, fromUser) ->
+        binding.roundCountSlider.addOnChangeListener((slider, numberOfRounds, fromUser) ->
                 viewModel.updateNumberOfRounds((int) numberOfRounds));
     }
 
@@ -183,11 +183,13 @@ public class GameSetupFragment extends Fragment {
         binding.listNameEditText.setText(
                 viewModel.getTitle().getValue());
 
-        binding.buttonPlayerCountInfo.setOnClickListener(
-                view -> Toast.makeText(
-                    requireContext(),
-                    "Currently only 3 players are supported.",
-                    Toast.LENGTH_SHORT));
+        binding.playerCountInfoButton.setOnClickListener(
+                view -> Toast
+                        .makeText(
+                                requireContext(),
+                        "Currently only 3 players are supported.",
+                        Toast.LENGTH_SHORT)
+                        .show());
 
         boolean isTournamentScoring = viewModel.isTournamentScoring().getValue();
         binding.scoringSettingsRg.check(
@@ -195,7 +197,7 @@ public class GameSetupFragment extends Fragment {
                         ? R.id.tournament_scoring_rb
                         : R.id.simple_scoring_rb
         );
-        binding.roundsSlider.setValue(
+        binding.roundCountSlider.setValue(
                 viewModel.getNumberOfRounds().getValue());
     }
 
