@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import com.damhoe.skatscores.game.score.application.ports.`in`.CreateScoreUseCase
-import com.damhoe.skatscores.game.score.domain.SkatOutcome
-import com.damhoe.skatscores.game.score.domain.SkatScore
-import com.damhoe.skatscores.game.score.domain.SkatScoreCommand
-import com.damhoe.skatscores.game.score.domain.SkatSuit
+import com.damhoe.skatscores.game.domain.score.SkatOutcome
+import com.damhoe.skatscores.game.domain.score.SkatScore
+import com.damhoe.skatscores.game.domain.score.SkatScoreCommand
+import com.damhoe.skatscores.game.domain.score.SkatSuit
 import java.lang.IllegalArgumentException
 
 class ScoreViewModel(

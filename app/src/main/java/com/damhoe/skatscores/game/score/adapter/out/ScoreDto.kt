@@ -1,8 +1,8 @@
 package com.damhoe.skatscores.game.score.adapter.out
 
-import com.damhoe.skatscores.game.score.domain.SkatOutcome
-import com.damhoe.skatscores.game.score.domain.SkatScore
-import com.damhoe.skatscores.game.score.domain.SkatSuit
+import com.damhoe.skatscores.game.domain.score.SkatOutcome
+import com.damhoe.skatscores.game.domain.score.SkatScore
+import com.damhoe.skatscores.game.domain.score.SkatSuit
 
 
 data class ScoreDto(

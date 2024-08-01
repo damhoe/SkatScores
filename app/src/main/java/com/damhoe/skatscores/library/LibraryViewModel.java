@@ -5,10 +5,10 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.damhoe.skatscores.base.Result;
-import com.damhoe.skatscores.game.game_home.application.ports.in.CreateGameUseCase;
-import com.damhoe.skatscores.game.game_home.application.ports.in.LoadGameUseCase;
-import com.damhoe.skatscores.game.game_home.domain.SkatGame;
-import com.damhoe.skatscores.game.game_home.domain.SkatGamePreview;
+import com.damhoe.skatscores.game.domain.skat.SkatGame;
+import com.damhoe.skatscores.game.application.ports.in.CreateGameUseCase;
+import com.damhoe.skatscores.game.application.ports.in.LoadGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.SkatGamePreview;
 
 import java.util.Calendar;
 import java.util.Date;

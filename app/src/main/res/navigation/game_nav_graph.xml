@@ -7,11 +7,11 @@
 
     <fragment
         android:id="@+id/game"
-        android:name="com.damhoe.skatscores.game.game_home.adapter.in.ui.GameFragment"
+        android:name="com.damhoe.skatscores.game.adapter.presentation.GameFragment"
         tools:layout="@layout/fragment_game" >
         <argument
             android:name="gameCommand"
-            app:argType="com.damhoe.skatscores.game.game_setup.domain.SkatGameCommand"
+            app:argType="com.damhoe.skatscores.game.domain.skat.SkatGameCommand"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
@@ -41,11 +41,11 @@
         tools:layout="@layout/fragment_score">
         <argument
             android:name="ScoreRequest"
-            app:argType="com.damhoe.skatscores.game.score.domain.ScoreRequest"
+            app:argType="com.damhoe.skatscores.game.domain.score.ScoreRequest"
             app:nullable="false"/>
     </fragment>
     <fragment
         android:id="@+id/graph"
-        android:name="com.damhoe.skatscores.game.game_statistics.presentation.GameGraphFragment"
+        android:name="com.damhoe.skatscores.game.adapter.presentation.GameGraphFragment"
         tools:layout="@layout/fragment_game_graph" />
 </navigation>

@@ -4,8 +4,8 @@ import com.damhoe.skatscores.game.score.application.ports.`in`.CreateScoreUseCas
 import com.damhoe.skatscores.game.score.application.ports.`in`.GetScoreUseCase
 import com.damhoe.skatscores.game.score.application.ports.out.CreateScorePort
 import com.damhoe.skatscores.game.score.application.ports.out.GetScoresPort
-import com.damhoe.skatscores.game.score.domain.SkatScore
-import com.damhoe.skatscores.game.score.domain.SkatScoreCommand
+import com.damhoe.skatscores.game.domain.score.SkatScore
+import com.damhoe.skatscores.game.domain.score.SkatScoreCommand
 import javax.inject.Inject
 
 class ScoreService @Inject constructor(

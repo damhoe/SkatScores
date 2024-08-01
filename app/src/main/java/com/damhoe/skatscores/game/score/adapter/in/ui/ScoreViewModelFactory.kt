@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.damhoe.skatscores.game.score.application.ports.`in`.CreateScoreUseCase
 import com.damhoe.skatscores.game.score.application.ports.`in`.GetScoreUseCase
-import com.damhoe.skatscores.game.score.domain.ScoreRequest
-import com.damhoe.skatscores.game.score.domain.SkatScoreCommand
+import com.damhoe.skatscores.game.domain.score.ScoreRequest
+import com.damhoe.skatscores.game.domain.score.SkatScoreCommand
 import javax.inject.Inject
 
 class ScoreViewModelFactory @Inject constructor(

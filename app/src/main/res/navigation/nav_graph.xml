@@ -23,7 +23,7 @@
 
     <activity
         android:id="@+id/game"
-        android:name="com.damhoe.skatscores.game.game_home.GameActivity"
+        android:name="com.damhoe.skatscores.game.adapter.presentation.GameActivity"
         tools:layout="@layout/activity_game">
         <argument
             android:name="gameId"

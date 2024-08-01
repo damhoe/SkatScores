@@ -4,34 +4,25 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavDirections
-import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.damhoe.skatscores.MainActivity
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.app.HomeFragmentDirections
 import com.damhoe.skatscores.databinding.FragmentLibraryBinding
-import com.damhoe.skatscores.game.game_home.adapter.`in`.ui.shared.GamePreviewAdapter
-import com.damhoe.skatscores.game.game_home.adapter.`in`.ui.shared.GamePreviewItemClickListener
-import com.damhoe.skatscores.game.game_home.domain.SkatGamePreview
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager
-import com.damhoe.skatscores.shared_ui.utils.LayoutMargins
+import com.damhoe.skatscores.game.adapter.presentation.shared.GamePreviewAdapter
+import com.damhoe.skatscores.game.adapter.presentation.shared.GamePreviewItemClickListener
+import com.damhoe.skatscores.game.domain.skat.SkatGamePreview
 import javax.inject.Inject
 
-class LibraryFragment : Fragment(), GamePreviewItemClickListener
+class LibraryFragment : Fragment(),
+    GamePreviewItemClickListener
 {
     @Inject
     lateinit var factory: LibraryViewModelFactory
@@ -104,7 +95,8 @@ class LibraryFragment : Fragment(), GamePreviewItemClickListener
         (HomeFragmentDirections.actionHomeToGame().setGameId(gameId) as NavDirections))
 
     override fun notifySelect(
-        skatGamePreview: SkatGamePreview)
+        skatGamePreview: SkatGamePreview
+    )
     {
         navigateToGame(
             skatGamePreview.gameId)

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.damhoe.skatscores.game.game_setup.adapter.in.ui.GameSetupViewModel" />
+            type="com.damhoe.skatscores.game.adapter.presentation.GameSetupViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:context=".game.game_setup.adapter.in.ui.GameSetupFragment"
+                tools:context=".game.adapter.presentation.GameSetupFragment"
                 android:paddingBottom="108dp">
 
                 <TextView

@@ -1,6 +1,6 @@
 package com.damhoe.skatscores.player.adapter.out
 
-import com.damhoe.skatscores.game.score.domain.SkatOutcome
+import com.damhoe.skatscores.game.domain.score.SkatOutcome
 import com.damhoe.skatscores.persistence.DbHelper
 import javax.inject.Inject
 

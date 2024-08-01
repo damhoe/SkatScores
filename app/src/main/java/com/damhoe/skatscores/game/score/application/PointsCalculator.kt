@@ -1,8 +1,8 @@
 package com.damhoe.skatscores.game.score.application
 
 import com.damhoe.skatscores.game.score.Constant
-import com.damhoe.skatscores.game.score.domain.SkatScore
-import com.damhoe.skatscores.game.score.domain.SkatSuit
+import com.damhoe.skatscores.game.domain.score.SkatScore
+import com.damhoe.skatscores.game.domain.score.SkatSuit
 
 class PointsCalculator(private val score: SkatScore) {
 

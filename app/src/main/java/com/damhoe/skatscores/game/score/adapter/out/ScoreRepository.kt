@@ -2,7 +2,7 @@ package com.damhoe.skatscores.game.score.adapter.out
 
 import com.damhoe.skatscores.game.score.application.ports.out.CreateScorePort
 import com.damhoe.skatscores.game.score.application.ports.out.GetScoresPort
-import com.damhoe.skatscores.game.score.domain.SkatScore
+import com.damhoe.skatscores.game.domain.score.SkatScore
 import javax.inject.Inject
 import javax.inject.Singleton
 
