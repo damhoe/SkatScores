@@ -26,7 +26,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,7 +48,6 @@ import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
-import java.util.Arrays
 import java.util.Locale
 import java.util.stream.Collectors
 import javax.inject.Inject
@@ -64,7 +62,7 @@ class GameFragment : Fragment(), IScoreActionListener
     @Inject
     lateinit var selectPlayerVMFactory: SelectPlayerVMFactory;
     private val selectPlayerViewModel: SelectPlayerViewModel by viewModels(
-            { requireActivity() }) { selectPlayerVMFactory }
+        { requireActivity() }) { selectPlayerVMFactory }
 
     private lateinit var binding: FragmentGameBinding
     private val playerValidator = PlayerSelectionValidator()
@@ -458,7 +456,7 @@ class GameFragment : Fragment(), IScoreActionListener
     override fun notifyDelete()
     {
         val deleteResult: Result<SkatScore> = viewModel.removeLastScore()
-        if (deleteResult.isFailure())
+        if (deleteResult.isFailure)
         {
             Snackbar.make(
                     requireView(),
@@ -470,22 +468,31 @@ class GameFragment : Fragment(), IScoreActionListener
                 .show()
             return
         }
-        val position = scoreAdapter.getPosition(deleteResult.value.id)
-        scoreAdapter.notifyItemRemoved(position)
+        val position = scoreAdapter.getPosition(
+            deleteResult.value.id)
+        scoreAdapter.notifyItemRemoved(
+            position)
     }
 
     override fun notifyDetails(skatScore: SkatScore)
     {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.dialog_title_score_details))
+            .setBackground(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.background_dialog_fragment,
+                    requireActivity().theme))
             .setMessage(
-                    SkatScore.TextMaker(requireContext())
-                        .setupWithSkatScore(skatScore)
-                        .make()
-            )
+                    SkatScore
+                        .TextMaker(
+                            requireContext())
+                        .setupWithSkatScore(
+                            skatScore)
+                        .make())
             .setPositiveButton(
                     getString(R.string.dialog_title_button_got_it),
-                    (DialogInterface.OnClickListener { dialogInterface: DialogInterface, i: Int -> dialogInterface.dismiss() }))
+                    (DialogInterface.OnClickListener { dialogInterface: DialogInterface, _: Int -> dialogInterface.dismiss() }))
             .create()
             .show()
     }
@@ -581,24 +588,29 @@ class GameFragment : Fragment(), IScoreActionListener
         editPlayer3.setAdapter<ArrayAdapter<Player>>(adapter)
 
         val dialog: AlertDialog = MaterialAlertDialogBuilder(requireContext())
-            .setView(contentView)
             .setTitle(getString(R.string.dialog_title_edit_players))
+            .setView(contentView)
+            .setBackground(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.background_dialog_fragment,
+                    requireActivity().theme))
             .setNegativeButton(
                     getString(R.string.dialog_title_button_cancel)) {
                 d: DialogInterface, _: Int -> d.cancel() }
             .setPositiveButton(
-                    getString(R.string.dialog_title_button_save)
-            ) { d: DialogInterface, _: Int ->
+                    getString(R.string.dialog_title_button_save))
+            { d: DialogInterface, _: Int ->
                 val name1: String =
-                        editPlayer1.getText()
+                        editPlayer1.text
                             .toString()
                             .trim { it <= ' ' }
                 val name2: String =
-                        editPlayer2.getText()
+                        editPlayer2.text
                             .toString()
                             .trim { it <= ' ' }
                 val name3: String =
-                        editPlayer3.getText()
+                        editPlayer3.text
                             .toString()
                             .trim { it <= ' ' }
 
@@ -608,11 +620,12 @@ class GameFragment : Fragment(), IScoreActionListener
                 val player3 = mapToPlayer(name3)
 
                 val newPlayers =
-                        Arrays.asList(
-                                player1,
-                                player2,
-                                player3)
-                viewModel.updatePlayers(newPlayers)
+                        listOf(
+                            player1,
+                            player2,
+                            player3)
+                viewModel.updatePlayers(
+                    newPlayers)
                 d.dismiss()
             }
             .create()
@@ -638,9 +651,7 @@ class GameFragment : Fragment(), IScoreActionListener
                 allPlayers,
                 currentPlayers.stream()
                     .map { obj: Player -> obj.name }
-                    .collect(Collectors.toList())
-        )
-
+                    .collect(Collectors.toList()))
         dialog.show()
     }
 
@@ -744,7 +755,7 @@ class GameFragment : Fragment(), IScoreActionListener
             Log.d(
                     "Event",
                     "Edit score button clicked.")
-            val players = viewModel!!.players.value!!
+            val players = viewModel.players.value!!
             val request: ScoreRequest.CreateScoreRequest = getCreateScoreRequest(players)
             val bundle = Bundle()
             bundle.putParcelable(
@@ -759,7 +770,7 @@ class GameFragment : Fragment(), IScoreActionListener
     private fun getCreateScoreRequest(
             players: List<Player>?): ScoreRequest.CreateScoreRequest
     {
-        val game = viewModel!!.game.value
+        val game = viewModel.game.value
         val gameId = game?.id ?: -1L
 
         val names: MutableList<String> = ArrayList()

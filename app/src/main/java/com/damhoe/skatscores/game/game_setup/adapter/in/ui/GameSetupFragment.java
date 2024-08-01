@@ -7,8 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +19,6 @@ import androidx.navigation.Navigation;
 
 import com.damhoe.skatscores.R;
 import com.damhoe.skatscores.databinding.FragmentGameSetupBinding;
-import com.damhoe.skatscores.game.game_home.Constants;
 import com.damhoe.skatscores.game.game_setup.domain.SkatGameCommand;
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager;
 import com.damhoe.skatscores.shared_ui.utils.LayoutMargins;
@@ -111,7 +109,6 @@ public class GameSetupFragment extends Fragment {
         viewModel.getSkatGameCommand().observe(getViewLifecycleOwner(), commandObserver);
 
         setUpListNameInput();
-        setUpNumberOfPlayersSpinner();
         setUpRoundsSeekbar();
         setUpScoringButtons();
         setUpStartButton();
@@ -159,24 +156,6 @@ public class GameSetupFragment extends Fragment {
         });
     }
 
-    private void setUpNumberOfPlayersSpinner() {
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(requireContext(),
-                R.layout.item_popup_list, Constants.ALLOWED_NUMBER_OF_PLAYERS);
-        binding.numberOfPlayersSpinner.setAdapter(adapter);
-        binding.numberOfPlayersSpinner.setOnItemSelectedListener(
-                new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                        viewModel.updateNumberOfPlayers(Integer.parseInt(adapterView.getSelectedItem().toString()));
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-                        // Ignore.
-                    }
-                });
-    }
-
     private void setUpRoundsSeekbar() {
         binding.roundsSlider.addOnChangeListener((slider, numberOfRounds, fromUser) ->
                 viewModel.updateNumberOfRounds((int) numberOfRounds));
@@ -201,26 +180,23 @@ public class GameSetupFragment extends Fragment {
 
     /** @noinspection DataFlowIssue*/
     private void initializeUI() {
-        // Set list name
-        binding.listNameEditText.setText(viewModel.getTitle().getValue());
-        // Set number of players
-        int numberOfPlayers = viewModel.getNumberOfPlayers().getValue();
-        binding.numberOfPlayersSpinner.setText(String.valueOf(numberOfPlayers), false);
-        // Set scoring buttons
+        binding.listNameEditText.setText(
+                viewModel.getTitle().getValue());
+
+        binding.buttonPlayerCountInfo.setOnClickListener(
+                view -> Toast.makeText(
+                    requireContext(),
+                    "Currently only 3 players are supported.",
+                    Toast.LENGTH_SHORT));
+
         boolean isTournamentScoring = viewModel.isTournamentScoring().getValue();
         binding.scoringSettingsRg.check(
-                isTournamentScoring? R.id.tournament_scoring_rb : R.id.simple_scoring_rb
+                isTournamentScoring
+                        ? R.id.tournament_scoring_rb
+                        : R.id.simple_scoring_rb
         );
-        binding.roundsSlider.setValue(viewModel.getNumberOfRounds().getValue());
-    }
-
-    private int calculateSeekbarPosition(int value, Integer[] allowedValues) {
-        for (int i = 0; i < allowedValues.length; i++) {
-            if (allowedValues[i] == value) {
-                return i;
-            }
-        }
-        return 0;
+        binding.roundsSlider.setValue(
+                viewModel.getNumberOfRounds().getValue());
     }
 
     @Override
