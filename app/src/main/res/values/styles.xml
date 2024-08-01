@@ -172,9 +172,10 @@
 
     </style>
 
-    <style name="Widget.App.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
-        <item name="trackColor">?attr/colorSurfaceVariant</item>
-        <item name="indicatorColor">?attr/colorPrimaryContainer</item>
+    <style name="Widget.App.SimplePieChart" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="trackColor">?attr/colorSurfaceContainer</item>
+        <item name="indicatorColor">?attr/colorPrimary</item>
+        <item name="indicatorTrackGapSize">0dp</item>
     </style>
 
     <style name="Widget.App.TextInputLayout"

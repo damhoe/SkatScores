@@ -143,10 +143,16 @@
     <string name="title_graph">Graph</string>
     <string name="title_score">Edit score</string>
     <string name="title_player_statistics">Statistics</string>
-    <string name="label_lost_points">x40</string>
-    <string name="label_solo_points">x50</string>
+    <string name="label_lost_points" translatable="false">x40</string>
+    <string name="label_solo_points" translatable="false">x50</string>
     <string name="label_total_points">Points</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="title_player_count_settings">Wie viele spielen?</string>
+    <string name="player_stats_title_list_count">Anzahl Listen</string>
+    <string name="player_stats_title_overall">Allgemein</string>
+    <string name="player_stats_title_game_count">Anzahl Spiele</string>
+    <string name="playerStatsTitleQuality">Qualität</string>
+    <string name="player_stats_title_quality_solo">Alleinspieler</string>
+    <string name="player_stats_title_quality_against">Gegenspiele gewonnen</string>
+    <string name="player_stats_title_quality_wins">Gewonnen</string>
 </resources>
