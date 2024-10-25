@@ -3,8 +3,8 @@ package com.damhoe.skatscores.game.score.adapter.`in`.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.damhoe.skatscores.game.score.application.ports.`in`.CreateScoreUseCase
-import com.damhoe.skatscores.game.score.application.ports.`in`.GetScoreUseCase
+import com.damhoe.skatscores.game.domain.skat.application.ports.CreateScoreUseCase
+import com.damhoe.skatscores.game.domain.skat.application.ports.GetScoreUseCase
 import com.damhoe.skatscores.game.domain.score.ScoreRequest
 import com.damhoe.skatscores.game.domain.score.SkatScoreCommand
 import javax.inject.Inject

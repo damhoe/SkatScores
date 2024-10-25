@@ -49,8 +49,8 @@ class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>
     @Override
     public void onBindViewHolder(@NonNull PlayerAdapter.PlayerViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Player player = players.get(position);
-        holder.name.setText(player.getName());
-        holder.numberGames.setText(String.format(Locale.getDefault(), "%d Games", player.getGameCount()));
+        holder.name.setText(player.name);
+        holder.numberGames.setText(String.format(Locale.getDefault(), "%d Games", player.gameCount));
 
         holder.itemView.setOnClickListener(view -> listener.notifyItemClick(player, position));
     }
@@ -97,7 +97,7 @@ class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldPlayers.get(oldItemPosition).getName().equals(newPlayers.get(newItemPosition).getName());
+            return oldPlayers.get(oldItemPosition).name.equals(newPlayers.get(newItemPosition).name);
         }
     }
 

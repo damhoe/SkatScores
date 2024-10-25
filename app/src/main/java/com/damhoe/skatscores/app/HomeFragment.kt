@@ -18,7 +18,7 @@ import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentHomeBinding
 import com.damhoe.skatscores.library.LibraryFragment
 import com.damhoe.skatscores.player.adapter.`in`.ui.PlayersFragment
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager
+import com.damhoe.skatscores.shared.shared_ui.utils.InsetsManager
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment()

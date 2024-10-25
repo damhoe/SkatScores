@@ -1,14 +1,15 @@
 package com.damhoe.skatscores.game.score.adapter.out
 
-import com.damhoe.skatscores.game.score.application.ports.out.CreateScorePort
-import com.damhoe.skatscores.game.score.application.ports.out.GetScoresPort
+import com.damhoe.skatscores.game.domain.skat.application.ports.CreateScorePort
+import com.damhoe.skatscores.game.domain.skat.application.ports.GetScoresPort
 import com.damhoe.skatscores.game.domain.score.SkatScore
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ScoreRepository @Inject constructor(private val persistenceAdapter: ScorePersistenceAdapter) :
-    CreateScorePort, GetScoresPort {
+    CreateScorePort, GetScoresPort
+{
 
     override fun saveScore(score: SkatScore): Result<SkatScore> =
         ScoreDto.fromScore(score).let { scoreDto ->

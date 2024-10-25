@@ -52,6 +52,6 @@ public class PlayerViewModel extends ViewModel {
 
     public Result<Player> updatePlayer(Player player) {
         selectedPlayer.postValue(player);
-        return updatePlayerUseCase.renamePlayer(player.getId(), player.getName());
+        return updatePlayerUseCase.renamePlayer(player.getId(), player.name);
     }
 }

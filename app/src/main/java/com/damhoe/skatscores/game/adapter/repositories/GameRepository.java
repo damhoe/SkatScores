@@ -8,12 +8,12 @@ import androidx.lifecycle.Transformations;
 
 import com.damhoe.skatscores.KotlinResultWrapper;
 import com.damhoe.skatscores.base.Result;
-import com.damhoe.skatscores.game.domain.skat.SkatGame;
-import com.damhoe.skatscores.game.application.ports.out.GamePort;
+import com.damhoe.skatscores.game.domain.skat.SkatGameLegacy;
+import com.damhoe.skatscores.game.domain.skat.application.ports.SkatGamePort;
 import com.damhoe.skatscores.game.domain.Game;
 import com.damhoe.skatscores.game.domain.skat.SkatGamePreview;
 import com.damhoe.skatscores.game.domain.skat.SkatSettings;
-import com.damhoe.skatscores.game.score.application.ports.in.CreateScoreUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.CreateScoreUseCase;
 import com.damhoe.skatscores.player.application.ports.in.GetPlayerUseCase;
 import com.damhoe.skatscores.player.domain.Player;
 
@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class GameRepository implements GamePort {
+public class GameRepository implements SkatGamePort {
    private final GetPlayerUseCase mGetPlayerUseCase;
    private final CreateScoreUseCase mCreateScoreUseCase;
    private final GamePersistenceAdapter mGameAdapter;
@@ -57,16 +57,16 @@ public class GameRepository implements GamePort {
    }
 
    @Override
-   public SkatGame saveSkatGame(SkatGame game) {
+   public SkatGameLegacy saveSkatGame(SkatGameLegacy game) {
       // Save settings
       SkatSettingsDTO settingsDTO =
-              SettingsMapper.mapSkatSettingsToSkatSettingsDTO(game.getSettings());
+              SettingsMapper.mapSkatSettingsToSkatSettingsDTO(game.settings);
       long settingsId = mSettingsPersistenceAdapter.insertSettings(settingsDTO);
 
       // Insert game into database
       SkatGameDTO dto = GameMapper.mapSkatGameToSkatGameDTO(game, settingsId);
       long gameId = mGameAdapter.insertGame(dto);
-      game.setId(gameId);
+      game.id = gameId;
 
       // Save players
       for (int k = 0; k < game.getPlayers().size(); k++) {
@@ -86,17 +86,17 @@ public class GameRepository implements GamePort {
    }
 
    @Override
-   public SkatGame deleteGame(long id) {
-      SkatGame skatGame = getGame(id);
+   public SkatGameLegacy deleteGame(long id) {
+      SkatGameLegacy skatGame = getGame(id);
 
       // Delete settings
-      mSettingsPersistenceAdapter.deleteSettings(skatGame.getSettings().getId());
+      mSettingsPersistenceAdapter.deleteSettings(skatGame.settings.getId());
       // Delete player matches
-      mPlayerMatchAdapter.deletePlayerMatchesForGame(skatGame.getId());
+      mPlayerMatchAdapter.deletePlayerMatchesForGame(skatGame.id);
       // Delete scores
-      KotlinResultWrapper.Companion.deleteScoresForGame(mCreateScoreUseCase, skatGame.getId());
+      KotlinResultWrapper.Companion.deleteScoresForGame(mCreateScoreUseCase, skatGame.id);
       // Delete game
-      mGameAdapter.deleteGame(skatGame.getId());
+      mGameAdapter.deleteGame(skatGame.id);
 
       // Update live data
       List<SkatGamePreview> _previews = skatGamePreviews.getValue();
@@ -110,25 +110,25 @@ public class GameRepository implements GamePort {
    }
 
    @Override
-   public SkatGame updateGame(SkatGame game) {
+   public SkatGameLegacy updateGame(SkatGameLegacy game) {
       // Update settings
       SkatSettingsDTO settingsDTO =
-              SettingsMapper.mapSkatSettingsToSkatSettingsDTO(game.getSettings());
+              SettingsMapper.mapSkatSettingsToSkatSettingsDTO(game.settings);
       int result = mSettingsPersistenceAdapter.updateSettings(settingsDTO);
 
       // Update game
-      SkatGameDTO dto = GameMapper.mapSkatGameToSkatGameDTO(game, game.getSettings().getId());
+      SkatGameDTO dto = GameMapper.mapSkatGameToSkatGameDTO(game, game.settings.getId());
       mGameAdapter.updateGame(dto);
 
       // Update players
       // Matches are deleted and created again,
       // because they can also become invalid during the update process
-      mPlayerMatchAdapter.deletePlayerMatchesForGame(game.getId());
+      mPlayerMatchAdapter.deletePlayerMatchesForGame(game.id);
       for (int k = 0; k < game.getPlayers().size(); k++) {
          long playerId = game.getPlayers().get(k).getId();
          if (mPlayerMatchAdapter.isValidPlayerId(playerId)) {
             PlayerMatchDTO playerMatch =
-                    new PlayerMatchDTO(game.getId(), playerId, k);
+                    new PlayerMatchDTO(game.id, playerId, k);
             mPlayerMatchAdapter.insertPlayerMatch(playerMatch);
          }
       }
@@ -169,7 +169,7 @@ public class GameRepository implements GamePort {
    }
 
    @Override
-   public SkatGame getGame(long id) {
+   public SkatGameLegacy getGame(long id) {
       Result<SkatGameDTO> gameResult = mGameAdapter.getGame(id);
       if (gameResult.isFailure()) {
          throw new Resources.NotFoundException(gameResult.message);
@@ -200,7 +200,7 @@ public class GameRepository implements GamePort {
     * If no player is saved for a specific position
     * fill with a default player
     *
-    * @param gameId Id of SkatGame
+    * @param gameId Id of SkatGameLegacy
     * @param count Expected number of players
     * @return List of players
     */

@@ -20,8 +20,8 @@ import androidx.navigation.Navigation;
 import com.damhoe.skatscores.R;
 import com.damhoe.skatscores.databinding.FragmentGameSetupBinding;
 import com.damhoe.skatscores.game.domain.skat.SkatGameCommand;
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager;
-import com.damhoe.skatscores.shared_ui.utils.LayoutMargins;
+import com.damhoe.skatscores.shared.shared_ui.utils.InsetsManager;
+import com.damhoe.skatscores.shared.shared_ui.utils.LayoutMargins;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
@@ -102,8 +102,8 @@ public class GameSetupFragment extends Fragment {
                     String.format("SkatGameCommand changed: %s, %d, %d, %b",
                             skatGameCommand.getTitle(),
                             skatGameCommand.getNumberOfPlayers(),
-                            skatGameCommand.getSettings().getNumberOfRounds(),
-                            skatGameCommand.getSettings().isTournamentScoring()
+                            skatGameCommand.getSettings().roundCount,
+                            skatGameCommand.getSettings().isTournamentScoring
                     ));
         };
         viewModel.getSkatGameCommand().observe(getViewLifecycleOwner(), commandObserver);

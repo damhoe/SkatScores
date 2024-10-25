@@ -104,7 +104,7 @@ public class PlayerRepository implements CreatePlayerPort, GetPlayerPort, Update
    @Override
    public Player updateName(long id, String newName) {
       Player player = getPlayer(id);
-      player.setName(newName);
+      player.name = newName;
       // Convert to database model
       PlayerDTO dto = PlayerDTO.fromPlayer(player);
       // Persist changes

@@ -5,9 +5,9 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.damhoe.skatscores.base.Result;
-import com.damhoe.skatscores.game.domain.skat.SkatGame;
-import com.damhoe.skatscores.game.application.ports.in.CreateGameUseCase;
-import com.damhoe.skatscores.game.application.ports.in.LoadGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.SkatGameLegacy;
+import com.damhoe.skatscores.game.domain.skat.application.ports.CrudSkatGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.LoadSkatGameUseCase;
 import com.damhoe.skatscores.game.domain.skat.SkatGamePreview;
 
 import java.util.Calendar;
@@ -19,18 +19,18 @@ import javax.inject.Inject;
 
 public class LibraryViewModel extends ViewModel {
 
-    private final LoadGameUseCase mLoadGameUseCase;
-    private final CreateGameUseCase mCreateGameUseCase;
+    private final LoadSkatGameUseCase mLoadSkatGameUseCase;
+    private final CrudSkatGameUseCase mCreateGameUseCase;
 
     Date oldestDate;
     Date firstOfMonth;
 
     @Inject
     public LibraryViewModel(
-            LoadGameUseCase loadGameUseCase,
-            CreateGameUseCase createGameUseCase
+            LoadSkatGameUseCase loadSkatGameUseCase,
+            CrudSkatGameUseCase createGameUseCase
     ) {
-        mLoadGameUseCase = loadGameUseCase;
+        mLoadSkatGameUseCase = loadSkatGameUseCase;
         mCreateGameUseCase = createGameUseCase;
 
         Calendar calendar = Calendar.getInstance();
@@ -45,7 +45,7 @@ public class LibraryViewModel extends ViewModel {
     }
 
     LiveData<List<SkatGamePreview>> getOldGames() {
-        return Transformations.map(mLoadGameUseCase.getGamesSince(oldestDate),
+        return Transformations.map(mLoadSkatGameUseCase.getGamesSince(oldestDate),
                 allGames -> allGames.stream()
                         .filter(preview -> preview.getDate().before(firstOfMonth))
                         .collect(Collectors.toList())
@@ -53,14 +53,14 @@ public class LibraryViewModel extends ViewModel {
     }
 
     LiveData<List<SkatGamePreview>> getGames() {
-        return mLoadGameUseCase.getGamesSince(oldestDate);
+        return mLoadSkatGameUseCase.getGamesSince(oldestDate);
     }
 
     LiveData<List<SkatGamePreview>> getUnfinishedGames() {
-        return mLoadGameUseCase.getUnfinishedGames();
+        return mLoadSkatGameUseCase.unfinishedGames;
     }
 
-    public Result<SkatGame> deleteGame(long id) {
+    public Result<SkatGameLegacy> deleteGame(long id) {
         return mCreateGameUseCase.deleteSkatGame(id);
     }
 }

@@ -1,153 +1,132 @@
-package com.damhoe.skatscores.game.domain;
+package com.damhoe.skatscores.game.domain
 
-import com.damhoe.skatscores.game.domain.score.Score;
-import com.damhoe.skatscores.player.domain.Player;
+import com.damhoe.skatscores.game.domain.score.Score
+import com.damhoe.skatscores.player.domain.Player
+import java.util.Calendar
+import java.util.Collections
+import java.util.Date
+import java.util.UUID
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-public abstract class Game<TSettings extends GameSettings, TScore extends Score> {
-
-    public enum RunState {
+abstract class Game<TSettings : GameSettings, TScore : Score>(
+    var title: String,
+    protected var players: MutableList<Player>,
+    var settings: TSettings)
+{
+    enum class RunState
+    {
         RUNNING,
         FINISHED
     }
-
-    private long id;
-    protected Date createdAt;
-    protected String title;
-    protected List<Player> players;
-    protected RunState runState;
-    protected TSettings settings;
-    protected List<TScore> scores;
-
-    public Game(String title, List<Player> players, TSettings settings) {
-        this.title = title;
-        this.players = players;
-        this.settings = settings;
-        id = UUID.randomUUID().getMostSignificantBits();
-        createdAt = Calendar.getInstance().getTime();
-        scores = new ArrayList<>();
-        start();
+    
+    var id: Long = UUID.randomUUID().mostSignificantBits
+    var createdAt: Date = Calendar.getInstance().time
+    protected var runState: RunState? = null
+    protected var scores: MutableList<TScore> = ArrayList()
+    
+    init
+    {
+        start()
     }
-
-    public void addScore(TScore score) {
-        this.scores.add(score);
+    
+    open fun addScore(score: TScore)
+    {
+        scores.add(score)
     }
-
-    public TScore removeLastScore() {
-        int lastIndex = this.scores.size()-1;
-        if (lastIndex < 0) {
-            return null;
+    
+    open fun removeLastScore(): TScore?
+    {
+        val lastIndex = scores.size - 1
+        if (lastIndex < 0)
+        {
+            return null
         }
-        return this.scores.remove(lastIndex);
+        return scores.removeAt(lastIndex)
     }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date date) {
-        this.createdAt = date;
-    }
-
-    public void updateScore(TScore score) {
-        for (int i = 0; i < scores.size(); i++) {
-            if (scores.get(i).getId() == score.getId()) {
-                scores.set(i, score);
-                break;
+    
+    fun updateScore(score: TScore)
+    {
+        for (i in scores.indices)
+        {
+            if (scores[i]!!.id == score!!.id)
+            {
+                scores[i] = score
+                break
             }
         }
     }
-
-    public List<TScore> getScores() {
-        return scores;
+    
+    fun getScores(): List<TScore>
+    {
+        return scores
     }
-
-    public void setSettings(TSettings settings) {
-        this.settings = settings;
+    
+    open fun start()
+    {
+        runState = RunState.RUNNING
     }
-
-    public TSettings getSettings() {
-        return settings;
+    
+    open fun finish()
+    {
+        runState = RunState.FINISHED
     }
-
-    public void start() {
-        runState = RunState.RUNNING;
+    
+    fun resume()
+    {
+        runState = RunState.RUNNING
     }
-
-    public void finish() {
-        runState = RunState.FINISHED;
+    
+    val isFinished: Boolean
+        get() = runState == RunState.FINISHED
+    
+    fun getPlayers(): Array<Player>
+    {
+        return Collections.unmodifiableList(players)
     }
-
-    public void resume() {
-        runState = RunState.RUNNING;
+    
+    fun setPlayers(players: List<Player>)
+    {
+        this.players = players
     }
-
-    public boolean isFinished() {
-        return runState == RunState.FINISHED;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public List<Player> getPlayers() {
-        return Collections.unmodifiableList(players);
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    public abstract static class Builder<T extends Game<S, C>,
-            S extends GameSettings, C extends Score> {
-        public String mTitle;
-        public List<Player> mPlayers;
-        public S mSettings;
-
-        public abstract T build();
-
-        public Builder<T, S, C> fromCommand(GameCommand<S> command) {
-            mTitle = command.getTitle();
-            mPlayers = new ArrayList<>();
-            for (int j = 1; j <= command.getNumberOfPlayers(); j++) {
-                mPlayers.add(new Player("Player " + j));
+    
+    abstract class Builder<
+            T : Game<S, C>?,
+            S : GameSettings?, C : Score?>
+    {
+        @JvmField var mTitle: String? = null
+        @JvmField var mPlayers: MutableList<Player>? = null;
+        @JvmField var mSettings: S? = null
+        
+        abstract fun build(): T
+        
+        fun fromCommand(command: GameCommand<S>): Builder<T, S, C>
+        {
+            mTitle = command.getTitle()
+            mPlayers = ArrayList()
+            for (j in 1..command.getNumberOfPlayers())
+            {
+                mPlayers?.add(Player("Player $j"))
             }
-            mPlayers = Collections.unmodifiableList(mPlayers);
-            mSettings = command.getSettings();
-            return this;
+            mPlayers = Collections.unmodifiableList(mPlayers)
+            mSettings = command.getSettings()
+            return this
         }
-
-        public Builder<T, S, C> setSettings(S settings) {
-            mSettings = settings;
-            return this;
+        
+        fun setSettings(settings: S): Builder<T, S, C>
+        {
+            mSettings = settings
+            return this
         }
-
-        public Builder<T, S, C> setTitle(String title) {
-            mTitle = title;
-            return this;
+        
+        fun setTitle(title: String?): Builder<T, S, C>
+        {
+            mTitle = title
+            return this
         }
-
-        public Builder<T, S, C> setPlayers(List<Player> players) {
-            mPlayers = players;
-            return this;
+        
+        fun setPlayers(players: MutableList<Player>?): Builder<T, S, C>
+        {
+            mPlayers = players
+            return this
         }
     }
 }

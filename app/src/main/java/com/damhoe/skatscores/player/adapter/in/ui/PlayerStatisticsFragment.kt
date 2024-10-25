@@ -16,7 +16,7 @@ import com.damhoe.skatscores.MainActivity
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentPlayerStatisticsBinding
 import com.damhoe.skatscores.player.domain.PlayerStatistics
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager
+import com.damhoe.skatscores.shared.shared_ui.utils.InsetsManager
 import javax.inject.Inject
 import kotlin.math.roundToInt
 

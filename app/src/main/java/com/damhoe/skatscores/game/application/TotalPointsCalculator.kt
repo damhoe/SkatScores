@@ -1,6 +1,6 @@
 package com.damhoe.skatscores.game.application
 
-import com.damhoe.skatscores.game.score.Constant
+import com.damhoe.skatscores.game.domain.skat.application.Constant
 import com.damhoe.skatscores.game.domain.score.SkatScore
 
 object TotalPointsCalculator {

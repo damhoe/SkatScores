@@ -19,8 +19,8 @@ import com.damhoe.skatscores.game.domain.skat.SkatGame
 import com.damhoe.skatscores.plot.Plot
 import com.damhoe.skatscores.plot.PlotData
 import com.damhoe.skatscores.plot.presentation.GraphicUtils.dpToPx
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager
-import com.damhoe.skatscores.shared_ui.utils.LayoutMargins
+import com.damhoe.skatscores.shared.shared_ui.utils.InsetsManager
+import com.damhoe.skatscores.shared.shared_ui.utils.LayoutMargins
 import com.google.android.material.color.MaterialColors
 import javax.inject.Inject
 import kotlin.math.max
@@ -58,7 +58,11 @@ class GameGraphFragment : Fragment() {
             InsetsManager.applyStatusBarInsets(appbarLayout)
             InsetsManager.applyNavigationBarInsets(
                 graphView,
-                LayoutMargins(dpToPx(8f), dpToPx(8f), dpToPx(8f), dpToPx(24f)))
+                LayoutMargins(
+                    dpToPx(8f),
+                    dpToPx(8f),
+                    dpToPx(8f),
+                    dpToPx(24f)))
         }
 
         NavigationUI.setupWithNavController(binding.toolbar, findNavController())

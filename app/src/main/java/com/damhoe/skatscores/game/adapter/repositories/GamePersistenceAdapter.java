@@ -55,7 +55,7 @@ public class GamePersistenceAdapter {
                 SkatGameDTO game = cursorToSkatGameDTO(cursor);
                 return Result.success(game);
             } else {
-                return Result.failure("SkatGame with id " + id + " does not exist");
+                return Result.failure("SkatGameLegacy with id " + id + " does not exist");
             }
 
         } catch (NullPointerException e) {
@@ -89,7 +89,7 @@ public class GamePersistenceAdapter {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Result<SkatGameDTO> getResult = getGame(id);
             if (getResult.isFailure()) {
-                return Result.failure("SkatGame with id " + id + " was not deleted because it did not exist");
+                return Result.failure("SkatGameLegacy with id " + id + " was not deleted because it did not exist");
             }
             db.execSQL(
                     "DELETE FROM " + DbHelper.GAME_TABLE_NAME

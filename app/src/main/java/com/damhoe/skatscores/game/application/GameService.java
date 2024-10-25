@@ -5,14 +5,14 @@ import androidx.lifecycle.LiveData;
 
 import com.damhoe.skatscores.KotlinResultWrapper;
 import com.damhoe.skatscores.base.Result;
-import com.damhoe.skatscores.game.domain.skat.SkatGame;
-import com.damhoe.skatscores.game.application.ports.in.AddScoreToGameUseCase;
-import com.damhoe.skatscores.game.application.ports.in.CreateGameUseCase;
-import com.damhoe.skatscores.game.application.ports.in.LoadGameUseCase;
-import com.damhoe.skatscores.game.application.ports.out.GamePort;
+import com.damhoe.skatscores.game.domain.skat.SkatGameLegacy;
+import com.damhoe.skatscores.game.domain.skat.application.ports.AddScoreToGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.CrudSkatGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.LoadSkatGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.SkatGamePort;
 import com.damhoe.skatscores.game.domain.skat.SkatGamePreview;
 import com.damhoe.skatscores.game.domain.skat.SkatGameCommand;
-import com.damhoe.skatscores.game.score.application.ports.in.CreateScoreUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.CreateScoreUseCase;
 import com.damhoe.skatscores.game.domain.score.SkatScore;
 
 import java.util.Date;
@@ -20,22 +20,22 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, LoadGameUseCase {
-    private final GamePort crudGamePort;
+public class GameService implements CrudSkatGameUseCase, AddScoreToGameUseCase, LoadSkatGameUseCase {
+    private final SkatGamePort crudGamePort;
     private final CreateScoreUseCase createScoreUseCase;
 
     @Inject
-    public GameService(GamePort crudGamePort, CreateScoreUseCase createScoreUseCase) {
+    public GameService(SkatGamePort crudGamePort, CreateScoreUseCase createScoreUseCase) {
         this.crudGamePort = crudGamePort;
         this.createScoreUseCase = createScoreUseCase;
     }
 
-
     @Override
-    public void addScoreToGame(SkatGame skatGame, SkatScore score) {
+    public void addScoreToGame(
+            SkatGameLegacy skatGame, SkatScore score) {
         // Set game data
         int index = skatGame.getScores().size();
-        long gameId = skatGame.getId();
+        long gameId = skatGame.id;
         score.setGameId(gameId);
         // Validation
         // Add score to game
@@ -45,7 +45,7 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
     }
 
     @Override
-    public Result<SkatScore> removeLastScore(SkatGame skatGame) {
+    public Result<SkatScore> removeLastScore(SkatGameLegacy skatGame) {
         int count = skatGame.getScores().size();
         if (count == 0) {
             return Result.failure("The provided Skat game currently has no scores.");
@@ -61,29 +61,29 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
     }
 
     @Override
-    public Result<SkatGame> createSkatGame(SkatGameCommand command) {
+    public Result<SkatGameLegacy> createSkatGame(SkatGameCommand command) {
         // Check for valid title
         if (isInvalidTitle(command.getTitle())) {
             return Result.failure("Please provide a non-empty title!");
         }
         // Create game from command
-        SkatGame skatGame = new SkatGame.SkatGameBuilder()
+        SkatGameLegacy skatGame = new SkatGameLegacy.SkatGameBuilder()
                 .fromCommand(command)
                 .build();
         return Result.success(crudGamePort.saveSkatGame(skatGame));
     }
 
     @Override
-    public Result<SkatGame> deleteSkatGame(long id) {
-        SkatGame deletedGame = crudGamePort.deleteGame(id);
+    public Result<SkatGameLegacy> deleteSkatGame(long id) {
+        SkatGameLegacy deletedGame = crudGamePort.deleteGame(id);
         if (deletedGame == null) {
-            return Result.failure("Unable to delete SkatGame with id: " + id);
+            return Result.failure("Unable to delete SkatGameLegacy with id: " + id);
         }
         return Result.success(deletedGame);
     }
 
     @Override
-    public Result<SkatGame> updateSkatGame(SkatGame game) {
+    public Result<SkatGameLegacy> updateSkatGame(SkatGameLegacy game) {
         try {
             return Result.success(crudGamePort.updateGame(game));
         } catch (Exception ex) {
@@ -97,8 +97,8 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
     }
 
     @Override
-    public Result<SkatGame> getGame(long id) {
-        SkatGame game = crudGamePort.getGame(id);
+    public Result<SkatGameLegacy> getGame(long id) {
+        SkatGameLegacy game = crudGamePort.getGame(id);
         if (game == null) {
             return Result.failure("Unable to load Game with id: " + id);
         }
@@ -112,7 +112,7 @@ public class GameService implements CreateGameUseCase, AddScoreToGameUseCase, Lo
 
     @Override
     public LiveData<List<SkatGamePreview>> getUnfinishedGames() {
-        return crudGamePort.getUnfinishedGames();
+        return crudGamePort.unfinishedGames;
     }
 
     @Override

@@ -27,7 +27,7 @@ import com.damhoe.skatscores.R;
 import com.damhoe.skatscores.base.DateConverter;
 import com.damhoe.skatscores.databinding.FragmentPlayerDetailsBinding;
 import com.damhoe.skatscores.player.domain.Player;
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager;
+import com.damhoe.skatscores.shared.shared_ui.utils.InsetsManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -81,7 +81,7 @@ public class PlayerDetailsFragment extends Fragment {
         if (player == null) {
             return;
         }
-        editText.setText(player.getName());
+        editText.setText(player.name);
         editText.setSelection(Objects.requireNonNull(editText.getText()).length());
         TextInputLayout inputLayout = layout.findViewById(R.id.input_name);
 
@@ -103,8 +103,8 @@ public class PlayerDetailsFragment extends Fragment {
                         return;
                     }
                     String name = s.toString().trim();
-                    if (!name.equals(player.getName())) {
-                        player.setName(name);
+                    if (!name.equals(player.name)) {
+                        player.name = name;
                         viewModel.updatePlayer(player);
                     }
                     d.dismiss();
@@ -134,7 +134,7 @@ public class PlayerDetailsFragment extends Fragment {
                 }
 
                 // Show error if name is not unique
-                if (viewModel.isExistentName(trimmed) && !trimmed.equals(player.getName())) {
+                if (viewModel.isExistentName(trimmed) && !trimmed.equals(player.name)) {
                     inputLayout.setError(getString(R.string.error_player_name_exists));
                 }
 
@@ -179,14 +179,14 @@ public class PlayerDetailsFragment extends Fragment {
         String createdAtTemplate = getString(R.string.template_created_at);
         String updatedAtTemplate = getString(R.string.template_updated_at);
 
-        binding.name.setText(player.getName());
+        binding.name.setText(player.name);
 
         binding.created.setText(String.format(createdAtTemplate,
-                DateConverter.toAppLocaleString(player.getCreatedAt())
+                DateConverter.toAppLocaleString(player.createdAt)
         ));
         binding.updated.setText(String.format(updatedAtTemplate,
-                DateConverter.toAppLocaleString(player.getUpdatedAt())));
-        binding.numberGames.setText(String.format(gameCountTemplate, player.getGameCount()));
+                DateConverter.toAppLocaleString(player.updatedAt)));
+        binding.numberGames.setText(String.format(gameCountTemplate, player.gameCount));
     }
 
     private void initializeUI() {

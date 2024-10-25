@@ -6,10 +6,10 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.damhoe.skatscores.base.Result;
-import com.damhoe.skatscores.game.domain.skat.SkatGame;
-import com.damhoe.skatscores.game.application.ports.in.AddScoreToGameUseCase;
-import com.damhoe.skatscores.game.application.ports.in.CreateGameUseCase;
-import com.damhoe.skatscores.game.application.ports.in.LoadGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.SkatGameLegacy;
+import com.damhoe.skatscores.game.domain.skat.application.ports.AddScoreToGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.CrudSkatGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.LoadSkatGameUseCase;
 import com.damhoe.skatscores.game.domain.Game;
 import com.damhoe.skatscores.game.domain.GameSettings;
 import com.damhoe.skatscores.game.domain.GameCommand;
@@ -22,8 +22,8 @@ import java.util.List;
 public abstract class GameViewModel<TGame extends Game<TSettings, TScore>,
         TSettings extends GameSettings, TScore extends Score> extends ViewModel {
 
-    protected final CreateGameUseCase mCreateGameUseCase;
-    protected final LoadGameUseCase mLoadGameUseCase;
+    protected final CrudSkatGameUseCase mCreateGameUseCase;
+    protected final LoadSkatGameUseCase mLoadSkatGameUseCase;
     protected final AddScoreToGameUseCase mAddScoreToGameUseCase;
 
     private final MutableLiveData<TGame> game = new MutableLiveData<>();
@@ -33,12 +33,12 @@ public abstract class GameViewModel<TGame extends Game<TSettings, TScore>,
     private final LiveData<List<TScore>> scores = Transformations.map(game, Game::getScores);
 
     protected GameViewModel(
-            CreateGameUseCase createGameUseCase,
-            LoadGameUseCase loadGameUseCase,
+            CrudSkatGameUseCase createGameUseCase,
+            LoadSkatGameUseCase loadSkatGameUseCase,
             AddScoreToGameUseCase addScoreToGameUseCase
     ) {
         mCreateGameUseCase = createGameUseCase;
-        mLoadGameUseCase = loadGameUseCase;
+        mLoadSkatGameUseCase = loadSkatGameUseCase;
         mAddScoreToGameUseCase = addScoreToGameUseCase;
     }
 
@@ -63,34 +63,34 @@ public abstract class GameViewModel<TGame extends Game<TSettings, TScore>,
         }
 
         // Persist changes
-        mCreateGameUseCase.updateSkatGame((SkatGame) mGame);
+        mCreateGameUseCase.updateSkatGame((SkatGameLegacy) mGame);
     }
 
     public void updateTitle(String newTitle) {
         TGame mGame = game.getValue();
         if (mGame != null) {
-            mGame.setTitle(newTitle);
+            mGame.title = newTitle;
             game.postValue(mGame);
 
             // Persist changes
-            mCreateGameUseCase.updateSkatGame((SkatGame) mGame);
+            mCreateGameUseCase.updateSkatGame((SkatGameLegacy) mGame);
         }
     }
 
     public void updateSettings(TSettings newSettings) {
         TGame mGame = game.getValue();
         if (mGame != null) {
-            mGame.setSettings(newSettings);
+            mGame.settings = newSettings;
             game.postValue(mGame);
 
             // Persist changes
-            mCreateGameUseCase.updateSkatGame((SkatGame) mGame);
+            mCreateGameUseCase.updateSkatGame((SkatGameLegacy) mGame);
         }
     }
 
     public void updateGame(TGame updatedGame) {
         game.postValue(updatedGame);
-        mCreateGameUseCase.updateSkatGame((SkatGame) updatedGame);
+        mCreateGameUseCase.updateSkatGame((SkatGameLegacy) updatedGame);
     }
 
     public LiveData<List<TScore>> getScores() {

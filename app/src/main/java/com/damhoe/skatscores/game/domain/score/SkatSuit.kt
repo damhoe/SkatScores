@@ -1,11 +1,30 @@
 package com.damhoe.skatscores.game.domain.score
 
-enum class SkatSuit {
-    GRAND, NULL, CLUBS, SPADES, HEARTS, DIAMONDS, INVALID;
+import arrow.core.Either
+import arrow.core.toOption
 
-    fun asInteger(): Int = ordinal
+enum class SkatSuit
+{
+    GRAND,
+    NULL,
+    CLUBS,
+    SPADES,
+    HEARTS,
+    DIAMONDS,
+    NONE;
 
-    companion object {
-        fun fromInteger(value: Int): SkatSuit = values().find { it.ordinal == value } ?: CLUBS
+    fun toInt(): Int = ordinal
+
+    companion object
+    {
+        fun fromInt(
+            value: Int): Either<IntDoesNotMatchAnySkatSuit, SkatSuit> =
+            entries
+                .find { it.ordinal == value }
+                .toOption()
+                .toEither { IntDoesNotMatchAnySkatSuit(value) }
     }
 }
+
+data class IntDoesNotMatchAnySkatSuit(
+    val value: Int)

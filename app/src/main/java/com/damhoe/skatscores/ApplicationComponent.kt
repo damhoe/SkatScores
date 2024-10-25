@@ -11,7 +11,7 @@ import com.damhoe.skatscores.persistence.DbHelper
 import com.damhoe.skatscores.player.PlayerModule
 import com.damhoe.skatscores.player.adapter.`in`.ui.PlayerDetailsFragment
 import com.damhoe.skatscores.player.adapter.`in`.ui.PlayersFragment
-import com.damhoe.skatscores.game.score.ScoreModule
+import com.damhoe.skatscores.game.ScoreModule
 import com.damhoe.skatscores.game.score.adapter.`in`.ui.ScoreFragment
 import com.damhoe.skatscores.player.adapter.`in`.ui.PlayerStatisticsFragment
 import dagger.Component

@@ -2,12 +2,12 @@ package com.damhoe.skatscores.game.domain.score
 
 import android.content.Context
 import com.damhoe.skatscores.R
-import com.damhoe.skatscores.game.score.Constant
-import com.damhoe.skatscores.game.score.application.PointsCalculator
+import com.damhoe.skatscores.game.domain.skat.application.Constant
+import com.damhoe.skatscores.game.domain.skat.application.PointsCalculator
 import java.util.Locale
 
 class SkatScore(
-    var suit: SkatSuit = SkatSuit.INVALID, // Clubs, Diamonds, Hears, Spades, Null, Grand, Invalid
+    var suit: SkatSuit = SkatSuit.NONE, // Clubs, Diamonds, Hears, Spades, Null, Grand, Invalid
     var outcome: SkatOutcome = SkatOutcome.PASSE, // Won, Lost, Overbid, Passe
     var spitzen: Int = 0, // negative value if missing
     var isHand: Boolean = false,
@@ -55,7 +55,7 @@ class SkatScore(
             SkatSuit.CLUBS to R.string.description_clubs,
             SkatSuit.SPADES to R.string.description_spades,
             SkatSuit.DIAMONDS to R.string.description_diamonds,
-            SkatSuit.INVALID to R.string.unknown
+            SkatSuit.NONE to R.string.unknown
         )
 
         fun setupWithSkatScore(score: SkatScore): TextMaker

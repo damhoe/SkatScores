@@ -2,10 +2,10 @@ package com.damhoe.skatscores.game;
 
 import com.damhoe.skatscores.game.adapter.repositories.GameRepository;
 import com.damhoe.skatscores.game.application.GameService;
-import com.damhoe.skatscores.game.application.ports.in.AddScoreToGameUseCase;
-import com.damhoe.skatscores.game.application.ports.in.CreateGameUseCase;
-import com.damhoe.skatscores.game.application.ports.in.LoadGameUseCase;
-import com.damhoe.skatscores.game.application.ports.out.GamePort;
+import com.damhoe.skatscores.game.domain.skat.application.ports.AddScoreToGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.CrudSkatGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.LoadSkatGameUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.SkatGamePort;
 
 import dagger.Binds;
 import dagger.Module;
@@ -13,11 +13,11 @@ import dagger.Module;
 @Module
 public abstract class GameModule {
    @Binds
-   abstract CreateGameUseCase bindCreateGameUseCase(GameService gameService);
+   abstract CrudSkatGameUseCase bindCreateGameUseCase(GameService gameService);
    @Binds
-   abstract LoadGameUseCase bindLoadGameUseCase(GameService gameService);
+   abstract LoadSkatGameUseCase bindLoadGameUseCase(GameService gameService);
    @Binds
    abstract AddScoreToGameUseCase bindAddScoreToGameUseCase(GameService gameService);
    @Binds
-   abstract GamePort bindGamePort(GameRepository gameRepository);
+   abstract SkatGamePort bindGamePort(GameRepository gameRepository);
 }

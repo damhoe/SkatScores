@@ -25,11 +25,11 @@ import com.damhoe.skatscores.game.domain.score.SkatSuit.CLUBS
 import com.damhoe.skatscores.game.domain.score.SkatSuit.DIAMONDS
 import com.damhoe.skatscores.game.domain.score.SkatSuit.GRAND
 import com.damhoe.skatscores.game.domain.score.SkatSuit.HEARTS
-import com.damhoe.skatscores.game.domain.score.SkatSuit.INVALID
+import com.damhoe.skatscores.game.domain.score.SkatSuit.NONE
 import com.damhoe.skatscores.game.domain.score.SkatSuit.NULL
 import com.damhoe.skatscores.game.domain.score.SkatSuit.SPADES
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager
-import com.damhoe.skatscores.shared_ui.utils.LayoutMargins
+import com.damhoe.skatscores.shared.shared_ui.utils.InsetsManager
+import com.damhoe.skatscores.shared.shared_ui.utils.LayoutMargins
 import javax.inject.Inject
 
 class ScoreFragment : Fragment() {
@@ -307,7 +307,12 @@ class ScoreFragment : Fragment() {
         InsetsManager.applyStatusBarInsets(binding.appbarLayout)
         val marginRight = resources.getDimensionPixelSize(R.dimen.fab_margin_right)
         val marginBottom = resources.getDimensionPixelSize(R.dimen.fab_margin_bottom)
-        val defaultMargins = LayoutMargins(0, 0, marginRight, marginBottom)
+        val defaultMargins =
+            LayoutMargins(
+                0,
+                0,
+                marginRight,
+                marginBottom)
         InsetsManager.applyNavigationBarInsets(binding.scoreDoneButton, defaultMargins)
         InsetsManager.applyNavigationBarInsets(binding.content)
 
@@ -343,7 +348,7 @@ class ScoreFragment : Fragment() {
 
             suit.observe(viewLifecycleOwner) { skatSuit -> skatSuit?.let {
                 when (it) {
-                    INVALID -> binding.apply {
+                    NONE  -> binding.apply {
                         announcementsChips.clearCheck()
                         winLevelChips.clearCheck()
                         spitzenSlider.value = spitzenSlider.valueFrom

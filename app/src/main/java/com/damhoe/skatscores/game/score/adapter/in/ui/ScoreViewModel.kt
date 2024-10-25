@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import com.damhoe.skatscores.game.score.application.ports.`in`.CreateScoreUseCase
+import com.damhoe.skatscores.game.domain.skat.application.ports.CreateScoreUseCase
 import com.damhoe.skatscores.game.domain.score.SkatOutcome
 import com.damhoe.skatscores.game.domain.score.SkatScore
 import com.damhoe.skatscores.game.domain.score.SkatScoreCommand
@@ -116,7 +116,7 @@ class ScoreViewModel(
                 it.suit = SkatSuit.CLUBS
                 it.spitzen = 1
             } else if (result == SkatOutcome.OVERBID) {
-                it.suit = SkatSuit.INVALID
+                it.suit = SkatSuit.NONE
                 resetSpitzen()
                 resetWinLevels()
             }
@@ -160,7 +160,7 @@ class ScoreViewModel(
     fun setPasse() = scoreCommandLD.value?.let { currentScore ->
         val updatedScore = currentScore.copy(
             outcome = SkatOutcome.PASSE,
-            suit = SkatSuit.INVALID,
+            suit = SkatSuit.NONE,
             playerPosition = -1
         ).apply { resetSpitzen(); resetWinLevels() }
         scoreCommandLD.postValue(updatedScore)

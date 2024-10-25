@@ -6,8 +6,8 @@ public class SettingsMapper {
 
    public static SkatSettingsDTO mapSkatSettingsToSkatSettingsDTO(SkatSettings settings) {
       SkatSettingsDTO settingsDTO = new SkatSettingsDTO();
-      settingsDTO.setNumberOfRounds(settings.getNumberOfRounds());
-      settingsDTO.setScoringType(settings.isTournamentScoring() ? 1 : 0);
+      settingsDTO.setNumberOfRounds(settings.roundCount);
+      settingsDTO.setScoringType(settings.isTournamentScoring ? 1 : 0);
       settingsDTO.setId(settings.getId());
       return settingsDTO;
    }

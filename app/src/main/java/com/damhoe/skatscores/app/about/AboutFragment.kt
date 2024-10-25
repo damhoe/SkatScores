@@ -10,7 +10,7 @@ import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.damhoe.skatscores.MainActivity
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentAboutBinding
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager
+import com.damhoe.skatscores.shared.shared_ui.utils.InsetsManager
 
 class AboutFragment : Fragment() {
 

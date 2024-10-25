@@ -20,14 +20,14 @@ data class ScoreDto(
     var schwarz: Int = 0,
     var schwarzAnnounced: Int = 0,
     var ouvert: Int = 0,
-    var result: Int = 0
-) {
+    var result: Int = 0)
+{
     fun toScore() = SkatScore().apply {
         id = this@ScoreDto.id
         gameId = this@ScoreDto.gameId
         playerPosition = this@ScoreDto.playerPosition
         spitzen = this@ScoreDto.spitzen
-        suit = SkatSuit.fromInteger(this@ScoreDto.suit)
+        suit = SkatSuit.fromInt(this@ScoreDto.suit).
         isHand = hand == 1
         isSchneider = schneider == 1
         isSchneiderAnnounced = schneiderAnnounced == 1
@@ -43,7 +43,7 @@ data class ScoreDto(
             gameId = skatScore.gameId
             playerPosition = skatScore.playerPosition
             spitzen = skatScore.spitzen
-            suit = skatScore.suit.asInteger()
+            suit = skatScore.suit.toInt()
             hand = if (skatScore.isHand) 1 else 0
             schneider = if (skatScore.isSchneider) 1 else 0
             schneiderAnnounced = if (skatScore.isSchneiderAnnounced) 1 else 0

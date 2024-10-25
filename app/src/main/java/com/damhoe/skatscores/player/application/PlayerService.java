@@ -67,7 +67,7 @@ public class PlayerService implements UpdatePlayerUseCase, GetPlayerUseCase {
 
             List<Player> players = mGetPlayerPort.getPlayers();
             Optional<Player> optionalPlayer = players.stream()
-                    .filter(x -> x.getName().equals(name))
+                    .filter(x -> x.name.equals(name))
                     .findFirst();
 
             return optionalPlayer.map(Result::success)
@@ -104,7 +104,7 @@ public class PlayerService implements UpdatePlayerUseCase, GetPlayerUseCase {
         if (players == null) {
             return false;
         }
-        return players.stream().anyMatch(x -> x.getName().equals(name));
+        return players.stream().anyMatch(x -> x.name.equals(name));
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.damhoe.skatscores.game.adapter.repositories;
 
 import com.damhoe.skatscores.KotlinResultWrapper;
-import com.damhoe.skatscores.game.domain.skat.SkatGame;
+import com.damhoe.skatscores.game.domain.skat.SkatGameLegacy;
 import com.damhoe.skatscores.game.domain.GameRunStateInfo;
 import com.damhoe.skatscores.game.domain.skat.SkatGamePreview;
 import com.damhoe.skatscores.game.domain.skat.SkatSettings;
-import com.damhoe.skatscores.game.score.application.ports.in.GetScoreUseCase;
+import com.damhoe.skatscores.game.domain.skat.application.ports.GetScoreUseCase;
 import com.damhoe.skatscores.game.domain.score.SkatScore;
 import com.damhoe.skatscores.player.domain.Player;
 
@@ -26,20 +26,20 @@ public class GameMapper {
       mGetScoreUseCase = getScoreUseCase;
    }
 
-   public SkatGame mapSkatGameDTOToSkatGame(
+   public SkatGameLegacy mapSkatGameDTOToSkatGame(
            SkatGameDTO skatGameDTO,
            SkatSettings skatSettings,
            List<Player> players
    ) {
       // Create game builder
-      SkatGame game = new SkatGame.SkatGameBuilder()
+      SkatGameLegacy game = new SkatGameLegacy.SkatGameBuilder()
               .setStartDealerPosition(skatGameDTO.getStartDealerPosition())
               .setTitle(skatGameDTO.getTitle())
               .setSettings(skatSettings)
               .setPlayers(players)
               .build();
 
-      game.setId(skatGameDTO.getId());
+      game.id = skatGameDTO.getId();
 
       // Add Scores
       List<SkatScore> scores = KotlinResultWrapper.Companion.getScores(mGetScoreUseCase, skatGameDTO.getId());
@@ -48,7 +48,7 @@ public class GameMapper {
       }
 
       try {
-         game.setCreatedAt(createSimpleDateFormat().parse(skatGameDTO.getCreatedAt()));
+         game.createdAt = createSimpleDateFormat().parse(skatGameDTO.getCreatedAt());
       } catch (Exception e) {
          e.printStackTrace();
       }
@@ -68,7 +68,7 @@ public class GameMapper {
       // Add Scores
       List<SkatScore> scores = KotlinResultWrapper.Companion.getScores(mGetScoreUseCase, skatGameDTO.getId());
       int scoreCount = scores.size();
-      int roundsCount = settings.getNumberOfRounds();
+      int roundsCount = settings.roundCount;
       skatGamePreview.setGameRunStateInfo(
               new GameRunStateInfo(
                       roundsCount,
@@ -86,12 +86,12 @@ public class GameMapper {
       return skatGamePreview;
    }
 
-   public static SkatGameDTO mapSkatGameToSkatGameDTO(SkatGame skatGame, long settingsId) {
+   public static SkatGameDTO mapSkatGameToSkatGameDTO(SkatGameLegacy skatGame, long settingsId) {
       SkatGameDTO skatGameDTO = new SkatGameDTO();
-      skatGameDTO.setTitle(skatGame.getTitle());
+      skatGameDTO.setTitle(skatGame.title);
       skatGameDTO.setStartDealerPosition(skatGame.getStartDealerPosition());
       skatGameDTO.setSettingsId(settingsId);
-      skatGameDTO.setCreatedAt(createSimpleDateFormat().format(skatGame.getCreatedAt()));
+      skatGameDTO.setCreatedAt(createSimpleDateFormat().format(skatGame.createdAt));
       skatGameDTO.setUpdatedAt(getCurrentTimeStamp());
       return skatGameDTO;
    }
@@ -107,7 +107,7 @@ public class GameMapper {
    private static List<String> getPlayerNames(List<Player> players) {
       List<java.lang.String> names = new ArrayList<>();
       for (Player player: players) {
-         names.add(player.getName());
+         names.add(player.name);
       }
       return names;
    }

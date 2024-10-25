@@ -41,7 +41,7 @@ public class PlayerSelectionValidator {
             continue;
          }
 
-         if (allPlayers.stream().noneMatch(p -> p.getName().equals(name))) {
+         if (allPlayers.stream().noneMatch(p -> p.name.equals(name))) {
             messages.add(new Pair<>(MessageType.Warning, "New player is created!"));
             continue;
          }

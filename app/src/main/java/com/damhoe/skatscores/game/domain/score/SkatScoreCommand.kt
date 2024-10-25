@@ -1,10 +1,10 @@
 package com.damhoe.skatscores.game.domain.score
 
-import com.damhoe.skatscores.game.score.Constant
+import com.damhoe.skatscores.game.domain.skat.application.Constant
 
 data class SkatScoreCommand(
     var spitzen: Int = 1,
-    var suit: SkatSuit = SkatSuit.INVALID, // Clubs, Diamonds, Hears, Spades, Null, Grand
+    var suit: SkatSuit = SkatSuit.NONE, // Clubs, Diamonds, Hears, Spades, Null, Grand
     var outcome: SkatOutcome = SkatOutcome.PASSE, // Won, Lost, Overbid, Passe
     var isHand: Boolean = false,
     var isSchneider: Boolean = false,
@@ -13,9 +13,8 @@ data class SkatScoreCommand(
     var isSchwarzAnnounced: Boolean = false,
     var isOuvert: Boolean = false,
     var playerPosition: Int = Constant.PASSE_PLAYER_POSITION,
-    var gameId: Long = -1L
-) {
-
+    var gameId: Long = -1L)
+{
     val isMinSpitzen: Boolean
         get() = spitzen <= getMinSpitzen()
     val isMaxSpitzen: Boolean

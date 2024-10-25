@@ -41,7 +41,7 @@ import com.damhoe.skatscores.game.score.adapter.`in`.ui.ScoreFragment
 import com.damhoe.skatscores.game.domain.score.ScoreRequest
 import com.damhoe.skatscores.game.domain.score.SkatScore
 import com.damhoe.skatscores.player.domain.Player
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager
+import com.damhoe.skatscores.shared.shared_ui.utils.InsetsManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
@@ -338,10 +338,10 @@ class GameFragment : Fragment(), IScoreActionListener
 
         val settings: SkatSettings = skatGame.settings
 
-        dialogBinding.roundCountText.text = settings.numberOfRounds.toString()
-        dialogBinding.roundCountSlider.value = settings.numberOfRounds.toFloat()
+        dialogBinding.roundCountText.text = settings.roundCount.toString()
+        dialogBinding.roundCountSlider.value = settings.roundCount.toFloat()
 
-        dialogBinding.scoringSettingsRg.check(if (settings.isTournamentScoring()) R.id.tournament_scoring_rb else R.id.simple_scoring_rb)
+        dialogBinding.scoringSettingsRg.check(if (settings.isTournamentScoring) R.id.tournament_scoring_rb else R.id.simple_scoring_rb)
 
         val dialog: AlertDialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.message_scoring_dialog)
@@ -357,7 +357,7 @@ class GameFragment : Fragment(), IScoreActionListener
                 val editable = dialogBinding.listNameEditText.text
                 val title = editable.toString()
 
-                settings.numberOfRounds = dialogBinding.roundCountSlider.value.toInt()
+                settings.roundCount = dialogBinding.roundCountSlider.value.toInt()
                 settings.isTournamentScoring = dialogBinding.tournamentScoringRb.isChecked
 
                 val checkedButton = dialogBinding.toggleGroupStartDealer.checkedButtonId

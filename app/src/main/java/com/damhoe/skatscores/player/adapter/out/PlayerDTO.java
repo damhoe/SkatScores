@@ -47,11 +47,11 @@ public class PlayerDTO {
     public Player asPlayer(int gameCount) {
         Player player = new Player("");
         player.setID(getId());
-        player.setName(getName());
-        player.setGameCount(gameCount);
+        player.name = getName();
+        player.gameCount = gameCount;
         try {
-            player.setCreatedAt(createSimpleDateFormat().parse(getCreatedAt()));
-            player.setUpdatedAt(createSimpleDateFormat().parse(getUpdatedAt()));
+            player.createdAt = createSimpleDateFormat().parse(getCreatedAt());
+            player.updatedAt = createSimpleDateFormat().parse(getUpdatedAt());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +61,7 @@ public class PlayerDTO {
     public static PlayerDTO fromPlayer(Player player) {
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setId(player.getId());
-        playerDTO.setName(player.getName());
+        playerDTO.setName(player.name);
         playerDTO.setCreatedAt(getCurrentTimeStamp());
         playerDTO.setUpdatedAt(getCurrentTimeStamp());
         return playerDTO;
