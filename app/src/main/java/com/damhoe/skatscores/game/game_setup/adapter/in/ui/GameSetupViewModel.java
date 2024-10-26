@@ -59,10 +59,6 @@ public class GameSetupViewModel extends ViewModel {
         return numberOfPlayers;
     }
 
-    public void updateNumberOfPlayers(int number) {
-        numberOfPlayers.postValue(number);
-    }
-
     public LiveData<Boolean> isTournamentScoring() {
         return isTournamentScoring;
     }
@@ -77,10 +73,6 @@ public class GameSetupViewModel extends ViewModel {
 
     public void updateNumberOfRounds(int numberOfRounds) {
         this.numberOfRounds.postValue(numberOfRounds);
-    }
-
-    public Integer[] getAllowedRounds() {
-        return Constants.ALLOWED_ROUNDS;
     }
 
     public LiveData<SkatGameCommand> getSkatGameCommand() {

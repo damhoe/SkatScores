@@ -7,6 +7,7 @@ enum class SkatOutcome {
 
     companion object {
         fun fromInteger(value: Int): SkatOutcome =
-            values().find { it.ordinal == value } ?: PASSE
+            SkatOutcome.entries.find { it.ordinal == value }
+                ?: PASSE
     }
 }

@@ -125,7 +125,8 @@ class AppSettingsDialogFragment : DialogFragment() {
                 R.id.buttonSystemTheme -> systemTheme
                 R.id.buttonLightTheme -> dayTheme
                 R.id.buttonDarkTheme -> nightTheme
-                else -> throw IllegalArgumentException("Unexpected checkedId: $checkedId")
+                else -> throw IllegalArgumentException(
+                    "Unexpected checkedId: $checkedId")
             }.let { viewModel.setTheme(it) }
         }
     }
@@ -135,7 +136,8 @@ class AppSettingsDialogFragment : DialogFragment() {
             when(checkedId) {
                 R.id.buttonEnglishLanguage -> english
                 R.id.buttonGermanLanguage -> german
-                else -> throw IllegalArgumentException("Unexpected checkedId: $checkedId")
+                else -> throw IllegalArgumentException(
+                    "Unexpected checkedId: $checkedId")
             }.let { viewModel.setLanguage(it) }
         }
     }

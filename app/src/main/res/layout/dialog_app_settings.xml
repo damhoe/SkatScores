@@ -102,41 +102,6 @@
 
                 </RadioGroup>
 
-                <TextView
-                    android:id="@+id/titleDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/languageGroup"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/behavior_preference_category_title"
-                    android:textColor="?colorOnSecondaryContainer"
-                    android:textSize="20sp"
-                    android:textAppearance="?textAppearanceTitleLarge" />
-
-                <TextView
-                    android:id="@+id/labelShowAxes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/titleDisplay"
-                    android:maxWidth="160dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/badge_preference_title"
-                    android:textColor="?colorOnSecondaryContainer"
-                    android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchShowAxes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="?attr/materialSwitchStyle"
-                    app:layout_constraintStart_toEndOf="@id/labelShowAxes"
-                    app:layout_constraintBottom_toBottomOf="@id/labelShowAxes"
-                    app:layout_constraintTop_toTopOf="@id/labelShowAxes"
-                    android:layout_marginStart="24dp" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
