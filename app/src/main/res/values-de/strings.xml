@@ -131,6 +131,6 @@
     <string name="playerStatsTitleQualitySolo">Alleinspieler</string>
     <string name="playerStatsTitleQualityAgainst">Gegenspiele gewonnen</string>
     <string name="playerStatsTitleQualityWins">Gewonnen</string>
-    <string name="settingsListNameTitle">Wie soll die Liste \\nheissen?</string>
+    <string name="settingsListNameTitle">"Wie soll die Liste \nheissen?"</string>
     <string name="settingsRoundCountContentDescription">Wähle die Anzahl der Runden aus.</string>
 </resources>
