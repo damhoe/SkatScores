@@ -54,7 +54,10 @@ public class GamePreviewAdapter extends
    public void onBindViewHolder(@NonNull GamePreviewViewHolder holder, int position) {
       SkatGamePreview preview = mPreviews.get(position);
       holder.title.setText(preview.getTitle());
-      holder.playerNames.setText(String.join(", ", preview.getPlayerNames()));
+      holder.playerNames.setText(
+              String.join(
+                      " \n",
+                      preview.getPlayerNames()));
       holder.date.setText(DateConverter.toAppLocaleStringFullMonth(preview.getDate()));
 
       if (preview.getGameRunStateInfo().isFinished()) {

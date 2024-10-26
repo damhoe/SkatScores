@@ -133,4 +133,5 @@
     <string name="playerStatsTitleQualityWins">Wins</string>
     <string name="settingsListNameTitle">Choose a list name!</string>
     <string name="settingsRoundCountContentDescription">Choose number of rounds.</string>
+    <string name="title_button_edit">Edit</string>
 </resources>

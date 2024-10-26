@@ -37,9 +37,9 @@ public class DateConverter {
    public static String toLocaleStringFullMonth(Date date, Locale locale) {
       String pattern;
       if (locale.getLanguage().equals(Locale.GERMAN.getLanguage())) {
-         pattern = "d. MMMM";
+         pattern = "d. MMMM \nyyyy";
       } else {
-         pattern = "MMMM d";
+         pattern = "MMMM d \nyyyy";
       }
       return new SimpleDateFormat(pattern, locale).format(date);
    }
