@@ -120,7 +120,7 @@
     <string name="title_button_delete">Löschen</string>
     <string name="title_button_player_statistics">Statistik</string>
     <string name="graphTitle">Graph</string>
-    <string name="scoreTitle">Ergebnis</string>
+    <string name="scoreTitle">Ergebnis eintragen</string>
     <string name="playerStatisticsTitle">Statistik</string>
     <string name="pointsTotalLabel">Punkte</string>
     <string name="settingsPlayerCountTitle">Wie viele spielen?</string>

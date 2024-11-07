@@ -255,14 +255,18 @@
     </style>
 
     <style name="Widget.App.Chip.Suggestion" parent="Widget.Material3.Chip.Suggestion">
-        <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
-        <item name="android:fontFamily">@font/app_font</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Chip.Suggestion</item>
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Chip</item>
     </style>
 
     <style name="ThemeOverlay.App.Chip" parent="">
         <item name="colorSecondaryContainer">?attr/colorTertiary</item>
         <item name="colorOnSecondaryContainer">?attr/colorOnTertiary</item>
+    </style>
+
+    <style name="TextAppearance.App.Chip.Suggestion" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/app_font</item>
+        <item name="fontFamily">@font/app_font</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.App.CircularImageView" parent="">
