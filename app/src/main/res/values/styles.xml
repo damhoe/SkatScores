@@ -89,12 +89,11 @@
     <style name="Widget.App.Toolbar.Colored" parent="Widget.Material3.Toolbar">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored</item>
         <item name="titleTextAppearance">@style/TextAppearance.App.ToolbarTitle</item>
-        <item name="titleTextColor">?colorOnSurfaceVariant</item>
+        <item name="titleTextColor">?colorOnSecondaryContainer</item>
     </style>
 
     <style name="ThemeOverlay.App.Toolbar.Colored" parent="">
-        <item name="colorSurface">?attr/colorSurfaceVariant</item>
-        <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
+        <item name="android:background">?attr/colorSurface</item>
     </style>
 
     <style name="TextAppearance.App.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
@@ -106,12 +105,12 @@
         <item name="titleTextAppearance">@style/TextAppearance.App.ToolbarTitle</item>
         <item name="titleTextColor">?colorOnSurfaceVariant</item>
     </style>
+
     <style name="ThemeOverlay.App.Toolbar.Colored.Dark" parent="">
         <item name="colorSurface">?attr/colorSurfaceVariant</item>
         <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
     </style>
 
-    <!-- Variant toolbar -->
     <style name="Widget.App.BottomAppBar" parent="Widget.Material3.BottomAppBar">
         <item name="backgroundTint">?attr/colorSurface</item>
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
@@ -143,7 +142,6 @@
 
     <style name="ThemeOverlay.App.TabLayout" parent="">
         <item name="textAppearanceTitleSmall">@style/TextAppearance.App.TitleSmallBold</item>
-        <item name="colorPrimary">?attr/colorTertiary</item>
     </style>
 
     <style name="Widget.App.BottomNavigationView.Dark" parent="Widget.Material3.BottomNavigationView">
@@ -190,17 +188,17 @@
         <item name="colorPrimary">?attr/colorTertiary</item>
     </style>
 
-    <style name="Widget.App.TextInputLayout.Secondary"
+    <style name="Widget.App.TextInputLayout.Tertiary"
         parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout.Secondary</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout.Tertiary</item>
         <item name="shapeAppearance">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
         <item name="android:paddingLeft">0dp</item>
     </style>
 
-    <style name="ThemeOverlay.App.TextInputLayout.Secondary" parent="">
+    <style name="ThemeOverlay.App.TextInputLayout.Tertiary" parent="">
         <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputLayout.FilledBox</item>
-        <item name="colorSurface">?attr/colorSecondaryContainer</item>
-        <item name="colorPrimary">?attr/colorSecondary</item>
+        <item name="colorSurface">?attr/colorTertiaryContainer</item>
+        <item name="colorPrimary">?attr/colorTertiary</item>
     </style>
 
     <style name="RoundImageViewShape" parent="">
@@ -208,10 +206,12 @@
         <item name="cornerSize">50%</item>
     </style>
 
-    <!-- Button style -->
-    <style name="Widget.App.Button" parent="Widget.Material3.Button">
-        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
-        <item name="iconTint">?attr/colorOnPrimaryContainer</item>
+    <style name="Widget.App.Button.Tertiary" parent="Widget.Material3.Button">
+
+    </style>
+
+    <style name="ThemeOverlay.App.Button.Tertiary" parent="">
+
     </style>
 
     <style name="Widget.App.Button.ToggleGroupIconButton" parent="Widget.App.Button.OutlinedButton">
@@ -235,12 +235,6 @@
     </style>
 
     <style name="Widget.App.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Button.OutlinedButton</item>
-    </style>
-
-    <style name="ThemeOverlay.App.Button.OutlinedButton" parent="ThemeOverlay.Material3.Button.TextButton">
-        <item name="colorSecondaryContainer">?attr/colorTertiary</item>
-        <item name="colorOnSecondaryContainer">?attr/colorOnTertiary</item>
     </style>
 
     <style name="Widget.App.ExtendedFloatingActionButton.Primary"
@@ -256,12 +250,6 @@
 
     <style name="Widget.App.Chip.Suggestion" parent="Widget.Material3.Chip.Suggestion">
         <item name="android:textAppearance">@style/TextAppearance.App.Chip.Suggestion</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Chip</item>
-    </style>
-
-    <style name="ThemeOverlay.App.Chip" parent="">
-        <item name="colorSecondaryContainer">?attr/colorTertiary</item>
-        <item name="colorOnSecondaryContainer">?attr/colorOnTertiary</item>
     </style>
 
     <style name="TextAppearance.App.Chip.Suggestion" parent="TextAppearance.Material3.BodyMedium">
@@ -278,9 +266,8 @@
     </style>
 
     <style name="ThemeOverlay.App.Slider" parent="">
-        <item name="colorPrimary">?attr/colorTertiary</item>
-        <item name="colorSecondaryContainer">?attr/colorSurfaceContainer</item>
-        <item name="colorSurfaceInverse">?attr/colorTertiary</item>
+        <item name="colorSecondaryContainer">?attr/colorSurfaceDim</item>
+        <item name="colorSurfaceInverse">?attr/colorSecondary</item>
     </style>
 
     <style name="Widget.App.Tooltip" parent="Widget.Material3.Tooltip">
@@ -289,17 +276,10 @@
     </style>
 
     <style name="Widget.App.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
-    </style>
-    <style name="ThemeOverlay.App.Switch" parent="">
-        <item name="colorSurfaceContainerHighest">?attr/colorSurfaceContainer</item>
-        <item name="colorPrimary">?attr/colorTertiary</item>
-        <item name="colorOnPrimary">?attr/colorSurfaceContainer</item>
-        <item name="colorOnPrimaryContainer">?attr/colorTertiary</item>
     </style>
 
     <style name="Widget.App.TextViewHeadline" parent="Widget.AppCompat.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceHeadlineLarge</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadlineMedium</item>
     </style>
 
     <style name="Widget.App.TextViewLabelBold" parent="Widget.AppCompat.TextView">

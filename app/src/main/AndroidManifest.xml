@@ -10,7 +10,7 @@
         android:localeConfig="@xml/locale_config"
         android:roundIcon="@mipmap/ic_launcher_skat_scores_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.App.SplashTheme"
+        android:theme="@style/Theme.App"
         android:windowSoftInputMode="adjustResize"
         tools:targetApi="tiramisu">
         <activity

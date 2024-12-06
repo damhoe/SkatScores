@@ -23,7 +23,7 @@
             android:layout_marginStart="28dp"
             android:layout_marginTop="24dp"
             android:textAppearance="?attr/textAppearanceTitleLarge"
-            android:textColor="?colorOnSurfaceVariant"
+            android:textColor="?colorOnSecondaryContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Skatrunde im Okt." />
@@ -44,9 +44,9 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?colorOnSurfaceVariant"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:layout_marginTop="16dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textColor="?colorOnSurfaceVariant"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:text="8th October \n2023" />
@@ -55,11 +55,11 @@
             android:id="@+id/rounds"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?colorOnSurfaceVariant"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            app:layout_constraintTop_toTopOf="@+id/date"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="24dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textColor="?colorOnSurfaceVariant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/date"
             tools:text="11/12" />
 
         <com.google.android.material.button.MaterialButton
@@ -83,8 +83,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:focusedByDefault="false"
-            app:iconTint="?attr/colorSecondary"
             app:icon="@drawable/ic_delete_24dp"
+            app:iconTint="?attr/colorTertiary"
             app:layout_constraintBottom_toBottomOf="@id/button_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/button_continue" />

@@ -33,13 +33,13 @@
                 android:id="@+id/avatar"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:background="?attr/colorSurfaceContainer"
+                android:background="?attr/colorSecondaryContainer"
                 app:srcCompat="@drawable/ic_avatar_48dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/guideline"
                 android:layout_marginBottom="36dp"
-                app:tint="?attr/colorPrimary"
+                app:tint="?attr/colorSurface"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -117,7 +117,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_delete"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.App.Button.Tertiary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"

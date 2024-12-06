@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.App.SplashTheme" parent="Theme.App">
-        <item name="android:windowSplashScreenAnimatedIcon">
-            @drawable/ic_launcher_scoresheet_skat_foreground
-        </item>
-        <item name="android:windowSplashScreenBackground">?attr/colorSecondaryContainer</item>
-    </style>
 </resources>
