@@ -1,4 +1,4 @@
-package com.damhoe.skatscores.game.game_home
+package com.damhoe.skatscores.game
 
 object Constants
 {
