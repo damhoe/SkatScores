@@ -75,10 +75,6 @@
         <item name="android:background">?attr/colorSurface</item>
     </style>
 
-    <style name="Widget.App.AppBarLayout.Variant" parent="Widget.Material3.AppBarLayout">
-        <item name="android:background">?attr/colorSurfaceVariant</item>
-    </style>
-
     <!-- Colored toolbar styling -->
     <style name="Widget.App.AppBarLayout.Colored" parent="Widget.Material3.AppBarLayout">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Colored</item>
@@ -94,6 +90,7 @@
 
     <style name="ThemeOverlay.App.Toolbar.Colored" parent="">
         <item name="android:background">?attr/colorSurface</item>
+        <item name="statusBarScrim">?attr/colorSurface</item>
     </style>
 
     <style name="TextAppearance.App.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
@@ -170,22 +167,20 @@
     </style>
 
     <style name="Widget.App.SimplePieChart" parent="Widget.Material3.CircularProgressIndicator">
-        <item name="trackColor">?attr/colorSurfaceContainer</item>
+        <item name="trackColor">?attr/colorSurfaceContainerHighest</item>
         <item name="indicatorColor">?attr/colorPrimary</item>
         <item name="indicatorTrackGapSize">0dp</item>
     </style>
 
     <style name="Widget.App.TextInputLayout"
-        parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
         <item name="shapeAppearance">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
         <item name="android:paddingLeft">0dp</item>
     </style>
-    
+
     <style name="ThemeOverlay.App.TextInputLayout" parent="">
         <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputLayout.FilledBox</item>
-        <item name="colorSurface">?attr/colorSurfaceVariant</item>
-        <item name="colorPrimary">?attr/colorTertiary</item>
     </style>
 
     <style name="Widget.App.TextInputLayout.Tertiary"

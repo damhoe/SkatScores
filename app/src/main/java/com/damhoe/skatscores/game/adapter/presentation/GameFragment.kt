@@ -341,7 +341,11 @@ class GameFragment : Fragment(), IScoreActionListener
         dialogBinding.roundCountText.text = settings.numberOfRounds.toString()
         dialogBinding.roundCountSlider.value = settings.numberOfRounds.toFloat()
 
-        dialogBinding.scoringSettingsRg.check(if (settings.isTournamentScoring()) R.id.tournament_scoring_rb else R.id.simple_scoring_rb)
+        dialogBinding.scoringSettingsRg.check(
+            if (settings.isTournamentScoring)
+                R.id.tournament_scoring_rb
+            else
+                R.id.simple_scoring_rb)
 
         val dialog: AlertDialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.message_scoring_dialog)
@@ -742,10 +746,6 @@ class GameFragment : Fragment(), IScoreActionListener
         scoreAdapter = SkatScoreAdapter(
                 this)
         binding.scoresRv.adapter = scoreAdapter
-        binding.scoresRv.addItemDecoration(
-                DividerItemDecoration(
-                        requireContext(),
-                        DividerItemDecoration.VERTICAL))
     }
 
     private fun setTitle(
