@@ -202,11 +202,7 @@
     </style>
 
     <style name="Widget.App.Button.Tertiary" parent="Widget.Material3.Button">
-
-    </style>
-
-    <style name="ThemeOverlay.App.Button.Tertiary" parent="">
-
+        <item name="backgroundTint">?attr/colorTertiary</item>
     </style>
 
     <style name="Widget.App.Button.ToggleGroupIconButton" parent="Widget.App.Button.OutlinedButton">

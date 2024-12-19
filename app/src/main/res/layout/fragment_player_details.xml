@@ -11,8 +11,7 @@
             style="@style/Widget.App.AppBarLayout"
             android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -33,7 +32,7 @@
                 android:id="@+id/avatar"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:background="?attr/colorSecondaryContainer"
+                android:background="?attr/colorPrimaryContainer"
                 app:srcCompat="@drawable/ic_avatar_48dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

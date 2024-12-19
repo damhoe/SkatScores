@@ -16,8 +16,8 @@ import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentGameGraphBinding
 import com.damhoe.skatscores.game.application.TotalPointsCalculator
 import com.damhoe.skatscores.game.domain.skat.SkatGame
-import com.damhoe.skatscores.plot.Plot
-import com.damhoe.skatscores.plot.PlotData
+import com.damhoe.skatscores.plot.domain.Plot
+import com.damhoe.skatscores.plot.domain.LineGraphData
 import com.damhoe.skatscores.plot.presentation.GraphicUtils.dpToPx
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager
 import com.damhoe.skatscores.shared_ui.utils.LayoutMargins
@@ -94,7 +94,7 @@ class GameGraphFragment : Fragment() {
 
             for (k in game.players.indices) {
 
-                val plotData = PlotData(
+                val plotData = LineGraphData(
                     points = pointsHistory[k].mapIndexed { index, value -> PointF(index.toFloat(), value.toFloat()) },
                     color = palette[k],
                     label = game.players[k].name

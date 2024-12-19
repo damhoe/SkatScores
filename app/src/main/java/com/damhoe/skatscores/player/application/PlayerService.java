@@ -24,11 +24,7 @@ public class PlayerService implements UpdatePlayerUseCase, GetPlayerUseCase {
     private final UpdatePlayerPort mUpdatePlayerPort;
 
     @Inject
-    PlayerService(
-            GetPlayerPort getPlayerPort,
-            CreatePlayerPort createPlayerPort,
-            UpdatePlayerPort updatePlayerPort
-    ) {
+    PlayerService(GetPlayerPort getPlayerPort, CreatePlayerPort createPlayerPort, UpdatePlayerPort updatePlayerPort) {
         mGetPlayerPort = getPlayerPort;
         mCreatePlayerPort = createPlayerPort;
         mUpdatePlayerPort = updatePlayerPort;
@@ -66,12 +62,9 @@ public class PlayerService implements UpdatePlayerUseCase, GetPlayerUseCase {
             }
 
             List<Player> players = mGetPlayerPort.getPlayers();
-            Optional<Player> optionalPlayer = players.stream()
-                    .filter(x -> x.getName().equals(name))
-                    .findFirst();
+            Optional<Player> optionalPlayer = players.stream().filter(x -> x.getName().equals(name)).findFirst();
 
-            return optionalPlayer.map(Result::success)
-                    .orElseGet(() -> createPlayer(name));
+            return optionalPlayer.map(Result::success).orElseGet(() -> createPlayer(name));
         } catch (Exception ex) {
             ex.printStackTrace();
             return Result.failure(ex.getMessage());
