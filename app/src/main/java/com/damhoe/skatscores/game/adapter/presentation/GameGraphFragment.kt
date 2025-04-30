@@ -25,40 +25,46 @@ import com.google.android.material.color.MaterialColors
 import javax.inject.Inject
 import kotlin.math.max
 
-class GameGraphFragment : Fragment() {
+class GameGraphFragment : Fragment()
+{
 
-    companion object {
+    companion object
+    {
         fun newInstance() = GameGraphFragment()
     }
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context)
+    {
         super.onAttach(context)
         (requireActivity() as GameActivity).appComponent.inject(this)
     }
 
     @Inject
     lateinit var factory: GameViewModelFactory
-    private val viewModel: SkatGameViewModel by viewModels ({ requireActivity() }) { factory }
+    private val viewModel: SkatGameViewModel by viewModels({ requireActivity() }) { factory }
     lateinit var binding: FragmentGameGraphBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View
+    {
         binding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_game_graph, container, false)
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
 
         binding.run {
             InsetsManager.applyStatusBarInsets(appbarLayout)
             InsetsManager.applyNavigationBarInsets(
                 graphView,
-                LayoutMargins(dpToPx(8f), dpToPx(8f), dpToPx(8f), dpToPx(24f)))
+                LayoutMargins(dpToPx(8f), dpToPx(8f), dpToPx(8f), dpToPx(24f))
+            )
         }
 
         NavigationUI.setupWithNavController(binding.toolbar, findNavController())
@@ -66,20 +72,28 @@ class GameGraphFragment : Fragment() {
         viewModel.game.observe(viewLifecycleOwner) { it?.let { updateScorePlot(it) } }
     }
 
-    private fun updateScorePlot(game: SkatGame) {
+    private fun updateScorePlot(
+        game: SkatGame
+    )
+    {
 
         val pointsHistory = TotalPointsCalculator
-            .createPointsHistory(game.players.size, game.scores, game.settings.isTournamentScoring)
+            .createPointsHistory(
+                game.players.size,
+                game.scores,
+                game.settings.isTournamentScoring
+            )
 
         val allPoints = pointsHistory.flatten()
         val minPoints = allPoints.min()
         val maxPoints = allPoints.max()
 
+        var boarderScale: Float = 1.2f
         val bounds = RectF(
             0f,
-            maxPoints.toFloat() + 50,
+            maxPoints.toFloat() * boarderScale,
             max(2f, pointsHistory.first().size.toFloat() - 1),
-            minPoints.toFloat() - 50
+            minPoints.toFloat() * boarderScale,
         )
 
         val palette = listOf(
@@ -92,10 +106,16 @@ class GameGraphFragment : Fragment() {
         binding.graphView.scorePlot = Plot(bounds).apply {
             lineGraphs.clear()
 
-            for (k in game.players.indices) {
+            for (k in game.players.indices)
+            {
 
                 val plotData = LineGraphData(
-                    points = pointsHistory[k].mapIndexed { index, value -> PointF(index.toFloat(), value.toFloat()) },
+                    points = pointsHistory[k].mapIndexed { index, value ->
+                        PointF(
+                            index.toFloat(),
+                            value.toFloat()
+                        )
+                    },
                     color = palette[k],
                     label = game.players[k].name
                 )

@@ -9,8 +9,8 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.TypedValue
-import com.damhoe.skatscores.plot.styles.PlotStyle
 import com.damhoe.skatscores.plot.presentation.GraphicUtils
+import com.damhoe.skatscores.plot.styles.PlotStyle
 import kotlin.math.ceil
 import kotlin.math.log10
 import kotlin.math.pow
@@ -20,23 +20,23 @@ class PlotPainter
     private lateinit var mCanvas: Canvas
     private lateinit var mTransform: Transform
     private lateinit var mStyle: PlotStyle
-    
+
     private val gridPaint = Paint().apply {
         style = Paint.Style.STROKE
     }
-    
+
     private val tickLabelPaint = Paint().apply {
         typeface = Typeface.DEFAULT
     }
-    
+
     private val legendPaint = Paint().apply {
         typeface = Typeface.DEFAULT
     }
-    
+
     private val legendMarkerPaint = Paint()
-    
+
     private val dpTickLabelDistance: Float = 15f
-    
+
     fun initialize(
         canvas: Canvas,
         transform: Transform,
@@ -46,11 +46,11 @@ class PlotPainter
         mCanvas = canvas
         mTransform = transform
         mStyle = style
-        
+
         tickLabelPaint.apply { textSize = dpToPx(mStyle.tickLabelSize).toFloat() }
         legendPaint.apply { textSize = dpToPx(mStyle.labelSize).toFloat() }
     }
-    
+
     fun drawGrid(
         gridDistanceX: Float = 1f,
         gridDistanceY: Float = 1f,
@@ -60,12 +60,12 @@ class PlotPainter
         val bottom = mTransform.viewportOffsetY
         val right = left + mTransform.viewportWidth
         val top = bottom + mTransform.viewportHeight
-        
+
         val pxLeft = mTransform.toPixelX(left)
         val pxBottom = mTransform.toPixelY(bottom)
         val pxRight = mTransform.toPixelX(right)
         val pxTop = mTransform.toPixelY(top)
-        
+
         var tickLabelWidth: Float // change with label text
         val tickLabelHeight = tickLabelPaint.let {
             val bounds = Rect()
@@ -74,46 +74,60 @@ class PlotPainter
                 text,
                 0,
                 text.length,
-                bounds)
+                bounds
+            )
             bounds.height()
         }
-        
+
+        gridPaint.apply {
+            strokeWidth = mStyle.gridStrokeWidth
+            color = mStyle.gridColor
+        }
+
         val path = Path()
         // Draw borders
         path.moveTo(
             pxLeft,
-            pxBottom)
+            pxBottom
+        )
         path.lineTo(
             pxLeft,
-            pxTop)
+            pxTop
+        )
         path.lineTo(
             pxRight,
-            pxTop)
+            pxTop
+        )
         path.lineTo(
             pxRight,
-            pxBottom)
+            pxBottom
+        )
         path.moveTo(
             pxLeft,
-            pxBottom)
+            pxBottom
+        )
         path.lineTo(
             pxRight,
-            pxBottom)
+            pxBottom
+        )
         path.close()
+
         // Draw horizontal lines
-        var y = nextHigherNumberWithDivisor(
-            bottom,
-            gridDistanceY)
-        
-        // Draw x ticks
+        // Draw y tick labels
         val ratio = mTransform.viewportHeight / mTransform.height
         val (exponent, realTicks) = calculateTickPositions(
             bottom,
             top,
-            ratio)
-        val ticks = realTicks.map { mTransform.toPixelY(it.toFloat()) }
-        
-        tickLabelPaint.apply { color = mStyle.tickLabelColor }
-        
+            ratio
+        )
+        val ticks = realTicks.map {
+            mTransform.toPixelY(it.toFloat())
+        }
+
+        tickLabelPaint.apply {
+            color = mStyle.tickLabelColor
+        }
+
         for ((realY, y) in realTicks.zip(ticks))
         {
             mCanvas.drawLine(
@@ -121,15 +135,17 @@ class PlotPainter
                 y,
                 pxRight,
                 y,
-                gridPaint)
-            
+                gridPaint
+            )
+
             // Add label
             val digits =
                 (-exponent + 1).takeIf { it > 0 }
-                ?: 0
+                    ?: 0
             val tickLabel = String.format(
                 "%.${digits}f",
-                realY)
+                realY
+            )
             tickLabelWidth = tickLabelPaint.measureText(tickLabel)
             val tickLeft: Float = pxLeft - dpToPx(dpTickLabelDistance) - tickLabelWidth
             val tickBottom: Float = y + tickLabelHeight / 2f
@@ -137,23 +153,26 @@ class PlotPainter
                 tickLabel,
                 tickLeft,
                 tickBottom,
-                tickLabelPaint)
+                tickLabelPaint
+            )
         }
-        
-        // Draw vertical lines
+
+        // Draw x tick labels
         var x = nextHigherNumberWithDivisor(
             left,
-            gridDistanceX)
+            gridDistanceX
+        )
         while (x < right)
         {
             val pxX = mTransform.toPixelX(x)
-            //path.moveTo(pxX, pxBottom)
-            //path.lineTo(pxX, pxTop)
-            
+
+
             // Tick label
             val tickLabel = String.format(
+                java.util.Locale.ENGLISH,
                 "%.0f",
-                x)
+                x
+            )
             tickLabelWidth = tickLabelPaint.measureText(tickLabel)
             val tickLeft: Float = pxX - tickLabelWidth / 2f
             val tickBottom: Float = pxBottom + tickLabelHeight + dpToPx(dpTickLabelDistance)
@@ -161,26 +180,23 @@ class PlotPainter
                 tickLabel,
                 tickLeft,
                 tickBottom,
-                tickLabelPaint)
-            
+                tickLabelPaint
+            )
+
             x += gridDistanceX
         }
-        
-        gridPaint.apply {
-            strokeWidth = mStyle.gridStrokeWidth
-            color = mStyle.gridColor
-        }
-        
+
         mCanvas.drawPath(
             path,
-            gridPaint)
+            gridPaint
+        )
     }
-    
+
     private val minTickDistance: Float =
         GraphicUtils.dpToPx(50f)
             .toFloat()
     private val normalizedMinTickIncrement = 0.5f // Normalized to (0.1, 1.0] interval
-    
+
     /**
      * Estimate the tick positions based on the minimum tick distance
      * and the normalized tick increment. The increment is normalized to the
@@ -197,47 +213,53 @@ class PlotPainter
         val minTickIncrement = normalizedMinTickIncrement * 10.0.pow(exponent)
         val increment = roundUpToNearest(
             realMinDist.toDouble(),
-            minTickIncrement)
+            minTickIncrement
+        )
         val firstTick = roundUpToNearest(
             min.toDouble(),
-            increment)
+            increment
+        )
         val ticks = generateSequence(firstTick) { x ->
             (x + increment).takeIf { it <= max }
         }
         return Pair(
             exponent,
-            ticks.toList())
+            ticks.toList()
+        )
     }
-    
+
     private fun roundUpToNearest(
         value: Double,
         increment: Double,
     ): Double = if (increment == 0.0)
     {
         value
-    }
-    else
+    } else
     {
         ceil(value / increment) * increment
     }
-    
-    
+
+
     fun drawLineGraph(
         data: LineGraphData,
         paint: Paint,
     )
     {
-        val pixelData = data.toPixels(mTransform)
-        
+        val pixelData = data.toPixels(
+            mTransform
+        )
+
         drawLinePath(
             pixelData,
-            paint)
+            paint
+        )
+
         drawMarkers(
             pixelData,
-            paint)
-        //canvas.drawLine(px0, py0, px1, py1, )
+            paint
+        )
     }
-    
+
     private fun drawMarkers(
         data: LineGraphData,
         paint: Paint,
@@ -247,32 +269,34 @@ class PlotPainter
             color = gridPaint.color
             style = Paint.Style.FILL
         }
-        
+
         for (point: PointF in data.points.filter { mTransform.isVisible(it) })
         {
             mCanvas.drawCircle(
                 point.x,
                 point.y,
                 dpToPx(mStyle.markerSize).toFloat(),
-                paint)
+                paint
+            )
         }
-        
+
         paint.apply {
             color = data.color
             style = Paint.Style.STROKE
-            strokeWidth = 4f
+            strokeWidth = dpToPx(2f).toFloat()
         }
-        
+
         for (point: PointF in data.points.filter { mTransform.isVisible(it) })
         {
             mCanvas.drawCircle(
                 point.x,
                 point.y,
                 dpToPx(mStyle.markerSize).toFloat(),
-                paint)
+                paint
+            )
         }
     }
-    
+
     private fun drawLinePath(
         data: LineGraphData,
         paint: Paint,
@@ -281,59 +305,131 @@ class PlotPainter
         // Create the path
         val path: Path = Path()
         val points = data.points
-            .filter { mTransform.isVisible(it) }
-        
+
         if (points.isEmpty())
         {
             return
         }
-        
+
         val p0 = points[0]
         path.moveTo(
             p0.x,
-            p0.y)
+            p0.y
+        )
         for (k in 1..<points.size)
         {
-            val p = points[k]
-            path.lineTo(
-                p.x,
-                p.y)
+            addVisibleLineSegment(
+                path,
+                points[k - 1],
+                points[k]
+            )
         }
-        
+
         paint.apply {
-            strokeWidth = dpToPx(this@PlotPainter.mStyle.lineWidth).toFloat()
+            strokeWidth = mStyle.lineWidth
             color = data.color
             style = Paint.Style.STROKE
         }
-        
+
         // Style the path
         // Draw path
         mCanvas.drawPath(
             path,
-            paint)
+            paint
+        )
     }
-    
-    fun drawLabels(data: List<LineGraphData>)
+
+    private fun addVisibleLineSegment(
+        path: Path,
+        point1: PointF,
+        point2: PointF,
+    )
     {
-        
+        // Create the path
+        val isPoint1Visible = mTransform.isVisible(
+            point1
+        )
+        val isPoint2Visible = mTransform.isVisible(
+            point2
+        )
+
+        if (!isPoint1Visible and !isPoint2Visible)
+        {
+            return;
+        }
+
+        if (isPoint1Visible and !isPoint2Visible)
+        {
+            val xRight = mTransform.width.toFloat() + mTransform.insets.left
+            val slope = (point2.y - point1.y) / (point2.x - point1.x)
+            val yIntercept = point1.y - slope * point1.x
+            val yAtXRight = slope * xRight + yIntercept
+
+            path.moveTo(
+                point1.x,
+                point1.y
+            )
+
+            path.lineTo(
+                xRight,
+                yAtXRight,
+            )
+        }
+
+        if (!isPoint1Visible and isPoint2Visible)
+        {
+            val xLeft = mTransform.insets.left
+            val slope = (point2.y - point1.y) / (point2.x - point1.x)
+            val yIntercept = point1.y - slope * point1.x
+            val yAtXLeft = slope * xLeft + yIntercept
+
+            path.moveTo(
+                xLeft,
+                yAtXLeft
+            )
+
+            path.lineTo(
+                point2.x,
+                point2.y,
+            )
+        }
+
+        if (isPoint1Visible and isPoint2Visible)
+        {
+            path.moveTo(
+                point1.x,
+                point1.y
+            )
+
+            path.lineTo(
+                point2.x,
+                point2.y
+            )
+        }
+    }
+
+    fun drawLabels(
+        data: List<LineGraphData>,
+    )
+    {
         // For each line graph add the marker and behind it
         // the label text
         val left = mTransform.insets.left.toFloat()
         val bottom = mTransform.height + mTransform.insets.bottom - 10f
-        
+
         val markerSize = dpToPx(mStyle.labelMarkerSize)
         val cornerRadius = dpToPx(4f).toFloat()
-        
-        val gap = dpToPx(5f)
+
+        val gap = dpToPx(8f)
         var x = left
-        
+
         legendPaint.apply { color = mStyle.legendColor }
-        
+
         for (line in data)
         {
-            
+
             legendMarkerPaint.apply { color = line.color }
-            
+
             mCanvas.drawRoundRect(
                 x,
                 bottom - markerSize,
@@ -341,52 +437,53 @@ class PlotPainter
                 bottom,
                 cornerRadius,
                 cornerRadius,
-                legendMarkerPaint)
-            
+                legendMarkerPaint
+            )
+
             x += markerSize + gap
             mCanvas.drawText(
                 line.label,
                 x,
                 bottom,
-                legendPaint)
-            
+                legendPaint
+            )
+
             x += legendPaint.measureText(line.label) + gap
         }
     }
-    
+
     private fun calculateVisiblePoints(points: List<PointF>): List<PointF>
     {
         val newPoints: MutableList<PointF> = mutableListOf()
-        
+
         for (i in 0..<points.size - 1)
         {
             if (mTransform.isVisible(points[i]))
             {
                 newPoints.add(points[i])
-                
+
                 if (!mTransform.isVisible(points[i + 1]))
                 {
-                
+
                 }
-            }
-            else
+            } else
             {
                 if (mTransform.isVisible(points[i + 1]))
                 {
-                
+
                 }
             }
         }
-        
+
         // Add last element
         if (mTransform.isVisible(points.last()))
         {
             newPoints.add(points.last())
         }
-        
+
         return newPoints
     }
-    
+
     /**
      * Assumes that p0 is outside the rectangle and p1 is inside
      */
@@ -398,8 +495,10 @@ class PlotPainter
     {
         // TODO
         return PointF()
+
+
     }
-    
+
     fun nextHigherNumberWithDivisor(
         x: Float,
         dx: Float,
@@ -409,11 +508,11 @@ class PlotPainter
         {
             throw IllegalArgumentException("The divisor 'dx' cannot be zero.")
         }
-        
+
         val quotient = (x / dx).toInt() + 1
         return quotient * dx
     }
-    
+
     /*
     * Calculate the bottom left coordinates for a canvas rectangle
     * where the y value increases from top to bottom
@@ -424,8 +523,9 @@ class PlotPainter
         height: Float,
     ): PointF = PointF(
         center.x - 0.5f * width,
-        center.y + 0.5f * height)
-    
+        center.y + 0.5f * height
+    )
+
     private fun dpToPx(
         dp: Float,
     ): Int
@@ -433,7 +533,8 @@ class PlotPainter
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dp,
-            Resources.getSystem().displayMetrics)
+            Resources.getSystem().displayMetrics
+        )
             .toInt()
     }
 }

@@ -31,8 +31,7 @@ class Transform
     
     fun toViewportY(
         y: Float
-    ) =
-        (height - y + insets.top) * viewportHeight / height + viewportOffsetY
+    ) = (height - y + insets.top) * viewportHeight / height + viewportOffsetY
     
     fun isVisible(
         point: PointF

@@ -11,24 +11,28 @@ class Plot(
     val bounds: RectF,
 )
 {
-    val style: PlotStyle = PlotStyle().apply {
-        markerSize = dpToPx(3f).toFloat()
-        lineWidth = dpToPx(2f).toFloat()
-        gridStrokeWidth = dpToPx(2f).toFloat()
-        gridColor = Color.GRAY.hashCode()
-        tickLabelSize = 16f
-    }
-    
+    val style: PlotStyle = PlotStyle(
+        markerSize = dpToPx(3f).toFloat(),
+        lineWidth = dpToPx(3f).toFloat(),
+        gridStrokeWidth = dpToPx(2f).toFloat(),
+        gridColor = Color.BLACK.hashCode(),
+        tickLabelSize = 16f,
+        labelSize = 16f,
+        labelMarkerSize = 16f,
+        tickLabelColor = Color.BLACK.hashCode(),
+        legendColor = Color.BLACK.hashCode()
+    )
+
     val paint: Paint = Paint()
-    
+
     var gridDistanceX: Float = 1f
     var gridDistanceY: Float = 1f
-    
+
     var lineGraphs: MutableList<LineGraphData> = mutableListOf()
-    
+
     // Allocate here to optimize drawing
     private val painter = PlotPainter()
-    
+
     fun draw(
         canvas: Canvas,
         transform: Transform,
@@ -37,22 +41,26 @@ class Plot(
         painter.initialize(
             canvas = canvas,
             transform = transform,
-            style = style)
-        
+            style = style
+        )
+
         gridDistanceY = transform.viewportHeight / transform.height * 100
-        
+
         painter.drawGrid(
             gridDistanceX = gridDistanceX,
-            gridDistanceY = gridDistanceY)
-        
+            gridDistanceY = gridDistanceY
+        )
+
         for (line: LineGraphData in lineGraphs)
         {
             painter.drawLineGraph(
                 line,
-                paint)
+                paint
+            )
         }
-        
+
         painter.drawLabels(
-            lineGraphs)
+            lineGraphs
+        )
     }
 }
