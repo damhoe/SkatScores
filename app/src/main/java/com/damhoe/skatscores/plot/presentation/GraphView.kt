@@ -184,6 +184,10 @@ class GraphView(
     var scorePlot: Plot by Delegates.observable(scorePlotDefault) { _, _, new ->
         new.style.apply {
             gridColor = this@GraphView.gridColor
+            tickLabelColor = MaterialColors.getColor(
+                this@GraphView,
+                R.attr.colorOnSurfaceVariant
+            )
             legendColor = MaterialColors.getColor(
                 this@GraphView,
                 R.attr.colorOnSurface

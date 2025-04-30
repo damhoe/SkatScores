@@ -29,7 +29,7 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_dark_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
-        <item name="colorControlNormal">@color/md_theme_dark_onSecondaryContainer</item>
+        <item name="colorControlNormal">@color/md_theme_dark_onSurface</item>
         <item name="colorCategorySubtitle">@color/md_theme_dark_tertiary</item>
         <item name="colorClubs">@color/md_theme_dark_onBackground</item>
         <item name="colorSpades">@color/md_theme_dark_onBackground</item>
