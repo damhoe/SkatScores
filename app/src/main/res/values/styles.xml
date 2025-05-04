@@ -257,7 +257,7 @@
     </style>
 
     <style name="ThemeOverlay.App.Slider" parent="">
-        <item name="colorSecondaryContainer">?attr/colorSurfaceDim</item>
+        <item name="colorSecondaryContainer">?attr/colorSurfaceVariant</item>
         <item name="colorSurfaceInverse">?attr/colorSecondary</item>
     </style>
 

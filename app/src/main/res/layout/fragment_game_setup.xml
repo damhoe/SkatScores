@@ -1,259 +1,258 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
-            name="viewModel"
-            type="com.damhoe.skatscores.game.adapter.presentation.GameSetupViewModel" />
+                name="viewModel"
+                type="com.damhoe.skatscores.game.adapter.presentation.GameSetupViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/background_layer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:id="@+id/background_layer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorTertiaryContainer"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/appbarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorTertiaryContainer"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/back_button"
-                    style="@style/Widget.Material3.Button.IconButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="8dp"
-                    app:iconTint="?attr/colorOnTertiaryContainer"
-                    app:icon="@drawable/ic_arrow_back_24dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+            <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            </Toolbar>
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/back_button"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="8dp"
+                        app:icon="@drawable/ic_arrow_back_24dp"
+                        app:iconTint="?colorControlNormal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+            </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appbarLayout"
-            android:fillViewport="true"
-            android:overScrollMode="never"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+                android:id="@+id/nestedScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:fillViewport="true"
+                android:overScrollMode="never"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appbarLayout">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:context=".game.adapter.presentation.GameSetupFragment"
-                android:paddingBottom="108dp">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="108dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:context=".game.adapter.presentation.GameSetupFragment">
 
                 <TextView
-                    android:id="@+id/listNameTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settingsListNameTitle"
-                    android:textColor="?attr/colorOnTertiaryContainer"
-                    android:textStyle="bold"
-                    android:paddingBottom="24dp"
-                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="36dp"/>
+                        android:id="@+id/listNameTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="36dp"
+                        android:paddingBottom="24dp"
+                        android:text="@string/settingsListNameTitle"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/listNameInput"
-                    android:layout_width="240dp"
-                    android:layout_height="wrap_content"
-                    app:endIconDrawable="@drawable/ic_cancel_24dp"
-                    app:endIconMode="clear_text"
-                    style="@style/Widget.App.TextInputLayout.Tertiary"
-                    app:layout_constraintTop_toBottomOf="@id/listNameTitle"
-                    app:layout_constraintStart_toStartOf="@id/listNameTitle">
+                        android:id="@+id/listNameInput"
+                        style="@style/Widget.App.TextInputLayout.Tertiary"
+                        android:layout_width="240dp"
+                        android:layout_height="wrap_content"
+                        app:endIconDrawable="@drawable/ic_cancel_24dp"
+                        app:endIconMode="clear_text"
+                        app:layout_constraintStart_toStartOf="@id/listNameTitle"
+                        app:layout_constraintTop_toBottomOf="@id/listNameTitle">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/listNameEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:focusedByDefault="false"
-                        android:textColor="?attr/colorOnTertiaryContainer"
-                        tools:text="New List 88"
-                        android:textSize="18sp" />
+                            android:id="@+id/listNameEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusedByDefault="false"
+                            android:inputType="text"
+                            android:textSize="18sp"
+                            tools:text="New List 88" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <View
-                    android:id="@+id/coloredBackground"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@id/listNameInput"
-                    android:layout_marginBottom="-36dp"
-                    android:translationZ="-1dp"
-                    android:background="@drawable/background_large_top_app_bar" />
+                        android:id="@+id/coloredBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="-36dp"
+                        android:background="@drawable/background_large_top_app_bar"
+                        android:translationZ="-1dp"
+                        app:layout_constraintBottom_toBottomOf="@id/listNameInput"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/playerCountTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp"
-                    android:text="@string/settingsPlayerCountTitle"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                    app:layout_constraintTop_toBottomOf="@id/coloredBackground"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"/>
+                        android:id="@+id/playerCountTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="24dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/settingsPlayerCountTitle"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/coloredBackground" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/playerCountInfoButton"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    style="@style/Widget.Material3.Button.IconButton"
-                    app:icon="@drawable/ic_info_24dp"
-                    app:iconTint="?attr/colorPrimary"
-                    android:layout_marginTop="-4dp"
-                    app:layout_constraintTop_toTopOf="@id/playerCountTitle"
-                    app:layout_constraintStart_toEndOf="@id/playerCountTitle"
-                    android:padding="2dp"/>
+                        android:id="@+id/playerCountInfoButton"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="-4dp"
+                        android:padding="2dp"
+                        app:icon="@drawable/ic_info_24dp"
+                        app:iconTint="?attr/colorControlNormal"
+                        app:layout_constraintStart_toEndOf="@id/playerCountTitle"
+                        app:layout_constraintTop_toTopOf="@id/playerCountTitle" />
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/playerCountRg"
-                    android:layout_width="56dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:singleSelection="true"
-                    app:checkedButton="@id/button_three_players"
-                    app:selectionRequired="true"
-                    app:layout_constraintStart_toStartOf="@id/playerCountTitle"
-                    app:layout_constraintTop_toBottomOf="@id/playerCountTitle">
+                        android:id="@+id/playerCountRg"
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:checkedButton="@id/button_three_players"
+                        app:layout_constraintStart_toStartOf="@id/playerCountTitle"
+                        app:layout_constraintTop_toBottomOf="@id/playerCountTitle"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
 
                     <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.App.Button.OutlinedButton"
-                        android:id="@+id/button_three_players"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settingsThreePlayersText"/>
+                            android:id="@+id/button_three_players"
+                            style="@style/Widget.App.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settingsThreePlayersText" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
                 <TextView
-                    android:id="@+id/scoringTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settingsScoringTitle"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                    android:layout_marginTop="24dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    app:layout_constraintStart_toStartOf="@id/playerCountRg"
-                    app:layout_constraintTop_toBottomOf="@id/playerCountRg"/>
+                        android:id="@+id/scoringTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/settingsScoringTitle"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="@id/playerCountRg"
+                        app:layout_constraintTop_toBottomOf="@id/playerCountRg" />
 
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/scoring_settings_rg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="36dp"
-                    android:layout_marginStart="36dp"
-                    android:layout_marginTop="8dp"
-                    app:singleSelection="true"
-                    app:checkedButton="@id/simple_scoring_rb"
-                    app:selectionRequired="true"
-                    app:layout_constraintStart_toStartOf="@id/scoringTitle"
-                    app:layout_constraintTop_toBottomOf="@id/scoringTitle">
+                        android:id="@+id/scoring_settings_rg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="36dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="36dp"
+                        app:checkedButton="@id/simple_scoring_rb"
+                        app:layout_constraintStart_toStartOf="@id/scoringTitle"
+                        app:layout_constraintTop_toBottomOf="@id/scoringTitle"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
 
                     <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.App.Button.OutlinedButton"
-                        android:id="@+id/simple_scoring_rb"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settingsScoringSimple"/>
+                            android:id="@+id/simple_scoring_rb"
+                            style="@style/Widget.App.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settingsScoringSimple" />
 
                     <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.App.Button.OutlinedButton"
-                        android:id="@+id/tournament_scoring_rb"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settingsScoringTournament" />
+                            android:id="@+id/tournament_scoring_rb"
+                            style="@style/Widget.App.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settingsScoringTournament" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
                 <TextView
-                    android:id="@+id/roundCountTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settingsRoundCountTitle"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                    android:layout_marginTop="24dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    app:layout_constraintStart_toStartOf="@id/playerCountTitle"
-                    app:layout_constraintTop_toBottomOf="@+id/scoring_settings_rg"/>
+                        android:id="@+id/roundCountTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/settingsRoundCountTitle"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="@id/playerCountTitle"
+                        app:layout_constraintTop_toBottomOf="@+id/scoring_settings_rg" />
 
                 <TextView
-                    android:id="@+id/roundCountText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                    android:layout_marginStart="36dp"
-                    app:layout_constraintStart_toEndOf="@id/roundCountTitle"
-                    app:layout_constraintTop_toTopOf="@id/roundCountTitle"
-                    app:layout_constraintBottom_toBottomOf="@id/roundCountTitle"
-                    tools:text="12"/>
+                        android:id="@+id/roundCountText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="36dp"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        app:layout_constraintBottom_toBottomOf="@id/roundCountTitle"
+                        app:layout_constraintStart_toEndOf="@id/roundCountTitle"
+                        app:layout_constraintTop_toTopOf="@id/roundCountTitle"
+                        tools:text="12" />
 
                 <com.google.android.material.slider.Slider
-                    android:id="@+id/roundCountSlider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.App.Slider"
-                    android:stepSize="3"
-                    android:valueFrom="3"
-                    android:valueTo="36"
-                    android:value="12"
-                    app:labelBehavior="floating"
-                    android:contentDescription="@string/settingsRoundCountContentDescription"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    app:layout_constraintTop_toBottomOf="@id/roundCountTitle"/>
+                        android:id="@+id/roundCountSlider"
+                        style="@style/Widget.App.Slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="24dp"
+                        android:contentDescription="@string/settingsRoundCountContentDescription"
+                        android:stepSize="3"
+                        android:value="12"
+                        android:valueFrom="3"
+                        android:valueTo="36"
+                        app:labelBehavior="floating"
+                        app:layout_constraintTop_toBottomOf="@id/roundCountTitle" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/startButton"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="@dimen/fab_margin_bottom"
-            android:layout_marginStart="@dimen/fab_margin_bottom"
-            android:layout_marginEnd="@dimen/fab_margin_bottom"
-            android:text="@string/settingsStartButton"
-            style="@style/Widget.Material3.Button"
-            android:contentDescription="@string/description_start" />
+                android:id="@+id/startButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="@dimen/fab_margin_bottom"
+                android:layout_marginEnd="@dimen/fab_margin_bottom"
+                android:layout_marginBottom="@dimen/fab_margin_bottom"
+                android:contentDescription="@string/description_start"
+                android:text="@string/settingsStartButton"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
