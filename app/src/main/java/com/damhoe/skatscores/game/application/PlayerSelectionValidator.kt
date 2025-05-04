@@ -1,62 +1,75 @@
-package com.damhoe.skatscores.game.application;
+package com.damhoe.skatscores.game.application
 
-import android.util.Pair;
+import com.damhoe.skatscores.game.application.PlayerSelectionValidationResult.DuplicateName
+import com.damhoe.skatscores.game.application.PlayerSelectionValidationResult.EmptyName
+import com.damhoe.skatscores.game.application.PlayerSelectionValidationResult.NewPlayer
+import com.damhoe.skatscores.game.application.PlayerSelectionValidationResult.Success
+import com.damhoe.skatscores.player.domain.Player
 
-import com.damhoe.skatscores.player.domain.Player;
+class PlayerSelectionValidator(
+    var allPlayers: MutableList<Player>,
+    var selectedNames: MutableList<String>
+)
+{
+    fun validate(): List<PlayerSelectionValidationResult>
+    {
+        val results = mutableListOf<PlayerSelectionValidationResult>()
 
-import java.util.ArrayList;
-import java.util.List;
+        for (name in selectedNames)
+        {
+            if (name.isEmpty())
+            {
+                results.add(
+                    EmptyName
+                )
+                continue
+            }
 
-public class PlayerSelectionValidator {
-   public enum MessageType {
-      Error,
-      Warning
-   }
+            val occurrenceCount = selectedNames.stream().filter { s: String -> s == name }.count()
+            if (occurrenceCount >= 2)
+            {
+                results.add(
+                    DuplicateName
+                )
+                continue
+            }
 
-   private List<Player> allPlayers;
-   private List<String> selectedNames = new ArrayList<>();
+            if (isDummyName(name))
+            {
+                results.add(
+                    Success
+                )
+            }
 
-   public void initialize(List<Player> allPlayers, List<String> selectedNames) {
-      this.selectedNames = selectedNames;
-      this.allPlayers = allPlayers;
-   }
+            if (allPlayers.stream().noneMatch { p: Player -> p.name == name })
+            {
+                results.add(
+                    NewPlayer
+                )
+                continue
+            }
 
-   public List<Pair<MessageType, String>> validate() {
-      List<Pair<MessageType, String>> messages = new ArrayList<>();
+            results.add(
+                Success
+            )
+        }
 
-      for (String name: selectedNames) {
-         if (name.isEmpty()) {
-            messages.add(new Pair<>(MessageType.Error, "Valid name is required!"));
-            continue;
-         }
+        return results
+    }
 
-         long occurrenceCount = selectedNames.stream().filter(s -> s.equals(name)).count();
-         if (occurrenceCount >= 2) {
-            messages.add(new Pair<>(MessageType.Error, "Player is selected twice!"));
-            continue;
-         }
+    fun isDummyName(
+        name: String
+    ): Boolean
+    {
+        return name.matches(
+            Player.DUMMY_PATTERN.toRegex())
+    }
 
-         if (isDummyName(name)) {
-            messages.add(new Pair<>(null, null));
-            continue;
-         }
-
-         if (allPlayers.stream().noneMatch(p -> p.getName().equals(name))) {
-            messages.add(new Pair<>(MessageType.Warning, "New player is created!"));
-            continue;
-         }
-
-         messages.add(new Pair<>(null, null));
-      }
-
-      return messages;
-   }
-
-   public boolean isDummyName(String name) {
-      return name.matches(Player.DUMMY_PATTERN);
-   }
-
-   public void select(int index, String name) {
-      this.selectedNames.set(index, name);
-   }
+    fun select(
+        index: Int,
+        name: String
+    )
+    {
+        this.selectedNames[index] = name
+    }
 }
