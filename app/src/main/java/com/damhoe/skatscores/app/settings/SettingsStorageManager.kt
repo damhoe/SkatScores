@@ -14,8 +14,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingsStorageManager @Inject constructor(@ApplicationContext context: Context) {
-
+class SettingsStorageManager @Inject constructor(
+    @ApplicationContext context: Context
+)
+{
     private val Context.dataStore: DataStore<Preferences>
         by preferencesDataStore(name = "skat_score_settings")
 

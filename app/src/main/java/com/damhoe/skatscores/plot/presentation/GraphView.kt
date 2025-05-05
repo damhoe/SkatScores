@@ -283,7 +283,7 @@ class GraphView(
             )
 
             // Update display
-            ViewCompat.postInvalidateOnAnimation(this@GraphView)
+            this@GraphView.postInvalidateOnAnimation()
 
             viewportFocus.set(
                 transform.toViewportX(focusX),
@@ -318,7 +318,7 @@ class GraphView(
             )
 
             // Update screen
-            ViewCompat.postInvalidateOnAnimation(this@GraphView)
+            this@GraphView.postInvalidateOnAnimation()
             return true
         }
     }
@@ -332,7 +332,8 @@ class GraphView(
         dX: Float,
         dY: Float,
     )
-    {/*
+    {
+        /*
         * Constrains the viewport within the image bounds.
         */
         val curX = transform.viewportOffsetX + dX

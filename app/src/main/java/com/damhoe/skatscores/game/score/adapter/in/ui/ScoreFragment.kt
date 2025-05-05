@@ -32,7 +32,8 @@ import com.damhoe.skatscores.shared_ui.utils.InsetsManager
 import com.damhoe.skatscores.shared_ui.utils.LayoutMargins
 import javax.inject.Inject
 
-class ScoreFragment : Fragment() {
+class ScoreFragment : Fragment()
+{
     /**
      * Score fragment is responsible for the creation and update process of scores.
      *
@@ -42,7 +43,8 @@ class ScoreFragment : Fragment() {
      *      (ii) Game view model lives at the activity level and holds the current game
      *          It is responsible for persisting the score if accepted
      */
-    companion object {
+    companion object
+    {
         const val SCORE_REQUEST_KEY: String = "ScoreRequest"
     }
 
@@ -51,9 +53,11 @@ class ScoreFragment : Fragment() {
 
     private val scoreRequest: ScoreRequest by lazy {
         arguments?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            {
                 it.getParcelable(SCORE_REQUEST_KEY, ScoreRequest::class.java)
-            }   else {
+            } else
+            {
                 it.getParcelable(SCORE_REQUEST_KEY)
             }
         } ?: throw IllegalArgumentException("Score fragment is missing score request.")
@@ -69,30 +73,34 @@ class ScoreFragment : Fragment() {
     @Inject
     lateinit var gameViewModelFactory: GameViewModelFactory
     private val gameViewModel: SkatGameViewModel
-            by viewModels({requireActivity()}) { gameViewModelFactory }
+            by viewModels({ requireActivity() }) { gameViewModelFactory }
 
     private lateinit var binding: FragmentScoreBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         (requireActivity() as GameActivity).appComponent.inject(this)
         super.onCreate(savedInstanceState)
     }
 
     private fun addListenersForToggleButtons() = binding.apply {
         toggleGroupSoloPlayer.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
+            if (isChecked)
+            {
                 handlePlayerButtonCheck(checkedId)
             }
         }
 
         toggleGroupResult.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
+            if (isChecked)
+            {
                 handleResultButtonCheck(checkedId)
             }
         }
 
         toggleGroupSuit.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
+            if (isChecked)
+            {
                 // Also clear special suits
                 toggleGroupSpecialSuit.clearChecked()
                 handleSuitButtonCheck(checkedId)
@@ -100,7 +108,8 @@ class ScoreFragment : Fragment() {
         }
 
         toggleGroupSpecialSuit.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
+            if (isChecked)
+            {
                 // Also clear special suits
                 toggleGroupSuit.clearChecked()
                 handleSuitButtonCheck(checkedId)
@@ -108,8 +117,10 @@ class ScoreFragment : Fragment() {
         }
     }
 
-    private fun handleResultButtonCheck(checkedId: Int) {
-        when (checkedId) {
+    private fun handleResultButtonCheck(checkedId: Int)
+    {
+        when (checkedId)
+        {
             R.id.buttonOverbid -> scoreViewModel.setResult(OVERBID)
             R.id.buttonWon -> scoreViewModel.setResult(WON)
             R.id.buttonLost -> scoreViewModel.setResult(LOST)
@@ -128,7 +139,8 @@ class ScoreFragment : Fragment() {
         }
     }
 
-    private fun updateSpitzenButtons(spitzen: Float) {
+    private fun updateSpitzenButtons(spitzen: Float)
+    {
         with(binding) {
             spitzenAddButton.isEnabled = spitzen < spitzenSlider.valueTo
             spitzenRemoveButton.isEnabled = spitzen > spitzenSlider.valueFrom
@@ -145,10 +157,13 @@ class ScoreFragment : Fragment() {
         spitzenAddButton.setOnClickListener { spitzenSlider.value += 1 }
 
         spitzenSwitch.setOnCheckedChangeListener { _, isChecked ->
-            spitzenSlider.valueTo = if (isChecked) {
+            spitzenSlider.valueTo = if (isChecked)
+            {
                 maxSpitzenValueTo
-            } else {
-                if (spitzenSlider.value > normalSpitzenValueTo) {
+            } else
+            {
+                if (spitzenSlider.value > normalSpitzenValueTo)
+                {
                     spitzenSlider.value = normalSpitzenValueTo
                 }
                 normalSpitzenValueTo
@@ -161,9 +176,12 @@ class ScoreFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(layoutInflater,
-            R.layout.fragment_score, container, false)
+    ): View
+    {
+        binding = DataBindingUtil.inflate(
+            layoutInflater,
+            R.layout.fragment_score, container, false
+        )
 
         addListenersForToggleButtons()
         addListenersForChips()
@@ -177,11 +195,13 @@ class ScoreFragment : Fragment() {
         return binding.root
     }
 
-    private fun handleAnnouncementChips(checkedIds: List<Int>) {
+    private fun handleAnnouncementChips(checkedIds: List<Int>)
+    {
         // Schwarz is checked only if Schneider is also checked
         if (checkedIds.contains(R.id.schwarz_announced_chip) &&
             !checkedIds.contains(R.id.schneider_announced_chip)
-        ) {
+        )
+        {
             binding.announcementsChips.check(R.id.schneider_announced_chip)
             return
         }
@@ -191,11 +211,13 @@ class ScoreFragment : Fragment() {
         scoreViewModel.setSchwarzAnnounced(checkedIds.contains(R.id.schwarz_announced_chip))
     }
 
-    private fun handleWinLevelChips(checkedIds: List<Int>) {
+    private fun handleWinLevelChips(checkedIds: List<Int>)
+    {
         // Schwarz is checked only if Schneider is also checked
         if (checkedIds.contains(R.id.schwarz_chip) &&
             !checkedIds.contains(R.id.schneider_chip)
-        ) {
+        )
+        {
             binding.winLevelChips.check(R.id.schneider_chip)
             return
         }
@@ -208,9 +230,10 @@ class ScoreFragment : Fragment() {
     private fun findNavController() =
         Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
 
-    private fun handlePlayerButtonCheck(buttonId: Int) = with (binding) {
+    private fun handlePlayerButtonCheck(buttonId: Int) = with(binding) {
         scoreViewModel.apply {
-            when (buttonId) {
+            when (buttonId)
+            {
                 buttonPasse.id -> setPasse()
                 buttonPlayer1.id -> selectPlayer(position = 0)
                 buttonPlayer2.id -> selectPlayer(position = 1)
@@ -219,9 +242,10 @@ class ScoreFragment : Fragment() {
         }
     }
 
-    private fun handleSuitButtonCheck(buttonId: Int) = with (binding) {
+    private fun handleSuitButtonCheck(buttonId: Int) = with(binding) {
         scoreViewModel.apply {
-            when (buttonId) {
+            when (buttonId)
+            {
                 buttonClubs.id -> setSuit(CLUBS)
                 buttonSpades.id -> setSuit(SPADES)
                 buttonHearts.id -> setSuit(HEARTS)
@@ -233,7 +257,7 @@ class ScoreFragment : Fragment() {
     }
 
     private fun writePlayerNames() = binding.also {
-        with (scoreViewModel.playerNames) {
+        with(scoreViewModel.playerNames) {
             it.buttonPlayer1.text = this[0]
             it.buttonPlayer2.text = this[1]
             it.buttonPlayer3.text = this[2]
@@ -241,7 +265,8 @@ class ScoreFragment : Fragment() {
     }
 
     private fun checkPlayer(position: Int) = binding.apply {
-        when (position) {
+        when (position)
+        {
             0 -> buttonPlayer1.isChecked = true
             1 -> buttonPlayer2.isChecked = true
             2 -> buttonPlayer3.isChecked = true
@@ -250,7 +275,8 @@ class ScoreFragment : Fragment() {
 
     /** @noinspection DataFlowIssue
      */
-    private fun initializeUI() {
+    private fun initializeUI()
+    {
         writePlayerNames()
 
         val positionMap = scoreViewModel.playerPositions
@@ -258,7 +284,8 @@ class ScoreFragment : Fragment() {
         scoreViewModel.scoreCommand.value?.let { cmd ->
             binding.apply {
 
-                if (cmd.isPasse) {
+                if (cmd.isPasse)
+                {
                     toggleGroupSoloPlayer.check(R.id.buttonPasse)
                     return
                 }
@@ -267,7 +294,8 @@ class ScoreFragment : Fragment() {
                 checkPlayer(playerPosition)
 
                 toggleGroupResult.apply {
-                    when {
+                    when
+                    {
                         cmd.isWon -> check(R.id.buttonWon)
                         cmd.isLost -> check(R.id.buttonLost)
                         cmd.isOverbid -> check(R.id.buttonOverbid)
@@ -276,9 +304,11 @@ class ScoreFragment : Fragment() {
 
                 // Init slider
                 spitzenSwitch.isChecked = cmd.spitzen > normalSpitzenValueTo
-                spitzenSlider.valueTo = if (cmd.spitzen > normalSpitzenValueTo) {
+                spitzenSlider.valueTo = if (cmd.spitzen > normalSpitzenValueTo)
+                {
                     maxSpitzenValueTo
-                } else {
+                } else
+                {
                     normalSpitzenValueTo
                 }
                 spitzenSlider.value = cmd.spitzen.toFloat()
@@ -295,8 +325,8 @@ class ScoreFragment : Fragment() {
     }
 
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
 
         // Setup navigation
@@ -311,7 +341,7 @@ class ScoreFragment : Fragment() {
         InsetsManager.applyNavigationBarInsets(binding.scoreDoneButton, defaultMargins)
         InsetsManager.applyNavigationBarInsets(binding.content)
 
-        with (scoreViewModel) {
+        with(scoreViewModel) {
             isSuitsEnabled
                 .observe(viewLifecycleOwner) { changeSuitButtonAccessibility(it) }
             isHandEnabled
@@ -332,53 +362,65 @@ class ScoreFragment : Fragment() {
                 }
             }
 
-            skatResult.observe(viewLifecycleOwner) { outcome -> outcome?.let {
-                when (it) {
-                    WON -> binding.toggleGroupResult.check(R.id.buttonWon)
-                    LOST -> binding.toggleGroupResult.check(R.id.buttonLost)
-                    OVERBID -> binding.toggleGroupResult.check(R.id.buttonOverbid)
-                    PASSE -> binding.toggleGroupResult.clearChecked()
-                }
-            } }
-
-            suit.observe(viewLifecycleOwner) { skatSuit -> skatSuit?.let {
-                when (it) {
-                    INVALID -> binding.apply {
-                        announcementsChips.clearCheck()
-                        winLevelChips.clearCheck()
-                        spitzenSlider.value = spitzenSlider.valueFrom
-                        toggleGroupSuit.clearChecked()
+            skatResult.observe(viewLifecycleOwner) { outcome ->
+                outcome?.let {
+                    when (it)
+                    {
+                        WON -> binding.toggleGroupResult.check(R.id.buttonWon)
+                        LOST -> binding.toggleGroupResult.check(R.id.buttonLost)
+                        OVERBID -> binding.toggleGroupResult.check(R.id.buttonOverbid)
+                        PASSE -> binding.toggleGroupResult.clearChecked()
                     }
-                    CLUBS -> binding.toggleGroupSuit.check(R.id.buttonClubs)
-                    SPADES -> binding.toggleGroupSuit.check(R.id.buttonSpades)
-                    HEARTS -> binding.toggleGroupSuit.check(R.id.buttonHearts)
-                    DIAMONDS -> binding.toggleGroupSuit.check(R.id.buttonDiamonds)
-                    NULL -> binding.toggleGroupSuit.check(R.id.buttonNull)
-                    GRAND -> binding.toggleGroupSuit.check(R.id.buttonGrand)
                 }
-            } }
+            }
+
+            suit.observe(viewLifecycleOwner) { skatSuit ->
+                skatSuit?.let {
+                    when (it)
+                    {
+                        INVALID -> binding.apply {
+                            announcementsChips.clearCheck()
+                            winLevelChips.clearCheck()
+                            spitzenSlider.value = spitzenSlider.valueFrom
+                            toggleGroupSuit.clearChecked()
+                        }
+
+                        CLUBS -> binding.toggleGroupSuit.check(R.id.buttonClubs)
+                        SPADES -> binding.toggleGroupSuit.check(R.id.buttonSpades)
+                        HEARTS -> binding.toggleGroupSuit.check(R.id.buttonHearts)
+                        DIAMONDS -> binding.toggleGroupSuit.check(R.id.buttonDiamonds)
+                        NULL -> binding.toggleGroupSuit.check(R.id.buttonNull)
+                        GRAND -> binding.toggleGroupSuit.check(R.id.buttonGrand)
+                    }
+                }
+            }
         }
 
         initializeUI()
     }
 
-    private fun changeAnnouncementsChipsAccessibility(isEnabled: Boolean) = with (binding) {
+    private fun changeAnnouncementsChipsAccessibility(isEnabled: Boolean) = with(binding) {
         listOf(schneiderChip, schwarzChip, schneiderAnnouncedChip, schwarzAnnouncedChip)
             .forEach { it.isEnabled = isEnabled }
     }
 
-    private fun changeSuitButtonAccessibility(isEnabled: Boolean) = with (binding) {
+    private fun changeSuitButtonAccessibility(isEnabled: Boolean) = with(binding) {
         listOf(buttonClubs, buttonSpades, buttonHearts, buttonDiamonds, buttonNull, buttonGrand)
             .forEach { it.isEnabled = isEnabled }
     }
 
-    private fun saveScore() {
-        when (scoreRequest) {
-            is ScoreRequest.CreateScoreRequest -> {
+    private fun saveScore()
+    {
+        when (scoreRequest)
+        {
+            is ScoreRequest.CreateScoreRequest ->
+            {
                 val score = scoreViewModel.createScore()
                 gameViewModel.addScore(score)
             }
-            is ScoreRequest.UpdateScoreRequest -> {
+
+            is ScoreRequest.UpdateScoreRequest ->
+            {
                 val score = scoreViewModel.updateScore()
                 gameViewModel.updateScore(score)
             }

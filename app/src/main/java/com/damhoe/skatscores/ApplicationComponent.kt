@@ -18,9 +18,16 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ApplicationModule::class, ScoreModule::class,
-    GameModule::class, PlayerModule::class])
-interface ApplicationComponent {
+@Component(
+    modules = [
+        ApplicationModule::class,
+        ScoreModule::class,
+        GameModule::class,
+        PlayerModule::class,
+    ]
+)
+interface ApplicationComponent
+{
     @get:ApplicationContext
     val context: Context
     val dbHelper: DbHelper

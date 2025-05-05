@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
-    kotlin("android") version "1.9.21"
-    kotlin("kapt")
+    id("org.jetbrains.kotlin.android") version "2.0.0"
+    id("org.jetbrains.kotlin.kapt")
     id("androidx.navigation.safeargs")
     id("kotlin-parcelize")
 }
@@ -62,8 +62,8 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.3.2")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-    implementation("androidx.navigation:navigation-fragment:2.8.9")
-    implementation("androidx.navigation:navigation-ui:2.8.9")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.9")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.9")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("com.android.support:support-annotations:28.0.0")
@@ -79,15 +79,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 
     // Dagger
-    implementation("com.google.dagger:dagger:2.49")
+    implementation("com.google.dagger:dagger:2.51")
     implementation("com.google.dagger:dagger-android:2.49")
     implementation("com.google.dagger:dagger-android-support:2.49")
     androidTestImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     kapt("com.google.dagger:dagger-android-processor:2.49")
-    kapt("com.google.dagger:dagger-compiler:2.49")
+    kapt("com.google.dagger:dagger-compiler:2.51")
 
     // Data store
-    implementation("androidx.datastore:datastore-preferences:1.1.5")
+    implementation("androidx.datastore:datastore-core-android:1.1.4")
+    implementation("androidx.datastore:datastore-preferences:1.1.4")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
