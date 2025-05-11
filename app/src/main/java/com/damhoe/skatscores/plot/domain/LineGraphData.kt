@@ -5,8 +5,7 @@ import androidx.annotation.ColorInt
 
 data class LineGraphData(
     var points: List<PointF>,
-    @ColorInt
-    var color: Int,
+    @ColorInt var color: Int,
     var label: String,
 )
 {

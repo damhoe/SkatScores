@@ -1,6 +1,5 @@
 package com.damhoe.skatscores.library
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,15 +11,16 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.damhoe.skatscores.MainActivity
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.app.HomeFragmentDirections
 import com.damhoe.skatscores.databinding.FragmentLibraryBinding
 import com.damhoe.skatscores.game.adapter.presentation.shared.GamePreviewAdapter
 import com.damhoe.skatscores.game.adapter.presentation.shared.GamePreviewItemClickListener
 import com.damhoe.skatscores.game.domain.skat.SkatGamePreview
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class LibraryFragment : Fragment(),
     GamePreviewItemClickListener
 {
@@ -29,12 +29,6 @@ class LibraryFragment : Fragment(),
     private val viewModel: LibraryViewModel by viewModels { factory }
     private lateinit var binding: FragmentLibraryBinding
     private lateinit var gamePreviewAdapter: GamePreviewAdapter
-
-    override fun onAttach(context: Context)
-    {
-        super.onAttach(context)
-        (requireActivity() as MainActivity).appComponent.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

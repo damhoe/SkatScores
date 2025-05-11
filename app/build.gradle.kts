@@ -1,8 +1,9 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android") version "2.0.0"
-    id("org.jetbrains.kotlin.kapt")
+    id("org.jetbrains.kotlin.android") version "2.1.20"
+    id("org.jetbrains.kotlin.kapt") version "2.1.20"
     id("androidx.navigation.safeargs")
+    id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
 }
 
@@ -11,21 +12,24 @@ android {
 
     defaultConfig {
         applicationId = "com.damhoe.skatscores"
-        compileSdk = 34
+        compileSdk = 35
         minSdk = 30
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
-        resourceConfigurations += arrayOf("de","en")
+        androidResources.localeFilters += arrayOf("de","en")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        named("release") {
+        getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -38,23 +42,15 @@ android {
         jvmToolchain(17)
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         dataBinding = true
-    }
-
-    kapt {
-        generateStubs = true
     }
 
     packaging {
         resources.excludes.add("META-INF/*")
     }
 
-    buildToolsVersion = "34.0.0"
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
@@ -79,18 +75,20 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 
     // Dagger
-    implementation("com.google.dagger:dagger:2.51")
-    implementation("com.google.dagger:dagger-android:2.49")
-    implementation("com.google.dagger:dagger-android-support:2.49")
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    kapt("com.google.dagger:hilt-compiler:2.56.2")
+
     androidTestImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-    kapt("com.google.dagger:dagger-android-processor:2.49")
-    kapt("com.google.dagger:dagger-compiler:2.51")
 
     // Data store
-    implementation("androidx.datastore:datastore-core-android:1.1.4")
-    implementation("androidx.datastore:datastore-preferences:1.1.4")
+    implementation("androidx.datastore:datastore-core-android:1.1.6")
+    implementation("androidx.datastore:datastore-preferences:1.1.6")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+}
+
+kapt {
+    correctErrorTypes = true
 }

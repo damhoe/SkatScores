@@ -13,7 +13,6 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentScoreBinding
-import com.damhoe.skatscores.game.adapter.presentation.GameActivity
 import com.damhoe.skatscores.game.adapter.presentation.GameViewModelFactory
 import com.damhoe.skatscores.game.adapter.presentation.SkatGameViewModel
 import com.damhoe.skatscores.game.domain.score.ScoreRequest
@@ -30,8 +29,10 @@ import com.damhoe.skatscores.game.domain.score.SkatSuit.NULL
 import com.damhoe.skatscores.game.domain.score.SkatSuit.SPADES
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager
 import com.damhoe.skatscores.shared_ui.utils.LayoutMargins
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ScoreFragment : Fragment()
 {
     /**
@@ -76,12 +77,6 @@ class ScoreFragment : Fragment()
             by viewModels({ requireActivity() }) { gameViewModelFactory }
 
     private lateinit var binding: FragmentScoreBinding
-
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        (requireActivity() as GameActivity).appComponent.inject(this)
-        super.onCreate(savedInstanceState)
-    }
 
     private fun addListenersForToggleButtons() = binding.apply {
         toggleGroupSoloPlayer.addOnButtonCheckedListener { _, checkedId, isChecked ->

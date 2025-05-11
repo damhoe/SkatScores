@@ -6,8 +6,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.damhoe.skatscores.ApplicationContext
 import com.damhoe.skatscores.R
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -19,14 +19,15 @@ class SettingsStorageManager @Inject constructor(
 )
 {
     private val Context.dataStore: DataStore<Preferences>
-        by preferencesDataStore(name = "skat_score_settings")
+            by preferencesDataStore(name = "skat_score_settings")
 
     private val storage = context.dataStore
 
     private val defaultTheme = context.getString(R.string.system_theme_preference_value)
     private val defaultLanguage = context.getString(R.string.german_preference_value)
 
-    companion object {
+    companion object
+    {
         val THEME = stringPreferencesKey("themePreference")
         val LANGUAGE = stringPreferencesKey("languagePreference")
     }

@@ -9,7 +9,10 @@ import com.damhoe.skatscores.game.score.application.ports.out.GetScoresPort;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 
+@InstallIn(SingletonComponent.class)
 @Module
 public abstract class ScoreModule {
    @Binds

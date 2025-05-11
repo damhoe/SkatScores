@@ -48,11 +48,15 @@ import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import java.util.stream.Collectors
 import javax.inject.Inject
 
-class GameFragment : Fragment(), IScoreActionListener
+@AndroidEntryPoint
+class GameFragment :
+    Fragment(),
+    IScoreActionListener
 {
     @Inject
     lateinit var viewModelFactory: GameViewModelFactory
@@ -85,12 +89,6 @@ class GameFragment : Fragment(), IScoreActionListener
         {
             viewModel.initialize(command)
         }
-    }
-
-    override fun onAttach(context: Context)
-    {
-        (requireActivity() as GameActivity).appComponent.inject(this)
-        super.onAttach(context)
     }
 
     private fun findNavController() = findNavController(
@@ -662,17 +660,22 @@ class GameFragment : Fragment(), IScoreActionListener
                 )
 
                 var validationResults = playerValidator.validate()
-                validationResults[position].let{
-                    when (it) {
+                validationResults[position].let {
+                    when (it)
+                    {
                         is PlayerSelectionValidationResult.EmptyName ->
                             inputLayout.setError(
-                               "Name is required.")
+                                "Name is required."
+                            )
+
                         is PlayerSelectionValidationResult.DuplicateName ->
                             inputLayout.setError(
-                                "Player is selected twice!")
+                                "Player is selected twice!"
+                            )
 
                         PlayerSelectionValidationResult.NewPlayer ->
                             inputLayout.helperText = "New player is created!"
+
                         PlayerSelectionValidationResult.Success -> return
                     }
                 }

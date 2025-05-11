@@ -34,7 +34,6 @@ class PlotPainter
     }
 
     private val legendMarkerPaint = Paint()
-
     private val dpTickLabelDistance: Float = 15f
 
     fun initialize(
@@ -452,53 +451,6 @@ class PlotPainter
         }
     }
 
-    private fun calculateVisiblePoints(points: List<PointF>): List<PointF>
-    {
-        val newPoints: MutableList<PointF> = mutableListOf()
-
-        for (i in 0..<points.size - 1)
-        {
-            if (mTransform.isVisible(points[i]))
-            {
-                newPoints.add(points[i])
-
-                if (!mTransform.isVisible(points[i + 1]))
-                {
-
-                }
-            } else
-            {
-                if (mTransform.isVisible(points[i + 1]))
-                {
-
-                }
-            }
-        }
-
-        // Add last element
-        if (mTransform.isVisible(points.last()))
-        {
-            newPoints.add(points.last())
-        }
-
-        return newPoints
-    }
-
-    /**
-     * Assumes that p0 is outside the rectangle and p1 is inside
-     */
-    fun calculateIntersection(
-        p0: PointF,
-        p1: PointF,
-        rect: RectF,
-    ): PointF
-    {
-        // TODO
-        return PointF()
-
-
-    }
-
     fun nextHigherNumberWithDivisor(
         x: Float,
         dx: Float,
@@ -512,19 +464,6 @@ class PlotPainter
         val quotient = (x / dx).toInt() + 1
         return quotient * dx
     }
-
-    /*
-    * Calculate the bottom left coordinates for a canvas rectangle
-    * where the y value increases from top to bottom
-    */
-    private fun calculateBottomLeft(
-        center: PointF,
-        width: Float,
-        height: Float,
-    ): PointF = PointF(
-        center.x - 0.5f * width,
-        center.y + 0.5f * height
-    )
 
     private fun dpToPx(
         dp: Float,

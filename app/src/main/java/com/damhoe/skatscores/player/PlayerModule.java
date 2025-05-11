@@ -14,21 +14,30 @@ import com.damhoe.skatscores.player.application.ports.out.UpdatePlayerPort;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 
+@InstallIn(SingletonComponent.class)
 @Module
 public abstract class PlayerModule {
-   @Binds
-   abstract UpdatePlayerUseCase bindManagePlayerUseCase(PlayerService playerService);
-   @Binds
-   abstract GetPlayerUseCase bindGetPlayersUseCase(PlayerService playerService);
-   @Binds
-   abstract CreatePlayerPort bindCreatePlayerPort(PlayerRepository playerRepository);
-   @Binds
-   abstract GetPlayerPort bindLoadPlayerPort(PlayerRepository playerRepository);
-   @Binds
-   abstract UpdatePlayerPort bindUpdatePlayerPort(PlayerRepository playerRepository);
-   @Binds
-   abstract GetPlayerStatisticsUseCase bindPlayerStatisticsUseCase(PlayerStatisticsService service);
-   @Binds
-   abstract GetPlayerStatisticsPort bindPlayerStatisticsPort(PlayerStatisticsRepository repository);
+    @Binds
+    abstract UpdatePlayerUseCase bindManagePlayerUseCase(PlayerService playerService);
+
+    @Binds
+    abstract GetPlayerUseCase bindGetPlayersUseCase(PlayerService playerService);
+
+    @Binds
+    abstract CreatePlayerPort bindCreatePlayerPort(PlayerRepository playerRepository);
+
+    @Binds
+    abstract GetPlayerPort bindLoadPlayerPort(PlayerRepository playerRepository);
+
+    @Binds
+    abstract UpdatePlayerPort bindUpdatePlayerPort(PlayerRepository playerRepository);
+
+    @Binds
+    abstract GetPlayerStatisticsUseCase bindPlayerStatisticsUseCase(PlayerStatisticsService service);
+
+    @Binds
+    abstract GetPlayerStatisticsPort bindPlayerStatisticsPort(PlayerStatisticsRepository repository);
 }

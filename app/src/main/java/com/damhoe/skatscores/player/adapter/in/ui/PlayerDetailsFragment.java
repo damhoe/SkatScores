@@ -1,6 +1,5 @@
 package com.damhoe.skatscores.player.adapter.in.ui;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -22,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.damhoe.skatscores.MainActivity;
 import com.damhoe.skatscores.R;
 import com.damhoe.skatscores.base.DateConverter;
 import com.damhoe.skatscores.databinding.FragmentPlayerDetailsBinding;
@@ -36,6 +34,9 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class PlayerDetailsFragment extends Fragment {
 
     private FragmentPlayerDetailsBinding binding;
@@ -46,12 +47,6 @@ public class PlayerDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        ((MainActivity)requireActivity()).appComponent.inject(this);
     }
 
     @Override

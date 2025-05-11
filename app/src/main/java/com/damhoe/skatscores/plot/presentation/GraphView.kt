@@ -13,10 +13,9 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.compose.ui.geometry.Rect
-import androidx.core.view.ViewCompat
 import com.damhoe.skatscores.R
-import com.damhoe.skatscores.plot.domain.Plot
 import com.damhoe.skatscores.plot.domain.LineGraphData
+import com.damhoe.skatscores.plot.domain.Plot
 import com.damhoe.skatscores.plot.domain.Transform
 import com.google.android.material.color.MaterialColors
 import kotlin.math.abs
@@ -214,7 +213,7 @@ class GraphView(
         insets = Rect(
             left = 120f,
             right = 50f,
-            top = 0f,
+            top = 10f,
             bottom = 150f
         )
         viewportHeight = scorePlot.bounds.height()
@@ -275,7 +274,7 @@ class GraphView(
             val viewportDistX: Float =
                 viewportFocus.x - (focusX - transform.insets.left) *
                         newWidth / transform.width - transform.viewportOffsetX
-            val viewportDistY: Float = 0f //viewportFocusY * (1 - newHeight / oldHeight)
+            val viewportDistY = 0f //viewportFocusY * (1 - newHeight / oldHeight)
 
             translateViewport(
                 viewportDistX,
@@ -309,8 +308,8 @@ class GraphView(
         ): Boolean
         {
             // Calculate the viewport translation
-            val viewportDistanceX: Float = distanceX * transform.viewportWidth / width
-            val viewportDistanceY: Float = 0f //-distanceY * transform.viewportHeight / height
+            val viewportDistanceX = distanceX * transform.viewportWidth / width
+            val viewportDistanceY = 0f //-distanceY * transform.viewportHeight / height
 
             translateViewport(
                 viewportDistanceX,
@@ -340,12 +339,16 @@ class GraphView(
         val curY = transform.viewportOffsetY + dY
         val curWidth = transform.viewportWidth
         val curHeight = transform.viewportHeight
-        val newX = scorePlot.bounds.left.coerceAtLeast(
-            curX.coerceAtMost(scorePlot.bounds.right - curWidth)
-        )
-        val newY = scorePlot.bounds.bottom.coerceAtLeast(
-            curY.coerceAtMost(scorePlot.bounds.top - curHeight)
-        )
+        val newX = scorePlot.bounds.left
+            .coerceAtLeast(
+                curX.coerceAtMost(
+                    scorePlot.bounds.right - curWidth)
+            )
+        val newY = scorePlot.bounds.bottom
+            .coerceAtLeast(
+                curY.coerceAtMost(
+                    scorePlot.bounds.top - curHeight)
+            )
 
         transform.apply {
             viewportOffsetX = newX

@@ -1,6 +1,5 @@
 package com.damhoe.skatscores.game.adapter.presentation
 
-import android.content.Context
 import android.graphics.PointF
 import android.graphics.RectF
 import android.os.Bundle
@@ -16,27 +15,24 @@ import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentGameGraphBinding
 import com.damhoe.skatscores.game.application.TotalPointsCalculator
 import com.damhoe.skatscores.game.domain.skat.SkatGame
-import com.damhoe.skatscores.plot.domain.Plot
 import com.damhoe.skatscores.plot.domain.LineGraphData
+import com.damhoe.skatscores.plot.domain.Plot
 import com.damhoe.skatscores.plot.presentation.GraphicUtils.dpToPx
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager
 import com.damhoe.skatscores.shared_ui.utils.LayoutMargins
 import com.google.android.material.color.MaterialColors
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.max
+import kotlin.math.min
 
+@AndroidEntryPoint
 class GameGraphFragment : Fragment()
 {
 
     companion object
     {
         fun newInstance() = GameGraphFragment()
-    }
-
-    override fun onAttach(context: Context)
-    {
-        super.onAttach(context)
-        (requireActivity() as GameActivity).appComponent.inject(this)
     }
 
     @Inject
@@ -76,7 +72,6 @@ class GameGraphFragment : Fragment()
         game: SkatGame
     )
     {
-
         val pointsHistory = TotalPointsCalculator
             .createPointsHistory(
                 game.players.size,
@@ -87,19 +82,20 @@ class GameGraphFragment : Fragment()
         val allPoints = pointsHistory.flatten()
         val minPoints = allPoints.min()
         val maxPoints = allPoints.max()
+        val scoreDelta = max(maxPoints - minPoints, 20)
+        val boarderInset = 0.1f * scoreDelta
 
-        var boarderScale: Float = 1.2f
         val bounds = RectF(
             0f,
-            maxPoints.toFloat() * boarderScale,
+            maxPoints + boarderInset,
             max(2f, pointsHistory.first().size.toFloat() - 1),
-            minPoints.toFloat() * boarderScale,
+            minPoints - boarderInset,
         )
 
         val palette = listOf(
             MaterialColors.getColor(binding.graphView, R.attr.colorPrimary),
-            MaterialColors.getColor(binding.graphView, R.attr.colorSecondary),
-            MaterialColors.getColor(binding.graphView, R.attr.colorError),
+            MaterialColors.getColor(binding.graphView, R.attr.colorTertiary),
+            MaterialColors.getColor(binding.graphView, R.attr.colorErrorContainer),
             MaterialColors.getColor(binding.graphView, R.attr.colorOnSurface)
         )
 

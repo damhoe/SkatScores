@@ -1,7 +1,6 @@
 package com.damhoe.skatscores.player.adapter.`in`.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,15 +11,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
-import com.damhoe.skatscores.MainActivity
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentPlayerStatisticsBinding
 import com.damhoe.skatscores.player.domain.PlayerStatistics
 import com.damhoe.skatscores.shared_ui.utils.InsetsManager
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class PlayerStatisticsFragment : Fragment() {
+@AndroidEntryPoint
+class PlayerStatisticsFragment : Fragment()
+{
 
     @Inject
     lateinit var statisticsVMFactory: PlayerStatisticsViewModelFactory
@@ -32,16 +33,12 @@ class PlayerStatisticsFragment : Fragment() {
 
     private lateinit var binding: FragmentPlayerStatisticsBinding
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity() as MainActivity).appComponent.inject(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View
+    {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_player_statistics, container, false
@@ -49,7 +46,8 @@ class PlayerStatisticsFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
 
         // Add insets
@@ -70,7 +68,8 @@ class PlayerStatisticsFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateUI(name: String, playerStatistics: PlayerStatistics) {
+    private fun updateUI(name: String, playerStatistics: PlayerStatistics)
+    {
         binding.apply {
             this.name.text = name
 
@@ -87,7 +86,8 @@ class PlayerStatisticsFragment : Fragment() {
         }
     }
 
-    private fun findNavController(): NavController {
+    private fun findNavController(): NavController
+    {
         return findNavController(requireActivity(), R.id.nav_host_fragment)
     }
 }

@@ -12,24 +12,25 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 
-import com.damhoe.skatscores.ApplicationComponent;
 import com.damhoe.skatscores.R;
-import com.damhoe.skatscores.SkatScoresApp;
 import com.damhoe.skatscores.databinding.ActivityGameBinding;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class GameActivity extends AppCompatActivity {
 
     private ActivityGameBinding binding;
-    private ApplicationComponent appComponent;
 
-    /** @noinspection DataFlowIssue*/
+    /**
+     * @noinspection DataFlowIssue
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        appComponent = ((SkatScoresApp)getApplicationContext()).getAppComponent();
-        appComponent.inject(this);
-
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
+        binding = DataBindingUtil.setContentView(
+                this,
+                R.layout.activity_game);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         ActivityNavigator.applyPopAnimationsToPendingTransition(this);
@@ -37,11 +38,9 @@ public class GameActivity extends AppCompatActivity {
         initializeNavController(getIntent().getExtras());
     }
 
-    public ApplicationComponent getAppComponent() {
-        return appComponent;
-    }
-
-    /** @noinspection DataFlowIssue*/
+    /**
+     * @noinspection DataFlowIssue
+     */
     private void initializeNavController(Bundle extras) {
         NavHostFragment navHostFragment = (NavHostFragment)
                 getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);

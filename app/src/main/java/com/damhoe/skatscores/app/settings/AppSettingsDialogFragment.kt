@@ -9,13 +9,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import com.damhoe.skatscores.MainActivity
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.DialogAppSettingsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-class AppSettingsDialogFragment : DialogFragment() {
+@AndroidEntryPoint
+class AppSettingsDialogFragment :
+    DialogFragment()
+{
     /**
      * Dialog fragment for managing app settings.
      *
@@ -42,11 +45,11 @@ class AppSettingsDialogFragment : DialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: AppSettingsViewModel by viewModels ({ requireActivity() }) { viewModelFactory }
+    private val viewModel: AppSettingsViewModel by viewModels({ requireActivity() }) { viewModelFactory }
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context)
+    {
         super.onAttach(context)
-        (requireActivity() as MainActivity).appComponent.inject(this)
 
         settingsManager = SettingsManager(context)
 
@@ -58,8 +61,9 @@ class AppSettingsDialogFragment : DialogFragment() {
         english = getString(R.string.english_preference_value)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        activity?.let{
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog
+    {
+        activity?.let {
             binding = DataBindingUtil.inflate(
                 layoutInflater,
                 R.layout.dialog_app_settings,
@@ -69,15 +73,19 @@ class AppSettingsDialogFragment : DialogFragment() {
 
             dialog = MaterialAlertDialogBuilder(requireContext())
                 .setTitle(
-                    R.string.title_settings)
+                    R.string.title_settings
+                )
                 .setView(
-                    binding.root)
-                .setPositiveButton("OK") { d, _  -> d.dismiss() }
+                    binding.root
+                )
+                .setPositiveButton("OK") { d, _ -> d.dismiss() }
                 .setBackground(
                     ResourcesCompat.getDrawable(
                         resources,
                         R.drawable.background_dialog_fragment,
-                        requireActivity().theme))
+                        requireActivity().theme
+                    )
+                )
                 .create()
 
         } ?: throw IllegalStateException("Activity can not be null")
@@ -100,9 +108,11 @@ class AppSettingsDialogFragment : DialogFragment() {
         return dialog
     }
 
-    private fun setDefaultTheme(theme: String?) {
+    private fun setDefaultTheme(theme: String?)
+    {
         binding.themeGroup.check(
-            when(theme) {
+            when (theme)
+            {
                 dayTheme -> R.id.buttonLightTheme
                 nightTheme -> R.id.buttonDarkTheme
                 else -> R.id.buttonSystemTheme // Default
@@ -110,34 +120,42 @@ class AppSettingsDialogFragment : DialogFragment() {
         )
     }
 
-    private fun setDefaultLanguage(language: String?) {
+    private fun setDefaultLanguage(language: String?)
+    {
         binding.languageGroup.check(
-            when(language) {
+            when (language)
+            {
                 english -> R.id.buttonEnglishLanguage
                 else -> R.id.buttonGermanLanguage // Default german
             }
         )
     }
 
-    private fun addThemeOnCheckedChangeListener() {
+    private fun addThemeOnCheckedChangeListener()
+    {
         binding.themeGroup.setOnCheckedChangeListener { _, checkedId ->
-            when(checkedId) {
+            when (checkedId)
+            {
                 R.id.buttonSystemTheme -> systemTheme
                 R.id.buttonLightTheme -> dayTheme
                 R.id.buttonDarkTheme -> nightTheme
                 else -> throw IllegalArgumentException(
-                    "Unexpected checkedId: $checkedId")
+                    "Unexpected checkedId: $checkedId"
+                )
             }.let { viewModel.setTheme(it) }
         }
     }
 
-    private fun addLanguageOnCheckedChangeListener() {
+    private fun addLanguageOnCheckedChangeListener()
+    {
         binding.languageGroup.setOnCheckedChangeListener { _, checkedId ->
-            when(checkedId) {
+            when (checkedId)
+            {
                 R.id.buttonEnglishLanguage -> english
                 R.id.buttonGermanLanguage -> german
                 else -> throw IllegalArgumentException(
-                    "Unexpected checkedId: $checkedId")
+                    "Unexpected checkedId: $checkedId"
+                )
             }.let { viewModel.setLanguage(it) }
         }
     }
