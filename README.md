@@ -4,16 +4,16 @@ SkatScores is a convenient Android app designed to streamline scorekeeping for S
 
 Key features include:
 
-Optimized score input for smooth and fast game tracking
+- Optimized score input for smooth and fast game tracking
 
-Comprehensive score summaries with helpful tables and visual graphs
+- Comprehensive score summaries with helpful tables and visual graphs
 
-Detailed round insights for in-depth review
+- Detailed round insights for in-depth review
 
 Beyond individual rounds, SkatScores lets you create independent player profiles, allowing you to:
 
-Track long-term performance
+- Track long-term performance
 
-View cumulative statistics across multiple games
+- View cumulative statistics across multiple games
 
 Perfect for casual and competitive players alike, SkatScores helps you focus on the game — not the math.
