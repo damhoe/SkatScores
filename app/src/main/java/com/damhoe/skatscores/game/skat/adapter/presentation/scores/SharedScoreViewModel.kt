@@ -8,6 +8,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.damhoe.skatscores.game.common.WonOrLost
 import com.damhoe.skatscores.game.skat.application.usecases.SkatGameUseCases
+import com.damhoe.skatscores.game.skat.domain.SkatBid
 import com.damhoe.skatscores.game.skat.domain.SkatGame
 import com.damhoe.skatscores.game.skat.domain.SkatParticipant
 import com.damhoe.skatscores.game.skat.domain.SkatParticipants
@@ -47,6 +48,7 @@ class SharedScoreViewModel @Inject constructor(
     val grandOrSuitOptions = MutableLiveData<GrandOrSuitOptions?>(null)
     val suit = MutableLiveData(SkatSuit.CLUBS)
     val nullOptions = MutableLiveData<SkatScore.Null.NullOptions?>(null)
+    val bid = MutableLiveData(SkatBid(SkatBid.BiddingValues.first()))
 
     fun setSpitzen(value: Spitzen)
     {
@@ -111,6 +113,25 @@ class SharedScoreViewModel @Inject constructor(
                     soloPlayer = soloPlayer.value!!,
                     wonOrLost = wonOrLost.value!!,
                     options = nullOptions.value,
+                )
+            )
+        }
+    }
+
+    fun addOverbidScore()
+    {
+        val game = skatGame.value ?: return
+        val declarer = soloPlayer.value ?: return
+        val suit = suit.value ?: return
+        val bid = bid.value ?: return
+
+        viewModelScope.launch {
+            skatGameUseCases.addScoreToSkatGame(
+                game,
+                SkatScore.Overbid.create(
+                    soloPlayer = declarer,
+                    suit = suit,
+                    bid = bid,
                 )
             )
         }

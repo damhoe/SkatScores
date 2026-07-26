@@ -25,12 +25,21 @@ sealed class SkatScore(
     override val id: UUID,
 ) : Score(id), Parcelable
 {
+    /** Id of the participant who played solo, or null when nobody declared a game. */
+    abstract val declarerId: UUID?
+
+    /** Whether the declarer won, or null when nobody declared a game. */
+    abstract val result: WonOrLost?
+
     class Passe(override val id: UUID) : SkatScore(id)
     {
         companion object
         {
             fun create() = Passe(UUID.randomUUID())
         }
+
+        override val declarerId: UUID? get() = null
+        override val result: WonOrLost? get() = null
 
         override fun toPoints() = 0
     }
@@ -42,6 +51,25 @@ sealed class SkatScore(
         val bid: SkatBid,
     ) : SkatScore(id)
     {
+        companion object
+        {
+            fun create(
+                soloPlayer: SkatParticipant,
+                suit: SkatSuit,
+                bid: SkatBid,
+            ) = Overbid(
+                id = UUID.randomUUID(),
+                skatParticipant = soloPlayer.id,
+                suit = suit,
+                bid = bid,
+            )
+        }
+
+        override val declarerId: UUID? get() = skatParticipant
+
+        /** An overbid game is lost by definition. */
+        override val result: WonOrLost? get() = LOST
+
         override fun toPoints(): Int
         {
             val suitValue = when (suit)
@@ -87,6 +115,9 @@ sealed class SkatScore(
             OUVERT,
             HAND_OUVERT,
         }
+
+        override val declarerId: UUID? get() = skatParticipant
+        override val result: WonOrLost? get() = wonOrLost
 
         override fun toPoints() = (options
             ?.let {
@@ -139,6 +170,9 @@ sealed class SkatScore(
             SCHWARZ_ANNOUNCED_NOT_SCHNEIDER,
             OUVERT,
         }
+
+        override val declarerId: UUID? get() = skatParticipant
+        override val result: WonOrLost? get() = wonOrLost
 
         override fun toPoints(): Int
         {

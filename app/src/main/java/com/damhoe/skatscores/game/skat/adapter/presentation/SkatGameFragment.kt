@@ -103,16 +103,31 @@ class SkatGameFragment :
 
     private fun setupPointsSummaryObserver()
     {
-        viewModel.totalPoints.observe(viewLifecycleOwner) {
-            // displayTotalPoints(it) 
+        viewModel.totalPoints.observe(viewLifecycleOwner) { points ->
+            binding.bottomSumView.apply {
+                points1Text.text = pointsText(points, 0)
+                points2Text.text = pointsText(points, 1)
+                points3Text.text = pointsText(points, 2)
+            }
         }
-        viewModel.winBonus.observe(viewLifecycleOwner) {
-            // Update UI
+        viewModel.winBonus.observe(viewLifecycleOwner) { points ->
+            binding.bottomSumView.apply {
+                solo1Text.text = pointsText(points, 0)
+                solo2Text.text = pointsText(points, 1)
+                solo3Text.text = pointsText(points, 2)
+            }
         }
-        viewModel.lossOfOthersBonus.observe(viewLifecycleOwner) {
-            // Update UI
+        viewModel.lossOfOthersBonus.observe(viewLifecycleOwner) { points ->
+            binding.bottomSumView.apply {
+                lost1Text.text = pointsText(points, 0)
+                lost2Text.text = pointsText(points, 1)
+                lost3Text.text = pointsText(points, 2)
+            }
         }
     }
+
+    private fun pointsText(points: IntArray, seat: Int) =
+        points.getOrNull(seat)?.toString() ?: "-"
 
     private fun setupDealerObserver()
     {

@@ -15,6 +15,16 @@ sealed interface SkatParticipant :
         get() = name.value
     val name: PlayerName
 
+    /**
+     * The same participant under an existing id. Used to keep a seat's identity stable when
+     * the person sitting there is replaced, so that recorded scores keep their column.
+     */
+    fun withId(id: UUID): SkatParticipant = when (this)
+    {
+        is Registered -> copy(id = id)
+        is Guest -> copy(id = id)
+    }
+
     @Parcelize
     data class Registered(
         override val id: UUID,

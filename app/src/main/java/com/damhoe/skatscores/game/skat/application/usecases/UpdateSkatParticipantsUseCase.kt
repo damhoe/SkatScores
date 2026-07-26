@@ -25,7 +25,18 @@ class UpdateSkatParticipantsUseCase @Inject constructor(
                     return Result.failure(Exception("Game not found with ID: ${command.id}"))
                 }
 
-                val updatedGame = skatGame.copy(participants = command.participants)
+                // A seat keeps its participant id even when another person takes it over,
+                // otherwise the scores already recorded lose their score board column.
+                val updatedGame = skatGame.copy(
+                    participants = SkatParticipants(
+                        foreHand = command.participants.foreHand
+                            .withId(skatGame.participants.foreHand.id),
+                        middleHand = command.participants.middleHand
+                            .withId(skatGame.participants.middleHand.id),
+                        rearHand = command.participants.rearHand
+                            .withId(skatGame.participants.rearHand.id),
+                    )
+                )
 
                 skatGameRepository.update(updatedGame).map {
                     updatedGame

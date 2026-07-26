@@ -168,7 +168,6 @@
                         android:textAlignment="center"
                         android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:textColor="?colorOnSurfaceVariant"
-                        android:text="@{String.valueOf(viewModel.skatGame.calculateTotalPoints()[0])}"
                         tools:text="24" />
 
                 <TextView
@@ -183,7 +182,6 @@
                         android:textAlignment="center"
                         android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:textColor="?colorOnSurfaceVariant"
-                        android:text="@{String.valueOf(viewModel.skatGame.calculateTotalPoints()[1])}"
                         tools:text="0" />
 
                 <TextView
@@ -198,7 +196,6 @@
                         android:textAlignment="center"
                         android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:textColor="?colorOnSurfaceVariant"
-                        android:text="@{String.valueOf(viewModel.skatGame.calculateTotalPoints()[2])}"
                         tools:text="230" />
 
             </LinearLayout>

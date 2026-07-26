@@ -45,7 +45,7 @@ data class SkatParticipantDto(
             SkatParticipant.Registered(
                 id = id,
                 name = name,
-                playerId = id
+                playerId = playerId
             )
         }
     }
@@ -73,8 +73,9 @@ data class SkatParticipantDto(
             tablePosition: SkatPlayerPosition,
         ): SkatParticipantDto
         {
+            // Keep the participant id: scores reference it to find their score board column.
             return SkatParticipantDto(
-                id = UUID.randomUUID(),
+                id = participant.id,
                 gameId = gameId,
                 playerId = if (participant is SkatParticipant.Registered) participant.playerId else null,
                 tablePosition = tablePosition,

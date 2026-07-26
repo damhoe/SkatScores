@@ -70,6 +70,7 @@ class ScoreDialogFragment :
 
                     R.id.biddingScoreFragment ->
                     {
+                        scoreViewModel.addOverbidScore()
                         dismiss()
                     }
 

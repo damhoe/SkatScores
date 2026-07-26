@@ -22,21 +22,36 @@ class BiddingScoreFragment :
     )
     private val args: BiddingScoreFragmentArgs by navArgs()
 
+    private val biddingValues = SkatBid.BiddingValues.toList()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentScoreBiddingBinding.bind(view)
+
+        // The dialog saves from the view model, so make sure it holds what this step shows.
+        scoreViewModel.soloPlayer.value = args.soloPlayer
+        args.skatSuit?.let { scoreViewModel.suit.value = it }
+
         setupNumberPicker()
     }
 
     private fun setupNumberPicker() {
-        val displayValues = SkatBid.BiddingValues.map { it.toString() }.toTypedArray()
+        val displayValues = biddingValues.map { it.toString() }.toTypedArray()
 
         binding.biddingNumberPicker.apply {
             minValue = 0
             maxValue = displayValues.size - 1
             displayedValues = displayValues
             wrapSelectorWheel = false
+            // The picker only reports changes, so the initial selection has to match the
+            // bid the view model already holds.
+            value = biddingValues
+                .indexOf(scoreViewModel.bid.value?.value)
+                .coerceAtLeast(0)
+            setOnValueChangedListener { _, _, selectedIndex ->
+                scoreViewModel.bid.value = SkatBid(biddingValues[selectedIndex])
+            }
         }
     }
 }

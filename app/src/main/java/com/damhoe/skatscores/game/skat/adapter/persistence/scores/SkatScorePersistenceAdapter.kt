@@ -18,7 +18,9 @@ class SkatScorePersistenceAdapter @Inject constructor(
     fun getScoresForGame(gameId: UUID): List<SkatScoreDto>
     {
         return databaseHelper.readableDatabase.run {
-            val query = "SELECT * FROM ${SkatScoresTable.TABLE_NAME} WHERE ${SkatScoresTable.COLUMN_GAME_ID} = ?"
+            val query = "SELECT * FROM ${SkatScoresTable.TABLE_NAME}" +
+                    " WHERE ${SkatScoresTable.COLUMN_GAME_ID} = ?" +
+                    " ORDER BY ${SkatScoresTable.COLUMN_ROUND} ASC"
             val selectionArgs = arrayOf(gameId.toString())
 
             val games = rawQuery(query, selectionArgs)

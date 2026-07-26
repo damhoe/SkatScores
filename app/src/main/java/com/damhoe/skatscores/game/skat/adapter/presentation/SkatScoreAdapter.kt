@@ -55,46 +55,22 @@ class SkatScoreAdapter(
     {
         val score = getItem(position)
 
-        if (participantsPositions.isEmpty())
+        holder.roundsText.text = (position + 1).toString()
+
+        // Null position means a passed round, or a declarer that is not at this table any more.
+        val declarerPosition = score.declarerId?.let { participantsPositions[it] }
+        if (declarerPosition == null)
         {
             noPoints(holder)
-            return
-        }
-
-        val pointsArray = intArrayOf(0, 0, 0)
-        val points = score.toPoints()
-
-        when (score)
+        } else
         {
-            is SkatScore.Passe ->
-            {
-                noPoints(holder)
-            }
+            val pointsArray = intArrayOf(0, 0, 0)
+            pointsArray[declarerPosition] = score.toPoints()
 
-            is SkatScore.GrandOrSuit ->
-            {
-                participantsPositions[score.skatParticipant]
-                    ?.let {  pointsArray[it] = points }
-            }
-
-            is SkatScore.Overbid ->
-            {
-                participantsPositions[score.skatParticipant]
-                    ?.let {  pointsArray[it] = points }
-            }
-
-            is SkatScore.Null ->
-            {
-                val playerIndex = participantsPositions[score.skatParticipant]!!
-                pointsArray[playerIndex] = points
-            }
+            holder.points1Text.text = makeScoreString(pointsArray[0])
+            holder.points2Text.text = makeScoreString(pointsArray[1])
+            holder.points3Text.text = makeScoreString(pointsArray[2])
         }
-
-        holder.points1Text.text = makeScoreString(pointsArray[0])
-        holder.points2Text.text = makeScoreString(pointsArray[1])
-        holder.points3Text.text = makeScoreString(pointsArray[2])
-
-        holder.roundsText.text = (position + 1).toString()
 
         holder.itemView.setOnClickListener { view: View? ->
             Log.d(

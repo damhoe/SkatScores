@@ -15,7 +15,9 @@ data class SkatGame(
     val scores: List<SkatScore> = emptyList(),
 )
 {
-    private val totalPointsCalculator = TotalPointsCalculator(SkatPlayerCount.THREE_PLAYERS)
+    private val totalPointsCalculator = TotalPointsCalculator(participants)
+
+    private val isTournamentScoring = settings.scoringMode == SkatScoringMode.TOURNAMENT
 
     val dealerPosition = calculateDealerPosition()
 
@@ -46,14 +48,14 @@ data class SkatGame(
     }
 
     fun calculateTotalPoints() =
-        totalPointsCalculator.calculateTotalPoints(
-            scores,
-            settings.scoringMode == SkatScoringMode.TOURNAMENT
-        )
+        totalPointsCalculator.calculateTotalPoints(scores, isTournamentScoring)
 
     fun calculateWinBonus() = totalPointsCalculator.calculateWinBonus(scores)
 
     fun calculateLossOfOthersBonus() = totalPointsCalculator.calculateLossOfOthersBonus(scores)
+
+    fun createPointsHistory() =
+        totalPointsCalculator.createPointsHistory(scores, isTournamentScoring)
 
     fun addScore(score: SkatScore): AddedScoreToGame
     {
