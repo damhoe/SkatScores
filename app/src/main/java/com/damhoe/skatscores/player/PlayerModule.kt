@@ -1,43 +1,24 @@
-package com.damhoe.skatscores.player;
+package com.damhoe.skatscores.player
 
-import com.damhoe.skatscores.player.adapter.out.PlayerRepository;
-import com.damhoe.skatscores.player.adapter.out.PlayerStatisticsRepository;
-import com.damhoe.skatscores.player.application.PlayerService;
-import com.damhoe.skatscores.player.application.PlayerStatisticsService;
-import com.damhoe.skatscores.player.application.ports.in.GetPlayerStatisticsUseCase;
-import com.damhoe.skatscores.player.application.ports.in.GetPlayerUseCase;
-import com.damhoe.skatscores.player.application.ports.in.UpdatePlayerUseCase;
-import com.damhoe.skatscores.player.application.ports.out.CreatePlayerPort;
-import com.damhoe.skatscores.player.application.ports.out.GetPlayerPort;
-import com.damhoe.skatscores.player.application.ports.out.GetPlayerStatisticsPort;
-import com.damhoe.skatscores.player.application.ports.out.UpdatePlayerPort;
+import com.damhoe.skatscores.player.adapter.persistence.PlayerRepositoryImpl
+import com.damhoe.skatscores.player.adapter.persistence.PlayerStatisticsRepositoryImpl
+import com.damhoe.skatscores.player.application.repositories.PlayerStatisticsRepository
+import com.damhoe.skatscores.player.application.repositories.PlayersRepository
+import dagger.Binds
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-import dagger.Binds;
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
-
-@InstallIn(SingletonComponent.class)
-@Module
-public abstract class PlayerModule {
+@InstallIn(SingletonComponent::class)
+@dagger.Module
+abstract class PlayerModule
+{
     @Binds
-    abstract UpdatePlayerUseCase bindManagePlayerUseCase(PlayerService playerService);
+    abstract fun bindPlayersRepository(
+        impl: PlayerRepositoryImpl
+    ): PlayersRepository
 
     @Binds
-    abstract GetPlayerUseCase bindGetPlayersUseCase(PlayerService playerService);
-
-    @Binds
-    abstract CreatePlayerPort bindCreatePlayerPort(PlayerRepository playerRepository);
-
-    @Binds
-    abstract GetPlayerPort bindLoadPlayerPort(PlayerRepository playerRepository);
-
-    @Binds
-    abstract UpdatePlayerPort bindUpdatePlayerPort(PlayerRepository playerRepository);
-
-    @Binds
-    abstract GetPlayerStatisticsUseCase bindPlayerStatisticsUseCase(PlayerStatisticsService service);
-
-    @Binds
-    abstract GetPlayerStatisticsPort bindPlayerStatisticsPort(PlayerStatisticsRepository repository);
+    abstract fun bindGetPlayerStatisticsPort(
+        impl: PlayerStatisticsRepositoryImpl
+    ): PlayerStatisticsRepository
 }

@@ -75,8 +75,8 @@ class GraphView(
     var scorePlotDefault = Plot(
         RectF(
             0f,
-            0f,
-            20f,
+            -20f,
+            10f,
             100f
         )
     ).apply {
@@ -212,12 +212,12 @@ class GraphView(
     private val transform = Transform().apply {
         insets = Rect(
             left = 120f,
-            right = 50f,
-            top = 10f,
-            bottom = 150f
+            right = 24f,
+            top = 160f,
+            bottom = 260f
         )
         viewportHeight = scorePlot.bounds.height()
-        viewportWidth = 10f // scorePlot.maxX - scorePlot.minX
+        viewportWidth = 6f // scorePlot.maxX - scorePlot.minX
     }
 
     private val mScaleGestureListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener()
@@ -342,12 +342,14 @@ class GraphView(
         val newX = scorePlot.bounds.left
             .coerceAtLeast(
                 curX.coerceAtMost(
-                    scorePlot.bounds.right - curWidth)
+                    scorePlot.bounds.right - curWidth
+                )
             )
         val newY = scorePlot.bounds.bottom
             .coerceAtLeast(
                 curY.coerceAtMost(
-                    scorePlot.bounds.top - curHeight)
+                    scorePlot.bounds.top - curHeight
+                )
             )
 
         transform.apply {

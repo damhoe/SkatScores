@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Material3.CardView.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?colorSurfaceContainerHigh">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <FrameLayout
+                    android:layout_width="@dimen/points_board_first_label_width"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    tools:text="">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_edit"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="end"
+                        app:icon="@drawable/ic_edit_24dp"
+                        app:iconTint="?colorOnSurfaceVariant" />
+            </FrameLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2">
+
+                <TextView
+                        android:id="@+id/name1_text"
+                        style="@style/Widget.App.TextViewLabelBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="8dp"
+                        android:singleLine="true"
+                        android:text="@{viewModel.skatParticipants.foreHand.displayName}"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Damian with a long name" />
+
+                <View
+                        android:id="@+id/indicator1"
+                        android:layout_width="24dp"
+                        android:layout_height="4dp"
+                        android:alpha="1.0"
+                        android:background="@drawable/dealer_indicator"
+                        android:translationZ="-1dp"
+                        app:layout_constraintEnd_toEndOf="@id/name1_text"
+                        app:layout_constraintStart_toStartOf="@id/name1_text"
+                        app:layout_constraintTop_toTopOf="@id/name1_text" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2">
+
+                <TextView
+                        android:id="@+id/name2_text"
+                        style="@style/Widget.App.TextViewLabelBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="8dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:text="@{viewModel.skatParticipants.middleHand.displayName}"
+                        tools:text="Paul" />
+
+                <View
+                        android:id="@+id/indicator2"
+                        android:layout_width="24dp"
+                        android:layout_height="4dp"
+                        android:alpha="0.0"
+                        android:background="@drawable/dealer_indicator"
+                        android:translationZ="-1dp"
+                        app:layout_constraintEnd_toEndOf="@id/name2_text"
+                        app:layout_constraintStart_toStartOf="@id/name2_text"
+                        app:layout_constraintTop_toTopOf="@id/name2_text" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2">
+
+                <TextView
+                        android:id="@+id/name3_text"
+                        style="@style/Widget.App.TextViewLabelBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="8dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        android:text="@{viewModel.skatParticipants.rearHand.displayName}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Damian" />
+
+                <View
+                        android:id="@+id/indicator3"
+                        android:layout_width="24dp"
+                        android:layout_height="4dp"
+                        android:alpha="0.0"
+                        android:background="@drawable/dealer_indicator"
+                        android:translationZ="-1dp"
+                        app:layout_constraintEnd_toEndOf="@id/name3_text"
+                        app:layout_constraintStart_toStartOf="@id/name3_text"
+                        app:layout_constraintTop_toTopOf="@id/name3_text" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <data>
+        <variable
+                name="viewModel"
+                type="com.damhoe.skatscores.game.skat.adapter.presentation.SharedSkatGameViewModel" />
+    </data>
+
+</layout>

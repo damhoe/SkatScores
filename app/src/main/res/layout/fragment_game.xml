@@ -1,126 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".game.adapter.presentation.GameFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
+        tools:context=".game.skat.adapter.presentation.SkatGameFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/content"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="80dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/return_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                style="@style/Widget.Material3.Button.IconButton"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:iconTint="?attr/colorOnSurface"
-                app:icon="@drawable/ic_close_24dp" />
-
-            <TextView
-                android:id="@+id/game_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="48dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:textColor="?attr/colorOnSurface"
-                style="@style/Widget.App.TextViewHeadline"
-                tools:text="My skat list 01" />
-
-            <TextView
-                android:id="@+id/current_round_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="@id/game_title"
-                app:layout_constraintEnd_toEndOf="@id/game_title"
-                app:layout_constraintTop_toBottomOf="@id/game_title"
-                android:textAppearance="?attr/textAppearanceBodyLarge"
-                tools:text="12 / 18" />
-
-            <include
-                android:id="@+id/title_view"
-                layout="@layout/header_score"
+                android:id="@+id/content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/current_round_text"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginTop="16dp" />
-            
+                android:layout_height="match_parent"
+                android:paddingBottom="80dp"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <TextView
+                    android:id="@+id/game_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{viewModel.skatGameTitle}"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="My skat list 01" />
+
             <androidx.core.widget.NestedScrollView
-                android:id="@+id/nestedScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constrainedHeight="true"
-                app:layout_constraintVertical_chainStyle="packed"
-                app:layout_constraintTop_toBottomOf="@id/title_view"
-                app:layout_constraintBottom_toTopOf="@id/bottom_sum_view">
+                    android:id="@+id/nestedScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintBottom_toTopOf="@id/bottom_sum_view"
+                    app:layout_constraintTop_toBottomOf="@id/playerNames"
+                    app:layout_constraintVertical_chainStyle="packed">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/scrollViewContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
+                        android:id="@+id/scrollViewContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/scores_rv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="12dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:listitem="@layout/item_score"
-                        tools:itemCount="30" />
+                            android:id="@+id/scores_rv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:itemCount="30"
+                            tools:listitem="@layout/item_score" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.core.widget.NestedScrollView>
 
-            <include layout="@layout/footer_score"
-                android:id="@+id/bottom_sum_view"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent" />
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/return_button"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    app:icon="@drawable/ic_close_24dp"
+                    app:iconTint="?attr/colorOnSurface"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                    android:id="@+id/playerNames"
+                    layout="@layout/item_score_header"
+                    bind:viewModel="@{viewModel}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="12dp"
+                    app:layout_constraintTop_toBottomOf="@id/game_title" />
+
+            <include
+                    android:id="@+id/bottom_sum_view"
+                    layout="@layout/item_score_footer"
+                    bind:viewModel="@{viewModel}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottom_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            style="@style/Widget.App.BottomAppBar"
-            app:elevation="0dp"
-            tools:menu="@menu/game_menu"/>
+                android:id="@+id/bottom_app_bar"
+                style="@style/Widget.App.BottomAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:elevation="0dp"
+                tools:menu="@menu/game_menu" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/edit_score_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_anchor="@id/bottom_app_bar"
-            android:src="@drawable/ic_add_24dp"
-            style="@style/Widget.Material3.FloatingActionButton.Primary"
-            android:contentDescription="@string/description_new_score" />
+                android:id="@+id/edit_score_button"
+                style="@style/Widget.Material3.FloatingActionButton.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_new_score"
+                android:src="@drawable/ic_add_24dp"
+                app:layout_anchor="@id/bottom_app_bar" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <data>
+        <variable
+                name="viewModel"
+                type="com.damhoe.skatscores.game.skat.adapter.presentation.SharedSkatGameViewModel" />
+    </data>
 
 </layout>

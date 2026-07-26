@@ -40,5 +40,6 @@
         <item name="colorHearts">@color/md_theme_light_error</item>
         <item name="colorDiamonds">@color/md_theme_light_error</item>
         <item name="colorSuitDisabled">@color/md_theme_light_surfaceVariant</item>
+        <item name="toolbarBackground">@drawable/toolbar_background</item>
     </style>
 </resources>

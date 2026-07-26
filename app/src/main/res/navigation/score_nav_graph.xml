@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/score_nav_graph"
+        app:startDestination="@id/whoWonScoreFragment">
+
+    <fragment
+            android:id="@+id/whoWonScoreFragment"
+            android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.WhoWonScoreFragment"
+            android:label="WhoWonScoreFragment"
+            tools:layout="@layout/fragment_score_who_won">
+        <action
+                android:id="@+id/toResultScoreFragment"
+                app:destination="@id/resultScoreFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/resultScoreFragment"
+            android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.ResultScoreFragment"
+            android:label="ResultScoreFragment"
+            tools:layout="@layout/fragment_score_result">
+        <action
+                android:id="@+id/toSuitScoreFragment"
+                app:destination="@id/suitScoreFragment" />
+        <argument
+                android:name="soloPlayer"
+                app:argType="com.damhoe.skatscores.game.skat.domain.SkatParticipant" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/suitScoreFragment"
+            android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.SuitScoreFragment"
+            android:label="SuitScoreFragment"
+            tools:layout="@layout/fragment_score_suit" >
+        <action
+                android:id="@+id/toBiddingScoreFragment"
+                app:destination="@id/biddingScoreFragment" />
+        <action
+                android:id="@+id/toSpitzenScoreFragment"
+                app:destination="@id/spitzenScoreFragment" />
+        <argument
+                android:name="soloPlayer"
+                app:argType="com.damhoe.skatscores.game.skat.domain.SkatParticipant" />
+        <argument
+                android:name="skatResult"
+                app:argType="com.damhoe.skatscores.game.skat.adapter.presentation.scores.SkatResult" />
+        <action
+                android:id="@+id/toNullMultipliersScoreFragment"
+                app:destination="@id/nullMultipliersScoreFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/biddingScoreFragment"
+            android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.BiddingScoreFragment"
+            android:label="BiddingScoreFragment"
+            tools:layout="@layout/fragment_score_bidding" >
+        <argument
+                android:name="soloPlayer"
+                app:argType="com.damhoe.skatscores.game.skat.domain.SkatParticipant" />
+        <argument
+                android:name="skatSuit"
+                app:argType="com.damhoe.skatscores.game.skat.domain.scores.SkatSuit"
+                app:nullable="true" />
+    </fragment>
+    <fragment
+            android:id="@+id/spitzenScoreFragment"
+            android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.SpitzenScoreFragment"
+            android:label="SpitzenScoreFragment"
+            tools:layout="@layout/fragment_score_spitzen" >
+        <action
+                android:id="@+id/toMultipliersScoreFragment"
+                app:destination="@id/multipliersScoreFragment" />
+        <argument
+                android:name="soloPlayer"
+                app:argType="com.damhoe.skatscores.game.skat.domain.SkatParticipant" />
+        <argument
+                android:name="skatResult"
+                app:argType="com.damhoe.skatscores.game.skat.adapter.presentation.scores.SkatResult" />
+        <argument
+                android:name="skatSuit"
+                app:argType="com.damhoe.skatscores.game.skat.domain.scores.SkatSuit"
+                app:nullable="true" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/multipliersScoreFragment"
+            android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.MultipliersScoreFragment"
+            android:label="MultipliersScoreFragment"
+            tools:layout="@layout/fragment_score_multipliers" />
+
+    <fragment
+            android:id="@+id/nullMultipliersScoreFragment"
+            android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.NullMultipliersScoreFragment"
+            android:label="NullMultipliersScoreFragment"
+            tools:layout="@layout/fragment_score_null_multipliers" />
+
+</navigation>

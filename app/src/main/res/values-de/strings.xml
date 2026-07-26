@@ -64,7 +64,7 @@
     <string name="title_suit">Spiel</string>
     <string name="title_spitzen">Mit / Ohne</string>
     <string name="description_spitzen_slider">Anzahl der Spitzen</string>
-    <string name="title_solo_player">Alleinspieler*in</string>
+    <string name="title_solo_player">Wer hat gewonnen?</string>
     <string name="title_result">Ergebnis</string>
     <string name="description_lower_spitzen">Erniedrige Anzahl der Spitzen</string>
     <string name="label_schneider_announced">Schneider angesagt</string>
@@ -89,7 +89,7 @@
     <string name="overbid_text">Es wurde überreizt.</string>
     <string name="won_text">Gewonnen</string>
     <string name="lost_text">Verloren</string>
-    <string name="title_library">Listen</string>
+    <string name="title_library">Gespielte Listen</string>
     <string name="title_continue">Fortsetzen</string>
     <string name="label_this_month">Dieser Monat</string>
     <string name="label_older">Ältere Listen</string>
@@ -110,8 +110,9 @@
     <string name="dialog_title_button_create">Ok</string>
     <string name="error_name_required">Name is erforderlich!</string>
     <string name="error_name_exists_already">Der Name existiert bereits.</string>
+    <string name="error_name_has_wrong_size">1 bis 20 Zeichen.</string>
     <string name="dialog_title_button_save">Speichern</string>
-    <string name="error_valid_title_required">Bitte gebe einen Namen ein!</string>
+    <string name="error_valid_title_required">Gib einen Namen ein!</string>
     <string name="dialog_title_edit_players">Ändere Spieler*innen</string>
     <string name="dialog_title_button_got_it">Ok</string>
     <string name="dialog_title_score_details">Spielinfo</string>
@@ -134,4 +135,9 @@
     <string name="settingsListNameTitle">"Wie soll die Liste \nheissen?"</string>
     <string name="settingsRoundCountContentDescription">Wähle die Anzahl der Runden aus.</string>
     <string name="title_button_edit">Bearbeiten</string>
+    <string name="biddingTitle">Reizwert</string>
+    <string name="title_next">Weiter</string>
+    <string name="linkWithPlayerProfile">Verlinke mit Spielerprofil</string>
+    <string name="title_game_settings">Optionen</string>
+    <string name="title_bidding">Reizwert</string>
 </resources>

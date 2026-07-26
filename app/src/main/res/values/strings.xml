@@ -76,7 +76,7 @@
     <string name="description_spitzen_slider">Number of Spitzen</string>
     <string name="label_ouvert" translatable="false">Ouvert</string>
     <string name="label_hand" translatable="false">Hand</string>
-    <string name="title_solo_player">Solo player</string>
+    <string name="title_solo_player">Who won?</string>
     <string name="title_result">Result</string>
     <string name="description_lower_spitzen">Lower the number of spitzen</string>
     <string name="label_grand" translatable="false">Grand</string>
@@ -127,8 +127,9 @@
     <string name="dialog_title_button_create">Create</string>
     <string name="error_name_required">Name is required!</string>
     <string name="error_name_exists_already">This name already exists.</string>
+    <string name="error_name_has_wrong_size">Use 1 to 20 chars.</string>
     <string name="dialog_title_button_save">Save</string>
-    <string name="error_valid_title_required">Please enter a valid title!</string>
+    <string name="error_valid_title_required">Enter a title!</string>
     <string name="dialog_title_edit_players">Edit players</string>
     <string name="dialog_title_button_got_it">Got it</string>
     <string name="dialog_title_score_details">Score details</string>
@@ -158,4 +159,10 @@
     <string name="settingsListNameTitle">"Wie soll die Liste \nheissen?"</string>
     <string name="settingsRoundCountContentDescription">Choose number of rounds.</string>
     <string name="title_button_edit">Edit</string>
+    <string name="biddingTitle">Bidding value</string>
+    <string name="title_next">Next</string>
+    <string name="description_score_next" translatable="false">Continue to score details</string>
+    <string name="linkWithPlayerProfile">Link with player profile</string>
+    <string name="title_game_settings">Settings</string>
+    <string name="title_bidding">Bidding value</string>
 </resources>

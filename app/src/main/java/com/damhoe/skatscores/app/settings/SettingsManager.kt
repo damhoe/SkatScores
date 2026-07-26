@@ -10,7 +10,6 @@ class SettingsManager @Inject constructor(
     @ApplicationContext context: Context
 )
 {
-
     private val themeProvider by lazy { ThemeProvider(context) }
 
     fun setTheme(theme: String)

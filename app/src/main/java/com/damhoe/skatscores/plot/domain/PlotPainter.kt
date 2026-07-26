@@ -9,6 +9,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.TypedValue
+import androidx.collection.intSetOf
 import com.damhoe.skatscores.plot.presentation.GraphicUtils
 import com.damhoe.skatscores.plot.styles.PlotStyle
 import kotlin.math.ceil
@@ -413,8 +414,8 @@ class PlotPainter
     {
         // For each line graph add the marker and behind it
         // the label text
-        val left = mTransform.insets.left.toFloat()
-        val bottom = mTransform.height + mTransform.insets.bottom - 10f
+        val left = mTransform.insets.left
+        val bottom = mTransform.height + mTransform.insets.top + mTransform.insets.bottom - 20f
 
         val markerSize = dpToPx(mStyle.labelMarkerSize)
         val cornerRadius = dpToPx(4f).toFloat()

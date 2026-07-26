@@ -14,4 +14,6 @@
     <declare-styleable name="GraphView">
         <attr name="gridColor" format="color" />
     </declare-styleable>
+
+    <attr name="toolbarBackground" format="reference" />
 </resources>

@@ -1,66 +1,27 @@
-package com.damhoe.skatscores.library;
+package com.damhoe.skatscores.library
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.damhoe.skatscores.game.skat.application.usecases.DeleteSkatGameUseCase
+import com.damhoe.skatscores.game.skat.application.usecases.GetGamePreviewsUseCase
+import com.damhoe.skatscores.game.skat.domain.GamePreviewFilter
+import com.damhoe.skatscores.game.skat.domain.SkatGamePreview
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import java.util.UUID
+import javax.inject.Inject
 
-import com.damhoe.skatscores.base.Result;
-import com.damhoe.skatscores.game.domain.skat.SkatGame;
-import com.damhoe.skatscores.game.application.ports.in.CreateGameUseCase;
-import com.damhoe.skatscores.game.application.ports.in.LoadGameUseCase;
-import com.damhoe.skatscores.game.domain.skat.SkatGamePreview;
+@HiltViewModel
+class LibraryViewModel @Inject constructor(
+    private val getGamePreviewsUseCase: GetGamePreviewsUseCase,
+    private val deleteSkatGameUseCase: DeleteSkatGameUseCase
+) : ViewModel()
+{
+    val games: LiveData<List<SkatGamePreview>> =
+        getGamePreviewsUseCase(GamePreviewFilter.All)
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
-public class LibraryViewModel extends ViewModel {
-
-    private final LoadGameUseCase mLoadGameUseCase;
-    private final CreateGameUseCase mCreateGameUseCase;
-
-    Date oldestDate;
-    Date firstOfMonth;
-
-    @Inject
-    public LibraryViewModel(
-            LoadGameUseCase loadGameUseCase,
-            CreateGameUseCase createGameUseCase
-    ) {
-        mLoadGameUseCase = loadGameUseCase;
-        mCreateGameUseCase = createGameUseCase;
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 1);
-        oldestDate = calendar.getTime();
-
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 1);
-        firstOfMonth = calendar.getTime();
-    }
-
-    LiveData<List<SkatGamePreview>> getOldGames() {
-        return Transformations.map(mLoadGameUseCase.getGamesSince(oldestDate),
-                allGames -> allGames.stream()
-                        .filter(preview -> preview.getDate().before(firstOfMonth))
-                        .collect(Collectors.toList())
-        );
-    }
-
-    LiveData<List<SkatGamePreview>> getGames() {
-        return mLoadGameUseCase.getGamesSince(oldestDate);
-    }
-
-    LiveData<List<SkatGamePreview>> getUnfinishedGames() {
-        return mLoadGameUseCase.getUnfinishedGames();
-    }
-
-    public Result<SkatGame> deleteGame(long id) {
-        return mCreateGameUseCase.deleteSkatGame(id);
+    fun deleteGame(id: UUID) = viewModelScope.launch {
+        deleteSkatGameUseCase(id)
     }
 }

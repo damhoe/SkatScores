@@ -19,17 +19,6 @@ import javax.inject.Inject
 class AppSettingsDialogFragment :
     DialogFragment()
 {
-    /**
-     * Dialog fragment for managing app settings.
-     *
-     * Settings are stored using preference data store, which is
-     * managed by the view model.
-     * Settings can be applied using the settings manager.
-     *
-     * Relevant properties are initialized in onAttach() when
-     * the calling context is attached to this fragment.
-     */
-
     // Languages
     private lateinit var german: String
     private lateinit var english: String
@@ -72,20 +61,8 @@ class AppSettingsDialogFragment :
             )
 
             dialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(
-                    R.string.title_settings
-                )
-                .setView(
-                    binding.root
-                )
+                .setView(binding.root)
                 .setPositiveButton("OK") { d, _ -> d.dismiss() }
-                .setBackground(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.background_dialog_fragment,
-                        requireActivity().theme
-                    )
-                )
                 .create()
 
         } ?: throw IllegalStateException("Activity can not be null")

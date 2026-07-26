@@ -5,21 +5,25 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="24dp"
+            android:paddingStart="36dp"
             android:paddingTop="16dp"
             android:paddingEnd="24dp">
 
-        <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/topDivider"
-                android:layout_width="match_parent"
+        <TextView
+                android:id="@+id/title"
+                android:text="@string/title_settings"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium" />
 
         <androidx.core.widget.NestedScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@id/topDivider">
+                app:layout_constraintTop_toBottomOf="@id/title">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -118,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/title_about"
-                android:textAppearance="?textAppearanceBodyLarge"
+                android:textAppearance="?textAppearanceTitleLarge"
                 android:textColor="?colorOnSurfaceVariant"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -7,7 +7,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AppSettingsViewModel @Inject constructor(private val storageManager: SettingsStorageManager) : ViewModel() {
+class AppSettingsViewModel @Inject constructor(
+    private val storageManager: SettingsStorageManager
+) : ViewModel()
+{
 
     val theme = storageManager.themeFlow.asLiveData(Dispatchers.IO)
 

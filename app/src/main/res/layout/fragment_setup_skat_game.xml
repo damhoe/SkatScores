@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/background_layer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+                android:id="@+id/nestedScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:fillViewport="true"
+                android:overScrollMode="never"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="108dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:context=".game.skat.adapter.presentation.GameSetupFragment">
+
+                <NumberPicker
+                        android:id="@+id/roundCountNumberPicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/settingsRoundCountContentDescription"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/roundCountTitle" />
+
+                <TextView
+                        android:id="@+id/scoringTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/amaticsc_bold"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/settingsScoringTitle"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                        app:layout_constraintStart_toStartOf="@id/listNameTitle"
+                        app:layout_constraintTop_toBottomOf="@id/listNameInput" />
+
+                <TextView
+                        android:id="@+id/roundCountTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/amaticsc_bold"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/settingsRoundCountTitle"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                        app:layout_constraintStart_toStartOf="@id/listNameTitle"
+                        app:layout_constraintTop_toBottomOf="@+id/scoring_settings_rg" />
+
+
+                <TextView
+                        android:id="@+id/listNameTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="36dp"
+                        android:fontFamily="@font/amaticsc_bold"
+                        android:paddingBottom="24dp"
+                        android:text="@string/settingsListNameTitle"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/scoring_settings_rg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="36dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="36dp"
+                        app:checkedButton="@id/simple_scoring_rb"
+                        app:layout_constraintStart_toStartOf="@id/scoringTitle"
+                        app:layout_constraintTop_toBottomOf="@id/scoringTitle"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/simple_scoring_rb"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settingsScoringSimple" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/tournament_scoring_rb"
+                            style="@style/Widget.App.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settingsScoringTournament" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/listNameInput"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="240dp"
+                        android:layout_height="wrap_content"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="20"
+                        app:endIconDrawable="@drawable/ic_cancel_24dp"
+                        app:endIconMode="clear_text"
+                        app:layout_constraintStart_toStartOf="@id/listNameTitle"
+                        app:layout_constraintTop_toBottomOf="@id/listNameTitle">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/listNameEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusedByDefault="false"
+                            android:inputType="text"
+                            android:text="@={viewModel.title}"
+                            android:textSize="18sp"
+                            tools:text="Cosy skat round" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/back_button"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:icon="@drawable/ic_arrow_back_24dp"
+                    app:iconTint="?colorControlNormal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/startButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="@dimen/fab_margin_bottom"
+                android:layout_marginEnd="@dimen/fab_margin_bottom"
+                android:layout_marginBottom="@dimen/fab_margin_bottom"
+                android:contentDescription="@string/description_start"
+                android:enabled="@{viewModel.canCreateSkatGame}"
+                android:text="@string/settingsStartButton"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <data>
+
+        <variable
+                name="viewModel"
+                type="com.damhoe.skatscores.game.skat.adapter.presentation.SetupSkatGameViewModel" />
+    </data>
+
+</layout>

@@ -1,107 +1,146 @@
 package com.damhoe.skatscores.library
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavDirections
-import androidx.navigation.Navigation.findNavController
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.damhoe.skatscores.R
-import com.damhoe.skatscores.app.HomeFragmentDirections
 import com.damhoe.skatscores.databinding.FragmentLibraryBinding
-import com.damhoe.skatscores.game.adapter.presentation.shared.GamePreviewAdapter
-import com.damhoe.skatscores.game.adapter.presentation.shared.GamePreviewItemClickListener
-import com.damhoe.skatscores.game.domain.skat.SkatGamePreview
+import com.damhoe.skatscores.library.GamePreviewItemClickListener
+import com.damhoe.skatscores.game.skat.domain.SkatGamePreview
+import com.damhoe.skatscores.shared.utils.InsetsManager
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import java.util.UUID
 
 @AndroidEntryPoint
-class LibraryFragment : Fragment(),
+class LibraryFragment :
+    Fragment(R.layout.fragment_library),
     GamePreviewItemClickListener
 {
-    @Inject
-    lateinit var factory: LibraryViewModelFactory
-    private val viewModel: LibraryViewModel by viewModels { factory }
+    private val viewModel: LibraryViewModel by viewModels()
     private lateinit var binding: FragmentLibraryBinding
     private lateinit var gamePreviewAdapter: GamePreviewAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View
-    {
-        binding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_library, container, false
-        )
-
-        // Setup recycler view
-        gamePreviewAdapter = GamePreviewAdapter(this)
-        binding.gamesRv.adapter = gamePreviewAdapter
-        binding.gamesRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.gamesRv.addItemDecoration(GamePreviewAdapter.ItemDecoration(16))
-        gamePreviewAdapter.setGamePreviews(
-            viewModel.games.value
-        )
-        binding.addButton.setOnClickListener { navigateToGameSetup() }
-        return binding.root
-    }
 
     override fun onViewCreated(
         view: View, savedInstanceState: Bundle?
     )
     {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentLibraryBinding.bind(view)
+
+        addMenu()
+
+        InsetsManager.applyStatusBarInsets(binding.toolbar)
+        InsetsManager.applyNavigationBarInsets(binding.content)
+
+        // Setup recycler view
+        gamePreviewAdapter = GamePreviewAdapter(this)
+        binding.gamesRv.adapter = gamePreviewAdapter
+        binding.gamesRv.layoutManager = LinearLayoutManager(requireContext())
+        binding.gamesRv.addItemDecoration(GamePreviewAdapter.ItemDecoration(16))
+        setupShadow()
+
+        binding.addButton.setOnClickListener { navigateToGameSetup() }
+        binding.statisticsButton.setOnClickListener { navigateToPlayers() }
 
         // Add live data observers
         viewModel.games.observe(viewLifecycleOwner) { previews ->
             val showNoGamesInfo = previews.isEmpty()
             binding.gamesRv.visibility = if (showNoGamesInfo) View.GONE else View.VISIBLE
-            gamePreviewAdapter.setGamePreviews(previews)
+            gamePreviewAdapter.submitList(previews)
             binding.gamesRv.invalidate()
         }
     }
 
-    override fun notifyDelete(skatGamePreview: SkatGamePreview?)
+    private fun setupShadow()
     {
-        val result = viewModel.deleteGame(
-            skatGamePreview!!.gameId)
+        var isHeaderElevated = false
 
-        if (result.isFailure)
+        binding.gamesRv.addOnScrollListener(object : RecyclerView.OnScrollListener()
         {
-            Log.d(
-                "Unexpected behavior",
-                result.message)
-        }
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int)
+            {
+                val scrollOffset = recyclerView.computeVerticalScrollOffset()
+                val shouldElevate = scrollOffset > 0
+
+                if (shouldElevate != isHeaderElevated)
+                {
+                    isHeaderElevated = shouldElevate
+
+                    // Animate the shadow alpha
+                    binding.headerShadow.animate()
+                        .alpha(if (shouldElevate) 0.2f else 0f)
+                        .setDuration(250) // Smooth duration in ms
+                        .start()
+
+                    // Optional: Animate the actual elevation for a real Material 3 feel
+//                    binding.headerContainer.animate()
+//                        .z(if (shouldElevate) 8f else 0f)
+//                        .setDuration(250)
+//                        .start()
+                }
+            }
+        })
     }
 
-    private fun findNavController() = findNavController(
-        requireActivity(),
-        R.id.nav_host_fragment)
+    private fun addMenu()
+    {
+        binding.toolbar.addMenuProvider(object : MenuProvider
+        {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater)
+            {
+                menu.clear()
+                menuInflater.inflate(R.menu.options_menu, menu)
+            }
+
+            override fun onMenuItemSelected(item: MenuItem): Boolean
+            {
+                val itemId = item.itemId
+                if (itemId == R.id.menu_settings)
+                {
+                    showAppSettingsDialog()
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun showAppSettingsDialog()
+    {
+        findNavController().navigate(
+            LibraryFragmentDirections.actionHomeToAppSettings()
+        )
+    }
+
+    override fun notifyDelete(skatGamePreview: SkatGamePreview)
+    {
+        val result = viewModel.deleteGame(skatGamePreview.gameId)
+    }
 
     private fun navigateToGameSetup() = findNavController().navigate(
-        (HomeFragmentDirections.actionHomeToGame() as NavDirections))
+        LibraryFragmentDirections.actionLibraryToGameSetup()
+    )
 
-    private fun navigateToGame(gameId: Long) = findNavController().navigate(
-        (HomeFragmentDirections.actionHomeToGame().setGameId(gameId) as NavDirections))
+    private fun navigateToGame(gameId: UUID) = findNavController().navigate(
+        LibraryFragmentDirections.actionLibraryFragmentToSkatGameNavGraph(gameId.toString())
+    )
+
+    private fun navigateToPlayers() = findNavController().navigate(
+        LibraryFragmentDirections.actionLibraryToPlayersFragment()
+    )
 
     override fun notifySelect(
         skatGamePreview: SkatGamePreview
     )
     {
-        navigateToGame(
-            skatGamePreview.gameId)
-    }
-
-    companion object
-    {
-        @JvmStatic
-        fun newInstance(): LibraryFragment
-        {
-            return LibraryFragment()
-        }
+        navigateToGame(skatGamePreview.gameId)
     }
 }

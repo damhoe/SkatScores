@@ -1,71 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:nestedScrollingEnabled="true"
-        android:descendantFocusability="blocksDescendants"
-        tools:context=".player.adapter.in.ui.PlayersFragment">
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:paddingBottom="100dp"
-            android:clipToPadding="false"
-            android:translationZ="-1dp"
-            android:contentDescription="@string/description_scroll_view_main_content"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+            android:layout_height="match_parent">
 
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/amaticsc_bold"
+                android:text="@string/title_players"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:descendantFocusability="blocksDescendants"
+                android:nestedScrollingEnabled="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                tools:context=".player.adapter.presentation.PlayersFragment">
 
-                <TextView
-                    android:id="@+id/text_no_players"
+            <androidx.core.widget.NestedScrollView
+                    android:id="@+id/nestedScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:contentDescription="@string/description_scroll_view_main_content"
+                    android:overScrollMode="never"
+                    android:paddingBottom="100dp"
+                    android:translationZ="-1dp"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp">
+
+                    <TextView
+                            android:id="@+id/text_no_players"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="36dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/text_info_no_players"
+                            android:textColor="?colorSecondary"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/player_recycler_view" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/player_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="true"
+                            android:overScrollMode="never"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:itemCount="10"
+                            tools:listitem="@layout/item_player" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/addPlayerButton"
+                    style="@style/Widget.Material3.FloatingActionButton.Large.Secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/player_recycler_view"
-                    android:layout_marginTop="36dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:textColor="?colorPrimaryVariant"
-                    android:text="@string/text_info_no_players" />
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="@dimen/fab_margin_right"
+                    android:layout_marginBottom="@dimen/fab_margin_bottom"
+                    android:contentDescription="@string/description_create_new_profile"
+                    android:src="@drawable/ic_person_add_24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/player_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:itemCount="10"
-                    tools:listitem="@layout/item_player"
-                    android:nestedScrollingEnabled="true"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:overScrollMode="never" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        </androidx.core.widget.NestedScrollView>
+        <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/Widget.App.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addPlayerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/fab_margin_right"
-            android:layout_marginBottom="@dimen/fab_margin_bottom"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_person_add_24dp"
-            android:contentDescription="@string/description_create_new_profile"
-            style="@style/Widget.Material3.FloatingActionButton.Large.Primary" />
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/backButton"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:icon="@drawable/ic_arrow_back_24dp"
+                    app:iconTint="?colorControlNormal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

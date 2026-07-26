@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Material3.CardView.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerHigh">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:id="@+id/solo_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@id/lost_container">
+
+                <TextView
+                        android:id="@+id/solo_label"
+                        style="@style/Widget.App.TextViewLabelBold"
+                        android:layout_width="@dimen/points_board_first_label_width"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="@string/pointsSoloLabel"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?colorOnSurfaceVariant" />
+
+                <TextView
+                        android:id="@+id/solo1_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        tools:text="24" />
+
+                <TextView
+                        android:id="@+id/solo2_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        tools:text="0" />
+
+                <TextView
+                        android:id="@+id/solo3_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        tools:text="0" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/lost_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@id/divider">
+
+                <TextView
+                        android:id="@+id/lost_label"
+                        style="@style/Widget.App.TextViewLabelBold"
+                        android:layout_width="@dimen/points_board_first_label_width"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="@string/pointsLostLabel"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?colorOnSurfaceVariant" />
+
+                <TextView
+                        android:id="@+id/lost1_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        tools:text="24" />
+
+                <TextView
+                        android:id="@+id/lost2_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        tools:text="0" />
+
+                <TextView
+                        android:id="@+id/lost3_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        tools:text="0" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/points_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                        android:id="@+id/total_points_label"
+                        style="@style/Widget.App.TextViewLabelBold"
+                        android:layout_width="@dimen/points_board_first_label_width"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/pointsTotalLabel"
+                        android:textAlignment="textStart"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?colorOnSurfaceVariant" />
+
+                <TextView
+                        android:id="@+id/points1_text"
+                        style="@style/Widget.App.TextViewLabelBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        android:text="@{String.valueOf(viewModel.skatGame.calculateTotalPoints()[0])}"
+                        tools:text="24" />
+
+                <TextView
+                        android:id="@+id/points2_text"
+                        style="@style/Widget.App.TextViewLabelBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        android:text="@{String.valueOf(viewModel.skatGame.calculateTotalPoints()[1])}"
+                        tools:text="0" />
+
+                <TextView
+                        android:id="@+id/points3_text"
+                        style="@style/Widget.App.TextViewLabelBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?colorOnSurfaceVariant"
+                        android:text="@{String.valueOf(viewModel.skatGame.calculateTotalPoints()[2])}"
+                        tools:text="230" />
+
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:dividerColor="?colorOutlineVariant"
+                    app:layout_constraintBottom_toTopOf="@id/points_container" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <data>
+
+        <variable
+                name="viewModel"
+                type="com.damhoe.skatscores.game.skat.adapter.presentation.SharedSkatGameViewModel" />
+    </data>
+
+</layout>

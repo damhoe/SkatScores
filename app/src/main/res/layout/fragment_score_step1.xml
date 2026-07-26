@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+                name="viewModel"
+                type="com.damhoe.skatscores.game.skat.adapter.presentation.SetupSkatGameViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/back_button"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:icon="@drawable/ic_arrow_back_24dp"
+                    app:iconTint="?colorControlNormal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="104dp">
+
+                <TextView
+                        android:id="@+id/playerTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="36dp"
+                        android:paddingBottom="24dp"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                        android:fontFamily="@font/amaticsc_bold"
+                        android:text="@string/title_solo_player"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                <GridLayout
+                        android:id="@+id/soloPlayerContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="1"
+                        android:rowCount="2"
+                        android:useDefaultMargins="true"
+                        android:paddingStart="36dp"
+                        android:paddingEnd="36dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/playerTitle">
+
+                    <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardPlayer1"
+                            style="@style/Widget.Material3.CardView.Outlined"
+                            android:checkable="true"
+                            android:focusable="true"
+                            android:clickable="true"
+                            app:checkedIconMargin="14dp"
+                            android:layout_width="0dp"
+                            android:layout_height="52dp"
+                            android:layout_columnWeight="1">
+
+                        <TextView
+                                android:id="@+id/textPlayer1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                tools:text="Player 1"
+                                android:textAlignment="center" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardWon"
+                            style="@style/Widget.Material3.CardView.Outlined"
+                            android:checkable="true"
+                            android:focusable="true"
+                            android:clickable="true"
+                            app:checkedIconMargin="14dp"
+                            android:layout_width="0dp"
+                            android:layout_height="52dp"
+                            android:layout_columnWeight="1">
+
+                        <TextView
+                                android:id="@+id/textPlayer2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                tools:text="Player 2"
+                                android:textAlignment="center" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardPlayer3"
+                            style="@style/Widget.Material3.CardView.Outlined"
+                            android:checkable="true"
+                            android:focusable="true"
+                            android:clickable="true"
+                            app:checkedIconMargin="14dp"
+                            android:layout_width="0dp"
+                            android:layout_height="52dp"
+                            android:layout_columnWeight="1">
+
+                        <TextView
+                                android:id="@+id/textPlayer3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                tools:text="Player 3"
+                                android:textAlignment="center" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardPasse"
+                            style="@style/Widget.Material3.CardView.Outlined"
+                            android:checkable="true"
+                            android:focusable="true"
+                            android:clickable="true"
+                            app:checkedIconMargin="14dp"
+                            android:layout_width="0dp"
+                            android:layout_height="52dp"
+                            android:layout_columnWeight="1">
+
+                        <TextView
+                                android:id="@+id/textPasse"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                android:text="@string/label_passe"
+                                android:textAlignment="center" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </GridLayout>
+
+                <TextView
+                        android:id="@+id/resultTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="36dp"
+                        android:paddingBottom="12dp"
+                        android:layout_marginTop="12dp"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                        android:fontFamily="@font/amaticsc_bold"
+                        android:text="@string/title_result"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/soloPlayerContainer" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggleGroupResult"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:checkedButton="@id/buttonWon"
+                        android:layout_marginStart="36dp"
+                        android:layout_marginEnd="36dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/resultTitle"
+                        app:selectionRequired="false"
+                        app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonWon"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.ButtonSmallest"
+                            android:text="@string/label_won"
+                            tools:ignore="VisualLintButtonSize" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonLost"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.ButtonSmallest"
+                            android:text="@string/label_lost"
+                            tools:ignore="VisualLintButtonSize" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonOverbid"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.ButtonSmallest"
+                            android:text="@string/label_overbid"
+                            tools:ignore="VisualLintButtonSize" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                style="@style/Widget.App.ExtendedFloatingActionButton.Primary"
+                android:id="@+id/nextStepButton"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="@dimen/fab_margin_bottom"
+                android:layout_marginEnd="@dimen/fab_margin_right"
+                android:text="@string/title_next"
+                app:icon="@drawable/ic_next_24dp"
+                app:iconGravity="end"
+                android:visibility="visible"
+                android:contentDescription="@string/description_score_next" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
