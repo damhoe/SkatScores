@@ -144,6 +144,7 @@ class SkatGamesRepositoryImpl @Inject constructor(
                             scores = scores)
                         SkatGamePreview.mapFrom(skatGame)
                     }
+                    .sortedByDescending { it.playedAt }
                 emit(previewList)
             }.onFailure { e ->
                 Log.e(TAG, "Error getting all games since $oldest", e)
@@ -160,12 +161,15 @@ class SkatGamesRepositoryImpl @Inject constructor(
             result.onSuccess { dtoList ->
                 val previewList = dtoList
                     .map {
-                        val players = loadSkatParticipants(it.id)
+                        // Scores are needed: the preview shows running totals and progress.
+                        val participants = loadSkatParticipants(it.id)
+                        val scores = loadSkatScores(it.id)
                         val skatGame = it.toSkatGame(
-                            players,
-                            emptyList())
+                            participants = participants,
+                            scores = scores)
                         SkatGamePreview.mapFrom(skatGame)
                     }
+                    .sortedByDescending { it.playedAt }
                 emit(previewList)
             }.onFailure { e ->
                 Log.e(TAG, "Error getting all games", e)

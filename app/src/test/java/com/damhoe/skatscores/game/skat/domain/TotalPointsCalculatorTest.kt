@@ -67,8 +67,10 @@ class TotalPointsCalculatorTest
     {
         val scores = listOf(grandOrSuit(middlehand, WON, SkatSuit.CLUBS, 2))
 
-        assertArrayEquals(intArrayOf(0, 50, 0), calculator.calculateWinBonus(scores))
-        assertArrayEquals(intArrayOf(0, 0, 0), calculator.calculateLossOfOthersBonus(scores))
+        val breakdown = calculator.calculateBreakdown(scores)
+
+        assertEquals(listOf(0, 50, 0), breakdown.map { it.soloBonus })
+        assertEquals(listOf(0, 0, 0), breakdown.map { it.againstBonus })
         assertArrayEquals(intArrayOf(0, 86, 0), calculator.calculateTotalPoints(scores, true))
     }
 
@@ -77,8 +79,10 @@ class TotalPointsCalculatorTest
     {
         val scores = listOf(grandOrSuit(middlehand, LOST, SkatSuit.CLUBS, 2))
 
-        assertArrayEquals(intArrayOf(0, -50, 0), calculator.calculateWinBonus(scores))
-        assertArrayEquals(intArrayOf(40, 0, 40), calculator.calculateLossOfOthersBonus(scores))
+        val breakdown = calculator.calculateBreakdown(scores)
+
+        assertEquals(listOf(0, -50, 0), breakdown.map { it.soloBonus })
+        assertEquals(listOf(40, 0, 40), breakdown.map { it.againstBonus })
         assertArrayEquals(intArrayOf(40, -122, 40), calculator.calculateTotalPoints(scores, true))
     }
 
@@ -87,9 +91,55 @@ class TotalPointsCalculatorTest
     {
         val scores = listOf(SkatScore.Passe.create())
 
+        val breakdown = calculator.calculateBreakdown(scores)
+
         assertArrayEquals(intArrayOf(0, 0, 0), calculator.calculateTotalPoints(scores, true))
-        assertArrayEquals(intArrayOf(0, 0, 0), calculator.calculateWinBonus(scores))
-        assertArrayEquals(intArrayOf(0, 0, 0), calculator.calculateLossOfOthersBonus(scores))
+        assertEquals(listOf(0, 0, 0), breakdown.map { it.soloBonus })
+        assertEquals(listOf(0, 0, 0), breakdown.map { it.againstBonus })
+        assertEquals(listOf(0, 0, 0), breakdown.map { it.declarerWins })
+        assertEquals(listOf(0, 0, 0), breakdown.map { it.defenderWins })
+    }
+
+    @Test
+    fun `the breakdown counts games per seat and adds up to the total`()
+    {
+        val scores = listOf(
+            grandOrSuit(forehand, WON, SkatSuit.GRAND, 1),    // 48
+            grandOrSuit(middlehand, LOST, SkatSuit.CLUBS, 2), // -72
+            SkatScore.Passe.create(),
+            grandOrSuit(forehand, LOST, SkatSuit.HEARTS, 1),  // -40
+            grandOrSuit(rearhand, WON, SkatSuit.CLUBS, 2),    // 36
+        )
+
+        val breakdown = calculator.calculateBreakdown(scores)
+
+        assertEquals(listOf(1, 0, 1), breakdown.map { it.declarerWins })
+        assertEquals(listOf(1, 1, 0), breakdown.map { it.declarerLosses })
+        assertEquals(listOf(1, 1, 2), breakdown.map { it.defenderWins })
+        assertEquals(listOf(8, -72, 36), breakdown.map { it.gameValue })
+        assertEquals(listOf(0, -50, 50), breakdown.map { it.soloBonus })
+        assertEquals(listOf(40, 40, 80), breakdown.map { it.againstBonus })
+
+        assertArrayEquals(
+            breakdown.map { it.total }.toIntArray(),
+            calculator.calculateTotalPoints(scores, true)
+        )
+        assertArrayEquals(
+            breakdown.map { it.gameValue }.toIntArray(),
+            calculator.calculateTotalPoints(scores, false)
+        )
+    }
+
+    @Test
+    fun `an overbid game counts as a loss for the declarer`()
+    {
+        val scores = listOf(SkatScore.Overbid.create(forehand, SkatSuit.CLUBS, SkatBid(40)))
+
+        val breakdown = calculator.calculateBreakdown(scores)
+
+        assertEquals(listOf(0, 0, 0), breakdown.map { it.declarerWins })
+        assertEquals(listOf(1, 0, 0), breakdown.map { it.declarerLosses })
+        assertEquals(listOf(0, 1, 1), breakdown.map { it.defenderWins })
     }
 
     @Test

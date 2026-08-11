@@ -1,4 +1,57 @@
 <resources>
+
+    <!--
+      Redesign tokens. The hero card is a fixed brand-coloured surface: it keeps the same
+      indigo fill in both themes, so it is not a light/dark pair.
+    -->
+    <color name="hero_surface">#535CA8</color>
+    <color name="hero_on_surface">#FFFFFF</color>
+    <color name="hero_on_surface_muted">#B8FFFFFF</color>
+    <color name="hero_on_surface_faint">#38FFFFFF</color>
+    <color name="hero_negative">#E4A89C</color>
+    <color name="hero_track">#38FFFFFF</color>
+
+    <!-- Hairline outline for unselected chips and quick-start row, 1dp. -->
+    <color name="md_theme_light_hairline">#d4d7de</color>
+    <color name="md_theme_dark_hairline">#2b2e33</color>
+
+    <!--
+      Red suits. A warm terracotta rather than colorError: a suit is information, not an
+      alarm, and this keeps it clear of the pink used for negative scores.
+    -->
+    <color name="md_theme_light_suit_red">#a95d4c</color>
+    <color name="md_theme_dark_suit_red">#E4A89C</color>
+
+    <!--
+      Chart series colours, one per seat in table order. Separated by hue rather than by
+      lightness so the three lines stay tellable apart in both themes.
+    -->
+    <color name="md_theme_light_chart_series_1">#535CA8</color>
+    <color name="md_theme_light_chart_series_2">#a95d4c</color>
+    <color name="md_theme_light_chart_series_3">#3F6B44</color>
+    <color name="md_theme_dark_chart_series_1">#9FCAFD</color>
+    <color name="md_theme_dark_chart_series_2">#F4B2E4</color>
+    <color name="md_theme_dark_chart_series_3">#A5D6A7</color>
+
+    <!--
+      Avatar palette. Six hues that deliberately steer clear of the brand indigo: the point of
+      the colour is to tell one player from another, so it has to come from the player rather
+      than from the theme. Each is used at full strength for the initial and at low alpha for
+      the circle behind it, so both tones come from one entry.
+    -->
+    <color name="md_theme_light_avatar_1">#0F766E</color>
+    <color name="md_theme_light_avatar_2">#B45309</color>
+    <color name="md_theme_light_avatar_3">#BE185D</color>
+    <color name="md_theme_light_avatar_4">#7C3AED</color>
+    <color name="md_theme_light_avatar_5">#15803D</color>
+    <color name="md_theme_light_avatar_6">#4D7C0F</color>
+    <color name="md_theme_dark_avatar_1">#4DB6AC</color>
+    <color name="md_theme_dark_avatar_2">#E7A15E</color>
+    <color name="md_theme_dark_avatar_3">#F09AB8</color>
+    <color name="md_theme_dark_avatar_4">#BCA5F5</color>
+    <color name="md_theme_dark_avatar_5">#85C88A</color>
+    <color name="md_theme_dark_avatar_6">#B5CE79</color>
+
     <color name="md_theme_light_primary">#535CA8</color>
     <color name="md_theme_light_onPrimary">#ffffff</color>
     <color name="md_theme_light_primaryContainer">#535CA8</color>
@@ -13,8 +66,8 @@
     <color name="md_theme_light_onTertiaryContainer">#200D09</color>
     <color name="md_theme_light_error">#8c0009</color>
     <color name="md_theme_light_onError">#ffffff</color>
-    <color name="md_theme_light_errorContainer">#da342e</color>
-    <color name="md_theme_light_onErrorContainer">#ffffff</color>
+    <color name="md_theme_light_errorContainer">#ffdad6</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
     <color name="md_theme_light_background">#FFFFFF</color>
     <color name="md_theme_light_onBackground">#191c20</color>
     <color name="md_theme_light_surface">#FFFFFF</color>

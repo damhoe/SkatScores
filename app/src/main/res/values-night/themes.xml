@@ -35,11 +35,15 @@
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
         <item name="colorControlNormal">@color/md_theme_dark_onSurface</item>
         <item name="colorCategorySubtitle">@color/md_theme_dark_tertiary</item>
-        <item name="colorClubs">@color/md_theme_dark_onBackground</item>
-        <item name="colorSpades">@color/md_theme_dark_onBackground</item>
-        <item name="colorHearts">@color/md_theme_dark_error</item>
-        <item name="colorDiamonds">@color/md_theme_dark_error</item>
+        <!-- Suits read as ink and warm red, not as body text and an error state. -->
+        <item name="colorClubs">@color/md_theme_dark_onSurfaceVariant</item>
+        <item name="colorSpades">@color/md_theme_dark_onSurfaceVariant</item>
+        <item name="colorHearts">@color/md_theme_dark_suit_red</item>
+        <item name="colorDiamonds">@color/md_theme_dark_suit_red</item>
         <item name="colorSuitDisabled">@color/md_theme_dark_surfaceVariant</item>
-        <item name="toolbarBackground">@drawable/toolbar_background_night</item>
+        <item name="colorHairline">@color/md_theme_dark_hairline</item>
+        <item name="colorChartSeries1">@color/md_theme_dark_chart_series_1</item>
+        <item name="colorChartSeries2">@color/md_theme_dark_chart_series_2</item>
+        <item name="colorChartSeries3">@color/md_theme_dark_chart_series_3</item>
     </style>
 </resources>

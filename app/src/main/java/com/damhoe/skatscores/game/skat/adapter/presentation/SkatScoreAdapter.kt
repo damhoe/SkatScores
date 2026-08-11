@@ -1,171 +1,128 @@
 package com.damhoe.skatscores.game.skat.adapter.presentation
 
-import android.annotation.SuppressLint
-import android.graphics.Rect
-import android.util.Log
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.game.skat.adapter.presentation.SkatScoreAdapter.SkatScoreViewHolder
+import com.damhoe.skatscores.game.skat.adapter.presentation.scores.RoundTextFactory
 import com.damhoe.skatscores.game.skat.domain.SkatParticipants
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
-import java.util.UUID
+import com.google.android.material.color.MaterialColors
 
+/**
+ * The round log: one row per played round, newest first. The rows describe what was played
+ * instead of spreading a single value across three mostly empty columns.
+ */
 class SkatScoreAdapter(
-    private val mListener: IScoreActionListener,
-) : ListAdapter<SkatScore, SkatScoreViewHolder>(SkatScoreDiffCallback())
+    private val listener: IScoreActionListener,
+    private val textFactory: RoundTextFactory,
+) : ListAdapter<SkatScoreAdapter.Round, SkatScoreViewHolder>(RoundDiffCallback())
 {
-    private var participantsPositions: Map<UUID, Int> = emptyMap()
+    /** A score together with the round number it was played in. */
+    data class Round(val number: Int, val score: SkatScore)
 
-    @SuppressLint("NotifyDataSetChanged")
+    private var participants: SkatParticipants? = null
+
     fun setParticipants(participants: SkatParticipants)
     {
-        participantsPositions = mapOf(
-            participants.foreHand.id to 0,
-            participants.middleHand.id to 1,
-            participants.rearHand.id to 2
-        )
-        notifyDataSetChanged()
+        this.participants = participants
+        notifyItemRangeChanged(0, itemCount)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): SkatScoreViewHolder
+    /** Scores arrive in playing order; the log shows the newest round at the top. */
+    fun submitScores(scores: List<SkatScore>)
+    {
+        submitList(scores.mapIndexed { index, score -> Round(index + 1, score) }.reversed())
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SkatScoreViewHolder
     {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(
-                R.layout.item_score,
-                parent,
-                false
-            )
+            .inflate(R.layout.item_score, parent, false)
         return SkatScoreViewHolder(itemView)
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(
-        holder: SkatScoreViewHolder,
-        position: Int
-    )
+    override fun onBindViewHolder(holder: SkatScoreViewHolder, position: Int)
     {
-        val score = getItem(position)
+        val round = getItem(position)
+        val score = round.score
+        val participants = participants
 
-        holder.roundsText.text = (position + 1).toString()
+        holder.roundNumber.text = round.number.toString()
+        holder.title.text = textFactory.titleOf(score)
+        holder.subtitle.text = participants
+            ?.let { textFactory.subtitleOf(score, it) }
+            .orEmpty()
 
-        // Null position means a passed round, or a declarer that is not at this table any more.
-        val declarerPosition = score.declarerId?.let { participantsPositions[it] }
-        if (declarerPosition == null)
-        {
-            noPoints(holder)
-        } else
-        {
-            val pointsArray = intArrayOf(0, 0, 0)
-            pointsArray[declarerPosition] = score.toPoints()
+        bindSuitIcon(holder, score)
 
-            holder.points1Text.text = makeScoreString(pointsArray[0])
-            holder.points2Text.text = makeScoreString(pointsArray[1])
-            holder.points3Text.text = makeScoreString(pointsArray[2])
-        }
+        bindValue(holder, score)
 
-        holder.itemView.setOnClickListener { view: View? ->
-            Log.d(
-                "Score Event",
-                "Item clicked at position $position"
-            )
-        }
+        holder.itemView.setOnClickListener { listener.notifyEdit(score) }
     }
 
-    private fun noPoints(holder: SkatScoreViewHolder)
+    private fun bindSuitIcon(holder: SkatScoreViewHolder, score: SkatScore)
     {
-        holder.points1Text.text = "-"
-        holder.points2Text.text = "-"
-        holder.points3Text.text = "-"
-    }
+        val suit = RoundTextFactory.suitOf(score)
+        val icon = suit?.let { RoundTextFactory.suitIconOf(it) }
 
-    private fun makeScoreString(points: Int): String
-    {
-        if (points == 0)
-        {
-            return "-"
-        }
-        return points.toString()
-    }
+        holder.suitIcon.visibility = if (icon == null) View.INVISIBLE else View.VISIBLE
+        if (icon == null || suit == null) return
 
-    override fun onBindViewHolder(
-        holder: SkatScoreViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
-    )
-    {
-        if (payloads.isEmpty())
-        {
-            // Full binding if payloads are empty
-            onBindViewHolder(
-                holder,
-                position
-            )
-        } else
-        {
-            // Handle payloads (e.g., update item index)
-            for (payload in payloads)
-            {
-                if (payload == "payload")
-                {
-                    // Update the item index view
-                    holder.updateRounds(position)
-                }
-            }
-        }
-    }
-
-    class SkatScoreViewHolder(itemView: View) :
-        RecyclerView.ViewHolder(itemView)
-    {
-        var roundsText: TextView = itemView.findViewById(R.id.round_text)
-        var points1Text: TextView = itemView.findViewById(R.id.points1_text)
-        var points2Text: TextView = itemView.findViewById(R.id.points2_text)
-        var points3Text: TextView = itemView.findViewById(R.id.points3_text)
-
-        fun updateRounds(position: Int)
-        {
-            roundsText.text = position.toString()
-        }
-    }
-
-    class ItemDecoration : RecyclerView.ItemDecoration()
-    {
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
+        holder.suitIcon.setImageResource(icon)
+        holder.suitIcon.imageTintList = ColorStateList.valueOf(
+            MaterialColors.getColor(holder.suitIcon, RoundTextFactory.suitColorAttrOf(suit))
         )
-        {
-            outRect.top = 1
-        }
     }
 
-    class SkatScoreDiffCallback : DiffUtil.ItemCallback<SkatScore>()
+    private fun bindValue(holder: SkatScoreViewHolder, score: SkatScore)
     {
-        override fun areItemsTheSame(
-            oldItem: SkatScore,
-            newItem: SkatScore
-        ): Boolean
+        val points = score.toPoints()
+
+        if (score is SkatScore.Passe)
         {
-            return oldItem.id == newItem.id
+            holder.value.text = "–"
+            holder.value.setTextColor(
+                MaterialColors.getColor(holder.value, R.attr.colorOutlineVariant)
+            )
+            return
         }
 
-        override fun areContentsTheSame(
-            oldItem: SkatScore,
-            newItem: SkatScore
-        ): Boolean
-        {
-            return oldItem == newItem
-        }
+        holder.value.text = if (points > 0) "+$points" else points.toString()
+        holder.value.setTextColor(
+            MaterialColors.getColor(
+                holder.value,
+                if (points < 0) R.attr.colorTertiary else R.attr.colorPrimary
+            )
+        )
+    }
+
+    class SkatScoreViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    {
+        val roundNumber: TextView = itemView.findViewById(R.id.round_text)
+        val suitIcon: ImageView = itemView.findViewById(R.id.suitIcon)
+        val title: TextView = itemView.findViewById(R.id.roundTitle)
+        val subtitle: TextView = itemView.findViewById(R.id.roundSubtitle)
+        val value: TextView = itemView.findViewById(R.id.roundValue)
+    }
+
+    class RoundDiffCallback : DiffUtil.ItemCallback<Round>()
+    {
+        override fun areItemsTheSame(oldItem: Round, newItem: Round): Boolean =
+            oldItem.score.id == newItem.score.id
+
+        // SkatScore subclasses are not data classes, so compare what the row actually shows.
+        override fun areContentsTheSame(oldItem: Round, newItem: Round): Boolean =
+            oldItem.number == newItem.number &&
+                    oldItem.score.declarerId == newItem.score.declarerId &&
+                    oldItem.score.result == newItem.score.result &&
+                    oldItem.score.toPoints() == newItem.score.toPoints()
     }
 }

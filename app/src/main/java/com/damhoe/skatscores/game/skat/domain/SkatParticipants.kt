@@ -19,14 +19,29 @@ data class SkatParticipants(
     fun seatOf(participantId: UUID): Int? =
         asList().indexOfFirst { it.id == participantId }.takeIf { it >= 0 }
 
+    /**
+     * The same people at the same seats, but as fresh participants. Used when starting a new
+     * list from an old one: participant ids are per-list, so they must not be shared.
+     */
+    fun asNewParticipants(): SkatParticipants = SkatParticipants(
+        foreHand = foreHand.withId(UUID.randomUUID()),
+        middleHand = middleHand.withId(UUID.randomUUID()),
+        rearHand = rearHand.withId(UUID.randomUUID()),
+    )
+
     companion object
     {
+        /**
+         * Placeholder seats for a list that has just been created. These are visible until
+         * the players are picked in the game view, so they read as slots to fill rather than
+         * as table positions.
+         */
         fun createNew(): SkatParticipants
         {
             return SkatParticipants(
-                foreHand = SkatParticipant.Guest(PlayerName("Player F")),
-                middleHand = SkatParticipant.Guest(PlayerName("Player M")),
-                rearHand = SkatParticipant.Guest(PlayerName("Player R"))
+                foreHand = SkatParticipant.Guest(PlayerName("Player 1")),
+                middleHand = SkatParticipant.Guest(PlayerName("Player 2")),
+                rearHand = SkatParticipant.Guest(PlayerName("Player 3"))
             )
         }
     }

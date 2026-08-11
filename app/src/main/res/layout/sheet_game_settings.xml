@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Everything about a running list that is not a round, reached from the game screen's app bar.
+  The seats used to have a sheet of their own next to this one, which put two doors on the same
+  room; they are now this sheet's first section, since a substitution is the likeliest edit.
+
+  Round-count chips are filled from SkatRoundCount.ALLOWED_VALUES at runtime; values below the
+  number of rounds already played are disabled rather than hidden.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_sheet"
+            android:clipToPadding="false">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+            <View
+                    android:layout_width="38dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bg_drag_handle" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_game_settings"
+                        android:textAppearance="@style/TextAppearance.App.AppBarTitle" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/closeButton"
+                        style="@style/Widget.App.AppBar.IconButton"
+                        android:contentDescription="@string/description_close"
+                        app:icon="@drawable/ic_close_24dp"
+                        app:iconTint="?attr/colorOutline" />
+
+            </LinearLayout>
+
+            <!-- Players -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/title_players" />
+
+            <TextView
+                    android:id="@+id/seatsHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_edit_players_hint"
+                    android:textAppearance="@style/TextAppearance.App.Meta" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player1Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:hint="@string/hint_player1"
+                    app:counterMaxLength="20"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player1EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        tools:text="Marlon" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player2Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/hint_player2"
+                    app:counterMaxLength="20"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player2EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        tools:text="Evi" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player3Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/hint_player3"
+                    app:counterMaxLength="20"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player3EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        tools:text="Daniel" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- List name -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_list_name" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/listNameInput"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/listNameEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        tools:text="Stammtisch 010" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Round count -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/settingsRoundCountTitle" />
+
+            <LinearLayout
+                    android:id="@+id/roundCountRows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            <TextView
+                    android:id="@+id/roundCountHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="@style/TextAppearance.App.Meta"
+                    android:visibility="gone"
+                    tools:text="6 rounds already played"
+                    tools:visibility="visible" />
+
+            <!-- Scoring mode -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/settingsScoringTitle" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/scoringSimple"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/settingsScoringSimple" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/scoringTournament"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/settingsScoringTournament" />
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveButton"
+                    style="@style/Widget.App.Sheet.SaveButton"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/dialog_title_button_save" />
+
+            <!--
+              The running list is the one place the recent rows never show - the hero card
+              holds it - so without this button it could not be deleted at all.
+            -->
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deleteButton"
+                    style="@style/Widget.App.DangerButton"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/menu_delete_list"
+                    app:icon="@drawable/ic_delete_24dp" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

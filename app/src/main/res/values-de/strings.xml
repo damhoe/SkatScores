@@ -69,8 +69,8 @@
     <string name="description_lower_spitzen">Erniedrige Anzahl der Spitzen</string>
     <string name="label_schneider_announced">Schneider angesagt</string>
     <string name="label_schwarz_announced">Schwarz angesagt</string>
-    <string name="description_spades">Kreuz</string>
-    <string name="description_clubs">Pik</string>
+    <string name="description_spades">Pik</string>
+    <string name="description_clubs">Kreuz</string>
     <string name="description_hearts">Herz</string>
     <string name="description_diamonds">Karo</string>
     <string name="text_info_no_players">Erstelle Spieler*innenprofile für deine Listen.</string>
@@ -89,7 +89,7 @@
     <string name="overbid_text">Es wurde überreizt.</string>
     <string name="won_text">Gewonnen</string>
     <string name="lost_text">Verloren</string>
-    <string name="title_library">Gespielte Listen</string>
+    <string name="title_library">Listen</string>
     <string name="title_continue">Fortsetzen</string>
     <string name="label_this_month">Dieser Monat</string>
     <string name="label_older">Ältere Listen</string>
@@ -113,7 +113,6 @@
     <string name="error_name_has_wrong_size">1 bis 20 Zeichen.</string>
     <string name="dialog_title_button_save">Speichern</string>
     <string name="error_valid_title_required">Gib einen Namen ein!</string>
-    <string name="dialog_title_edit_players">Ändere Spieler*innen</string>
     <string name="dialog_title_button_got_it">Ok</string>
     <string name="dialog_title_score_details">Spielinfo</string>
     <string name="dialog_title_edit_player_name">Namen bearbeiten</string>
@@ -134,10 +133,73 @@
     <string name="playerStatsTitleQualityWins">Gewonnen</string>
     <string name="settingsListNameTitle">"Wie soll die Liste \nheissen?"</string>
     <string name="settingsRoundCountContentDescription">Wähle die Anzahl der Runden aus.</string>
-    <string name="title_button_edit">Bearbeiten</string>
     <string name="biddingTitle">Reizwert</string>
     <string name="title_next">Weiter</string>
     <string name="linkWithPlayerProfile">Verlinke mit Spielerprofil</string>
     <string name="title_game_settings">Optionen</string>
     <string name="title_bidding">Reizwert</string>
+
+    <!-- Home / Game redesign -->
+    <string name="greeting_morning">Guten Morgen</string>
+    <string name="greeting_afternoon">Guten Tag</string>
+    <string name="greeting_evening">Guten Abend</string>
+    <string name="greeting_night">Gute Nacht</string>
+    <string name="label_dealer">Gibt: %s</string>
+    <string name="label_round_progress">Runde %1$d / %2$d</string>
+    <string name="title_keep_playing">Weiterspielen</string>
+    <string name="title_quick_start">Schnellstart</string>
+    <string name="title_same_round_again">Gleiche Runde nochmal</string>
+    <string name="title_recently_played">Zuletzt gespielt</string>
+    <string name="title_show_all">Alle</string>
+    <string name="title_no_running_list">Keine Liste läuft — starte eine neue.</string>
+    <string name="description_quick_start">Neue Liste mit den gleichen Spielern starten</string>
+    <string name="description_new_list">Neue Liste</string>
+    <string name="message_list_deleted">Liste gelöscht</string>
+    <string name="action_undo">Rückgängig</string>
+    <string name="title_who_plays">Wer spielt?</string>
+    <string name="title_game_kind">Spiel</string>
+    <string name="title_round">Runde %d</string>
+    <string name="label_announced">Angesagt</string>
+    <string name="format_points_for">Punkte für %s</string>
+    <string name="text_no_rounds">Noch keine Runde eingetragen.\nTippe auf +, um zu starten.</string>
+    <string name="message_round_removed">Runde entfernt</string>
+    <string name="description_undo">Letzte Runde zurücknehmen</string>
+    <string name="description_share">Liste teilen</string>
+    <string name="description_close">Schließen</string>
+    <string name="menu_delete_list">Liste löschen</string>
+    <string name="title_delete_list">Liste löschen?</string>
+    <string name="message_delete_list_empty">„%1$s“ wird gelöscht.</string>
+    <plurals name="message_delete_list">
+        <item quantity="one">„%1$s“ und die %2$d eingetragene Runde werden gelöscht.</item>
+        <item quantity="other">„%1$s“ und alle %2$d eingetragenen Runden werden gelöscht.</item>
+    </plurals>
+    <string name="error_duplicate_players">Spieler brauchen verschiedene Namen</string>
+    <string name="description_game_type_unavailable">Wertung für dieses Spiel gibt es noch nicht</string>
+    <string name="text_edit_players_hint">Bereits eingetragene Runden bleiben bei ihrem Platz.</string>
+    <string name="title_chart_cumulative">Gesamt</string>
+    <string name="title_chart_per_round">Pro Runde</string>
+    <string name="title_chart_final">Endstand</string>
+    <string name="description_score_chart">Punkteverlauf über %1$d Runden. %2$s</string>
+    <string name="label_rounds">Runden</string>
+    <string name="title_stat_solo_share">Solo gespielt</string>
+    <string name="title_stat_solo_win_rate">Solo gewonnen</string>
+    <string name="title_stat_defender_win_rate">Als Gegenspieler gewonnen</string>
+    <string name="text_no_statistics">Noch keine Runde gespielt.</string>
+    <string name="label_points_without_bonus">Punkte ohne Bonus</string>
+    <string name="label_solo_bonus">Solobonus ×50</string>
+    <string name="label_against_bonus">Gegenbonus ×40</string>
+    <string name="description_scoreboard_record">%1$s: %2$d gewonnen und %3$d verloren als Alleinspieler, %4$d gewonnen als Gegenspieler</string>
+    <string name="title_points_breakdown">Punkteaufteilung</string>
+    <string name="label_total">Gesamt</string>
+    <string name="description_show_breakdown">Punkteaufteilung anzeigen</string>
+    <string name="description_hide_breakdown">Punkteaufteilung ausblenden</string>
+    <string name="format_stat_of">%1$d von %2$d</string>
+    <plurals name="label_player_list_count">
+        <item quantity="one">1 Liste</item>
+        <item quantity="other">%d Listen</item>
+    </plurals>
+    <plurals name="label_rounds_already_played">
+        <item quantity="one">1 Runde schon gespielt</item>
+        <item quantity="other">%d Runden schon gespielt</item>
+    </plurals>
 </resources>

@@ -33,22 +33,24 @@ class PlayerAdapter(private val listener: NotifyItemClickListener) :
     )
     {
         val playerInfo = getItem(position)
+
         holder.name.text = playerInfo.name.value
-        holder.numberGames.text = String.format(
-            holder.itemView.context.getString(R.string.template_game_count_long),
+        holder.initial.text = playerInfo.name.value.take(1).uppercase()
+        PlayerAvatar.bind(holder.initial, playerInfo.playerId)
+        holder.numberGames.text = holder.itemView.resources.getQuantityString(
+            R.plurals.label_player_list_count,
+            playerInfo.totalGamesPlayed,
             playerInfo.totalGamesPlayed
         )
 
-        holder.itemView.setOnClickListener { view: View? ->
-            listener.notifyItemClick(
-                playerInfo.playerId,
-                position
-            )
+        holder.itemView.setOnClickListener {
+            listener.notifyItemClick(playerInfo.playerId, position)
         }
     }
 
     class PlayerViewHolder(
         itemView: View,
+        val initial: TextView = itemView.findViewById(R.id.initial),
         val name: TextView = itemView.findViewById(R.id.name),
         val numberGames: TextView = itemView.findViewById(R.id.number_games),
     ) : RecyclerView.ViewHolder(itemView)

@@ -4,6 +4,29 @@ import com.damhoe.skatscores.game.common.WonOrLost.LOST
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 
 /**
+ * What one seat's total is made of.
+ *
+ * The parts are what the score board shows when the tournament breakdown is expanded, and
+ * they add up to [total] by construction, so the board can never disagree with the sum
+ * printed above it.
+ */
+data class SeatBreakdown(
+    /** Sum of the game values of the rounds this seat declared - no bonuses. */
+    val gameValue: Int,
+    val declarerWins: Int,
+    val declarerLosses: Int,
+    /** Rounds this seat defended and the declarer lost. */
+    val defenderWins: Int,
+    /** ±50 per declared game, won or lost. */
+    val soloBonus: Int,
+    /** 40 per round in [defenderWins]. */
+    val againstBonus: Int,
+)
+{
+    val total = gameValue + soloBonus + againstBonus
+}
+
+/**
  * Aggregates the scores of a game into one point value per seat.
  *
  * Seats are indexed in the order of [SkatParticipants.asList], which is also the column
@@ -28,13 +51,48 @@ class TotalPointsCalculator(
     fun calculateTotalPoints(
         scores: List<SkatScore>,
         isTournamentScoring: Boolean
-    ): IntArray = scores.sumPerSeat { pointsForScore(it, isTournamentScoring) }
+    ): IntArray = calculateBreakdown(scores).toPoints(isTournamentScoring)
 
-    fun calculateWinBonus(scores: List<SkatScore>): IntArray =
-        scores.sumPerSeat(::soloBonusForScore)
+    /** One entry per seat, in the column order of the score board. */
+    fun calculateBreakdown(scores: List<SkatScore>): List<SeatBreakdown>
+    {
+        val gameValue = IntArray(seatCount)
+        val declarerWins = IntArray(seatCount)
+        val declarerLosses = IntArray(seatCount)
+        val defenderWins = IntArray(seatCount)
 
-    fun calculateLossOfOthersBonus(scores: List<SkatScore>): IntArray =
-        scores.sumPerSeat(::againstBonusForScore)
+        for (score in scores)
+        {
+            // Passed rounds, and rounds whose declarer has left the table, pay nobody.
+            val declarerSeat = seatOf(score) ?: continue
+
+            gameValue[declarerSeat] += score.toPoints()
+
+            if (score.result == LOST)
+            {
+                declarerLosses[declarerSeat]++
+                for (seat in 0 until seatCount)
+                {
+                    if (seat != declarerSeat) defenderWins[seat]++
+                }
+            }
+            else
+            {
+                declarerWins[declarerSeat]++
+            }
+        }
+
+        return List(seatCount) { seat ->
+            SeatBreakdown(
+                gameValue = gameValue[seat],
+                declarerWins = declarerWins[seat],
+                declarerLosses = declarerLosses[seat],
+                defenderWins = defenderWins[seat],
+                soloBonus = (declarerWins[seat] - declarerLosses[seat]) * BONUS_SOLO,
+                againstBonus = defenderWins[seat] * BONUS_AGAINST,
+            )
+        }
+    }
 
     /**
      * Running totals per seat, starting at 0 before the first round, with one entry
@@ -49,7 +107,8 @@ class TotalPointsCalculator(
 
         for (score in scores)
         {
-            val points = pointsForScore(score, isTournamentScoring)
+            // One round at a time through the same aggregation the totals use.
+            val points = calculateBreakdown(listOf(score)).toPoints(isTournamentScoring)
             pointsHistory.forEachIndexed { seat, seatHistory ->
                 seatHistory.add(seatHistory.last() + points[seat])
             }
@@ -58,67 +117,10 @@ class TotalPointsCalculator(
         return pointsHistory
     }
 
-    private fun pointsForScore(
-        score: SkatScore,
-        isTournamentScoring: Boolean
-    ): IntArray
-    {
-        val points = gameValueForScore(score)
-
-        if (isTournamentScoring)
-        {
-            val soloBonus = soloBonusForScore(score)
-            val againstBonus = againstBonusForScore(score)
-            for (seat in points.indices)
-            {
-                points[seat] += soloBonus[seat] + againstBonus[seat]
-            }
+    private fun List<SeatBreakdown>.toPoints(isTournamentScoring: Boolean): IntArray =
+        IntArray(size) { seat ->
+            this[seat].let { if (isTournamentScoring) it.total else it.gameValue }
         }
-
-        return points
-    }
-
-    /** The game value of the round, credited to the declarer. */
-    private fun gameValueForScore(score: SkatScore): IntArray
-    {
-        val points = IntArray(seatCount)
-        val declarerSeat = seatOf(score) ?: return points
-
-        points[declarerSeat] = score.toPoints()
-
-        return points
-    }
-
-    private fun soloBonusForScore(score: SkatScore): IntArray
-    {
-        val points = IntArray(seatCount)
-        val declarerSeat = seatOf(score) ?: return points
-
-        points[declarerSeat] = if (score.result == LOST) -BONUS_SOLO else BONUS_SOLO
-
-        return points
-    }
-
-    private fun againstBonusForScore(score: SkatScore): IntArray
-    {
-        val points = IntArray(seatCount)
-        val declarerSeat = seatOf(score) ?: return points
-
-        if (score.result != LOST)
-        {
-            return points
-        }
-
-        for (seat in points.indices)
-        {
-            if (seat != declarerSeat)
-            {
-                points[seat] = BONUS_AGAINST
-            }
-        }
-
-        return points
-    }
 
     /**
      * Seat of the declarer, or null for a passed round and for scores whose declarer is
@@ -126,14 +128,4 @@ class TotalPointsCalculator(
      */
     private fun seatOf(score: SkatScore): Int? =
         score.declarerId?.let { participants.seatOf(it) }
-
-    private fun List<SkatScore>.sumPerSeat(pointsForScore: (SkatScore) -> IntArray): IntArray =
-        fold(IntArray(seatCount)) { total, score ->
-            val points = pointsForScore(score)
-            for (seat in total.indices)
-            {
-                total[seat] += points[seat]
-            }
-            total
-        }
 }

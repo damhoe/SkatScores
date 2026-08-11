@@ -8,6 +8,6 @@ interface SkatScoresRepository
 {
     fun getScoresOfGame(gameId: UUID): Flow<SkatScore>
     suspend fun insert(score: SkatScore, gameId: UUID, round: Int): Result<Unit>
-    suspend fun update(score: SkatScore): Result<Unit>
-    suspend fun delete(id: UUID): Result<Unit>
+    suspend fun update(score: SkatScore, gameId: UUID): Result<Unit>
+    suspend fun delete(id: UUID, gameId: UUID): Result<Unit>
 }

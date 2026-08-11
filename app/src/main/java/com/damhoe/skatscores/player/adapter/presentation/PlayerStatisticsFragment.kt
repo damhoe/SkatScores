@@ -1,66 +1,112 @@
 package com.damhoe.skatscores.player.adapter.presentation
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.ui.NavigationUI.setupWithNavController
+import androidx.navigation.fragment.findNavController
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentPlayerStatisticsBinding
+import com.damhoe.skatscores.databinding.ViewStatRateBinding
 import com.damhoe.skatscores.player.domain.PlayerStatistics
-import com.damhoe.skatscores.shared.utils.InsetsManager
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class PlayerStatisticsFragment :
-    Fragment(R.layout.fragment_player_statistics)
+class PlayerStatisticsFragment : Fragment(R.layout.fragment_player_statistics)
 {
-    private val statsViewModel: StatisticsViewModel by viewModels()
-    private val playerViewModel: PlayerViewModel by viewModels()
+    private val viewModel: StatisticsViewModel by viewModels()
 
     private lateinit var binding: FragmentPlayerStatisticsBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-
         binding = FragmentPlayerStatisticsBinding.bind(view)
 
-        // Add insets
-        InsetsManager.applyStatusBarInsets(binding.appbarLayout)
-        InsetsManager.applyNavigationBarInsets(binding.nestedScrollView)
-        setupWithNavController(binding.toolbar, findNavController())
+        applyInsets()
+        binding.backButton.setOnClickListener { findNavController().navigateUp() }
+
+        viewModel.playerName.observe(viewLifecycleOwner) { binding.name.text = it }
+        viewModel.statistics.observe(viewLifecycleOwner) { updateUi(it) }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun updateUI(name: String, playerStatistics: PlayerStatistics)
+    private fun applyInsets()
     {
-        binding.apply {
-            this.name.text = name
+        val contentBottomPadding = binding.content.paddingBottom
 
-            listCountText.text = playerStatistics.totalGamesPlayed.toString()
-            gameCountText.text = playerStatistics.totalRoundsPlayed.toString()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
+            val bars: Insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-            soloIndicator.progress = playerStatistics.soloPercentage.toInt()
-            winsIndicator.progress = playerStatistics.soloWinPercentage.toInt()
-            againstIndicator.progress = playerStatistics.opponentWinPercentage.toInt()
+            binding.appBar.setPadding(
+                binding.appBar.paddingLeft,
+                bars.top,
+                binding.appBar.paddingRight,
+                binding.appBar.paddingBottom
+            )
+            binding.content.setPadding(
+                binding.content.paddingLeft,
+                binding.content.paddingTop,
+                binding.content.paddingRight,
+                contentBottomPadding + bars.bottom
+            )
 
-            soloText.text = "${playerStatistics.soloPercentage.roundToInt()}%"
-            winsText.text = "${playerStatistics.soloWinPercentage.roundToInt()}%"
-            againstText.text = "${playerStatistics.opponentWinPercentage.roundToInt()}%"
+            WindowInsetsCompat.CONSUMED
         }
     }
 
-    private fun findNavController(): NavController
+    private fun updateUi(statistics: PlayerStatistics?)
     {
-        return findNavController(
-            requireActivity(),
-            R.id.nav_host_fragment
+        // Rates need rounds behind them to mean anything.
+        val hasRounds = statistics != null && statistics.hasRounds
+        binding.statsContent.visibility = if (hasRounds) View.VISIBLE else View.GONE
+        binding.emptyHint.visibility = if (hasRounds) View.GONE else View.VISIBLE
+
+        if (statistics == null || !hasRounds) return
+
+        binding.listCountText.text = statistics.totalGamesPlayed.toString()
+        binding.gameCountText.text = statistics.totalRoundsPlayed.toString()
+
+        bindRate(
+            rate = binding.soloShare,
+            labelRes = R.string.title_stat_solo_share,
+            share = statistics.soloShare,
+            part = statistics.soloRoundsPlayed,
+            whole = statistics.totalRoundsPlayed,
         )
+        bindRate(
+            rate = binding.soloWinRate,
+            labelRes = R.string.title_stat_solo_win_rate,
+            share = statistics.soloWinRate,
+            part = statistics.soloRoundsWon,
+            whole = statistics.soloRoundsPlayed,
+        )
+        bindRate(
+            rate = binding.defenderWinRate,
+            labelRes = R.string.title_stat_defender_win_rate,
+            share = statistics.defenderWinRate,
+            part = statistics.roundsWonAsOpponent,
+            whole = statistics.opponentRoundsPlayed,
+        )
+    }
+
+    private fun bindRate(
+        rate: ViewStatRateBinding,
+        @StringRes labelRes: Int,
+        share: Double,
+        part: Int,
+        whole: Int,
+    )
+    {
+        val percent = (share * 100).roundToInt()
+
+        rate.rateLabel.setText(labelRes)
+        rate.ratePercent.text = getString(R.string.format_percent, percent)
+        rate.rateBar.setProgressCompat(percent, /* animated = */ true)
+        rate.rateDetail.text = getString(R.string.format_stat_of, part, whole)
     }
 }

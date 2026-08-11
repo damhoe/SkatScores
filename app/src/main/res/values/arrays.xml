@@ -23,6 +23,19 @@
         <item>@string/system_theme_preference_value</item>
     </string-array>
 
+    <!--
+      Per-player avatar hues, picked by player id. values-night carries the dark set under the
+      same name, so the lookup in PlayerAvatar stays theme-agnostic.
+    -->
+    <array name="avatar_palette">
+        <item>@color/md_theme_light_avatar_1</item>
+        <item>@color/md_theme_light_avatar_2</item>
+        <item>@color/md_theme_light_avatar_3</item>
+        <item>@color/md_theme_light_avatar_4</item>
+        <item>@color/md_theme_light_avatar_5</item>
+        <item>@color/md_theme_light_avatar_6</item>
+    </array>
+
     <integer-array name="allowed_rounds">
         <item>3</item>
         <item>6</item>

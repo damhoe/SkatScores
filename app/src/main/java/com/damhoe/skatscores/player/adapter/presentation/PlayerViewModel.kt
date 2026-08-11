@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.damhoe.skatscores.player.application.usecases.PlayerUseCases
 import com.damhoe.skatscores.player.domain.Player
@@ -20,6 +22,27 @@ class PlayerViewModel @Inject internal constructor(
 ) : ViewModel()
 {
     val players: LiveData<List<Player>> = playerUseCases.getAllPlayers().asLiveData()
+
+    /**
+     * Players with the number of lists each has taken part in. The count is fetched per player
+     * rather than carried on [Player]: it is derived from the games table, not stored on the
+     * profile.
+     */
+    val playerInfos: LiveData<List<PlayerInfo>> = players.switchMap { players ->
+        liveData {
+            emit(players.map { PlayerInfo(it.id, it.name, totalGamesPlayed = 0) })
+            emit(players.map { player ->
+                PlayerInfo(
+                    playerId = player.id,
+                    name = player.name,
+                    totalGamesPlayed = playerUseCases.getTotalGamesPlayed(player.id)
+                        .getOrDefault(0),
+                )
+            })
+        }
+    }
+
+    fun playerNames(): List<String> = players.value.orEmpty().map { it.name.value }
 
     private val _playerDetails = MutableLiveData<Player?>()
     val playerDetails: LiveData<Player?> = _playerDetails

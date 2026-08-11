@@ -53,4 +53,19 @@ sealed interface SkatParticipant :
 
         override fun toString(): String = displayName
     }
+
+    companion object
+    {
+        /**
+         * Turns a typed name into a participant: a name that matches a registered player
+         * links the seat to that profile, anything else becomes a guest.
+         */
+        fun resolve(name: PlayerName, registeredPlayers: List<Player>): SkatParticipant
+        {
+            val player = registeredPlayers
+                .firstOrNull { it.name.value.equals(name.value, ignoreCase = true) }
+
+            return if (player != null) Registered.from(player) else Guest(name)
+        }
+    }
 }

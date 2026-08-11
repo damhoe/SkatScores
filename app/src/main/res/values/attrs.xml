@@ -15,5 +15,12 @@
         <attr name="gridColor" format="color" />
     </declare-styleable>
 
-    <attr name="toolbarBackground" format="reference" />
+
+    <!-- Chart series colours, one per seat in table order. -->
+    <attr name="colorChartSeries1" format="color" />
+    <attr name="colorChartSeries2" format="color" />
+    <attr name="colorChartSeries3" format="color" />
+
+    <!-- Hairline outline used by unselected chips and the quick-start row. -->
+    <attr name="colorHairline" format="color" />
 </resources>

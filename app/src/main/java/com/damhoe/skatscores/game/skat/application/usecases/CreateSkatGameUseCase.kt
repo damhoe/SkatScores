@@ -19,6 +19,8 @@ data class CreateSkatGameCommand(
     val settings: SkatSettings,
     val title: Title,
     val playerCount: SkatPlayerCount,
+    /** Who sits at the table. Null means start with placeholder guests. */
+    val participants: SkatParticipants? = null,
 ) : Parcelable
 
 class CreateSkatGameUseCase @Inject constructor(
@@ -32,8 +34,7 @@ class CreateSkatGameUseCase @Inject constructor(
                 "Invalid skat player count ${command.playerCount}"
             }
 
-            //val skatPlayers = SkatPlayers.ThreePlayers()
-            val participants = SkatParticipants.createNew()
+            val participants = command.participants ?: SkatParticipants.createNew()
 
             val skatGame = SkatGame.create(
                 command.title,

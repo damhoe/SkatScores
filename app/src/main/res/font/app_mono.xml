@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Number face: every score in the app renders in this, so columns line up.
+
+  Currently Roboto Mono (Apache 2.0). The design asks for Geist Mono, which is a separate
+  Google Fonts family and was not in the downloaded bundle - only Geist itself was. Roboto
+  Mono stands in because it is genuinely fixed-width with lining figures and covers German
+  fully; drop geist_mono_*.ttf into res/font/ and repoint the four entries below to switch.
+-->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font
+        android:font="@font/mono_regular"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+    <font
+        android:font="@font/mono_medium"
+        android:fontStyle="normal"
+        android:fontWeight="500" />
+    <font
+        android:font="@font/mono_semibold"
+        android:fontStyle="normal"
+        android:fontWeight="600" />
+    <font
+        android:font="@font/mono_bold"
+        android:fontStyle="normal"
+        android:fontWeight="700" />
+</font-family>

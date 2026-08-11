@@ -17,7 +17,7 @@ data class SkatGame(
 {
     private val totalPointsCalculator = TotalPointsCalculator(participants)
 
-    private val isTournamentScoring = settings.scoringMode == SkatScoringMode.TOURNAMENT
+    val isTournamentScoring = settings.scoringMode == SkatScoringMode.TOURNAMENT
 
     val dealerPosition = calculateDealerPosition()
 
@@ -25,8 +25,10 @@ data class SkatGame(
     {
         val firstDealerPosition = 0
         val currentRound: Int = scores.size
-        val playerCount = 3
-        return (firstDealerPosition - 1 + currentRound) % playerCount
+        val playerCount = participants.asList().size
+        // floorMod, not %: before the first round the offset is negative and Kotlin's
+        // remainder would return -1 instead of the last seat.
+        return Math.floorMod(firstDealerPosition - 1 + currentRound, playerCount)
     }
 
     companion object
@@ -50,9 +52,8 @@ data class SkatGame(
     fun calculateTotalPoints() =
         totalPointsCalculator.calculateTotalPoints(scores, isTournamentScoring)
 
-    fun calculateWinBonus() = totalPointsCalculator.calculateWinBonus(scores)
-
-    fun calculateLossOfOthersBonus() = totalPointsCalculator.calculateLossOfOthersBonus(scores)
+    /** What each seat's total is made of - shown by the tournament breakdown. */
+    fun calculateBreakdown() = totalPointsCalculator.calculateBreakdown(scores)
 
     fun createPointsHistory() =
         totalPointsCalculator.createPointsHistory(scores, isTournamentScoring)
@@ -70,6 +71,8 @@ data class SkatGame(
     }
 
     fun removeLastScore() = this.copy(scores = scores.dropLast(1))
+
+    fun removeScore(scoreId: UUID) = this.copy(scores = scores.filterNot { it.id == scoreId })
 
     fun updateScore(score: SkatScore) =
         this.copy(scores = scores.map { if (it.id == score.id) score else it })

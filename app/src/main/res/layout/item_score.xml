@@ -1,59 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  One played round in the log. Tap it to edit that round; there is no menu on the row, and
+  only the newest round can be removed - that is what the undo action in the bottom bar does.
+
+  The side gutters live here rather than on the RecyclerView so the press state spans the
+  whole width of the screen.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="52dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:background="?colorSurface"
-    android:foreground="?selectableItemBackground">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:baselineAligned="false"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/game_side_padding"
+        android:paddingTop="11dp"
+        android:paddingEnd="@dimen/score_row_end_padding"
+        android:paddingBottom="11dp">
 
     <TextView
-        style="@style/Widget.App.TextViewLabelBold"
-        android:id="@+id/round_text"
-        android:layout_width="@dimen/points_board_first_label_width"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textAlignment="textEnd"
-        android:alpha="0.6"
-        tools:text="18" />
+            android:id="@+id/round_text"
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textAppearance="@style/TextAppearance.App.NumberSmall"
+            android:textColor="?attr/colorOutlineVariant"
+            tools:text="6" />
+
+    <ImageView
+            android:id="@+id/suitIcon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@null"
+            tools:src="@drawable/ic_suit_clubs" />
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/roundTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.App.RoundTitle"
+                tools:text="Kreuz · Hand" />
+
+        <TextView
+                android:id="@+id/roundSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.App.MetaSmall"
+                tools:text="Marlon · Gewonnen · 3×" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/points1_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.2"
-        android:singleLine="true"
-        android:textAlignment="center"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textAppearance="?attr/textAppearanceBodyLarge"
-        tools:text="24" />
-
-    <TextView
-        android:id="@+id/points2_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.2"
-        android:singleLine="true"
-        android:textAlignment="center"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textAppearance="?attr/textAppearanceBodyLarge"
-        tools:text="0" />
-
-    <TextView
-        android:id="@+id/points3_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.2"
-        android:singleLine="true"
-        android:textAlignment="center"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textAppearance="?attr/textAppearanceBodyLarge"
-        tools:text="0" />
+            android:id="@+id/roundValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textAppearance="@style/TextAppearance.App.RoundValue"
+            tools:text="+36" />
 
 </LinearLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Clubs. Tinted at the use site from the suit colour attributes. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,2A4,4 0 0,1 16,6C16,6.7 15.8,7.4 15.5,8C16.2,7.4 17.1,7 18,7A4,4 0 0,1 22,11A4,4 0 0,1 18,15C16.9,15 15.9,14.6 15.2,13.8L14,21H10L8.8,13.8C8.1,14.6 7.1,15 6,15A4,4 0 0,1 2,11A4,4 0 0,1 6,7C6.9,7 7.8,7.4 8.5,8C8.2,7.4 8,6.7 8,6A4,4 0 0,1 12,2Z" />
+</vector>

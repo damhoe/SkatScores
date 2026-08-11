@@ -7,9 +7,8 @@
 
     <dialog
             android:id="@+id/app_settings"
-            android:name="com.damhoe.skatscores.app.settings.AppSettingsDialogFragment"
-            android:label="AppSettingsDialogFragment"
-            tools:layout="@layout/dialog_app_settings">
+            android:name="com.damhoe.skatscores.app.settings.AppSettingsSheetFragment"
+            tools:layout="@layout/sheet_app_settings">
         <action
                 android:id="@+id/action_app_settings_to_about"
                 app:destination="@id/about"
@@ -17,30 +16,19 @@
                 app:popExitAnim="@android:anim/slide_out_right" />
     </dialog>
 
-    <fragment
-            android:id="@+id/game_setup"
-            android:name="com.damhoe.skatscores.game.skat.adapter.presentation.SetupSkatGameFragment"
-            tools:layout="@layout/fragment_setup_skat_game">
-        <action
-                android:id="@+id/actionSetupToSkatGame"
-                app:destination="@id/skat_game_nav_graph"
-                app:enterAnim="@anim/zoom_fade_in"
-                app:exitAnim="@anim/exit_to_bottom"
-                app:popEnterAnim="@android:anim/slide_in_left"
-                app:popExitAnim="@android:anim/slide_out_right">
-            <argument
-                    android:name="gameId"
-                    app:argType="string" />
-        </action>
-        <argument
-                android:name="ShowBottomAppBar"
-                android:defaultValue="false" />
-    </fragment>
+    <!--
+      New lists are created in NewListSheetFragment, shown directly by LibraryFragment, so
+      there is no setup destination any more.
+    -->
 
     <fragment
             android:id="@+id/player_statistics"
             android:name="com.damhoe.skatscores.player.adapter.presentation.PlayerStatisticsFragment"
-            tools:layout="@layout/fragment_player_statistics" />
+            tools:layout="@layout/fragment_player_statistics">
+        <argument
+                android:name="playerId"
+                app:argType="string" />
+    </fragment>
 
     <fragment
             android:id="@+id/player_details"
@@ -61,7 +49,6 @@
     <fragment
             android:id="@+id/libraryFragment"
             android:name="com.damhoe.skatscores.library.LibraryFragment"
-            android:label="fragment_library"
             tools:layout="@layout/fragment_library">
         <action
                 android:id="@+id/action_libraryFragment_to_skatGameNavGraph"
@@ -74,9 +61,6 @@
                 android:id="@+id/action_home_to_app_settings"
                 app:destination="@id/app_settings" />
         <action
-                android:id="@+id/action_library_to_game_setup"
-                app:destination="@id/game_setup" />
-        <action
                 android:id="@+id/action_library_to_playersFragment"
                 app:destination="@id/playersFragment" />
     </fragment>
@@ -84,7 +68,6 @@
     <fragment
             android:id="@+id/about"
             android:name="com.damhoe.skatscores.app.about.AboutFragment"
-            android:label=""
             tools:layout="@layout/fragment_about" />
     <fragment
             android:id="@+id/playersFragment"
@@ -100,16 +83,10 @@
             android:label="SkatGameNavGraph"
             app:startDestination="@id/skatGameFragment">
 
-        <dialog
-                android:id="@+id/scoreDialogFragment"
-                android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.ScoreDialogFragment"
-                android:label="Add Score">
-            <argument
-                    android:name="gameId"
-                    app:argType="string"
-                    app:nullable="false" />
-        </dialog>
-
+        <!--
+          Rounds are entered and edited in RoundEntrySheetFragment, which is shown directly by
+          SkatGameFragment rather than being a navigation destination.
+        -->
         <fragment
                 android:id="@+id/skatGameFragment"
                 android:name="com.damhoe.skatscores.game.skat.adapter.presentation.SkatGameFragment"
@@ -117,49 +94,12 @@
             <action
                     android:id="@+id/action_skatGameFragment_to_skatGameGraphFragment"
                     app:destination="@id/skatGameGraphFragment" />
-            <action
-                    android:id="@+id/action_skatGameFragment_to_scoreStep1Fragment"
-                    app:destination="@id/scoreStep1Fragment">
-                <argument
-                        android:name="scoreRequest"
-                        app:argType="com.damhoe.skatscores.game.skat.adapter.presentation.scores.ScoreRequest" />
-            </action>
-            <action
-                    android:id="@+id/toScoreNavGraph"
-                    app:destination="@id/scoreDialogFragment">
-            </action>
         </fragment>
 
         <fragment
                 android:id="@+id/skatGameGraphFragment"
                 android:name="com.damhoe.skatscores.game.skat.adapter.presentation.GameGraphFragment"
                 tools:layout="@layout/fragment_game_graph" />
-
-        <fragment
-                android:id="@+id/scoreStep1Fragment"
-                android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.ScoreStep1Fragment"
-                tools:layout="@layout/fragment_score_step1">
-            <action
-                    android:id="@+id/action_scoreStep1Fragment_to_scoreStep2DetailsFragment"
-                    app:destination="@id/scoreStep2DetailsFragment" />
-            <action
-                    android:id="@+id/action_scoreStep1Fragment_to_scoreStep2OverbidFragment"
-                    app:destination="@id/scoreStep2OverbidFragment" />
-            <argument
-                    android:name="scoreRequest"
-                    app:argType="com.damhoe.skatscores.game.skat.adapter.presentation.scores.ScoreRequest"
-                    app:nullable="false" />
-        </fragment>
-
-        <fragment
-                android:id="@+id/scoreStep2OverbidFragment"
-                android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.ScoreStep2OverbidFragment"
-                tools:layout="@layout/fragment_score_step2_overbid" />
-
-        <fragment
-                android:id="@+id/scoreStep2DetailsFragment"
-                android:name="com.damhoe.skatscores.game.skat.adapter.presentation.scores.ScoreStep2DetailsFragment"
-                tools:layout="@layout/fragment_score_step2_details" />
     </navigation>
 
 </navigation>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The three parts a tournament total is made of, one column per seat. Shared by the pinned
+  score board and the chart screen so the two can never disagree about what they show or in
+  which order.
+
+  Row labels are full-width lines above their values rather than a leading label column: that
+  keeps the three value columns on the same grid as whatever names the including layout puts
+  above them.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                style="@style/Widget.App.Breakdown.Label"
+                android:text="@string/label_points_without_bonus" />
+
+        <LinearLayout style="@style/Widget.App.Breakdown.Row">
+
+            <TextView
+                    android:id="@+id/gameValue1"
+                    style="@style/Widget.App.Breakdown.Value"
+                    tools:text="212" />
+
+            <TextView
+                    android:id="@+id/gameValue2"
+                    style="@style/Widget.App.Breakdown.Value"
+                    tools:text="-156" />
+
+            <TextView
+                    android:id="@+id/gameValue3"
+                    style="@style/Widget.App.Breakdown.Value"
+                    tools:text="+62" />
+
+        </LinearLayout>
+
+        <TextView
+                style="@style/Widget.App.Breakdown.Label"
+                android:text="@string/label_solo_bonus" />
+
+        <LinearLayout style="@style/Widget.App.Breakdown.Row">
+
+            <TextView
+                    android:id="@+id/soloBonus1"
+                    style="@style/Widget.App.Breakdown.Value"
+                    tools:text="+150" />
+
+            <TextView
+                    android:id="@+id/soloBonus2"
+                    style="@style/Widget.App.Breakdown.Value"
+                    tools:text="-100" />
+
+            <TextView
+                    android:id="@+id/soloBonus3"
+                    style="@style/Widget.App.Breakdown.Value"
+                    tools:text="0" />
+
+        </LinearLayout>
+
+        <TextView
+                style="@style/Widget.App.Breakdown.Label"
+                android:text="@string/label_against_bonus" />
+
+        <LinearLayout style="@style/Widget.App.Breakdown.Row">
+
+            <TextView
+                    android:id="@+id/againstBonus1"
+                    style="@style/Widget.App.Breakdown.Value"
+                    tools:text="+200" />
+
+            <TextView
+                    android:id="@+id/againstBonus2"
+                    style="@style/Widget.App.Breakdown.Value"
+                    tools:text="+120" />
+
+            <TextView
+                    android:id="@+id/againstBonus3"
+                    style="@style/Widget.App.Breakdown.Value"
+                    tools:text="+160" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

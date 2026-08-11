@@ -25,19 +25,27 @@ class SkatScoreRepositoryImpl @Inject constructor(
         score: SkatScore,
         gameId: UUID,
         round: Int,
-    ): Result<Unit>
+    ): Result<Unit> = scoreDao.insert(SkatScoreDto.mapFrom(score, gameId, round))
+
+    /**
+     * Replaces a round with an edited version. The stored round number is kept, so the
+     * position of the round in the list does not move.
+     */
+    override suspend fun update(score: SkatScore, gameId: UUID): Result<Unit>
     {
-        scoreDao.insert(SkatScoreDto.mapFrom(score, gameId, round))
-        return Result.success(Unit)
+        val round = scoreDao.getRound(score.id).getOrNull()
+            ?: return Result.failure(NoSuchElementException("Unknown score ${score.id}"))
+
+        return scoreDao.update(SkatScoreDto.mapFrom(score, gameId, round))
     }
 
-    override suspend fun update(score: SkatScore): Result<Unit>
+    /** Removes a round and closes the gap it leaves in the round numbering. */
+    override suspend fun delete(id: UUID, gameId: UUID): Result<Unit>
     {
-        TODO("Not yet implemented")
-    }
+        val round = scoreDao.getRound(id).getOrNull()
+            ?: return Result.failure(NoSuchElementException("Unknown score $id"))
 
-    override suspend fun delete(id: UUID): Result<Unit>
-    {
-        TODO("Not yet implemented")
+        return scoreDao.delete(id)
+            .mapCatching { scoreDao.shiftRoundsDown(gameId, round).getOrThrow() }
     }
 }
