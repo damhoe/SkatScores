@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.game.skat.domain
 
+import com.damhoe.skatscores.game.common.GameType
+import com.damhoe.skatscores.game.common.ListPreview
 import com.damhoe.skatscores.game.common.Title
 import java.time.Instant
 import java.util.UUID
@@ -42,6 +44,19 @@ data class SkatGamePreview(
     /** The leading total, or null before anything has been scored. */
     val leaderTotal: Int?
         get() = leaderPosition?.let { totals.getOrNull(it) }
+
+    /** The game-agnostic view of this list, for the home screen. */
+    fun toListPreview() = ListPreview(
+        gameType = GameType.SKAT,
+        gameId = gameId,
+        title = title,
+        playedAt = playedAt,
+        playerNames = playerNames,
+        totals = totals,
+        roundsPlayed = roundsPlayed,
+        totalRounds = totalRounds,
+        dealerPosition = dealerPosition,
+    )
 
     companion object
     {

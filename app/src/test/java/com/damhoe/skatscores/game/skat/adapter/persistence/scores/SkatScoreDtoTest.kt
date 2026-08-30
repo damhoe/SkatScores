@@ -2,7 +2,7 @@ package com.damhoe.skatscores.game.skat.adapter.persistence.scores
 
 import com.damhoe.skatscores.game.common.WonOrLost.LOST
 import com.damhoe.skatscores.game.skat.domain.SkatBid
-import com.damhoe.skatscores.game.skat.domain.SkatParticipant
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.skat.domain.Spitzen
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 import com.damhoe.skatscores.game.skat.domain.scores.SkatSuit
@@ -14,7 +14,7 @@ import java.util.UUID
 class SkatScoreDtoTest
 {
     private val gameId = UUID.randomUUID()
-    private val declarer = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Declarer"))
+    private val declarer = Participant.Guest(UUID.randomUUID(), PlayerName("Declarer"))
 
     private fun roundTrip(score: SkatScore, round: Int = 0): SkatScore =
         SkatScoreDto.mapFrom(score, gameId, round).toSkatScore()

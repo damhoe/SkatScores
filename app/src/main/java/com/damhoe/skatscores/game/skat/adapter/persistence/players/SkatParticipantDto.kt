@@ -2,7 +2,7 @@ package com.damhoe.skatscores.game.skat.adapter.persistence.players
 
 import android.database.Cursor
 import androidx.core.content.contentValuesOf
-import com.damhoe.skatscores.game.skat.domain.SkatParticipant
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.skat.domain.SkatParticipants
 import com.damhoe.skatscores.game.skat.domain.SkatPlayerPosition
 import com.damhoe.skatscores.persistence.DatabaseConstants.SkatParticipantsTable
@@ -32,17 +32,17 @@ data class SkatParticipantDto(
         SkatParticipantsTable.COLUMN_NAME to name.value,
     )
 
-    fun toSkatParticipant(): SkatParticipant
+    fun toSkatParticipant(): Participant
     {
         return if (playerId == null)
         {
-            SkatParticipant.Guest(
+            Participant.Guest(
                 id = id,
                 name = name
             )
         } else
         {
-            SkatParticipant.Registered(
+            Participant.Registered(
                 id = id,
                 name = name,
                 playerId = playerId
@@ -68,7 +68,7 @@ data class SkatParticipantDto(
         }
 
         fun mapFrom(
-            participant: SkatParticipant,
+            participant: Participant,
             gameId: UUID,
             tablePosition: SkatPlayerPosition,
         ): SkatParticipantDto
@@ -77,7 +77,7 @@ data class SkatParticipantDto(
             return SkatParticipantDto(
                 id = participant.id,
                 gameId = gameId,
-                playerId = if (participant is SkatParticipant.Registered) participant.playerId else null,
+                playerId = if (participant is Participant.Registered) participant.playerId else null,
                 tablePosition = tablePosition,
                 name = participant.name,
             )

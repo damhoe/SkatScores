@@ -12,7 +12,6 @@ data class SkatGameUseCases @Inject constructor(
     // which reaches DeleteScoreUseCase itself. Exposing it would hand every caller a
     // delete-any-round door that the UI does not have.
     val removeLastScore: RemoveLastScoreUseCase,
-    val refreshAllUseCase: RefreshAllUseCase,
     val updateSkatGame: UpdateSkatGameUseCase,
     val updateSkatParticipants: UpdateSkatParticipantsUseCase,
 )

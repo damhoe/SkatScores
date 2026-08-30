@@ -1,9 +1,9 @@
 package com.damhoe.skatscores.library
 
-import com.damhoe.skatscores.game.skat.domain.SkatGamePreview
+import com.damhoe.skatscores.game.common.ListPreview
 
 interface GamePreviewItemClickListener
 {
-    fun notifyDelete(skatGamePreview: SkatGamePreview)
-    fun notifySelect(skatGamePreview: SkatGamePreview)
+    fun notifyDelete(preview: ListPreview)
+    fun notifySelect(preview: ListPreview)
 }

@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.damhoe.skatscores.game.skat.application.usecases.SkatGameUseCases
 import com.damhoe.skatscores.game.skat.domain.SkatBid
 import com.damhoe.skatscores.game.skat.domain.SkatGame
-import com.damhoe.skatscores.game.skat.domain.SkatParticipant
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.skat.domain.SkatParticipants
 import com.damhoe.skatscores.game.skat.domain.Spitzen
 import com.damhoe.skatscores.game.skat.domain.scores.RoundDraft
@@ -88,7 +88,7 @@ class RoundEntryViewModel @Inject constructor(
     }
 
     /** Forehand of the coming round is the most likely declarer, so preselect that seat. */
-    private fun defaultDeclarer(skatGame: SkatGame): SkatParticipant
+    private fun defaultDeclarer(skatGame: SkatGame): Participant
     {
         val seats = skatGame.participants.asList()
         val forehand = Math.floorMod(skatGame.dealerPosition + 1, seats.size)
@@ -100,7 +100,7 @@ class RoundEntryViewModel @Inject constructor(
         _draft.value = _draft.value?.let(transform) ?: return
     }
 
-    fun setDeclarer(declarer: SkatParticipant?) = edit { it.copy(declarer = declarer) }
+    fun setDeclarer(declarer: Participant?) = edit { it.copy(declarer = declarer) }
 
     fun setGame(game: RoundGame) = edit { draft ->
         // Overbid is not representable for a Null game, so fall back to a plain result.

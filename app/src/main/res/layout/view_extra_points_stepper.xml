@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One party's extras: foxes caught, doppelkopf tricks and Karlchen, as a plain counter.
+
+  A stepper rather than a set of toggles, because a party can collect the same extra more than
+  once in a round and only the number of them affects the score.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+        <TextView
+                android:id="@+id/extraLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.App.RowTitle"
+                tools:text="Re" />
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/extraRemove"
+                style="@style/Widget.App.Sheet.Stepper"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:contentDescription="@string/description_dk_extra_remove"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/label_minus" />
+
+        <TextView
+                android:id="@+id/extraValue"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.App.NumberInline"
+                tools:text="2" />
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/extraAdd"
+                style="@style/Widget.App.Sheet.Stepper"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:contentDescription="@string/description_dk_extra_add"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/label_plus" />
+
+    </LinearLayout>
+
+</layout>

@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.library
 
+import com.damhoe.skatscores.shared.signed
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +10,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.damhoe.skatscores.R
-import com.damhoe.skatscores.game.skat.domain.SkatGamePreview
+import com.damhoe.skatscores.game.common.ListPreview
 import com.damhoe.skatscores.library.GamePreviewAdapter.GamePreviewViewHolder
 import com.damhoe.skatscores.shared.asListDate
 
 class GamePreviewAdapter(private val itemClickListener: GamePreviewItemClickListener) :
-    ListAdapter<SkatGamePreview, GamePreviewViewHolder>(GamePreviewDiffCallback())
+    ListAdapter<ListPreview, GamePreviewViewHolder>(GamePreviewDiffCallback())
 {
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
@@ -53,8 +54,6 @@ class GamePreviewAdapter(private val itemClickListener: GamePreviewItemClickList
             true
         }
     }
-
-    private fun signed(value: Int) = if (value > 0) "+$value" else value.toString()
 
     class GamePreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     {
@@ -108,14 +107,14 @@ class GamePreviewAdapter(private val itemClickListener: GamePreviewItemClickList
         }
     }
 
-    class GamePreviewDiffCallback : DiffUtil.ItemCallback<SkatGamePreview>()
+    class GamePreviewDiffCallback : DiffUtil.ItemCallback<ListPreview>()
     {
         override fun areItemsTheSame(
-            oldItem: SkatGamePreview, newItem: SkatGamePreview
+            oldItem: ListPreview, newItem: ListPreview
         ): Boolean = oldItem.gameId == newItem.gameId
 
         override fun areContentsTheSame(
-            oldItem: SkatGamePreview, newItem: SkatGamePreview
+            oldItem: ListPreview, newItem: ListPreview
         ): Boolean = oldItem == newItem
     }
 }

@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.SheetRoundEntryBinding
 import com.damhoe.skatscores.game.skat.domain.SkatBid
-import com.damhoe.skatscores.game.skat.domain.SkatParticipant
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.skat.domain.SkatParticipants
 import com.damhoe.skatscores.game.skat.domain.scores.RoundDraft
 import com.damhoe.skatscores.game.skat.domain.scores.RoundGame

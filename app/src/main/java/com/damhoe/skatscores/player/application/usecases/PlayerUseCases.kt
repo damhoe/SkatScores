@@ -10,5 +10,6 @@ data class PlayerUseCases @Inject constructor(
     val deletePlayer: DeletePlayerUseCase,
     val refreshAllPlayers: RefreshAllPlayersUseCase,
     val getStatistics: GetPlayerStatisticsUseCase,
-    val getTotalGamesPlayed: GetTotalGamesPlayedUseCase
+    val getListCounts: GetListCountsUseCase,
+    val statisticsChanges: GetStatisticsChangesUseCase,
 )

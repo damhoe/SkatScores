@@ -12,7 +12,7 @@ interface SkatGamesRepository
     suspend fun delete(id: UUID): Result<SkatGame?>
     suspend fun update(game: SkatGame): Result<Unit>
     suspend fun get(id: UUID): Result<SkatGame?>
+    /** Both re-read on every write, so a collector stays in step with the database. */
     fun getAllSince(oldest: Instant): Flow<List<SkatGamePreview>>
     fun getAll(): Flow<List<SkatGamePreview>>
-    suspend fun refreshAll()
 }

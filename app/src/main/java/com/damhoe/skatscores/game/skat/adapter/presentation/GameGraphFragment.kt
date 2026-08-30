@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.game.skat.adapter.presentation
 
+import com.damhoe.skatscores.shared.signed
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
@@ -143,10 +144,6 @@ class GameGraphFragment : Fragment(R.layout.fragment_game_graph)
                 // Tied to the chart by colour, the way the legend is.
                 view.setTextColor(MaterialColors.getColor(view, seriesColorAttr(seat)))
             }
-            listOf(breakdownRecord1, breakdownRecord2, breakdownRecord3)
-                .forEachIndexed { seat, view ->
-                    view.bindRecord(breakdowns.getOrNull(seat), names.getOrNull(seat))
-                }
 
             breakdownRows.bindBreakdown(breakdowns)
 

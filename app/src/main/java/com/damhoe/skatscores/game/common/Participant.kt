@@ -1,4 +1,4 @@
-package com.damhoe.skatscores.game.skat.domain
+package com.damhoe.skatscores.game.common
 
 import android.os.Parcelable
 import com.damhoe.skatscores.player.domain.Player
@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 @Parcelize
-sealed interface SkatParticipant :
+sealed interface Participant :
     Parcelable
 {
     val id: UUID
@@ -19,7 +19,7 @@ sealed interface SkatParticipant :
      * The same participant under an existing id. Used to keep a seat's identity stable when
      * the person sitting there is replaced, so that recorded scores keep their column.
      */
-    fun withId(id: UUID): SkatParticipant = when (this)
+    fun withId(id: UUID): Participant = when (this)
     {
         is Registered -> copy(id = id)
         is Guest -> copy(id = id)
@@ -30,7 +30,7 @@ sealed interface SkatParticipant :
         override val id: UUID,
         override val name: PlayerName,
         val playerId: UUID,
-    ) : SkatParticipant, Parcelable
+    ) : Participant, Parcelable
     {
         override fun toString(): String = displayName
 
@@ -47,7 +47,7 @@ sealed interface SkatParticipant :
     data class Guest(
         override val id: UUID,
         override val name: PlayerName
-    ) : SkatParticipant, Parcelable
+    ) : Participant, Parcelable
     {
         constructor(name: PlayerName) : this(UUID.randomUUID(), name)
 
@@ -60,7 +60,7 @@ sealed interface SkatParticipant :
          * Turns a typed name into a participant: a name that matches a registered player
          * links the seat to that profile, anything else becomes a guest.
          */
-        fun resolve(name: PlayerName, registeredPlayers: List<Player>): SkatParticipant
+        fun resolve(name: PlayerName, registeredPlayers: List<Player>): Participant
         {
             val player = registeredPlayers
                 .firstOrNull { it.name.value.equals(name.value, ignoreCase = true) }

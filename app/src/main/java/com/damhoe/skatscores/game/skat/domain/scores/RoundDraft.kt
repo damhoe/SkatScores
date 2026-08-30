@@ -2,7 +2,7 @@ package com.damhoe.skatscores.game.skat.domain.scores
 
 import com.damhoe.skatscores.game.common.WonOrLost
 import com.damhoe.skatscores.game.skat.domain.SkatBid
-import com.damhoe.skatscores.game.skat.domain.SkatParticipant
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.skat.domain.SkatParticipants
 import com.damhoe.skatscores.game.skat.domain.Spitzen
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore.GrandOrSuit.GrandOrSuitOptions
@@ -64,7 +64,7 @@ data class RoundDraft(
     /** Null while entering a new round. */
     val scoreId: UUID? = null,
     /** Null means nobody played: the round was passed. */
-    val declarer: SkatParticipant? = null,
+    val declarer: Participant? = null,
     val game: RoundGame = RoundGame.CLUBS,
     val spitzen: Spitzen = Spitzen(1),
     val hand: Boolean = false,
@@ -160,7 +160,7 @@ data class RoundDraft(
         private val PREVIEW_ID: UUID = UUID(0L, 0L)
 
         /** A blank round with the next dealer's left-hand neighbour pre-selected. */
-        fun forNewRound(declarer: SkatParticipant?) = RoundDraft(declarer = declarer)
+        fun forNewRound(declarer: Participant?) = RoundDraft(declarer = declarer)
 
         fun fromScore(score: SkatScore, participants: SkatParticipants): RoundDraft
         {

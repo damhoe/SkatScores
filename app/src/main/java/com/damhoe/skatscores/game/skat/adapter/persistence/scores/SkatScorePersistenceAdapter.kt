@@ -107,6 +107,20 @@ class SkatScorePersistenceAdapter @Inject constructor(
         }
     }
 
+    /** Drops every round of a list, for when the list itself is deleted. */
+    fun deleteAllOfGame(gameId: UUID): Result<Unit>
+    {
+        return databaseHelper.writableDatabase.run {
+            delete(
+                SkatScoresTable.TABLE_NAME,
+                "${SkatScoresTable.COLUMN_GAME_ID} = ?",
+                arrayOf(gameId.toString()),
+            )
+
+            Result.success(Unit)
+        }
+    }
+
     /**
      * Closes the gap left by a deleted round. Rounds are dense and zero-based, and
      * (game_id, round) is unique, so later rounds have to shift down.

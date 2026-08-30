@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.SheetGameSettingsBinding
 import com.damhoe.skatscores.game.skat.domain.SkatRoundCount
@@ -21,16 +19,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
-import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.util.UUID
 
 /**
- * Everything about a running list that is not a round: its three seats, its name, its round
- * count and its scoring mode. Seat identity is kept by UpdateSkatParticipantsUseCase, so rounds
- * already recorded stay in their column when somebody new takes a seat.
+ * Everything about a running list that is not a round and not who is playing it: its name,
+ * its round count and its scoring mode. The seats are next door in PlayerSeatsSheetFragment,
+ * which the game screen opens from a button of its own.
  */
 @AndroidEntryPoint
 class GameSettingsSheetFragment : BottomSheetDialogFragment()
@@ -42,9 +37,6 @@ class GameSettingsSheetFragment : BottomSheetDialogFragment()
 
     /** Set while pushing state into the controls, so their listeners do not echo back. */
     private var isBinding = false
-
-    /** Seats the user has actually edited; errors only surface for those. */
-    private val touchedSeats = mutableSetOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,12 +54,11 @@ class GameSettingsSheetFragment : BottomSheetDialogFragment()
 
         buildRoundCountChips()
         setupListeners()
-        setupPlayerSuggestions()
         setupObservers()
     }
 
     /**
-     * Four sections are taller than the collapsed peek height, and a sheet that opens
+     * Its sections are taller than the collapsed peek height, and a sheet that opens
      * half-drawn hides the save button behind a drag.
      */
     override fun onStart()
@@ -104,38 +95,11 @@ class GameSettingsSheetFragment : BottomSheetDialogFragment()
             if (!isBinding) viewModel.setTitle(it?.toString().orEmpty())
         }
 
-        seatFields().forEachIndexed { seat, field ->
-            field.doAfterTextChanged {
-                if (isBinding) return@doAfterTextChanged
-                touchedSeats += seat
-                viewModel.setSeatName(seat, it?.toString().orEmpty())
-            }
-        }
-
         binding.scoringSimple.setOnClickListener {
             viewModel.setScoringMode(SkatScoringMode.CLASSIC)
         }
         binding.scoringTournament.setOnClickListener {
             viewModel.setScoringMode(SkatScoringMode.TOURNAMENT)
-        }
-    }
-
-    /** Registered players are offered as suggestions; any other text becomes a guest. */
-    private fun setupPlayerSuggestions()
-    {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.allRegisteredPlayers.collect { players ->
-                val names = players.map { it.name.value }
-                seatFields().forEach { field ->
-                    field.setAdapter(
-                        ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_dropdown_item_1line,
-                            names
-                        )
-                    )
-                }
-            }
         }
     }
 
@@ -146,9 +110,6 @@ class GameSettingsSheetFragment : BottomSheetDialogFragment()
             event.getContentIfNotHandled()?.let { draft ->
                 isBinding = true
                 binding.listNameEditText.setText(draft.title)
-                seatFields().forEachIndexed { seat, field ->
-                    field.setText(draft.seatNames.getOrNull(seat).orEmpty())
-                }
                 isBinding = false
             }
         }
@@ -178,22 +139,6 @@ class GameSettingsSheetFragment : BottomSheetDialogFragment()
                 if (hasError) getString(R.string.error_valid_title_required) else null
         }
 
-        viewModel.seatErrors.observe(viewLifecycleOwner) { problems ->
-            seatInputs().forEachIndexed { seat, input ->
-                input.error = when
-                {
-                    seat !in touchedSeats -> null
-                    problems[seat] == SeatError.NAME_REQUIRED ->
-                        getString(R.string.error_name_required)
-
-                    problems[seat] == SeatError.NAME_DUPLICATE ->
-                        getString(R.string.error_duplicate_players)
-
-                    else -> null
-                }
-            }
-        }
-
         viewModel.canSave.observe(viewLifecycleOwner) { binding.saveButton.isEnabled = it }
 
         viewModel.dismissEvent.observe(viewLifecycleOwner) { event ->
@@ -217,12 +162,6 @@ class GameSettingsSheetFragment : BottomSheetDialogFragment()
             }
         }
     }
-
-    private fun seatFields(): List<MaterialAutoCompleteTextView> =
-        listOf(binding.player1EditText, binding.player2EditText, binding.player3EditText)
-
-    private fun seatInputs(): List<TextInputLayout> =
-        listOf(binding.player1Input, binding.player2Input, binding.player3Input)
 
     companion object
     {

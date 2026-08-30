@@ -54,14 +54,21 @@
 
             <!--
               Actions on the list itself. The bottom pill is about the rounds, so sharing the
-              list and settings - which now covers the seats too - belong up here next to its
-              name rather than mixed in among undo and the chart.
+              list, who is playing it and its settings belong up here next to its name rather
+              than mixed in among undo and the chart. Players get an icon of their own because
+              a substitution mid-evening is the likeliest edit of the three.
             -->
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/shareButton"
                     style="@style/Widget.App.AppBar.IconButton"
                     android:contentDescription="@string/description_share"
                     app:icon="@drawable/ic_share_24dp" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/playersButton"
+                    style="@style/Widget.App.AppBar.IconButton"
+                    android:contentDescription="@string/title_players"
+                    app:icon="@drawable/ic_people_24dp" />
 
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/settingsButton"

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  One player's record across every list. Two count tiles, then the three rates, each showing
-  the fraction it came from so a 100% built on two rounds cannot be mistaken for a career.
+  One player's record across every list, in both games. Two count tiles for the totals, then a
+  section per game, each showing the fraction a rate came from so a 100% built on two rounds
+  cannot be mistaken for a career.
+
+  Profiles are shared, but the games are not comparable - declaring a Skat game and holding the
+  queens of clubs are not the same thing - so the rates stay in their own section and a section
+  the player has never played is hidden rather than shown at zero.
 -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -64,7 +69,7 @@
                     android:paddingStart="@dimen/screen_side_padding"
                     android:paddingEnd="@dimen/screen_side_padding">
 
-                <!-- Counts -->
+                <!-- Counts across both games -->
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -121,31 +126,96 @@
 
                 </LinearLayout>
 
-                <!-- Rates -->
-                <TextView
-                        style="@style/Widget.App.Sheet.SectionLabel"
-                        android:layout_marginTop="24dp"
-                        android:text="@string/title_statistics" />
-
-                <include
-                        android:id="@+id/soloShare"
-                        layout="@layout/view_stat_rate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                <include
-                        android:id="@+id/soloWinRate"
-                        layout="@layout/view_stat_rate"
+                <!-- Skat -->
+                <LinearLayout
+                        android:id="@+id/skatSection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp" />
+                        android:orientation="vertical">
 
-                <include
-                        android:id="@+id/defenderWinRate"
-                        layout="@layout/view_stat_rate"
+                    <TextView
+                            style="@style/Widget.App.Sheet.SectionLabel"
+                            android:layout_marginTop="24dp"
+                            android:text="@string/label_game_type_skat" />
+
+                    <TextView
+                            android:id="@+id/skatRounds"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.App.Meta"
+                            tools:text="96 rounds in 8 lists" />
+
+                    <include
+                            android:id="@+id/soloShare"
+                            layout="@layout/view_stat_rate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp" />
+
+                    <include
+                            android:id="@+id/soloWinRate"
+                            layout="@layout/view_stat_rate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp" />
+
+                    <include
+                            android:id="@+id/defenderWinRate"
+                            layout="@layout/view_stat_rate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp" />
+
+                </LinearLayout>
+
+                <!-- Doppelkopf -->
+                <LinearLayout
+                        android:id="@+id/doppelkopfSection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp" />
+                        android:orientation="vertical">
+
+                    <TextView
+                            style="@style/Widget.App.Sheet.SectionLabel"
+                            android:layout_marginTop="24dp"
+                            android:text="@string/label_game_type_doppelkopf" />
+
+                    <TextView
+                            android:id="@+id/doppelkopfRounds"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.App.Meta"
+                            tools:text="52 rounds in 4 lists" />
+
+                    <include
+                            android:id="@+id/dkWinRate"
+                            layout="@layout/view_stat_rate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp" />
+
+                    <include
+                            android:id="@+id/dkReWinRate"
+                            layout="@layout/view_stat_rate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp" />
+
+                    <include
+                            android:id="@+id/dkSoloShare"
+                            layout="@layout/view_stat_rate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp" />
+
+                    <include
+                            android:id="@+id/dkSoloWinRate"
+                            layout="@layout/view_stat_rate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

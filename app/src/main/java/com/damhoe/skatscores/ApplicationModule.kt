@@ -14,7 +14,8 @@ object ApplicationModule
     @DatabaseInfo
     fun provideDatabaseName() = DatabaseConstants.DATABASE_NAME
 
+    /** 2 added the Doppelkopf tables; the upgrade only creates what is missing. */
     @Provides
     @DatabaseInfo
-    fun provideDatabaseVersion() = 1
+    fun provideDatabaseVersion() = 2
 }

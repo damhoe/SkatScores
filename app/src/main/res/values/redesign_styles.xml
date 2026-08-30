@@ -456,19 +456,6 @@
       wherever they are shown.
     -->
 
-    <!--
-      Won - lost · games won as defender. On the board it is the one line of the breakdown
-      that stays visible while the rest is collapsed.
-    -->
-    <style name="Widget.App.Breakdown.Record" parent="TextAppearance.App.NumberSmall">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:textColor">?attr/colorOutline</item>
-    </style>
-
     <!-- Names the row of values below it, full width so the columns stay on their grid. -->
     <style name="Widget.App.Breakdown.Label" parent="TextAppearance.App.SectionLabel">
         <item name="android:layout_width">match_parent</item>
@@ -609,6 +596,15 @@
         <item name="backgroundTint">@color/sheet_chip_background</item>
         <item name="cornerRadius">14dp</item>
         <item name="strokeWidth">0dp</item>
+    </style>
+
+    <!--
+      Plus/minus button of a counter. Looks like a sheet chip but is not checkable: it fires
+      an action rather than holding a selection, and a latched + would read as a chosen value.
+    -->
+    <style name="Widget.App.Sheet.Stepper" parent="Widget.App.Sheet.Chip">
+        <item name="android:checkable">false</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <!-- Outlined on/off modifier. Transparent when off, tinted primary when on. -->

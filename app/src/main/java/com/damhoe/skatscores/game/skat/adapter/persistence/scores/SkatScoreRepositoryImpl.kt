@@ -2,6 +2,7 @@ package com.damhoe.skatscores.game.skat.adapter.persistence.scores
 
 import com.damhoe.skatscores.game.skat.application.repository.SkatScoresRepository
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
+import com.damhoe.skatscores.persistence.DatabaseChanges
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
@@ -11,7 +12,8 @@ import javax.inject.Singleton
 
 @Singleton
 class SkatScoreRepositoryImpl @Inject constructor(
-    private val scoreDao: SkatScorePersistenceAdapter
+    private val scoreDao: SkatScorePersistenceAdapter,
+    private val databaseChanges: DatabaseChanges,
 ) : SkatScoresRepository
 {
     override fun getScoresOfGame(gameId: UUID): Flow<SkatScore>
@@ -26,6 +28,7 @@ class SkatScoreRepositoryImpl @Inject constructor(
         gameId: UUID,
         round: Int,
     ): Result<Unit> = scoreDao.insert(SkatScoreDto.mapFrom(score, gameId, round))
+        .onSuccess { databaseChanges.notifyChanged() }
 
     /**
      * Replaces a round with an edited version. The stored round number is kept, so the
@@ -37,6 +40,7 @@ class SkatScoreRepositoryImpl @Inject constructor(
             ?: return Result.failure(NoSuchElementException("Unknown score ${score.id}"))
 
         return scoreDao.update(SkatScoreDto.mapFrom(score, gameId, round))
+            .onSuccess { databaseChanges.notifyChanged() }
     }
 
     /** Removes a round and closes the gap it leaves in the round numbering. */
@@ -47,5 +51,6 @@ class SkatScoreRepositoryImpl @Inject constructor(
 
         return scoreDao.delete(id)
             .mapCatching { scoreDao.shiftRoundsDown(gameId, round).getOrThrow() }
+            .onSuccess { databaseChanges.notifyChanged() }
     }
 }

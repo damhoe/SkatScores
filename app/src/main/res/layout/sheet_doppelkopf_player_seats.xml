@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Who sits at the four seats of a running Doppelkopf list, reached from the game screen's app
+  bar. The same sheet as sheet_player_seats but for a table of four, which is why it is its own
+  layout rather than a taller version of the Skat one - including its note on why the boxes
+  carry the ExposedDropdownMenu style while their end icon clears the field.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_sheet"
+            android:clipToPadding="false">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+            <View
+                    android:layout_width="38dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bg_drag_handle" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <!-- The same icon the app bar button carries, so the two read as one door. -->
+                <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="10dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_people_24dp"
+                        app:tint="?attr/colorPrimary" />
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_players"
+                        android:textAppearance="@style/TextAppearance.App.AppBarTitle" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/closeButton"
+                        style="@style/Widget.App.AppBar.IconButton"
+                        android:contentDescription="@string/description_close"
+                        app:icon="@drawable/ic_close_24dp"
+                        app:iconTint="?attr/colorOutline" />
+
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/seatsHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/text_edit_players_hint"
+                    android:textAppearance="@style/TextAppearance.App.Meta" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player1Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:hint="@string/hint_player1"
+                    app:endIconContentDescription="@string/description_clear_player"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player1EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        tools:text="Marlon" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player2Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/hint_player2"
+                    app:endIconContentDescription="@string/description_clear_player"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player2EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        tools:text="Evi" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player3Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/hint_player3"
+                    app:endIconContentDescription="@string/description_clear_player"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player3EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        tools:text="Daniel" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player4Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/hint_player4"
+                    app:endIconContentDescription="@string/description_clear_player"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player4EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        tools:text="Jonas" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveButton"
+                    style="@style/Widget.App.Sheet.SaveButton"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/dialog_title_button_save" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

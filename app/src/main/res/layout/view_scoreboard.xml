@@ -3,10 +3,11 @@
   Pinned scoreboard. Replaces item_score_header.xml + item_score_footer.xml: round progress,
   names and running totals in one card. The dealer is named in the progress line.
 
-  With tournament scoring the card carries the Seeger-Fabian breakdown in two tiers: a always
-  visible record line under each total (won - lost · games won as defender), and an expandable
-  block with the parts the total is made of. The block is collapsed by default because the card
-  is pinned above the round log and every dp it takes is a dp the log loses.
+  With tournament scoring the card carries the Seeger-Fabian breakdown in an expandable block
+  with the parts the total is made of, collapsed by default because the card is pinned above
+  the round log and every dp it takes is a dp the log loses. A won - lost - defended line sat
+  under each total until it was removed: three bare numbers with no labels told a reader who
+  did not already know the format nothing at all.
 
   The breakdown values reuse the three weighted columns of the totals rather than sitting in a
   table with a leading label column, so every number stays under the name it belongs to. That
@@ -95,11 +96,6 @@
                             style="@style/Widget.App.Scoreboard.Total"
                             tools:text="+562" />
 
-                    <TextView
-                            android:id="@+id/record1"
-                            style="@style/Widget.App.Breakdown.Record"
-                            tools:text="4 – 1 · 5" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -119,11 +115,6 @@
                             style="@style/Widget.App.Scoreboard.Total"
                             tools:text="-136" />
 
-                    <TextView
-                            android:id="@+id/record2"
-                            style="@style/Widget.App.Breakdown.Record"
-                            tools:text="1 – 3 · 3" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -142,11 +133,6 @@
                             android:id="@+id/total3"
                             style="@style/Widget.App.Scoreboard.Total"
                             tools:text="+222" />
-
-                    <TextView
-                            android:id="@+id/record3"
-                            style="@style/Widget.App.Breakdown.Record"
-                            tools:text="2 – 2 · 4" />
 
                 </LinearLayout>
 

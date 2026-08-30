@@ -62,4 +62,54 @@ object DatabaseConstants
         const val COLUMN_CREATED_AT = "created_at"
         const val COLUMN_UPDATED_AT = "updated_at"
     }
+
+    object DoppelkopfGamesTable
+    {
+        const val TABLE_NAME: String = "doppelkopf_games"
+        const val COLUMN_ID: String = "id"
+        const val COLUMN_TITLE: String = "title"
+
+        const val COLUMN_ROUND_COUNT: String = "round_count"
+        const val COLUMN_SCORING_MODE: String = "scoring_mode"
+
+        const val COLUMN_PLAYED_AT = "played_at"
+        const val COLUMN_UPDATED_AT = "updated_at"
+    }
+
+    object DoppelkopfParticipantsTable
+    {
+        const val TABLE_NAME: String = "doppelkopf_participants"
+        const val COLUMN_ID: String = "id"
+        const val COLUMN_GAME_ID: String = "game_id" // Foreign key to doppelkopf_games.id
+        const val COLUMN_PLAYER_ID: String = "player_id" // Foreign key to players.id
+        const val COLUMN_SEAT: String = "seat"
+        const val COLUMN_NAME: String = "name"
+    }
+
+    object DoppelkopfScoresTable
+    {
+        const val TABLE_NAME = "doppelkopf_scores"
+        const val COLUMN_ID = "id"
+        const val COLUMN_GAME_ID = "game_id" // Foreign key to doppelkopf_games.id
+        const val COLUMN_ROUND = "round"
+
+        const val COLUMN_SCORE_TYPE = "score_type"
+        const val COLUMN_WINNER = "winner"
+
+        const val COLUMN_RE_PARTICIPANT_1 = "re_participant_1"
+        const val COLUMN_RE_PARTICIPANT_2 = "re_participant_2"
+
+        const val COLUMN_SOLOIST_ID = "soloist_id"
+        const val COLUMN_SOLO_KIND = "solo_kind"
+
+        const val COLUMN_WIN_LEVEL = "win_level"
+        const val COLUMN_ABSAGE = "absage"
+        const val COLUMN_RE_ANNOUNCED = "re_announced"
+        const val COLUMN_KONTRA_ANNOUNCED = "kontra_announced"
+        const val COLUMN_EXTRA_POINTS_RE = "extra_points_re"
+        const val COLUMN_EXTRA_POINTS_KONTRA = "extra_points_kontra"
+
+        const val COLUMN_CREATED_AT = "created_at"
+        const val COLUMN_UPDATED_AT = "updated_at"
+    }
 }

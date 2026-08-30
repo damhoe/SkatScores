@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.game.skat.domain
 
+import com.damhoe.skatscores.game.common.Participant
 import android.os.Parcelable
 import com.damhoe.skatscores.player.domain.PlayerName
 import kotlinx.parcelize.Parcelize
@@ -7,13 +8,13 @@ import java.util.UUID
 
 @Parcelize
 data class SkatParticipants(
-    val foreHand: SkatParticipant,
-    val middleHand: SkatParticipant,
-    val rearHand: SkatParticipant
+    val foreHand: Participant,
+    val middleHand: Participant,
+    val rearHand: Participant
 ) : Parcelable
 {
     /** The participants in table order, i.e. the column order used on the score board. */
-    fun asList(): List<SkatParticipant> = listOf(foreHand, middleHand, rearHand)
+    fun asList(): List<Participant> = listOf(foreHand, middleHand, rearHand)
 
     /** Column of the given participant on the score board, or null if not at this table. */
     fun seatOf(participantId: UUID): Int? =
@@ -39,9 +40,9 @@ data class SkatParticipants(
         fun createNew(): SkatParticipants
         {
             return SkatParticipants(
-                foreHand = SkatParticipant.Guest(PlayerName("Player 1")),
-                middleHand = SkatParticipant.Guest(PlayerName("Player 2")),
-                rearHand = SkatParticipant.Guest(PlayerName("Player 3"))
+                foreHand = Participant.Guest(PlayerName("Player 1")),
+                middleHand = Participant.Guest(PlayerName("Player 2")),
+                rearHand = Participant.Guest(PlayerName("Player 3"))
             )
         }
     }

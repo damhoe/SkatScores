@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.game.skat.domain
 
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.common.WonOrLost.LOST
 import com.damhoe.skatscores.game.common.WonOrLost.WON
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
@@ -12,15 +13,15 @@ import java.util.UUID
 
 class TotalPointsCalculatorTest
 {
-    private val forehand = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Forehand"))
-    private val middlehand = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Middlehand"))
-    private val rearhand = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Rearhand"))
+    private val forehand = Participant.Guest(UUID.randomUUID(), PlayerName("Forehand"))
+    private val middlehand = Participant.Guest(UUID.randomUUID(), PlayerName("Middlehand"))
+    private val rearhand = Participant.Guest(UUID.randomUUID(), PlayerName("Rearhand"))
 
     private val participants = SkatParticipants(forehand, middlehand, rearhand)
     private val calculator = TotalPointsCalculator(participants)
 
     private fun grandOrSuit(
-        declarer: SkatParticipant,
+        declarer: Participant,
         wonOrLost: com.damhoe.skatscores.game.common.WonOrLost,
         suit: SkatSuit,
         spitzen: Int,

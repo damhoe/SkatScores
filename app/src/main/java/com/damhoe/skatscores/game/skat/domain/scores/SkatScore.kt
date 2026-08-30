@@ -7,7 +7,7 @@ import com.damhoe.skatscores.game.common.Score
 import com.damhoe.skatscores.game.common.WonOrLost
 import com.damhoe.skatscores.game.common.WonOrLost.LOST
 import com.damhoe.skatscores.game.skat.domain.SkatBid
-import com.damhoe.skatscores.game.skat.domain.SkatParticipant
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.skat.domain.Spitzen
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -54,7 +54,7 @@ sealed class SkatScore(
         companion object
         {
             fun create(
-                soloPlayer: SkatParticipant,
+                soloPlayer: Participant,
                 suit: SkatSuit,
                 bid: SkatBid,
             ) = Overbid(
@@ -98,7 +98,7 @@ sealed class SkatScore(
         companion object
         {
             fun create(
-                soloPlayer: SkatParticipant,
+                soloPlayer: Participant,
                 wonOrLost: WonOrLost,
                 options: NullOptions? = null,
             ) = Null(
@@ -143,7 +143,7 @@ sealed class SkatScore(
         companion object
         {
             fun create(
-                soloPlayer: SkatParticipant,
+                soloPlayer: Participant,
                 wonOrLost: WonOrLost,
                 suit: SkatSuit,
                 spitzen: Spitzen,

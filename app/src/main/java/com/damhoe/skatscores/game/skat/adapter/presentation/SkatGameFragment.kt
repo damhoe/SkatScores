@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.game.skat.adapter.presentation
 
+import com.damhoe.skatscores.shared.signed
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -88,6 +89,7 @@ class SkatGameFragment :
     private fun setupAppBar()
     {
         binding.returnButton.setOnClickListener { findNavController().navigateUp() }
+        binding.playersButton.setOnClickListener { showPlayerSeatsSheet() }
         binding.settingsButton.setOnClickListener { showGameSettingsSheet() }
         binding.shareButton.setOnClickListener {
             Snackbar.make(binding.root, R.string.description_share, Snackbar.LENGTH_SHORT)
@@ -159,6 +161,7 @@ class SkatGameFragment :
         listOf(
             RoundEntrySheetFragment.REQUEST_KEY,
             GameSettingsSheetFragment.REQUEST_KEY,
+            PlayerSeatsSheetFragment.REQUEST_KEY,
         ).forEach { requestKey ->
             parentFragmentManager.setFragmentResultListener(
                 requestKey,
@@ -210,9 +213,6 @@ class SkatGameFragment :
                 bindTotal(totalView, totals.getOrNull(seat) ?: 0, isLeader = seat == leader)
             }
 
-            listOf(record1, record2, record3).forEachIndexed { seat, recordView ->
-                recordView.bindRecord(breakdowns.getOrNull(seat), names.getOrNull(seat))
-            }
             breakdownRows.bindBreakdown(breakdowns)
         }
 
@@ -245,10 +245,6 @@ class SkatGameFragment :
     private fun applyBreakdownState(isTournamentScoring: Boolean, isExpanded: Boolean)
     {
         binding.scoreboard.apply {
-            listOf(record1, record2, record3).forEach {
-                it.visibility = if (isTournamentScoring) View.VISIBLE else View.GONE
-            }
-
             breakdownToggle.visibility = if (isTournamentScoring) View.VISIBLE else View.GONE
             breakdownToggle.animate().rotation(if (isExpanded) 180f else 0f).setDuration(150).start()
 
@@ -270,7 +266,6 @@ class SkatGameFragment :
         }
     }
 
-
     private fun showRoundSheet(scoreId: UUID?)
     {
         val gameId = viewModel.skatGameId ?: return
@@ -284,6 +279,15 @@ class SkatGameFragment :
         findNavController().navigate(
             SkatGameFragmentDirections.actionSkatGameFragmentToSkatGameGraphFragment()
         )
+    }
+
+    /** The seats are their own sheet, so that a substitution is one tap from the board. */
+    private fun showPlayerSeatsSheet()
+    {
+        val gameId = viewModel.skatGameId ?: return
+        PlayerSeatsSheetFragment
+            .newInstance(gameId)
+            .show(parentFragmentManager, PlayerSeatsSheetFragment.TAG)
     }
 
     private fun showGameSettingsSheet()

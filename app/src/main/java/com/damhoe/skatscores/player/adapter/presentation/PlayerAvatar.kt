@@ -4,22 +4,27 @@ import android.content.res.ColorStateList
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import com.damhoe.skatscores.R
-import java.util.UUID
 
 /**
  * Per-player colour for the initials avatar.
  *
- * Keyed on the player id rather than the name or the row position, so a player keeps the same
- * colour in the list, on their own page, and across renames and restarts.
+ * The colour is picked by the slot [PlayerViewModel] hands out rather than by hashing the
+ * player id. Hashing gave every player a colour of their own choosing, which meant they chose
+ * the same one often: six colours and five players collide better than half the time - a table
+ * of four could easily show three identical circles, which is exactly what the colour is there
+ * to prevent.
+ *
+ * Slots are dealt out in order instead, so the first six players are always six different
+ * colours; past that the palette repeats, which no six-colour set can avoid.
  */
 object PlayerAvatar
 {
     /** The circle is the hue at low alpha; the initial on top of it is the hue in full. */
     private const val FILL_ALPHA = 0x2E
 
-    fun bind(initial: TextView, playerId: UUID)
+    fun bind(initial: TextView, slot: Int)
     {
-        val color = colorFor(initial, playerId)
+        val color = colorFor(initial, slot)
 
         initial.setTextColor(color)
         // A tint rather than a mutated drawable: the background is shared with every other row
@@ -28,13 +33,14 @@ object PlayerAvatar
             ColorStateList.valueOf(ColorUtils.setAlphaComponent(color, FILL_ALPHA))
     }
 
-    private fun colorFor(initial: TextView, playerId: UUID): Int
+    /** Any slot is valid: it wraps around the palette, so callers never have to know its size. */
+    private fun colorFor(initial: TextView, slot: Int): Int
     {
         val palette = initial.resources.obtainTypedArray(R.array.avatar_palette)
 
         return try
         {
-            palette.getColor(playerId.hashCode().mod(palette.length()), 0)
+            palette.getColor(slot.mod(palette.length()), 0)
         }
         finally
         {

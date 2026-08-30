@@ -58,6 +58,13 @@
                     app:argType="string" />
         </action>
         <action
+                android:id="@+id/action_libraryFragment_to_doppelkopfGameNavGraph"
+                app:destination="@id/doppelkopf_game_nav_graph">
+            <argument
+                    android:name="gameId"
+                    app:argType="string" />
+        </action>
+        <action
                 android:id="@+id/action_home_to_app_settings"
                 app:destination="@id/app_settings" />
         <action
@@ -100,6 +107,35 @@
                 android:id="@+id/skatGameGraphFragment"
                 android:name="com.damhoe.skatscores.game.skat.adapter.presentation.GameGraphFragment"
                 tools:layout="@layout/fragment_game_graph" />
+    </navigation>
+
+    <!--
+      Doppelkopf gets a graph of its own rather than sharing the Skat one: the two games have
+      separate screens, and the graph is also the scope of the view model the game screen and
+      its chart share, so a single graph would hand a Doppelkopf list to the Skat view model.
+    -->
+    <navigation
+            android:id="@+id/doppelkopf_game_nav_graph"
+            android:label="DoppelkopfGameNavGraph"
+            app:startDestination="@id/doppelkopfGameFragment">
+
+        <!--
+          Rounds are entered and edited in DoppelkopfRoundEntrySheetFragment, which is shown
+          directly by DoppelkopfGameFragment rather than being a navigation destination.
+        -->
+        <fragment
+                android:id="@+id/doppelkopfGameFragment"
+                android:name="com.damhoe.skatscores.game.doppelkopf.adapter.presentation.DoppelkopfGameFragment"
+                tools:layout="@layout/fragment_doppelkopf_game">
+            <action
+                    android:id="@+id/action_doppelkopfGameFragment_to_doppelkopfGameGraphFragment"
+                    app:destination="@id/doppelkopfGameGraphFragment" />
+        </fragment>
+
+        <fragment
+                android:id="@+id/doppelkopfGameGraphFragment"
+                android:name="com.damhoe.skatscores.game.doppelkopf.adapter.presentation.DoppelkopfGameGraphFragment"
+                tools:layout="@layout/fragment_doppelkopf_game_graph" />
     </navigation>
 
 </navigation>

@@ -24,33 +24,45 @@
 
     <!--
       Chart series colours, one per seat in table order. Separated by hue rather than by
-      lightness so the three lines stay tellable apart in both themes.
+      lightness so the lines stay tellable apart in both themes. The fourth is only reached by
+      a Doppelkopf table, and sits in the gap the first three leave between green and indigo.
     -->
     <color name="md_theme_light_chart_series_1">#535CA8</color>
     <color name="md_theme_light_chart_series_2">#a95d4c</color>
     <color name="md_theme_light_chart_series_3">#3F6B44</color>
+    <color name="md_theme_light_chart_series_4">#8A6A1F</color>
     <color name="md_theme_dark_chart_series_1">#9FCAFD</color>
     <color name="md_theme_dark_chart_series_2">#F4B2E4</color>
     <color name="md_theme_dark_chart_series_3">#A5D6A7</color>
+    <color name="md_theme_dark_chart_series_4">#E8C77A</color>
 
     <!--
-      Avatar palette. Six hues that deliberately steer clear of the brand indigo: the point of
-      the colour is to tell one player from another, so it has to come from the player rather
-      than from the theme. Each is used at full strength for the initial and at low alpha for
-      the circle behind it, so both tones come from one entry.
+      Avatar palette. Six hues that tell one player from another, drawn from the app's own
+      colours rather than from a general-purpose set: the first four are the chart series in
+      order - brand indigo, the warm red the suits use, the chart green and gold - and the last
+      two fill the gaps those leave, so a player's colour belongs to this app and not to
+      whatever palette it came from.
+
+      They used to be picked for maximum separation alone, which put a hot pink and an electric
+      violet next to a muted indigo page and read as somebody else's brand.
+
+      Each is used at full strength for the initial and at low alpha for the circle behind it,
+      so both tones come from one entry. The light set is deep enough to read as text on the
+      page; the dark set is the same hue lifted to sit on a dark background, so a player keeps
+      their colour identity when the theme flips.
     -->
-    <color name="md_theme_light_avatar_1">#0F766E</color>
-    <color name="md_theme_light_avatar_2">#B45309</color>
-    <color name="md_theme_light_avatar_3">#BE185D</color>
-    <color name="md_theme_light_avatar_4">#7C3AED</color>
-    <color name="md_theme_light_avatar_5">#15803D</color>
-    <color name="md_theme_light_avatar_6">#4D7C0F</color>
-    <color name="md_theme_dark_avatar_1">#4DB6AC</color>
-    <color name="md_theme_dark_avatar_2">#E7A15E</color>
-    <color name="md_theme_dark_avatar_3">#F09AB8</color>
-    <color name="md_theme_dark_avatar_4">#BCA5F5</color>
-    <color name="md_theme_dark_avatar_5">#85C88A</color>
-    <color name="md_theme_dark_avatar_6">#B5CE79</color>
+    <color name="md_theme_light_avatar_1">#535CA8</color>
+    <color name="md_theme_light_avatar_2">#A95D4C</color>
+    <color name="md_theme_light_avatar_3">#3F6B44</color>
+    <color name="md_theme_light_avatar_4">#8A6A1F</color>
+    <color name="md_theme_light_avatar_5">#3E6E77</color>
+    <color name="md_theme_light_avatar_6">#744F79</color>
+    <color name="md_theme_dark_avatar_1">#A8B0EE</color>
+    <color name="md_theme_dark_avatar_2">#E4A89C</color>
+    <color name="md_theme_dark_avatar_3">#A5D6A7</color>
+    <color name="md_theme_dark_avatar_4">#E8C77A</color>
+    <color name="md_theme_dark_avatar_5">#93C6D1</color>
+    <color name="md_theme_dark_avatar_6">#CBA6D0</color>
 
     <color name="md_theme_light_primary">#535CA8</color>
     <color name="md_theme_light_onPrimary">#ffffff</color>

@@ -3,7 +3,7 @@ package com.damhoe.skatscores.game.skat.domain.scores
 import com.damhoe.skatscores.game.common.WonOrLost.LOST
 import com.damhoe.skatscores.game.common.WonOrLost.WON
 import com.damhoe.skatscores.game.skat.domain.SkatBid
-import com.damhoe.skatscores.game.skat.domain.SkatParticipant
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.skat.domain.SkatParticipants
 import com.damhoe.skatscores.game.skat.domain.Spitzen
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore.GrandOrSuit.GrandOrSuitOptions
@@ -18,9 +18,9 @@ import java.util.UUID
 
 class RoundDraftTest
 {
-    private val forehand = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Marlon"))
-    private val middlehand = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Evi"))
-    private val rearhand = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Daniel"))
+    private val forehand = Participant.Guest(UUID.randomUUID(), PlayerName("Marlon"))
+    private val middlehand = Participant.Guest(UUID.randomUUID(), PlayerName("Evi"))
+    private val rearhand = Participant.Guest(UUID.randomUUID(), PlayerName("Daniel"))
     private val participants = SkatParticipants(forehand, middlehand, rearhand)
 
     @Test

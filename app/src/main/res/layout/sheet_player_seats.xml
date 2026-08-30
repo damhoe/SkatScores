@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Who sits at the three seats of a running list, reached from the game screen's app bar.
+
+  The seats were a section of sheet_game_settings for a while. They are their own sheet again
+  because swapping a player is the edit that happens mid-evening, while a list's name, length
+  and scoring are set once - and a room of its own is what lets the app bar advertise it with
+  an icon of its own.
+
+  Each field clears from its end icon: a field that already holds a name filters the suggestion
+  list down to that name, so emptying it is how you get to picking somebody else.
+
+  The boxes carry the ExposedDropdownMenu style even though their end icon clears rather than
+  drops down. That style is the one whose theme overlay gives an AutoCompleteTextView the
+  outlined-box metrics; under the plain OutlinedBox style it keeps the theme default, which is
+  the filled-box one - 24dp of top padding - and the text sits low in the frame.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_sheet"
+            android:clipToPadding="false">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+            <View
+                    android:layout_width="38dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bg_drag_handle" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <!-- The same icon the app bar button carries, so the two read as one door. -->
+                <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="10dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_people_24dp"
+                        app:tint="?attr/colorPrimary" />
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_players"
+                        android:textAppearance="@style/TextAppearance.App.AppBarTitle" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/closeButton"
+                        style="@style/Widget.App.AppBar.IconButton"
+                        android:contentDescription="@string/description_close"
+                        app:icon="@drawable/ic_close_24dp"
+                        app:iconTint="?attr/colorOutline" />
+
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/seatsHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/text_edit_players_hint"
+                    android:textAppearance="@style/TextAppearance.App.Meta" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player1Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:hint="@string/hint_player1"
+                    app:endIconContentDescription="@string/description_clear_player"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player1EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        tools:text="Marlon" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player2Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/hint_player2"
+                    app:endIconContentDescription="@string/description_clear_player"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player2EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        tools:text="Evi" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/player3Input"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/hint_player3"
+                    app:endIconContentDescription="@string/description_clear_player"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/player3EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusedByDefault="false"
+                        android:inputType="text"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        tools:text="Daniel" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveButton"
+                    style="@style/Widget.App.Sheet.SaveButton"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/dialog_title_button_save" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

@@ -36,12 +36,9 @@ class PlayerAdapter(private val listener: NotifyItemClickListener) :
 
         holder.name.text = playerInfo.name.value
         holder.initial.text = playerInfo.name.value.take(1).uppercase()
-        PlayerAvatar.bind(holder.initial, playerInfo.playerId)
-        holder.numberGames.text = holder.itemView.resources.getQuantityString(
-            R.plurals.label_player_list_count,
-            playerInfo.totalGamesPlayed,
-            playerInfo.totalGamesPlayed
-        )
+        PlayerAvatar.bind(holder.initial, playerInfo.avatarSlot)
+        holder.numberGames.text =
+            holder.itemView.resources.listCountLabel(playerInfo.listCounts)
 
         holder.itemView.setOnClickListener {
             listener.notifyItemClick(playerInfo.playerId, position)

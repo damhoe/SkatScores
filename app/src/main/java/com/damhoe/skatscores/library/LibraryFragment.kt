@@ -13,7 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentLibraryBinding
-import com.damhoe.skatscores.game.skat.domain.SkatGamePreview
+import com.damhoe.skatscores.game.common.GameType
+import com.damhoe.skatscores.game.common.ListPreview
+import com.damhoe.skatscores.game.doppelkopf.adapter.presentation.NewDoppelkopfListSheetFragment
 import com.damhoe.skatscores.shared.asListDate
 import com.damhoe.skatscores.shared.confirmListDeletion
 import com.google.android.material.color.MaterialColors
@@ -102,13 +104,13 @@ class LibraryFragment :
     }
 
     /** Long press on a row: confirm, then the list is gone. */
-    private fun askBeforeDeleting(preview: SkatGamePreview)
+    private fun askBeforeDeleting(preview: ListPreview)
     {
         requireContext().confirmListDeletion(
             listName = preview.title.value,
             roundsPlayed = preview.roundsPlayed,
         ) {
-            viewModel.confirmDelete(preview.gameId)
+            viewModel.confirmDelete(preview)
             Snackbar
                 .make(binding.root, R.string.message_list_deleted, Snackbar.LENGTH_SHORT)
                 .setAnchorView(binding.bottomPill)
@@ -117,19 +119,15 @@ class LibraryFragment :
     }
 
     /**
-     * Game-type filters. Skat is the only scoring the app has, so the row is presentational
-     * for now: Skat stays selected and Doppelkopf is disabled rather than silently doing
-     * nothing when tapped.
+     * Game-type filters. The two games keep separate lists, separate setup and separate
+     * scoring, so this row picks which of them the whole screen is about.
      */
     private fun setupGameTypeFilters()
     {
-        binding.filterSkat.isChecked = true
-        binding.filterSkat.setOnClickListener { binding.filterSkat.isChecked = true }
-
-        binding.filterDoppelkopf.isChecked = false
-        binding.filterDoppelkopf.isEnabled = false
-        binding.filterDoppelkopf.contentDescription =
-            getString(R.string.description_game_type_unavailable)
+        binding.filterSkat.setOnClickListener { viewModel.selectGameType(GameType.SKAT) }
+        binding.filterDoppelkopf.setOnClickListener {
+            viewModel.selectGameType(GameType.DOPPELKOPF)
+        }
     }
 
     private fun setupBottomBar()
@@ -143,6 +141,15 @@ class LibraryFragment :
 
     private fun setupObservers()
     {
+        viewModel.gameType.observe(viewLifecycleOwner) { gameType ->
+            binding.filterSkat.isChecked = gameType == GameType.SKAT
+            binding.filterDoppelkopf.isChecked = gameType == GameType.DOPPELKOPF
+            binding.addButton.contentDescription = getString(
+                if (gameType == GameType.DOPPELKOPF) R.string.description_new_doppelkopf_list
+                else R.string.description_new_list
+            )
+        }
+
         viewModel.activeList.observe(viewLifecycleOwner) { bindActiveList(it) }
 
         viewModel.quickStartTemplate.observe(viewLifecycleOwner) { template ->
@@ -167,7 +174,7 @@ class LibraryFragment :
         }
 
         viewModel.navigateToGame.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { navigateToGame(it) }
+            event.getContentIfNotHandled()?.let { navigateToGame(it.gameType, it.gameId) }
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { event ->
@@ -179,7 +186,7 @@ class LibraryFragment :
         }
     }
 
-    private fun bindActiveList(preview: SkatGamePreview?)
+    private fun bindActiveList(preview: ListPreview?)
     {
         val hasActiveList = preview != null
         binding.activeList.root.visibility = if (hasActiveList) View.VISIBLE else View.GONE
@@ -195,21 +202,28 @@ class LibraryFragment :
             bindStanding(player2Name, player2Total, preview, seat = 1)
             bindStanding(player3Name, player3Total, preview, seat = 2)
 
+            // The fourth column only belongs to a Doppelkopf table.
+            val hasFourthSeat = preview.playerNames.size > 3
+            player4Column.visibility = if (hasFourthSeat) View.VISIBLE else View.GONE
+            if (hasFourthSeat) bindStanding(player4Name, player4Total, preview, seat = 3)
+
             roundProgress.setProgressCompat(
                 (preview.progress * 100).toInt(),
                 /* animated = */ true
             )
             progressLabel.text = progressLabelFor(preview)
 
-            root.setOnClickListener { navigateToGame(preview.gameId) }
-            keepPlayingButton.setOnClickListener { navigateToGame(preview.gameId) }
+            root.setOnClickListener { navigateToGame(preview.gameType, preview.gameId) }
+            keepPlayingButton.setOnClickListener {
+                navigateToGame(preview.gameType, preview.gameId)
+            }
         }
     }
 
     private fun bindStanding(
         nameView: TextView,
         totalView: TextView,
-        preview: SkatGamePreview,
+        preview: ListPreview,
         seat: Int
     )
     {
@@ -223,7 +237,7 @@ class LibraryFragment :
         )
     }
 
-    private fun progressLabelFor(preview: SkatGamePreview): String
+    private fun progressLabelFor(preview: ListPreview): String
     {
         val rounds = getString(
             R.string.label_round_progress,
@@ -240,7 +254,7 @@ class LibraryFragment :
     private fun bindAvatars(playerNames: List<String>)
     {
         binding.quickStart.apply {
-            listOf(avatar1, avatar2, avatar3).forEachIndexed { seat, avatar ->
+            listOf(avatar1, avatar2, avatar3, avatar4).forEachIndexed { seat, avatar ->
                 val name = playerNames.getOrNull(seat)
                 avatar.visibility = if (name == null) View.GONE else View.VISIBLE
                 avatar.text = name?.take(1)?.uppercase().orEmpty()
@@ -253,19 +267,25 @@ class LibraryFragment :
     )
 
     /**
-     * Opens the new-list sheet, prefilled from the most recent list so the usual case is
-     * "change nothing and hit Start".
+     * Opens the new-list sheet for the game currently selected, prefilled from the most recent
+     * list so the usual case is "change nothing and hit Start".
      */
     private fun showNewListSheet()
     {
         val template = viewModel.quickStartTemplate.value
+        val suggestedTitle = template?.let { viewModel.suggestedTitleFor(it) }
+        val suggestedRoundCount = template?.totalRounds
 
-        NewListSheetFragment
-            .newInstance(
-                suggestedTitle = template?.let { viewModel.suggestedTitleFor(it) },
-                suggestedRoundCount = template?.totalRounds,
-            )
-            .show(parentFragmentManager, NewListSheetFragment.TAG)
+        when (viewModel.gameType.value ?: GameType.Default)
+        {
+            GameType.SKAT -> NewListSheetFragment
+                .newInstance(suggestedTitle, suggestedRoundCount)
+                .show(parentFragmentManager, NewListSheetFragment.TAG)
+
+            GameType.DOPPELKOPF -> NewDoppelkopfListSheetFragment
+                .newInstance(suggestedTitle, suggestedRoundCount)
+                .show(parentFragmentManager, NewDoppelkopfListSheetFragment.TAG)
+        }
     }
 
     private fun listenForNewLists()
@@ -275,20 +295,36 @@ class LibraryFragment :
             viewLifecycleOwner
         ) { _, bundle ->
             bundle.getString(NewListSheetFragment.RESULT_GAME_ID)
-                ?.let { navigateToGame(UUID.fromString(it)) }
+                ?.let { navigateToGame(GameType.SKAT, UUID.fromString(it)) }
+        }
+
+        parentFragmentManager.setFragmentResultListener(
+            NewDoppelkopfListSheetFragment.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            bundle.getString(NewDoppelkopfListSheetFragment.RESULT_GAME_ID)
+                ?.let { navigateToGame(GameType.DOPPELKOPF, UUID.fromString(it)) }
         }
     }
 
-    private fun navigateToGame(gameId: UUID) = findNavController().navigate(
-        LibraryFragmentDirections.actionLibraryFragmentToSkatGameNavGraph(gameId.toString())
-    )
+    private fun navigateToGame(gameType: GameType, gameId: UUID) = when (gameType)
+    {
+        GameType.SKAT -> findNavController().navigate(
+            LibraryFragmentDirections.actionLibraryFragmentToSkatGameNavGraph(gameId.toString())
+        )
+
+        GameType.DOPPELKOPF -> findNavController().navigate(
+            LibraryFragmentDirections
+                .actionLibraryFragmentToDoppelkopfGameNavGraph(gameId.toString())
+        )
+    }
 
     private fun navigateToPlayers() = findNavController().navigate(
         LibraryFragmentDirections.actionLibraryToPlayersFragment()
     )
 
-    override fun notifyDelete(skatGamePreview: SkatGamePreview) = askBeforeDeleting(skatGamePreview)
+    override fun notifyDelete(preview: ListPreview) = askBeforeDeleting(preview)
 
-    override fun notifySelect(skatGamePreview: SkatGamePreview) =
-        navigateToGame(skatGamePreview.gameId)
+    override fun notifySelect(preview: ListPreview) =
+        navigateToGame(preview.gameType, preview.gameId)
 }

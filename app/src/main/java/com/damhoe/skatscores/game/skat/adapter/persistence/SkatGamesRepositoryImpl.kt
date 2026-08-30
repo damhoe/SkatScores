@@ -12,12 +12,12 @@ import com.damhoe.skatscores.game.skat.domain.SkatPlayerPosition.FOREHAND
 import com.damhoe.skatscores.game.skat.domain.SkatPlayerPosition.MIDDLEHAND
 import com.damhoe.skatscores.game.skat.domain.SkatPlayerPosition.REARHAND
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
+import com.damhoe.skatscores.persistence.DatabaseChanges
 import com.damhoe.skatscores.persistence.DatabaseHelper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -29,17 +29,10 @@ class SkatGamesRepositoryImpl @Inject constructor(
     private val skatGamesDao: SkatGamesPersistenceAdapter,
     private val skatParticipantsPersistenceAdapter: SkatParticipantsPersistenceAdapter,
     private val skatScoresPersistenceAdapter: SkatScorePersistenceAdapter,
+    private val databaseChanges: DatabaseChanges,
 ) : SkatGamesRepository
 {
-    private val _allGamesState = MutableStateFlow<List<SkatGame>>(emptyList())
-    val allGamesState = _allGamesState.asStateFlow()
-
     private val TAG = SkatGamesRepositoryImpl::class.java.simpleName
-
-    init
-    {
-        runBlocking { refreshAll() }
-    }
 
     override suspend fun save(game: SkatGame): Result<Unit>
     {
@@ -57,23 +50,31 @@ class SkatGamesRepositoryImpl @Inject constructor(
 
         }
 
-        refreshAll()
+        databaseChanges.notifyChanged()
 
         return result
     }
 
+    /**
+     * Takes the seats and the rounds with it. The foreign keys declare ON DELETE CASCADE, but
+     * SQLite only honours that with foreign key enforcement switched on, which it is not by
+     * default on Android - so the children are removed here rather than assumed away. Left
+     * behind, the participant rows would keep counting towards the player statistics of a
+     * list that no longer exists.
+     */
     override suspend fun delete(id: UUID): Result<SkatGame?>
     {
-        // For delete, consider if it also needs to be transactional
-        // if SkatPlayerDto entries related to game.id should also be deleted
-        // and if refreshAll should only happen on full success.
-        // Current implementation is not fully transactional for all related data.
         return get(id)
             .onSuccess { game ->
-                game?.run {
+                game ?: return@onSuccess
+
+                dbHelper.transaction {
+                    skatScoresPersistenceAdapter.deleteAllOfGame(id)
+                    skatParticipantsPersistenceAdapter.deleteAllOfGame(id)
                     skatGamesDao.delete(id)
-                        .onSuccess { refreshAll() }
                 }
+
+                databaseChanges.notifyChanged()
             }
     }
 
@@ -90,7 +91,7 @@ class SkatGamesRepositoryImpl @Inject constructor(
             skatParticipantsPersistenceAdapter.update(participantsDto)
         }
 
-        refreshAll()
+        databaseChanges.notifyChanged()
 
         return result
     }
@@ -107,59 +108,26 @@ class SkatGamesRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun refreshAll()
-    {
-        skatGamesDao.getAll()
-            .onSuccess { dtoList ->
-                val fetchedSkatGames = dtoList
-                    .map { skatGameDto ->
-                        val gameId = skatGameDto.id
-                        val participants = loadSkatParticipants(gameId)
-                        val scores = loadSkatScores(gameId)
-                        skatGameDto.toSkatGame(
-                            participants = participants,
-                            scores = scores)
-                    }
+    override fun getAllSince(oldest: Instant): Flow<List<SkatGamePreview>> =
+        previews { it.playedAt >= oldest }
 
-                _allGamesState.value = fetchedSkatGames
-            }
-            .onFailure { e ->
-                Log.e(TAG, "Error refreshing all games", e)
-            }
-    }
+    override fun getAll(): Flow<List<SkatGamePreview>> = previews { true }
 
-    override fun getAllSince(oldest: Instant): Flow<List<SkatGamePreview>>
-    {
-        val result = skatGamesDao.getAll()
+    /**
+     * Re-read on every change rather than once when this was called: the home screen keeps one
+     * LiveData for the whole time it is open, so a list started, played or deleted since then
+     * has to arrive on the same flow.
+     */
+    private fun previews(keep: (SkatGameDto) -> Boolean): Flow<List<SkatGamePreview>> =
+        databaseChanges.revision
+            .map { loadPreviews(keep) }
+            .flowOn(Dispatchers.IO)
 
-        return flow {
-            result.onSuccess { dtoList ->
-                val previewList = dtoList
-                    .filter { it.playedAt >= oldest } // filter applied correctly
-                    .map {
-                        val participants = loadSkatParticipants(it.id)
-                        val scores = loadSkatScores(it.id)
-                        val skatGame = it.toSkatGame(
-                            participants = participants,
-                            scores = scores)
-                        SkatGamePreview.mapFrom(skatGame)
-                    }
-                    .sortedByDescending { it.playedAt }
-                emit(previewList)
-            }.onFailure { e ->
-                Log.e(TAG, "Error getting all games since $oldest", e)
-                emit(emptyList()) // Emit empty list or handle error as appropriate
-            }
-        }
-    }
-
-    override fun getAll(): Flow<List<SkatGamePreview>>
-    {
-        val result = skatGamesDao.getAll()
-
-        return flow {
-            result.onSuccess { dtoList ->
-                val previewList = dtoList
+    private fun loadPreviews(keep: (SkatGameDto) -> Boolean): List<SkatGamePreview> =
+        skatGamesDao.getAll().fold(
+            onSuccess = { dtoList ->
+                dtoList
+                    .filter(keep)
                     .map {
                         // Scores are needed: the preview shows running totals and progress.
                         val participants = loadSkatParticipants(it.id)
@@ -170,13 +138,12 @@ class SkatGamesRepositoryImpl @Inject constructor(
                         SkatGamePreview.mapFrom(skatGame)
                     }
                     .sortedByDescending { it.playedAt }
-                emit(previewList)
-            }.onFailure { e ->
+            },
+            onFailure = { e ->
                 Log.e(TAG, "Error getting all games", e)
-                emit(emptyList()) // Emit empty list or handle error as appropriate
+                emptyList()
             }
-        }
-    }
+        )
 
     private fun loadSkatParticipants(
         gameId: UUID,

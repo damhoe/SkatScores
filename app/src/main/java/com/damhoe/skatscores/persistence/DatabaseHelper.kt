@@ -25,19 +25,26 @@ class DatabaseHelper @Inject constructor(
     companion object
     {
         private const val TAG = "SkatScoreDatabase"
-        private const val CREATE_PLAYERS_TABLE_SQL_FILE = "tables/create_players_table.sql"
-        private const val CREATE_SKAT_GAMES_TABLE_SQL_FILE = "tables/create_skat_games_table.sql"
-        private const val CREATE_SKAT_PARTICIPANTS_TABLE_SQL_FILE =
-            "tables/create_skat_participants_table.sql"
-        private const val CREATE_SKAT_SCORES_TABLE_SQL_FILE = "tables/create_skat_scores_table.sql"
+
+        /**
+         * Every table the app owns, in dependency order. Each script is written with
+         * IF NOT EXISTS so that running the whole list is safe on an existing database,
+         * which is what an upgrade does.
+         */
+        private val CREATE_TABLE_SQL_FILES = listOf(
+            "tables/create_players_table.sql",
+            "tables/create_skat_games_table.sql",
+            "tables/create_skat_participants_table.sql",
+            "tables/create_skat_scores_table.sql",
+            "tables/create_doppelkopf_games_table.sql",
+            "tables/create_doppelkopf_participants_table.sql",
+            "tables/create_doppelkopf_scores_table.sql",
+        )
     }
 
     override fun onCreate(database: SQLiteDatabase)
     {
-        executeSqlScript(database, CREATE_PLAYERS_TABLE_SQL_FILE, context)
-        executeSqlScript(database, CREATE_SKAT_GAMES_TABLE_SQL_FILE, context)
-        executeSqlScript(database, CREATE_SKAT_PARTICIPANTS_TABLE_SQL_FILE, context)
-        executeSqlScript(database, CREATE_SKAT_SCORES_TABLE_SQL_FILE, context)
+        CREATE_TABLE_SQL_FILES.forEach { executeSqlScript(database, it, context) }
     }
 
     private fun executeSqlScript(
@@ -46,50 +53,42 @@ class DatabaseHelper @Inject constructor(
         context: Context,
     )
     {
-        try
+        val statements = try
         {
-            context.assets.open(fileName).bufferedReader().use { reader ->
-                val statementBuilder = StringBuilder()
-                reader.forEachLine { line ->
-                    val trimmedLine = line.trim()
-                    if (trimmedLine.startsWith("--") || trimmedLine.isEmpty())
-                    {
-                        // Skip comments and empty lines
-                    } else
-                    {
-                        statementBuilder.append(trimmedLine)
-                            .append("\n") // Append line and a newline
-                    }
-                }
-
-                val wholeScript = statementBuilder.toString().trim()
-
-                if (wholeScript.isNotEmpty())
-                {
-                    db.execSQL(wholeScript)
-                    Log.d(TAG, "Executed SQL script (whole file): $fileName")
-                }
-            }
+            // execSQL runs a single statement, so a script has to be handed to it one
+            // statement at a time or everything after the first one is silently dropped.
+            context.assets.open(fileName).bufferedReader().use { splitSqlStatements(it.readText()) }
         } catch (e: Exception)
         {
-            Log.e(TAG, "Error executing SQL script from assets/$fileName", e)
+            Log.e(TAG, "Could not read SQL script from assets/$fileName", e)
+            return
         }
 
+        // Per statement, so that one that cannot be applied - an index an existing database
+        // already violates, say - does not take the rest of the script down with it.
+        statements.forEach { statement ->
+            try
+            {
+                db.execSQL(statement)
+            } catch (e: Exception)
+            {
+                Log.e(TAG, "Error executing statement from assets/$fileName: $statement", e)
+            }
+        }
     }
 
+    /**
+     * Additive by design: every create script is IF NOT EXISTS, so an upgrade adds whatever
+     * tables a newer version introduced and leaves recorded lists alone. Dropping and
+     * recreating would take a user's whole history with it.
+     */
     override fun onUpgrade(
         database: SQLiteDatabase,
+        oldVersion: Int,
         newVersion: Int,
-        oldVersion: Int
     )
     {
-        database.apply {
-            dropTable(DatabaseConstants.SkatParticipantsTable.TABLE_NAME)
-            dropTable(DatabaseConstants.SkatScoresTable.TABLE_NAME)
-            dropTable(DatabaseConstants.SkatGamesTable.TABLE_NAME)
-            dropTable(DatabaseConstants.PlayersTable.TABLE_NAME)
-        }
-
+        Log.d(TAG, "Upgrading database from $oldVersion to $newVersion")
         onCreate(database)
     }
 

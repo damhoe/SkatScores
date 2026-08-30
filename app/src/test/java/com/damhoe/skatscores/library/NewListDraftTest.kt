@@ -1,6 +1,6 @@
 package com.damhoe.skatscores.library
 
-import com.damhoe.skatscores.game.skat.domain.SkatParticipant
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.skat.domain.SkatParticipants
 import com.damhoe.skatscores.game.skat.domain.SkatRoundCount
 import org.junit.Assert.assertEquals
@@ -49,6 +49,6 @@ class NewListDraftTest
         assertEquals(3, seats.size)
         assertEquals(3, seats.map { it.displayName }.toSet().size)
         // Distinct names matter: participants are unique per (list, name) in the database.
-        assertTrue(seats.all { it is SkatParticipant.Guest })
+        assertTrue(seats.all { it is Participant.Guest })
     }
 }

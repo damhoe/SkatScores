@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.game.skat.domain
 
+import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.common.Title
 import com.damhoe.skatscores.game.common.WonOrLost.WON
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
@@ -15,9 +16,9 @@ import java.util.UUID
 
 class SkatGamePreviewTest
 {
-    private val forehand = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Marlon"))
-    private val middlehand = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Evi"))
-    private val rearhand = SkatParticipant.Guest(UUID.randomUUID(), PlayerName("Daniel"))
+    private val forehand = Participant.Guest(UUID.randomUUID(), PlayerName("Marlon"))
+    private val middlehand = Participant.Guest(UUID.randomUUID(), PlayerName("Evi"))
+    private val rearhand = Participant.Guest(UUID.randomUUID(), PlayerName("Daniel"))
 
     private fun game(
         rounds: Int = 9,
@@ -31,7 +32,7 @@ class SkatGamePreviewTest
         scores = scores,
     )
 
-    private fun wonBy(declarer: SkatParticipant, suit: SkatSuit, spitzen: Int) =
+    private fun wonBy(declarer: Participant, suit: SkatSuit, spitzen: Int) =
         SkatScore.GrandOrSuit.create(declarer, WON, suit, Spitzen(spitzen))
 
     @Test

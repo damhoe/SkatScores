@@ -66,7 +66,11 @@
 
                 </LinearLayout>
 
-                <!-- 2. Game-type filters. Only Skat has scoring, so Doppelkopf is inert. -->
+                <!--
+                  2. Game-type filters. Lists never mix, so this picks which game the whole
+                  screen below is about: the running list, quick start and recently played all
+                  follow it, and the centre button opens that game's setup sheet.
+                -->
                 <LinearLayout
                         android:id="@+id/gameTypeFilters"
                         android:layout_width="match_parent"
@@ -87,7 +91,6 @@
                             style="@style/Widget.App.FilterChip"
                             android:layout_width="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:enabled="false"
                             android:text="@string/label_game_type_doppelkopf" />
 
                 </LinearLayout>

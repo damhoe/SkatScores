@@ -220,31 +220,6 @@
 
                             </LinearLayout>
 
-                            <LinearLayout style="@style/Widget.App.Breakdown.Row">
-
-                                <TextView
-                                        android:id="@+id/breakdownRecord1"
-                                        style="@style/Widget.App.Breakdown.Record"
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        tools:text="4 – 1 · 5" />
-
-                                <TextView
-                                        android:id="@+id/breakdownRecord2"
-                                        style="@style/Widget.App.Breakdown.Record"
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        tools:text="1 – 3 · 3" />
-
-                                <TextView
-                                        android:id="@+id/breakdownRecord3"
-                                        style="@style/Widget.App.Breakdown.Record"
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        tools:text="2 – 2 · 4" />
-
-                            </LinearLayout>
-
                             <include
                                     android:id="@+id/breakdownRows"
                                     layout="@layout/view_points_breakdown"

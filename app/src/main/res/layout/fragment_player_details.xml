@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  One player. Same shell as the rest of the app: 60dp header, 20dp gutters, actions as
-  hairline rows rather than a stack of outlined buttons.
+  One player. Same shell as the rest of the app: 60dp header, 20dp gutters.
+
+  The two actions used to be a pair of outlined cards with a gap between them, each a label and
+  a chevron. They are now one grouped container split by a hairline - the M3 list idiom - and
+  the statistics row carries its own number, so the page says something about the player
+  instead of only offering doors to walk through.
 -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -64,7 +68,7 @@
                     android:paddingEnd="@dimen/screen_side_padding">
 
                 <!--
-                  Identity. No container: the avatar, name, count and date are the subject of
+                  Identity. No container: the avatar, name, counts and date are the subject of
                   the screen rather than one item among several, so they sit straight on the
                   page and the card padding becomes plain vertical spacing.
                 -->
@@ -73,13 +77,13 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:paddingTop="24dp"
-                        android:paddingBottom="24dp">
+                        android:paddingTop="28dp"
+                        android:paddingBottom="28dp">
 
                     <TextView
                             android:id="@+id/initial"
-                            android:layout_width="72dp"
-                            android:layout_height="72dp"
+                            android:layout_width="84dp"
+                            android:layout_height="84dp"
                             android:background="@drawable/bg_avatar_tint"
                             android:gravity="center"
                             android:textAppearance="@style/TextAppearance.App.Initial.Profile"
@@ -89,13 +93,14 @@
                             android:id="@+id/name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
+                            android:layout_marginTop="16dp"
                             android:ellipsize="end"
                             android:gravity="center"
                             android:maxLines="1"
                             android:textAppearance="@style/TextAppearance.App.ProfileName"
                             tools:text="Daniel D." />
 
+                    <!-- Lists per game: a bare total would not say which table they were at. -->
                     <TextView
                             android:id="@+id/number_games"
                             android:layout_width="match_parent"
@@ -103,7 +108,7 @@
                             android:layout_marginTop="10dp"
                             android:gravity="center"
                             android:textAppearance="@style/TextAppearance.App.ProfileCount"
-                            tools:text="12 Listen" />
+                            tools:text="2 Skat · 3 Doppelkopf" />
 
                     <TextView
                             android:id="@+id/created"
@@ -112,86 +117,105 @@
                             android:layout_marginTop="4dp"
                             android:gravity="center"
                             android:textAppearance="@style/TextAppearance.App.Meta"
-                            tools:text="Erstellt am 29.10.2023" />
+                            tools:text="Created at 29.10.2023" />
 
                 </LinearLayout>
 
-                <!-- Actions -->
+                <!--
+                  Actions, grouped. One outline around both rows with a hairline between them,
+                  so they read as a list rather than as two unrelated cards.
+                -->
                 <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/button_stats"
                         style="@style/Widget.App.OutlinedRow"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:clickable="true"
-                        android:focusable="true">
+                        android:layout_height="wrap_content">
 
                     <LinearLayout
-                            style="@style/Widget.App.PlayerActionRow"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                        <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_bar_chart_24dp"
-                                app:tint="?attr/colorPrimary" />
-
-                        <TextView
-                                android:layout_width="0dp"
+                        <LinearLayout
+                                android:id="@+id/button_stats"
+                                style="@style/Widget.App.PlayerActionRow"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="14dp"
-                                android:layout_weight="1"
-                                android:text="@string/title_button_player_statistics"
-                                android:textAppearance="@style/TextAppearance.App.RowTitle" />
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
 
-                        <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_next_24dp"
-                                app:tint="?attr/colorOutline" />
+                            <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_bar_chart_24dp"
+                                    app:tint="?attr/colorPrimary" />
 
-                    </LinearLayout>
+                            <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="14dp"
+                                    android:layout_weight="1"
+                                    android:text="@string/title_button_player_statistics"
+                                    android:textAppearance="@style/TextAppearance.App.RowTitle" />
 
-                </com.google.android.material.card.MaterialCardView>
+                            <!-- What is behind the row, so it is not a label and a chevron. -->
+                            <TextView
+                                    android:id="@+id/statsValue"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:textAppearance="@style/TextAppearance.App.Meta"
+                                    tools:text="148 rounds" />
 
-                <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/edit_name"
-                        style="@style/Widget.App.OutlinedRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:clickable="true"
-                        android:focusable="true">
+                            <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginStart="6dp"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_next_24dp"
+                                    app:tint="?attr/colorOutline" />
 
-                    <LinearLayout
-                            style="@style/Widget.App.PlayerActionRow"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                        </LinearLayout>
 
-                        <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_edit_24dp"
-                                app:tint="?attr/colorPrimary" />
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="50dp"
+                                android:background="?attr/colorHairline" />
 
-                        <TextView
-                                android:layout_width="0dp"
+                        <LinearLayout
+                                android:id="@+id/edit_name"
+                                style="@style/Widget.App.PlayerActionRow"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="14dp"
-                                android:layout_weight="1"
-                                android:text="@string/dialog_title_edit_player_name"
-                                android:textAppearance="@style/TextAppearance.App.RowTitle" />
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
 
-                        <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_next_24dp"
-                                app:tint="?attr/colorOutline" />
+                            <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_edit_24dp"
+                                    app:tint="?attr/colorPrimary" />
+
+                            <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="14dp"
+                                    android:layout_weight="1"
+                                    android:text="@string/dialog_title_edit_player_name"
+                                    android:textAppearance="@style/TextAppearance.App.RowTitle" />
+
+                            <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_next_24dp"
+                                    app:tint="?attr/colorOutline" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.player.adapter.persistence
 
+import com.damhoe.skatscores.persistence.DatabaseChanges
 import com.damhoe.skatscores.player.application.repositories.PlayersRepository
 import com.damhoe.skatscores.player.domain.Player
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +12,8 @@ import javax.inject.Singleton
 
 @Singleton
 class PlayerRepositoryImpl @Inject constructor(
-    private val playerDao: PlayerPersistenceAdapter
+    private val playerDao: PlayerPersistenceAdapter,
+    private val databaseChanges: DatabaseChanges,
 ) : PlayersRepository
 {
     private val _allPlayersState = MutableStateFlow<List<Player>>(emptyList())
@@ -28,6 +30,7 @@ class PlayerRepositoryImpl @Inject constructor(
         return playerDao.insert(dto)
             .onSuccess {
                 refreshAll()
+                databaseChanges.notifyChanged()
             }
     }
 
@@ -35,7 +38,10 @@ class PlayerRepositoryImpl @Inject constructor(
     {
         return playerDao.deletePlayer(id)
             .map { it?.toPlayer() }
-            .onSuccess { refreshAll() }
+            .onSuccess {
+                refreshAll()
+                databaseChanges.notifyChanged()
+            }
     }
 
     override fun get(id: UUID): Result<Player?>
@@ -57,6 +63,9 @@ class PlayerRepositoryImpl @Inject constructor(
     {
         val dto = PlayerDto.mapFrom(player)
         return playerDao.updatePlayer(dto)
-            .onSuccess { refreshAll() }
+            .onSuccess {
+                refreshAll()
+                databaseChanges.notifyChanged()
+            }
     }
 }
