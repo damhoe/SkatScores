@@ -67,9 +67,16 @@
         <action
                 android:id="@+id/action_home_to_app_settings"
                 app:destination="@id/app_settings" />
+        <!--
+          The two bottom-bar tabs are peers. Players sits on top of the lists rather than
+          beside them because the lists are the start destination, so singleTop keeps a
+          double tap from stacking a second copy; the players screen itself offers no way
+          back down except the tab, which pops rather than pushes.
+        -->
         <action
                 android:id="@+id/action_library_to_playersFragment"
-                app:destination="@id/playersFragment" />
+                app:destination="@id/playersFragment"
+                app:launchSingleTop="true" />
     </fragment>
 
     <fragment

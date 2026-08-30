@@ -93,6 +93,12 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details)
             player?.let { updateUi(it) } ?: findNavController().navigateUp()
         }
 
+        // Separate from the player: the colour comes from where this player sits among all of
+        // them, and that list arrives on its own schedule.
+        viewModel.avatarSlot.observe(viewLifecycleOwner) { slot ->
+            PlayerAvatar.bind(binding.initial, slot)
+        }
+
         // Statistics arrive after the player, so the counts are bound separately.
         viewModel.playerStatistics.observe(viewLifecycleOwner) { statistics ->
             // Profiles are shared, so the lists are named by game rather than added up.
@@ -117,7 +123,6 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details)
         binding.headerName.text = player.name.value
         binding.name.text = player.name.value
         binding.initial.text = player.name.value.take(1).uppercase()
-        PlayerAvatar.bind(binding.initial, viewModel.avatarSlotOf(player.id))
 
         binding.created.text = getString(
             R.string.template_created_at,

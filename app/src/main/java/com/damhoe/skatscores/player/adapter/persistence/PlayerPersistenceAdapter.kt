@@ -1,7 +1,6 @@
 package com.damhoe.skatscores.player.adapter.persistence
 
 import com.damhoe.skatscores.persistence.DatabaseConstants.PlayersTable
-import com.damhoe.skatscores.persistence.DatabaseConstants.SkatParticipantsTable
 import com.damhoe.skatscores.persistence.DatabaseHelper
 import com.damhoe.skatscores.persistence.mapToList
 import com.damhoe.skatscores.persistence.mapToOneOrNull
@@ -9,27 +8,35 @@ import com.damhoe.skatscores.persistence.run
 import java.util.UUID
 import javax.inject.Inject
 
+/**
+ * The database handles are taken per call rather than held in fields. Holding them opened the
+ * database in the constructor - which on a first launch also runs every create script - on
+ * whatever thread Hilt happened to build this on, which is the main one.
+ */
 class PlayerPersistenceAdapter @Inject constructor(
     private val databaseHelper: DatabaseHelper,
 )
 {
-    private val writableDatabase = databaseHelper.writableDatabase
-    private val readableDatabase = databaseHelper.readableDatabase
-
+    /**
+     * SQLite answers a rejected insert with -1 rather than an exception, so the row id has to
+     * be checked. Without that a name the unique index refuses was reported as saved, and the
+     * profile the caller thought it had created was never there.
+     */
     fun insert(player: PlayerDto): Result<Unit>
     {
-        return writableDatabase.run {
-            insert(
+        return databaseHelper.writableDatabase.run {
+            val rowId = insert(
                 PlayersTable.TABLE_NAME, null, player.toContentValues()
             )
 
-            Result.success(Unit)
+            if (rowId > 0) Result.success(Unit)
+            else Result.failure(IllegalStateException("Failed to insert player ${player.id}"))
         }
     }
 
     fun get(id: UUID): Result<PlayerDto?>
     {
-        return readableDatabase.run {
+        return databaseHelper.readableDatabase.run {
             val selection = "${PlayersTable.COLUMN_ID} = ?"
             val selectionArgs = arrayOf(id.toString())
 
@@ -51,61 +58,45 @@ class PlayerPersistenceAdapter @Inject constructor(
         }
     }
 
+    /** No rows updated means the name was refused or the profile is gone; either way it did
+     * not happen, and reporting success would leave the new name on screen only. */
     fun updatePlayer(player: PlayerDto): Result<Unit>
     {
-        return writableDatabase.run {
-            val whereClause = PlayersTable.COLUMN_ID + " = ? "
-
-            update(
+        return databaseHelper.writableDatabase.run {
+            val rowsAffected = update(
                 PlayersTable.TABLE_NAME,
                 player.toContentValues(),
-                whereClause,
+                "${PlayersTable.COLUMN_ID} = ?",
                 arrayOf(player.id.toString()),
             )
 
-            Result.success(Unit)
+            if (rowsAffected > 0) Result.success(Unit)
+            else Result.failure(IllegalStateException("Failed to update player ${player.id}"))
         }
     }
 
     fun deletePlayer(id: UUID): Result<PlayerDto?>
     {
-        return writableDatabase.run {
-            get(id).onSuccess {
-                val whereClause = "${PlayersTable.COLUMN_ID} = ?"
-                delete(
+        return databaseHelper.writableDatabase.run {
+            get(id).mapCatching { player ->
+                // Nothing to delete is not a failure, but a row that would not go is.
+                player ?: return@mapCatching null
+
+                val rowsAffected = delete(
                     PlayersTable.TABLE_NAME,
-                    whereClause,
+                    "${PlayersTable.COLUMN_ID} = ?",
                     arrayOf(id.toString()),
                 )
-            }
-        }
-    }
 
-    fun getGameCount(playerId: UUID): Result<Int>
-    {
-        return readableDatabase.run {
-            val selection = "${SkatParticipantsTable.COLUMN_PLAYER_ID} = ?"
-            val selectionArgs = arrayOf(playerId.toString())
-
-            val cursor = query(
-                SkatParticipantsTable.TABLE_NAME,
-                arrayOf(SkatParticipantsTable.COLUMN_GAME_ID),
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null,
-            )
-
-            cursor.use {
-                Result.success(it.count)
+                check(rowsAffected > 0) { "Failed to delete player $id" }
+                player
             }
         }
     }
 
     fun getAll(): Result<List<PlayerDto>>
     {
-        return readableDatabase.run {
+        return databaseHelper.readableDatabase.run {
             val cursor = query(
                 PlayersTable.TABLE_NAME,
                 null,

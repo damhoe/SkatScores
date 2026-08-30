@@ -12,10 +12,12 @@ import com.damhoe.skatscores.player.domain.PlayerName
 import com.damhoe.skatscores.player.domain.PlayerStatistics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
@@ -73,8 +75,17 @@ class PlayerViewModel @Inject internal constructor(
         .withIndex()
         .associate { (slot, player) -> player.id to slot }
 
-    /** The same slot the list gives this player, so their page shows the colour they have. */
-    fun avatarSlotOf(playerId: UUID): Int = avatarSlots(players.value)[playerId] ?: 0
+    /** Which player the details screen is showing, so its avatar can follow the list. */
+    private val loadedPlayerId = MutableStateFlow<UUID?>(null)
+
+    /**
+     * The same slot the list gives this player, so their page shows the colour they have.
+     * Observed rather than asked for once: the list is filled in the background, and a slot
+     * read before it arrives would be everybody's first colour.
+     */
+    val avatarSlot: LiveData<Int> = combine(players, loadedPlayerId) { players, id ->
+        id?.let { avatarSlots(players)[it] } ?: 0
+    }.asLiveData()
 
     fun playerNames(): List<String> = players.value.map { it.name.value }
 
@@ -86,9 +97,16 @@ class PlayerViewModel @Inject internal constructor(
 
     fun loadPlayerById(playerId: UUID)
     {
-        _playerDetails.postValue(players.value.firstOrNull { it.id == playerId })
+        loadedPlayerId.value = playerId
 
         viewModelScope.launch {
+            val player = players.value.firstOrNull { it.id == playerId }
+            // The list is filled in the background, so a page opened before it arrives reads
+            // the one profile it needs directly rather than deciding the player is gone.
+                ?: withContext(Dispatchers.IO) { playerUseCases.getPlayer(playerId).getOrNull() }
+
+            _playerDetails.postValue(player)
+
             playerUseCases.getStatistics(playerId).onSuccess {
                 _playerStatistics.postValue(it)
             }
@@ -128,13 +146,6 @@ class PlayerViewModel @Inject internal constructor(
                         _playerDetails.postValue(player)
                     }
                 }
-        }
-    }
-
-    fun isPlayerNameTaken(name: String): Boolean
-    {
-        return players.value.any {
-            it.name.value.equals(name.trim(), ignoreCase = true)
         }
     }
 }

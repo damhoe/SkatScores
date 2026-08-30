@@ -30,11 +30,9 @@ class PlayerStatisticsPersistenceAdapter @Inject constructor(
     private val dbHelper: DatabaseHelper,
 )
 {
-    private val readableDatabase = dbHelper.readableDatabase
-
     fun getPlayerStatistics(playerId: UUID): Result<PlayerStatistics>
     {
-        return readableDatabase.run {
+        return dbHelper.readableDatabase.run {
             Result.success(
                 PlayerStatistics(
                     skat = readSkatStatistics(this, playerId),
@@ -51,7 +49,7 @@ class PlayerStatisticsPersistenceAdapter @Inject constructor(
      */
     fun getListCounts(playerId: UUID): Result<ListCounts>
     {
-        return readableDatabase.run {
+        return dbHelper.readableDatabase.run {
             Result.success(
                 ListCounts(
                     skat = countSkatLists(this, playerId),

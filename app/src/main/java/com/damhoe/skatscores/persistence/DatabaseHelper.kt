@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DatabaseHelper @Inject constructor(
-    @ApplicationContext val context: Context,
+    @param:ApplicationContext val context: Context,
     @DatabaseInfo dbName: String,
     @DatabaseInfo version: Int,
 ) : SQLiteOpenHelper(
@@ -92,20 +92,27 @@ class DatabaseHelper @Inject constructor(
         onCreate(database)
     }
 
-    fun SQLiteDatabase.dropTable(tableName: String)
-    {
-        execSQL("DROP TABLE IF EXISTS $tableName")
-    }
-
-    fun <T> transaction(operation: (db: SQLiteDatabase) -> T): T
+    /**
+     * Runs [operation] as one unit of work, rolling back if any part of it fails.
+     *
+     * The body has to throw for that to happen - androidx's transaction marks the work
+     * successful unless it does - and every adapter in this app reports failure as a
+     * `Result` instead. So the body is expected to `getOrThrow()` each step, and the
+     * exception that comes out is turned back into a `Result` here.
+     *
+     * Without that, a transaction whose first statement failed still committed the rest of
+     * itself, and the caller was handed the last statement's result as if it spoke for the
+     * whole: a list could be written with no seats, and reported as saved.
+     */
+    fun <T> transaction(operation: (db: SQLiteDatabase) -> T): Result<T>
     {
         return try
         {
-            writableDatabase.transaction { operation(this) }
+            Result.success(writableDatabase.transaction { operation(this) })
         } catch (e: Exception)
         {
-            Log.e(TAG, "Error in transaction", e)
-            throw e
+            Log.e(TAG, "Error in transaction, rolled back", e)
+            Result.failure(e)
         }
     }
 }
