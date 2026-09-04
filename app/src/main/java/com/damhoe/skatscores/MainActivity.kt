@@ -1,6 +1,8 @@
 package com.damhoe.skatscores
 
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -20,7 +22,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity()
 {
-
     lateinit var binding: ActivityMainBinding
 
     @Inject
@@ -34,12 +35,20 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
 
-        viewModel.language.observe(this) { settingsManager.setLanguage(it) }
-        viewModel.theme.observe(this) { settingsManager.setTheme(it) }
+        if (savedInstanceState != null && Build.VERSION.SDK_INT >= 35) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+        }
+        enableEdgeToEdge()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        viewModel.language.observe(this) {
+            settingsManager.setLanguage(it)
+        }
+        viewModel.theme.observe(this) {
+            settingsManager.setTheme(it)
+        }
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
         val navController = navHostFragment!!.navController

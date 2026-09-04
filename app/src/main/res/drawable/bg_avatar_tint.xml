@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Initials avatar that carries a per-player colour. White so backgroundTint replaces it
+  outright; PlayerAvatar supplies the tint. bg_avatar_circle stays for the overlapping
+  quick-start stack, which needs the ring against the page background.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="oval">
+    <solid android:color="@android:color/white" />
+</shape>

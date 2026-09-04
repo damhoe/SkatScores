@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Spades. Tinted at the use site from the suit colour attributes. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,2C12,2 4,8 4,13A4,4 0 0,0 8,17C9.1,17 10.1,16.6 10.8,15.8L10,21H14L13.2,15.8C13.9,16.6 14.9,17 16,17A4,4 0 0,0 20,13C20,8 12,2 12,2Z" />
+</vector>

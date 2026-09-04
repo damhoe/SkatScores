@@ -5,4 +5,50 @@
     <dimen name="fab_margin_right">16dp</dimen>
     <dimen name="fab_margin_bottom">36dp</dimen>
     <dimen name="points_board_first_label_width">60dp</dimen>
+
+    <!-- Redesign: floating bottom bar. The FAB straddles the pill, so the two are linked. -->
+    <!-- Sized for the tallest slot the bar carries: a 24dp glyph over its label, with room
+         above and below. The game screen's icon-only actions share it so the bars match. -->
+    <dimen name="bottom_pill_height">64dp</dimen>
+    <!-- Half the height, so the bar is a fully rounded container rather than a soft rectangle. -->
+    <dimen name="bottom_pill_corner_radius">32dp</dimen>
+    <dimen name="bottom_pill_side_margin">20dp</dimen>
+    <dimen name="bottom_pill_bottom_margin">18dp</dimen>
+    <!-- Gap left in the button row for the centre button: its width plus clearance. -->
+    <dimen name="bottom_pill_cradle_width">92dp</dimen>
+    <!--
+      Icon-only slot on the game screen, where the bar wraps its content instead of spanning
+      the screen. Wide enough to keep the 24dp glyph a comfortable touch target on its own.
+    -->
+    <dimen name="bottom_pill_action_width">64dp</dimen>
+    <!--
+      Stadium, so width and height are separate. At 50% corners the 48dp height makes both
+      ends 24dp semicircles, leaving 20dp of straight edge along the top and bottom; 8dp of
+      bar still shows above and below.
+    -->
+    <dimen name="center_fab_width">68dp</dimen>
+    <dimen name="center_fab_height">48dp</dimen>
+
+    <!--
+      Redesign: one radius for the whole card family, so the filled cards and the hairline
+      rows read as the same component. The hero card on home keeps its larger 24dp on purpose.
+    -->
+    <dimen name="card_corner_radius">16dp</dimen>
+
+    <!--
+      Redesign: screen gutters.
+
+      The lists carry these as row padding rather than as padding on the RecyclerView, so a
+      row's press and swipe states reach the screen edges instead of stopping at the text.
+      The negative value cancels the gutter on the one list that sits inside an already
+      padded container.
+    -->
+    <dimen name="screen_side_padding">20dp</dimen>
+    <dimen name="screen_side_padding_negative">-20dp</dimen>
+    <dimen name="game_side_padding">16dp</dimen>
+    <!-- The score row's trailing value wants a little more air than its leading gutter. -->
+    <dimen name="score_row_end_padding">24dp</dimen>
+    <dimen name="legend_gap">10dp</dimen>
+    <!-- Floor for the chart once the breakdown card is under it; below this it stops reading. -->
+    <dimen name="chart_card_min_height">220dp</dimen>
 </resources>

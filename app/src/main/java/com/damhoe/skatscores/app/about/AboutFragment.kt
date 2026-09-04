@@ -1,51 +1,56 @@
 package com.damhoe.skatscores.app.about
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.ui.NavigationUI.setupWithNavController
-import com.damhoe.skatscores.MainActivity
+import androidx.navigation.Navigation
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.FragmentAboutBinding
-import com.damhoe.skatscores.shared_ui.utils.InsetsManager
 
-class AboutFragment : Fragment() {
+class AboutFragment : Fragment(R.layout.fragment_about)
+{
+    private lateinit var binding: FragmentAboutBinding
 
-    lateinit var binding: FragmentAboutBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAboutBinding.inflate(layoutInflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentAboutBinding.bind(view)
+
         applyInsets()
-        setUpNavigation()
+
+        // The header is this screen's own, not a toolbar wired to the navigation graph: a
+        // NavController-driven toolbar adopts the next destination's label while the pop
+        // animation is still running, which flashed that label over this screen.
+        binding.backButton.setOnClickListener { findNavController().navigateUp() }
     }
 
-    private fun applyInsets() {
-        binding.run {
-            InsetsManager.applyStatusBarInsets(appbarLayout)
-            InsetsManager.applyNavigationBarInsets(content)
-        }
-    }
+    private fun applyInsets()
+    {
+        val contentBottomPadding = binding.content.paddingBottom
 
-    private fun setUpNavigation() {
-        binding.run {
-            val navController = findNavController()
-            val appBarConfiguration = (requireActivity() as MainActivity).appBarConfiguration
-            setupWithNavController(toolbar, navController, appBarConfiguration)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
+            val bars: Insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.appBar.setPadding(
+                binding.appBar.paddingLeft,
+                bars.top,
+                binding.appBar.paddingRight,
+                binding.appBar.paddingBottom
+            )
+            binding.content.setPadding(
+                binding.content.paddingLeft,
+                binding.content.paddingTop,
+                binding.content.paddingRight,
+                contentBottomPadding + bars.bottom
+            )
+
+            WindowInsetsCompat.CONSUMED
         }
     }
 
     private fun findNavController() =
-        findNavController(requireActivity(), R.id.nav_host_fragment)
+        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
 }

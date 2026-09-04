@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  A single sheet chip, inflated when chips are built from data (e.g. the round-count row).
+  Inflating rather than constructing keeps the sheet chip style applied.
+-->
+<com.google.android.material.button.MaterialButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.App.Sheet.Chip"
+    android:layout_width="0dp"
+    android:layout_height="44dp" />

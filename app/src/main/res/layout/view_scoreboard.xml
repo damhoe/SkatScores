@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pinned scoreboard. Replaces item_score_header.xml + item_score_footer.xml: round progress,
+  names and running totals in one card. The dealer is named in the progress line.
+
+  With tournament scoring the card carries the Seeger-Fabian breakdown in an expandable block
+  with the parts the total is made of, collapsed by default because the card is pinned above
+  the round log and every dp it takes is a dp the log loses. A won - lost - defended line sat
+  under each total until it was removed: three bare numbers with no labels told a reader who
+  did not already know the format nothing at all.
+
+  The breakdown values reuse the three weighted columns of the totals rather than sitting in a
+  table with a leading label column, so every number stays under the name it belongs to. That
+  is why the row labels are full-width lines above their values instead of a first cell.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.card.MaterialCardView
+            android:id="@+id/scoreboardCard"
+            style="@style/Widget.Material3.CardView.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="0dp">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="12dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="18dp">
+
+            <!-- Round progress lives here rather than under the app bar title. -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/roundProgress"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.SectionLabel"
+                        tools:text="Runde 14 / 24 · Gibt: Evi" />
+
+                <!--
+                  Affordance only. The target is the whole card, which keeps the chevron at
+                  24dp instead of the 48dp box a tappable icon would need - height the pinned
+                  card would take from the round log below it. The card carries the action
+                  label for TalkBack, so this stays out of the accessibility tree.
+                -->
+                <ImageView
+                        android:id="@+id/breakdownToggle"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@null"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_expand_more_24dp"
+                        app:tint="?attr/colorOutline" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/name1"
+                            style="@style/Widget.App.Scoreboard.Name"
+                            tools:text="Marlon" />
+
+                    <TextView
+                            android:id="@+id/total1"
+                            style="@style/Widget.App.Scoreboard.Total"
+                            tools:text="+562" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/name2"
+                            style="@style/Widget.App.Scoreboard.Name"
+                            tools:text="Evi" />
+
+                    <TextView
+                            android:id="@+id/total2"
+                            style="@style/Widget.App.Scoreboard.Total"
+                            tools:text="-136" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/name3"
+                            style="@style/Widget.App.Scoreboard.Name"
+                            tools:text="Daniel" />
+
+                    <TextView
+                            android:id="@+id/total3"
+                            style="@style/Widget.App.Scoreboard.Total"
+                            tools:text="+222" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Expanded tier: where the totals above come from. -->
+            <LinearLayout
+                    android:id="@+id/breakdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:background="?attr/colorHairline" />
+
+                <include
+                        android:id="@+id/breakdownRows"
+                        layout="@layout/view_points_breakdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

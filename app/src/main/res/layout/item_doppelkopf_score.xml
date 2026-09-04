@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One played Doppelkopf round in the log. Tap it to edit that round; there is no menu on the
+  row, and only the newest round can be removed - that is what the undo action in the bottom
+  bar does.
+
+  Where a Skat row carries a suit icon, this one carries the party that won: a round is decided
+  between Re and Kontra rather than by what was played, so that is the first thing to read.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:baselineAligned="false"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/game_side_padding"
+        android:paddingTop="11dp"
+        android:paddingEnd="@dimen/score_row_end_padding"
+        android:paddingBottom="11dp">
+
+    <TextView
+            android:id="@+id/round_text"
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textAppearance="@style/TextAppearance.App.NumberSmall"
+            android:textColor="?attr/colorOutlineVariant"
+            tools:text="9" />
+
+    <TextView
+            android:id="@+id/partyBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:minWidth="46dp"
+            android:textAppearance="@style/TextAppearance.App.MetaSmall"
+            tools:text="Re" />
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/roundTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.App.RoundTitle"
+                tools:text="Solo · Damen" />
+
+        <TextView
+                android:id="@+id/roundSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.App.MetaSmall"
+                tools:text="Marlon, Evi · &lt; 60 · Re" />
+
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/roundValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textAppearance="@style/TextAppearance.App.RoundValue"
+            tools:text="+3" />
+
+</LinearLayout>

@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Round sheet. One surface for entering a new round and for editing an existing one: every
+  field of every score type is reachable, and the footer previews the points live.
+  Replaces the six-fragment score flow (who won -> result -> suit -> spitzen -> multipliers).
+
+  The chip rows are plain LinearLayouts rather than MaterialButtonToggleGroups: the group
+  fuses its children into a connected bar and strips their inner corners, and exclusivity is
+  enforced in the fragment anyway so that a restored draft selects the right chip.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_sheet"
+            android:clipToPadding="false">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+            <View
+                    android:layout_width="38dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bg_drag_handle" />
+
+            <!-- Header -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/sheetTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/TextAppearance.App.AppBarTitle"
+                        tools:text="Runde 6" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/closeButton"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/description_close"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        app:icon="@drawable/ic_close_24dp"
+                        app:iconSize="20dp"
+                        app:iconTint="?attr/colorOutline" />
+
+            </LinearLayout>
+
+            <!-- Who plays? Three seats plus Passe. -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_who_plays" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/declarer1"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        tools:text="Marlon" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/declarer2"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        tools:text="Evi" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/declarer3"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        tools:text="Daniel" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/declarerPasse"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/label_passe" />
+
+            </LinearLayout>
+
+            <!-- Everything below only applies when somebody played. -->
+            <LinearLayout
+                    android:id="@+id/gameDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/Widget.App.Sheet.SectionLabel"
+                        android:text="@string/title_game_kind" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/gameDiamonds"
+                            style="@style/Widget.App.Sheet.Chip"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/description_diamonds" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/gameHearts"
+                            style="@style/Widget.App.Sheet.Chip"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/description_hearts" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/gameSpades"
+                            style="@style/Widget.App.Sheet.Chip"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/description_spades" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/gameClubs"
+                            style="@style/Widget.App.Sheet.Chip"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/description_clubs" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/gameGrand"
+                            style="@style/Widget.App.Sheet.Chip"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/label_grand" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/gameNull"
+                            style="@style/Widget.App.Sheet.Chip"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/label_null" />
+
+                </LinearLayout>
+
+                <!-- Mit / Ohne and win levels. Meaningless for a Null game. -->
+                <LinearLayout
+                        android:id="@+id/multiplierBlock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:baselineAligned="false"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/title_spitzen"
+                                android:textAppearance="@style/TextAppearance.App.SectionLabel" />
+
+                        <TextView
+                                android:id="@+id/spitzenValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.App.NumberInline"
+                                android:textColor="?attr/colorPrimary"
+                                tools:text="3×" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.slider.Slider
+                            android:id="@+id/spitzenSlider"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/description_spitzen_slider"
+                            android:stepSize="1"
+                            android:value="1"
+                            android:valueFrom="1"
+                            android:valueTo="11" />
+
+                    <TextView
+                            style="@style/Widget.App.Sheet.SectionLabel"
+                            android:text="@string/title_win_levels" />
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                                android:id="@+id/modifierHand"
+                                style="@style/Widget.App.Sheet.Toggle"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:text="@string/label_hand" />
+
+                        <com.google.android.material.button.MaterialButton
+                                android:id="@+id/modifierSchneider"
+                                style="@style/Widget.App.Sheet.Toggle"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:text="@string/label_schneider" />
+
+                        <com.google.android.material.button.MaterialButton
+                                android:id="@+id/modifierSchwarz"
+                                style="@style/Widget.App.Sheet.Toggle"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:text="@string/label_schwarz" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                                android:id="@+id/modifierAnnounced"
+                                style="@style/Widget.App.Sheet.Toggle"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:text="@string/label_announced" />
+
+                        <com.google.android.material.button.MaterialButton
+                                android:id="@+id/modifierOuvert"
+                                style="@style/Widget.App.Sheet.Toggle"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:text="@string/label_ouvert" />
+
+                        <Space
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- A Null game only has Hand and Ouvert. -->
+                <LinearLayout
+                        android:id="@+id/nullModifierBlock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                    <TextView
+                            style="@style/Widget.App.Sheet.SectionLabel"
+                            android:text="@string/title_win_levels" />
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                                android:id="@+id/nullModifierHand"
+                                style="@style/Widget.App.Sheet.Toggle"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:text="@string/label_hand" />
+
+                        <com.google.android.material.button.MaterialButton
+                                android:id="@+id/nullModifierOuvert"
+                                style="@style/Widget.App.Sheet.Toggle"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:text="@string/label_ouvert" />
+
+                        <Space
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Result -->
+                <TextView
+                        style="@style/Widget.App.Sheet.SectionLabel"
+                        android:text="@string/title_result" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/resultWon"
+                            style="@style/Widget.App.Sheet.Chip"
+                            android:layout_width="0dp"
+                            android:layout_height="46dp"
+                            android:layout_weight="1"
+                            android:text="@string/label_won" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/resultLost"
+                            style="@style/Widget.App.Sheet.Chip"
+                            android:layout_width="0dp"
+                            android:layout_height="46dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/label_lost" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/resultOverbid"
+                            style="@style/Widget.App.Sheet.Chip"
+                            android:layout_width="0dp"
+                            android:layout_height="46dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/label_overbid" />
+
+                </LinearLayout>
+
+                <!-- Bidding value, only needed for an overbid round. -->
+                <LinearLayout
+                        android:id="@+id/bidBlock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                    <TextView
+                            style="@style/Widget.App.Sheet.SectionLabel"
+                            android:text="@string/title_bidding" />
+
+                    <NumberPicker
+                            android:id="@+id/bidPicker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Footer: live points preview and save -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/pointsForLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textAppearance="@style/TextAppearance.App.MetaSmall"
+                            tools:text="Punkte für Marlon" />
+
+                    <TextView
+                            android:id="@+id/pointsPreview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.App.PointsPreview"
+                            tools:text="+36" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/saveButton"
+                        style="@style/Widget.App.Sheet.SaveButton"
+                        android:layout_width="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@string/dialog_title_button_save" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

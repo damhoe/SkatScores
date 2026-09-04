@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Doppelkopf score chart. Same shell as the Skat one, minus the breakdown card underneath: a
+  Doppelkopf total is the sum of the rounds a seat won and lost with nothing added on top, so
+  the chart and its legend are the whole story and the page does not need to scroll.
+
+  The legend doubles as the readout - dragging on the chart moves the values to the picked
+  round, so there is no separate tooltip layer.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".game.doppelkopf.adapter.presentation.DoppelkopfGameGraphFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/colorBackground">
+
+        <LinearLayout
+                android:id="@+id/appBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:minHeight="60dp"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="8dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/backButton"
+                    style="@style/Widget.App.AppBar.IconButton"
+                    android:contentDescription="@string/description_close"
+                    app:icon="@drawable/ic_arrow_back_24dp" />
+
+            <TextView
+                    android:id="@+id/graphTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.App.AppBarTitle"
+                    tools:text="Doppelkopf 003" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+                android:id="@+id/contentScroll"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:clipToPadding="false"
+                android:fillViewport="true"
+                android:paddingBottom="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appBar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/readoutLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/game_side_padding"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="@dimen/game_side_padding"
+                        android:textAppearance="@style/TextAppearance.App.SectionLabel"
+                        tools:text="Runde 9" />
+
+                <LinearLayout
+                        android:id="@+id/legend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/game_side_padding"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="@dimen/game_side_padding"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/readoutLabel" />
+
+                <!-- Cumulative totals or the points scored in each round. -->
+                <LinearLayout
+                        android:id="@+id/modeRow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/game_side_padding"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="@dimen/game_side_padding"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/legend">
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/modeCumulative"
+                            style="@style/Widget.App.FilterChip"
+                            android:layout_width="wrap_content"
+                            android:checked="true"
+                            android:text="@string/title_chart_cumulative" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/modePerRound"
+                            style="@style/Widget.App.FilterChip"
+                            android:layout_width="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/title_chart_per_round" />
+
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/chartCard"
+                        style="@style/Widget.Material3.CardView.Filled"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/game_side_padding"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="@dimen/game_side_padding"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardElevation="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHeight_min="@dimen/chart_card_min_height"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/modeRow">
+
+                    <com.damhoe.skatscores.plot.presentation.ScoreChartView
+                            android:id="@+id/scoreChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="14dp" />
+
+                    <TextView
+                            android:id="@+id/emptyHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:padding="32dp"
+                            android:text="@string/text_no_rounds"
+                            android:textAppearance="@style/TextAppearance.App.Meta"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

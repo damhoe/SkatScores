@@ -1,93 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    style="@style/Widget.Material3.CardView.Filled"
-    app:cardBackgroundColor="?colorSurfaceVariant"
-    app:cardCornerRadius="12dp">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+<!--
+  One row in "Recently played". The row itself opens the list; the old Fortsetzen and
+  delete buttons are gone — delete is swipe-to-dismiss with an undo snackbar.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rowContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/title">
+        android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground"
+        android:baselineAligned="false"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/screen_side_padding"
+        android:paddingTop="11dp"
+        android:paddingEnd="@dimen/screen_side_padding"
+        android:paddingBottom="11dp">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="24dp"
-            android:textAppearance="?attr/textAppearanceTitleLarge"
-            android:textColor="?colorOnSurfaceVariant"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Skatrunde im Okt." />
-
-        <TextView
-            android:id="@+id/players"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="textStart"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:textColor="?colorOnSurfaceVariant"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/date"
-            tools:text="Marlon, \nEvi, \nDaniel K." />
-
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:textColor="?colorOnSurfaceVariant"
-            app:layout_constraintStart_toStartOf="@+id/title"
-            app:layout_constraintTop_toBottomOf="@+id/title"
-            tools:text="8th October \n2023" />
-
-        <TextView
+    <TextView
             android:id="@+id/rounds"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_rounded_square_12"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.App.NumberBadge"
+            tools:text="24" />
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.App.RowTitle"
+                tools:text="Stammtisch 010" />
+
+        <TextView
+                android:id="@+id/meta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.App.Meta"
+                tools:text="Sa, 21. Feb · Marlon, Evi, Daniel" />
+
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/winnerDelta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:textColor="?colorOnSurfaceVariant"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/date"
-            tools:text="11/12" />
+            android:layout_marginStart="12dp"
+            android:textAppearance="@style/TextAppearance.App.NumberInline"
+            android:textColor="?attr/colorPrimary"
+            tools:text="+412" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_continue"
-            style="@style/Widget.App.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp"
-            android:focusedByDefault="false"
-            android:text="@string/title_continue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/players" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_delete"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:focusedByDefault="false"
-            app:icon="@drawable/ic_delete_24dp"
-            app:iconTint="?attr/colorTertiary"
-            app:layout_constraintBottom_toBottomOf="@id/button_continue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/button_continue" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.material.card.MaterialCardView>
+</LinearLayout>

@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="?attr/colorSurface"
-    android:foreground="?selectableItemBackground">
+<!-- One saved player. Same row rhythm as the recent-lists rows on home. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:baselineAligned="false"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/screen_side_padding"
+        android:paddingTop="12dp"
+        android:paddingEnd="@dimen/screen_side_padding"
+        android:paddingBottom="12dp">
 
     <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
-        app:layout_constraintStart_toEndOf="@id/button_continue"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="Daniel D." />
+            android:id="@+id/initial"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_avatar_tint"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.App.Initial"
+            tools:text="D" />
 
     <TextView
-        android:id="@+id/number_games"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="16dp"
-        tools:text="12 games" />
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.App.RowTitle"
+            tools:text="Daniel D." />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/button_continue"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircularImageView"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="16dp"
-        android:tint="?colorSurface"
-        android:background="?colorPrimaryContainer"
-        app:srcCompat="@drawable/ic_avatar_48dp" />
+    <TextView
+            android:id="@+id/number_games"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textAppearance="@style/TextAppearance.App.Meta"
+            tools:text="12 lists" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

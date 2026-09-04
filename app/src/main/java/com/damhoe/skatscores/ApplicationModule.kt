@@ -1,5 +1,6 @@
 package com.damhoe.skatscores
 
+import com.damhoe.skatscores.persistence.DatabaseConstants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,9 +12,10 @@ object ApplicationModule
 {
     @Provides
     @DatabaseInfo
-    fun provideDatabaseName() = "skat_scores_app.db"
+    fun provideDatabaseName() = DatabaseConstants.DATABASE_NAME
 
+    /** 2 added the Doppelkopf tables; the upgrade only creates what is missing. */
     @Provides
     @DatabaseInfo
-    fun provideDatabaseVersion() = 3
+    fun provideDatabaseVersion() = 2
 }

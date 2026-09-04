@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark counterpart of the avatar palette in values/arrays.xml. -->
+<resources>
+
+    <array name="avatar_palette">
+        <item>@color/md_theme_dark_avatar_1</item>
+        <item>@color/md_theme_dark_avatar_2</item>
+        <item>@color/md_theme_dark_avatar_3</item>
+        <item>@color/md_theme_dark_avatar_4</item>
+        <item>@color/md_theme_dark_avatar_5</item>
+        <item>@color/md_theme_dark_avatar_6</item>
+    </array>
+
+</resources>

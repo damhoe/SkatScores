@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Doppelkopf round sheet. One surface for entering a new round and for editing an existing one,
+  with a live points preview in the footer.
+
+  The order follows the round itself: who was Re, who won, how clearly, what was announced, and
+  finally the extras. The party section is the only one that has to be filled in - until both
+  queens are placed (or a soloist picked) there is nothing to save, so Save stays disabled and
+  the hint says what is missing.
+
+  The chip rows are plain LinearLayouts rather than MaterialButtonToggleGroups, matching the
+  Skat sheet: the group fuses its children into a connected bar and strips their inner corners,
+  and exclusivity is enforced in the fragment anyway so that a restored draft selects the right
+  chip.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_sheet"
+            android:clipToPadding="false">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+            <View
+                    android:layout_width="38dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bg_drag_handle" />
+
+            <!-- Header -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/sheetTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/TextAppearance.App.AppBarTitle"
+                        tools:text="Runde 9" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/closeButton"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/description_close"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        app:icon="@drawable/ic_close_24dp"
+                        app:iconSize="20dp"
+                        app:iconTint="?attr/colorOutline" />
+
+            </LinearLayout>
+
+            <!-- Normal or solo -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_round_kind" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/kindNormal"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/label_round_normal" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/kindSolo"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/label_round_solo" />
+
+            </LinearLayout>
+
+            <!-- Who was Re. Two seats for a normal round, one for a solo. -->
+            <TextView
+                    android:id="@+id/seatsLabel"
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_who_was_re" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/seat1"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        tools:text="Marlon" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/seat2"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        tools:text="Evi" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/seat3"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        tools:text="Daniel" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/seat4"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        tools:text="Sonja" />
+
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/seatsHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="@style/TextAppearance.App.Meta"
+                    tools:text="Mark the two players who had the queens of clubs." />
+
+            <!-- Which solo was played. Only shown for a solo. -->
+            <LinearLayout
+                    android:id="@+id/soloKindBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                <TextView
+                        style="@style/Widget.App.Sheet.SectionLabel"
+                        android:text="@string/title_solo_kind" />
+
+                <!-- Filled by the fragment: one chip per solo the domain knows. -->
+                <LinearLayout
+                        android:id="@+id/soloKindRows"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+            </LinearLayout>
+
+            <!-- Winner -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_winner" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/winnerRe"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_height="46dp"
+                        android:layout_weight="1"
+                        android:text="@string/label_re" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/winnerKontra"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_height="46dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/label_kontra" />
+
+            </LinearLayout>
+
+            <!-- How clearly it was won. Cumulative, so one chip says it all. -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_win_level" />
+
+            <LinearLayout
+                    android:id="@+id/winLevelRows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            <!-- Re / Kontra called during the round. -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_dk_announcements" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/announceRe"
+                        style="@style/Widget.App.Sheet.Toggle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/label_re" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/announceKontra"
+                        style="@style/Widget.App.Sheet.Toggle"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/label_kontra" />
+
+            </LinearLayout>
+
+            <!-- Levels announced in advance. -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_dk_absage" />
+
+            <LinearLayout
+                    android:id="@+id/absageRows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            <!-- Extras. Only a list scored with them shows this at all. -->
+            <LinearLayout
+                    android:id="@+id/extraPointsBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                <TextView
+                        style="@style/Widget.App.Sheet.SectionLabel"
+                        android:text="@string/title_dk_extra_points" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_dk_extra_points_hint"
+                        android:textAppearance="@style/TextAppearance.App.Meta" />
+
+                <include
+                        android:id="@+id/extraRe"
+                        layout="@layout/view_extra_points_stepper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp" />
+
+                <include
+                        android:id="@+id/extraKontra"
+                        layout="@layout/view_extra_points_stepper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" />
+
+            </LinearLayout>
+
+            <!-- Footer: live points preview and save -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/pointsForLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textAppearance="@style/TextAppearance.App.MetaSmall"
+                            tools:text="Punkte für Re" />
+
+                    <TextView
+                            android:id="@+id/pointsPreview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.App.PointsPreview"
+                            tools:text="+4" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/saveButton"
+                        style="@style/Widget.App.Sheet.SaveButton"
+                        android:layout_width="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@string/dialog_title_button_save" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

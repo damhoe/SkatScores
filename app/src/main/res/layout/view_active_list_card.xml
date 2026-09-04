@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Hero card for the list that is currently running. Fixed indigo brand surface in both
+  themes, so its content colours are literal rather than ?attr-based.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Material3.CardView.Filled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/hero_surface"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="0dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="18dp">
+
+        <!-- Title row -->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/listName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.App.AppBarTitle"
+                    android:textColor="@color/hero_on_surface"
+                    tools:text="Stammtisch 010" />
+
+            <TextView
+                    android:id="@+id/listDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textAppearance="@style/TextAppearance.App.SectionLabel"
+                    android:textColor="@color/hero_on_surface_muted"
+                    tools:text="Sa, 21. Feb" />
+
+        </LinearLayout>
+
+        <!-- Standings: one column per seat -->
+        <LinearLayout
+                android:id="@+id/standings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/player1Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.Meta"
+                        android:textColor="@color/hero_on_surface_muted"
+                        tools:text="Marlon" />
+
+                <TextView
+                        android:id="@+id/player1Total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.App.Total.Hero"
+                        tools:text="+412" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/player2Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.Meta"
+                        android:textColor="@color/hero_on_surface_muted"
+                        tools:text="Evi" />
+
+                <TextView
+                        android:id="@+id/player2Total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.App.Total.Hero"
+                        tools:text="-96" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/player3Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.Meta"
+                        android:textColor="@color/hero_on_surface_muted"
+                        tools:text="Daniel" />
+
+                <TextView
+                        android:id="@+id/player3Total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.App.Total.Hero"
+                        tools:text="+18" />
+
+            </LinearLayout>
+
+            <!-- Only a Doppelkopf table fills this column; a Skat list hides it. -->
+            <LinearLayout
+                    android:id="@+id/player4Column"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                <TextView
+                        android:id="@+id/player4Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.Meta"
+                        android:textColor="@color/hero_on_surface_muted"
+                        tools:text="Sonja" />
+
+                <TextView
+                        android:id="@+id/player4Total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.App.Total.Hero"
+                        tools:text="-8" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Progress -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/roundProgress"
+                style="@style/Widget.App.Hero.Progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:trackStopIndicatorSize="0dp"
+                tools:progress="50" />
+
+        <TextView
+                android:id="@+id/progressLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.App.MetaSmall"
+                android:textColor="@color/hero_on_surface_muted"
+                tools:text="Runde 12 / 24 · Gibt: Evi" />
+
+        <!-- Action: a single primary button; the whole card already opens the list. -->
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/keepPlayingButton"
+                style="@style/Widget.App.Hero.Button"
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:text="@string/title_keep_playing" />
+
+    </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

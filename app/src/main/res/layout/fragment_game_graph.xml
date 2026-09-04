@@ -1,43 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Score chart. Same shell as the game screen: 60dp single-line header, 16dp gutters, card
+  surface for the plot.
+
+  The legend doubles as the readout - dragging on the chart moves the values to the picked
+  round, so there is no separate tooltip layer.
+
+  Everything below the app bar scrolls, because tournament lists add the breakdown card under
+  the chart. The chart itself stays a match_constraint with a minimum height, so with the
+  breakdown gone (simple scoring, or no round played yet) fillViewport hands it the whole
+  screen exactly as before, and with the breakdown there it gives up as much height as it can
+  spare before the page starts scrolling.
+-->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".game.adapter.presentation.GameGraphFragment">
+        tools:context=".game.skat.adapter.presentation.GameGraphFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="?android:attr/colorBackground">
 
-        <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/appbarLayout"
-                style="@style/Widget.App.AppBarLayout.Colored"
+        <LinearLayout
+                android:id="@+id/appBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:minHeight="60dp"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="8dp"
                 app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
-                    style="@style/Widget.App.Toolbar.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="?actionBarSize"
-                    app:layout_collapseMode="none"
-                    app:title="@string/graphTitle"
-                    app:titleTextColor="?colorOnSurface">
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/backButton"
+                    style="@style/Widget.App.AppBar.IconButton"
+                    android:contentDescription="@string/description_close"
+                    app:icon="@drawable/ic_arrow_back_24dp" />
 
-            </com.google.android.material.appbar.MaterialToolbar>
+            <TextView
+                    android:id="@+id/graphTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.App.AppBarTitle"
+                    tools:text="Stammtisch 010" />
 
-        </com.google.android.material.appbar.AppBarLayout>
+        </LinearLayout>
 
-        <com.damhoe.skatscores.plot.presentation.GraphView
-                android:id="@+id/graph_view"
+        <androidx.core.widget.NestedScrollView
+                android:id="@+id/contentScroll"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="24dp"
-                app:gridColor="?attr/colorSurfaceVariant"
+                android:clipToPadding="false"
+                android:fillViewport="true"
+                android:paddingBottom="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appbarLayout" />
+                app:layout_constraintTop_toBottomOf="@id/appBar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <!-- What the numbers mean: the final total, or the round being inspected. -->
+                <TextView
+                        android:id="@+id/readoutLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/game_side_padding"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="@dimen/game_side_padding"
+                        android:textAppearance="@style/TextAppearance.App.SectionLabel"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Runde 6" />
+
+                <LinearLayout
+                        android:id="@+id/legend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/game_side_padding"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="@dimen/game_side_padding"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/readoutLabel" />
+
+                <!-- Cumulative totals or the points scored in each round. -->
+                <LinearLayout
+                        android:id="@+id/modeRow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/game_side_padding"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="@dimen/game_side_padding"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/legend">
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/modeCumulative"
+                            style="@style/Widget.App.FilterChip"
+                            android:layout_width="wrap_content"
+                            android:checked="true"
+                            android:text="@string/title_chart_cumulative" />
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/modePerRound"
+                            style="@style/Widget.App.FilterChip"
+                            android:layout_width="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/title_chart_per_round" />
+
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/chartCard"
+                        style="@style/Widget.Material3.CardView.Filled"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/game_side_padding"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="@dimen/game_side_padding"
+                        android:layout_marginBottom="20dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardElevation="0dp"
+                        app:layout_constraintBottom_toTopOf="@id/breakdownSection"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHeight_min="@dimen/chart_card_min_height"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/modeRow"
+                        app:layout_goneMarginBottom="0dp">
+
+                    <com.damhoe.skatscores.plot.presentation.ScoreChartView
+                            android:id="@+id/scoreChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="14dp" />
+
+                    <TextView
+                            android:id="@+id/emptyHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:padding="32dp"
+                            android:text="@string/text_no_rounds"
+                            android:textAppearance="@style/TextAppearance.App.Meta"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!--
+                  Where the totals in the legend come from. Tournament lists only - with simple
+                  scoring the chart is the whole story.
+                -->
+                <LinearLayout
+                        android:id="@+id/breakdownSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/game_side_padding"
+                        android:layout_marginEnd="@dimen/game_side_padding"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/chartCard"
+                        tools:visibility="visible">
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/title_points_breakdown"
+                            android:textAppearance="@style/TextAppearance.App.SectionLabel" />
+
+                    <com.google.android.material.card.MaterialCardView
+                            style="@style/Widget.Material3.CardView.Filled"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                            app:cardCornerRadius="@dimen/card_corner_radius"
+                            app:cardElevation="0dp">
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:paddingStart="12dp"
+                                android:paddingTop="14dp"
+                                android:paddingEnd="12dp"
+                                android:paddingBottom="18dp">
+
+                            <!-- Same three columns as the legend, in the same seat order. -->
+                            <LinearLayout style="@style/Widget.App.Breakdown.Row">
+
+                                <TextView
+                                        android:id="@+id/breakdownName1"
+                                        style="@style/Widget.App.Breakdown.Name"
+                                        tools:text="Marlon" />
+
+                                <TextView
+                                        android:id="@+id/breakdownName2"
+                                        style="@style/Widget.App.Breakdown.Name"
+                                        tools:text="Evi" />
+
+                                <TextView
+                                        android:id="@+id/breakdownName3"
+                                        style="@style/Widget.App.Breakdown.Name"
+                                        tools:text="Daniel" />
+
+                            </LinearLayout>
+
+                            <include
+                                    android:id="@+id/breakdownRows"
+                                    layout="@layout/view_points_breakdown"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:layout_marginTop="16dp"
+                                    android:background="?attr/colorHairline" />
+
+                            <TextView
+                                    style="@style/Widget.App.Breakdown.Label"
+                                    android:text="@string/label_total" />
+
+                            <LinearLayout style="@style/Widget.App.Breakdown.Row">
+
+                                <TextView
+                                        android:id="@+id/breakdownTotal1"
+                                        style="@style/Widget.App.Breakdown.Value.Total"
+                                        tools:text="+562" />
+
+                                <TextView
+                                        android:id="@+id/breakdownTotal2"
+                                        style="@style/Widget.App.Breakdown.Value.Total"
+                                        tools:text="-136" />
+
+                                <TextView
+                                        android:id="@+id/breakdownTotal3"
+                                        style="@style/Widget.App.Breakdown.Value.Total"
+                                        tools:text="+222" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

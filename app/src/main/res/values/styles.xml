@@ -2,13 +2,34 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="colorPrimaryDark">?attr/colorSecondary</item>
-        <item name="android:fontFamily">@font/app_font</item>
+        <!--
+          No android:fontFamily here on purpose - see the type scale below. A family set on
+          the theme is applied to a TextView as a direct attribute, which beats the text
+          appearance and takes the appearance's weight and face down with it: it was
+          flattening every android:textFontWeight in the app to regular and rendering the
+          mono styles in the sans face. The scale carries the family instead.
+        -->
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.App.M3.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.App.M3.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.App.M3.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.App.M3.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.App.M3.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.App.M3.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.App.M3.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.App.M3.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.App.M3.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.App.M3.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.App.M3.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.App.M3.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.App.M3.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.App.M3.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.App.M3.LabelSmall</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="android:listDivider">@drawable/list_divider</item>
         <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
         <item name="materialIconButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupIconButton</item>
@@ -20,13 +41,33 @@
         <item name="coloredToolbarStyle">@style/Widget.App.Toolbar.Colored</item>
     </style>
 
+    <!--
+      The type scale is repeated rather than shared: this theme has to parent
+      Theme.Material3.Dark, so there is no common ancestor to hang it on. Keep the two blocks
+      in step.
+    -->
     <style name="Theme.App.Dark" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:fontFamily">@font/app_font</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!-- No android:fontFamily here either; the scale carries it. -->
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.App.M3.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.App.M3.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.App.M3.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.App.M3.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.App.M3.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.App.M3.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.App.M3.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.App.M3.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.App.M3.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.App.M3.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.App.M3.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.App.M3.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.App.M3.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.App.M3.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.App.M3.LabelSmall</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
-        <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
         <item name="materialIconButtonOutlinedStyle">@style/Widget.App.Button.ToggleGroupIconButton.Dark</item>
         <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.OutlinedButton</item>
@@ -36,9 +77,98 @@
         <item name="coloredAppBarLayoutStyle">@style/Widget.App.AppBarLayout.Colored.Dark</item>
         <item name="coloredToolbarStyle">@style/Widget.App.Toolbar.Colored.Dark</item>
     </style>
-    
-    <style name="Widget.App.PopupMenu" parent="@style/Widget.Material3.PopupMenu">
-        <item name="android:popupBackground">@drawable/popup_menu_background</item>
+
+    <!--
+      ============ Material 3 type scale ============
+
+      Material's own text appearances hard-set the family: every
+      TextAppearance.M3.Sys.Typescale.* declares fontFamily and android:fontFamily as
+      @string/m3_ref_typeface_plain_regular (Roboto). A theme-level android:fontFamily reaches
+      plain TextViews but never reaches a component, because a component takes its appearance
+      from the type scale - MaterialButton and Chip both resolve android:textAppearance to
+      ?attr/textAppearanceLabelLarge - and the appearance names a family of its own.
+
+      So re-facing the app means repointing the fifteen scale attributes, not setting one font
+      on the theme. These styles change nothing but the family; sizes, tracking and line
+      heights stay on Material's values.
+
+      The .Emphasized variants that Material 1.13 adds are deliberately left alone: nothing in
+      the app resolves to one. Override them here as well if that changes.
+    -->
+
+    <style name="TextAppearance.App.M3.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+    </style>
+
+    <style name="TextAppearance.App.M3.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:fontFamily">@font/app_sans</item>
     </style>
 
     <!-- Collapsing toolbar -->
@@ -47,7 +177,6 @@
         <item name="android:background">?attr/colorSurface</item>
         <item name="contentScrim">?attr/colorSurfaceVariant</item>
         <item name="statusBarScrim">?attr/colorSurfaceVariant</item>
-        <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="collapsedTitleTextColor">?attr/colorOnSurfaceVariant</item>
         <item name="expandedTitleTextColor">?attr/colorOnSurfaceVariant</item>
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.CollapsingToolbar</item>
@@ -61,10 +190,10 @@
         </item>
     </style>
     <style name="TextAppearance.App.CollapsingToolbar.Expanded"
-        parent="TextAppearance.Material3.DisplayMedium">
+        parent="TextAppearance.App.M3.DisplayMedium">
     </style>
     <style name="TextAppearance.App.CollapsingToolbar.Collapsed"
-        parent="TextAppearance.Material3.TitleLarge">
+        parent="TextAppearance.App.M3.TitleLarge">
     </style>
     <style name="ThemeOverlay.App.CollapsingToolbar" parent="">
         <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
@@ -93,7 +222,7 @@
         <item name="statusBarScrim">?attr/colorSurface</item>
     </style>
 
-    <style name="TextAppearance.App.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+    <style name="TextAppearance.App.ToolbarTitle" parent="TextAppearance.App.M3.TitleLarge">
         <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
@@ -128,7 +257,6 @@
     </style>
 
     <style name="ThemeOverlay.App.Toolbar.Variant" parent="">
-
     </style>
 
     <!-- Bottom navigation bar -->
@@ -163,7 +291,6 @@
     </style>
 
     <style name="Widget.App.AutoCompleteTextView" parent="Widget.Material3.AutoCompleteTextView.FilledBox">
-
     </style>
 
     <style name="Widget.App.SimplePieChart" parent="Widget.Material3.CircularProgressIndicator">
@@ -228,6 +355,11 @@
     <style name="Widget.App.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
     </style>
 
+    <style name="Widget.App.Button.OutlinedButton.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="iconTint">?attr/colorSecondary</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
     <style name="Widget.App.ExtendedFloatingActionButton.Primary"
         parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
     </style>
@@ -236,17 +368,23 @@
         parent="Widget.Material3.ExtendedFloatingActionButton.Secondary">
     </style>
 
-    <style name="Widget.App.TextButton" parent="Widget.Material3.Button.TextButton">
+    <style name="Widget.App.TextButton.Tertiary" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">?attr/colorTertiary</item>
     </style>
 
-    <style name="Widget.App.Chip.Suggestion" parent="Widget.Material3.Chip.Suggestion">
+    <style name="Widget.App.IconButton.Tertiary" parent="Widget.Material3.Button.IconButton">
+        <item name="iconTint">?attr/colorTertiary</item>
+    </style>
+
+    <style name="Widget.App.Chip.Suggestion" parent="Widget.Material3.Chip.Suggestion.Elevated">
         <item name="android:textAppearance">@style/TextAppearance.App.Chip.Suggestion</item>
     </style>
 
-    <style name="TextAppearance.App.Chip.Suggestion" parent="TextAppearance.Material3.BodyMedium">
-        <item name="android:fontFamily">@font/app_font</item>
-        <item name="fontFamily">@font/app_font</item>
-    </style>
+    <!--
+      A chip's own default is labelLarge; this keeps it on body metrics instead. The family is
+      not set here any more - it comes from the scale.
+    -->
+    <style name="TextAppearance.App.Chip.Suggestion" parent="TextAppearance.App.M3.BodyMedium" />
 
     <style name="ShapeAppearanceOverlay.App.CircularImageView" parent="">
         <item name="cornerSize">50%</item>
@@ -257,7 +395,7 @@
     </style>
 
     <style name="ThemeOverlay.App.Slider" parent="">
-        <item name="colorSecondaryContainer">?attr/colorSurfaceVariant</item>
+        <item name="colorSecondaryContainer">?attr/colorSurfaceContainer</item>
         <item name="colorSurfaceInverse">?attr/colorSecondary</item>
     </style>
 
@@ -283,14 +421,14 @@
     </style>
 
     <style name="TextAppearance.App.TitleSmallBold"
-        parent="TextAppearance.Material3.TitleSmall">
+        parent="TextAppearance.App.M3.TitleSmall">
     </style>
 
-    <style name="TextAppearance.App.ButtonSmallest" parent="TextAppearance.Material3.BodySmall">
+    <style name="TextAppearance.App.ButtonSmallest" parent="TextAppearance.App.M3.BodySmall">
         <item name="android:textSize" tools:ignore="SpUsage">10dp</item>
     </style>
 
-    <style name="TextAppearance.App.TitleMedium" parent="TextAppearance.Material3.TitleLarge">
+    <style name="TextAppearance.App.TitleMedium" parent="TextAppearance.App.M3.TitleLarge">
         <item name="android:textSize">20sp</item>
     </style>
 

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Starts a new list with the players and round count of the most recent one. -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.App.OutlinedRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:contentDescription="@string/description_quick_start"
+        android:focusable="true">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="13dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="13dp">
+
+        <!--
+          Overlapping initials avatars, one per seat. The fourth only appears for a
+          Doppelkopf table; a Skat row hides it rather than leaving a gap.
+        -->
+        <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="28dp">
+
+            <TextView
+                    android:id="@+id/avatar1"
+                    style="@style/Widget.App.QuickStartAvatar"
+                    tools:text="M" />
+
+            <TextView
+                    android:id="@+id/avatar2"
+                    style="@style/Widget.App.QuickStartAvatar"
+                    android:layout_marginStart="20dp"
+                    tools:text="E" />
+
+            <TextView
+                    android:id="@+id/avatar3"
+                    style="@style/Widget.App.QuickStartAvatar"
+                    android:layout_marginStart="40dp"
+                    tools:text="D" />
+
+            <TextView
+                    android:id="@+id/avatar4"
+                    style="@style/Widget.App.QuickStartAvatar"
+                    android:layout_marginStart="60dp"
+                    android:visibility="gone"
+                    tools:text="S"
+                    tools:visibility="visible" />
+
+        </FrameLayout>
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="@string/title_same_round_again"
+                android:textAppearance="@style/TextAppearance.App.RowTitle" />
+
+        <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="12dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_replay_24dp"
+                app:tint="?attr/colorPrimary" />
+
+    </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

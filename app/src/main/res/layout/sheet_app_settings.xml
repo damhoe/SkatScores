@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  App settings. Replaces the AlertDialog built from dialog_app_settings.xml: radio groups
+  become the same selection chips the rest of the app uses, so a two-option choice reads at a
+  glance instead of as a form.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_sheet"
+            android:clipToPadding="false">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+            <View
+                    android:layout_width="38dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bg_drag_handle" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_settings"
+                        android:textAppearance="@style/TextAppearance.App.AppBarTitle" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/closeButton"
+                        style="@style/Widget.App.AppBar.IconButton"
+                        android:contentDescription="@string/description_close"
+                        app:icon="@drawable/ic_close_24dp"
+                        app:iconTint="?attr/colorOutline" />
+
+            </LinearLayout>
+
+            <!-- Theme -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/theme_preference_title" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/themeLight"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/mode_day_title" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/themeDark"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/mode_night_title" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/themeSystem"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/mode_system_title" />
+
+            </LinearLayout>
+
+            <!-- Language -->
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/language_preference_title" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/languageGerman"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/german" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/languageEnglish"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/english" />
+
+            </LinearLayout>
+
+            <!-- About -->
+            <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/aboutRow"
+                    style="@style/Widget.App.OutlinedRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="16dp"
+                        android:paddingTop="14dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="14dp">
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/title_about"
+                            android:textAppearance="@style/TextAppearance.App.RowTitle" />
+
+                    <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_next_24dp"
+                            app:tint="?attr/colorOutline" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

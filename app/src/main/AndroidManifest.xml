@@ -23,18 +23,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".game.adapter.presentation.GameActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SkatScores"
-            android:parentActivityName=".MainActivity"
-            android:launchMode="singleTask">
-            <!-- Parent activity meta-data to support API level 4+ -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

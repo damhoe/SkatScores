@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Type scale and component styles for the Home / Game redesign.
+
+  Kept in a separate file so the redesigned surface is easy to review against the handoff
+  while the rest of the app still runs on the Playpen Sans styles in styles.xml.
+
+  Weights: the handoff asks for 400/500/600/700 and both faces ship those four cuts, so the
+  styles below set android:textFontWeight (API 28+, minSdk is 30) rather than falling back to
+  synthetic bold.
+-->
+<resources>
+
+    <!--
+      ============ Text ============
+
+      Two faces, each named in exactly one file:
+        text    -> res/font/app_sans.xml  (Geist)
+        numbers -> res/font/app_mono.xml  (Roboto Mono, standing in for Geist Mono)
+
+      Repointing one of those files re-faces every redesigned screen.
+    -->
+
+    <style name="TextAppearance.App.Redesign" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/app_sans</item>
+        <item name="fontFamily">@font/app_sans</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <!--
+      Every number in the app inherits from this, so score columns line up. tnum/lnum ask for
+      tabular lining figures explicitly: the current face is fixed-width anyway, but this keeps
+      digit advances equal if a proportional face is ever swapped in.
+
+      Tracking is zeroed rather than left to inherit. The parent is BodyMedium, which carries
+      +0.0179em - tracking meant to open up 14sp body text, applied here to a face that is
+      already spaced for its own width. On the totals it read as gappy digits, and it grew
+      with the size: at 30sp the stat tiles were paying half a point of it per digit.
+
+      The two mono styles that do want tracking - the uppercase section label, and the date on
+      the hero card - set their own, so this does not reach them.
+    -->
+    <style name="TextAppearance.App.Redesign.Mono" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/app_mono</item>
+        <item name="fontFamily">@font/app_mono</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFeatureSettings">tnum, lnum</item>
+    </style>
+
+    <!--
+      Screen title, e.g. the greeting on home. 26sp / 700 / -0.6 tracking.
+
+      Line height is set explicitly here and on every other style above ~20sp. The scale
+      parents on BodyMedium, which carries a 20sp line box - fine under it, but a 26sp line
+      set in a 20sp box has its leading pulled negative, which crowds a wrapped title and can
+      crop the extremes of a single line.
+    -->
+    <style name="TextAppearance.App.ScreenTitle" parent="TextAppearance.App.Redesign">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:letterSpacing">-0.023</item>
+        <item name="android:lineHeight">32sp</item>
+        <item name="lineHeight">32sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!--
+      Title of a screen's app bar and of every bottom sheet. 19sp / 600 / -0.3 tracking.
+
+      This was written out attribute by attribute in twelve layouts before it had a style, and
+      the copies had already drifted: the six app bars carried the tracking, the five sheets
+      and the hero card's list name did not.
+    -->
+    <style name="TextAppearance.App.AppBarTitle" parent="TextAppearance.App.Redesign">
+        <item name="android:textSize">19sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:letterSpacing">-0.015</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="lineHeight">24sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Uppercase section label. Mono 11sp / 500 / 1.2 tracking. -->
+    <style name="TextAppearance.App.SectionLabel" parent="TextAppearance.App.Redesign.Mono">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:letterSpacing">0.109</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">?attr/colorOutline</item>
+    </style>
+
+    <!-- List row title. 14.5sp / 500. -->
+    <style name="TextAppearance.App.RowTitle" parent="TextAppearance.App.Redesign">
+        <item name="android:textSize">14.5sp</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Secondary/meta line. 12sp / 400. -->
+    <style name="TextAppearance.App.Meta" parent="TextAppearance.App.Redesign">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">?attr/colorOutline</item>
+    </style>
+
+    <!--
+      The same line one step down, for the denser rows: the subtitle of a round, the caption
+      over the points preview, the progress line on the hero card. 11.5sp / 400.
+    -->
+    <style name="TextAppearance.App.MetaSmall" parent="TextAppearance.App.Meta">
+        <item name="android:textSize">11.5sp</item>
+    </style>
+
+    <!-- Title of one round in the score list. Denser than a list row title: 13.5sp / 400. -->
+    <style name="TextAppearance.App.RoundTitle" parent="TextAppearance.App.Redesign">
+        <item name="android:textSize">13.5sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!--
+      Initials in an avatar circle. The list rows set the base size; the player page header
+      takes the same face and weight two steps up.
+    -->
+    <style name="TextAppearance.App.Initial" parent="TextAppearance.App.Redesign">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">600</item>
+    </style>
+
+    <style name="TextAppearance.App.Initial.Profile">
+        <item name="android:textSize">28sp</item>
+        <item name="android:lineHeight">32sp</item>
+        <item name="lineHeight">32sp</item>
+    </style>
+
+    <!-- Button label. 15sp / 600. -->
+    <style name="TextAppearance.App.ButtonLabel" parent="TextAppearance.App.Redesign">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- Big signed total. Mono 26sp / 700. -->
+    <style name="TextAppearance.App.Total" parent="TextAppearance.App.Redesign.Mono">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:lineHeight">30sp</item>
+        <item name="lineHeight">30sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Big signed total on the hero card. Mono 28sp / 700. -->
+    <style name="TextAppearance.App.Total.Hero">
+        <item name="android:textSize">28sp</item>
+        <item name="android:lineHeight">32sp</item>
+        <item name="lineHeight">32sp</item>
+        <item name="android:textColor">@color/hero_on_surface</item>
+    </style>
+
+    <!--
+      Seat total in the chart legend. Mono 20sp / 700. The colour is replaced at runtime with
+      the seat's series colour, which is what ties the number to its line on the chart.
+    -->
+    <style name="TextAppearance.App.Total.Legend">
+        <item name="android:textSize">20sp</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="lineHeight">24sp</item>
+    </style>
+
+    <!-- Signed value of one round. Mono 17sp / 700. -->
+    <style name="TextAppearance.App.RoundValue" parent="TextAppearance.App.Redesign.Mono">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+    <!-- Inline number, e.g. a round count or a winner delta. Mono 13sp / 500. -->
+    <style name="TextAppearance.App.NumberInline" parent="TextAppearance.App.Redesign.Mono">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <!-- Number in a filled square, e.g. the round count on a list row. Mono 12sp / 600. -->
+    <style name="TextAppearance.App.NumberBadge" parent="TextAppearance.App.Redesign.Mono">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <!--
+      Smallest number in the app: the round number in the score list's gutter, and the
+      won-lost record under a seat. Mono 11sp / 400. Each caller sets its own colour - the
+      gutter sits back further than the record does.
+    -->
+    <style name="TextAppearance.App.NumberSmall" parent="TextAppearance.App.Redesign.Mono">
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <!-- Running points of the round being entered, in the sheet's footer. Mono 30sp / 600. -->
+    <style name="TextAppearance.App.PointsPreview" parent="TextAppearance.App.Redesign.Mono">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:lineHeight">36sp</item>
+        <item name="lineHeight">36sp</item>
+    </style>
+
+    <!--
+      The three lines of the player page header. They are the only sizes in the scale that
+      appear on exactly one screen; they are named anyway, so the header cannot drift away
+      from the rest of the type the way the app bar titles did.
+    -->
+
+    <!-- Player name under the avatar. Sans 22sp / 600. -->
+    <style name="TextAppearance.App.ProfileName" parent="TextAppearance.App.Redesign">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:lineHeight">28sp</item>
+        <item name="lineHeight">28sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- How many lists the player appears in. Sans 20sp / 400. -->
+    <style name="TextAppearance.App.ProfileCount" parent="TextAppearance.App.Redesign">
+        <item name="android:textSize">20sp</item>
+        <item name="android:lineHeight">26sp</item>
+        <item name="lineHeight">26sp</item>
+    </style>
+
+    <!-- ============ Components ============ -->
+
+    <!--
+      Game-type filter pill on home. Doppelkopf ships visible but disabled: its scoring does
+      not exist yet, and hiding the row entirely loses the affordance the design relies on.
+    -->
+    <style name="Widget.App.FilterChip" parent="Widget.Material3.Button.TextButton">
+        <item name="android:checkable">true</item>
+        <item name="android:layout_height">34dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">12.5sp</item>
+        <item name="android:textColor">@color/filter_chip_text</item>
+        <item name="backgroundTint">@color/filter_chip_background</item>
+        <item name="cornerRadius">17dp</item>
+    </style>
+
+    <!--
+      App bar icon button. 44dp box around a 24dp glyph, with min width/height and padding
+      zeroed so MaterialButton's 88dp minimum does not stretch the box and shift the icon
+      off centre.
+
+      The circular shape and the ripple have to be set together: the shape masks the ripple, so
+      a press draws a 44dp circle centred on the glyph rather than a slab the width of the box.
+    -->
+    <style name="Widget.App.AppBar.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">24dp</item>
+        <item name="iconTint">?attr/colorOnSurface</item>
+        <item name="rippleColor">@color/icon_button_ripple</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.App.Circle</item>
+    </style>
+
+    <style name="ShapeAppearance.App.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Primary action inside the hero card: white fill, indigo label. -->
+    <style name="Widget.App.Hero.Button" parent="Widget.Material3.Button">
+        <item name="android:layout_height">46dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@color/hero_on_surface</item>
+        <item name="android:textColor">@color/hero_surface</item>
+        <item name="iconTint">@color/hero_surface</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.ButtonLabel</item>
+        <item name="rippleColor">@color/hero_surface</item>
+    </style>
+
+    <!-- Square secondary action inside the hero card. -->
+    <style name="Widget.App.Hero.IconButton" parent="Widget.Material3.Button.IconButton.Filled">
+        <item name="android:layout_width">46dp</item>
+        <item name="android:layout_height">46dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="backgroundTint">@color/hero_on_surface_faint</item>
+        <item name="iconTint">@color/hero_on_surface</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">22dp</item>
+        <item name="cornerRadius">14dp</item>
+    </style>
+
+    <!--
+      Floating bottom pill shared by home, players and the game screen. No shadow and no
+      outline: it separates itself by fill alone, on the same surfaceContainer the scoreboard
+      and the other filled cards use, so every container in the app sits at one level.
+    -->
+    <style name="Widget.App.BottomPill" parent="Widget.Material3.CardView.Filled">
+        <item name="android:layout_height">@dimen/bottom_pill_height</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
+        <item name="cardCornerRadius">@dimen/bottom_pill_corner_radius</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <!--
+      Destination inside the bottom pill on the main pages: icon over a label, the way a
+      navigation bar reads. The game screen is not a set of destinations, so its slots stay
+      icon-only - see Action below.
+
+      Zero min width/height and zero horizontal padding matter here. MaterialButton's defaults
+      (88dp min width, 16dp padding, 6dp insets) fight the weighted slots and push the
+      icon/label group off centre, which is what made the bar look skewed.
+    -->
+    <style name="Widget.App.BottomPill.Tab" parent="Widget.Material3.Button.TextButton">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="android:gravity">center</item>
+        <item name="iconGravity">top</item>
+        <item name="iconSize">24dp</item>
+        <item name="iconPadding">3dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">10.5sp</item>
+    </style>
+
+    <!-- Icon-only slot inside the bottom pill, used by the game screen's actions. -->
+    <style name="Widget.App.BottomPill.Action" parent="Widget.Material3.Button.IconButton">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">24dp</item>
+        <item name="iconTint">?attr/colorPrimary</item>
+    </style>
+
+    <!--
+      Centre button of the bottom bar. A MaterialButton rather than a FloatingActionButton:
+      the FAB forces a square in onMeasure, so a stadium is not something it can be.
+
+      It reads as part of the bar rather than as something hovering over it, so the state list
+      animator goes too - that is what lifts a filled button on press, and zeroing the resting
+      elevation alone would not stop it.
+
+      Both dimensions live here rather than in the layouts. A layout attribute beats a style
+      one, so a stray wrap_content in any of the three screens would silently put the button
+      back at MaterialButton's own measurement.
+    -->
+    <style name="Widget.App.CenterFab" parent="Widget.Material3.Button">
+        <item name="android:layout_width">@dimen/center_fab_width</item>
+        <item name="android:layout_height">@dimen/center_fab_height</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="iconTint">?attr/colorOnPrimary</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">24dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.App.CenterFab</item>
+    </style>
+
+    <style name="ShapeAppearance.App.CenterFab" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Hairline-outlined row, used by quick start. -->
+    <style name="Widget.App.OutlinedRow" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@android:color/transparent</item>
+        <item name="strokeColor">?attr/colorHairline</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <!--
+      Destructive action at the foot of the player page. It used to be a bare text button under
+      two hairline rows, which left it floating with no container of its own; an outline in the
+      error colour gives it the same footprint as the rows above without promoting it to a
+      filled button.
+    -->
+    <style name="Widget.App.DangerButton" parent="Widget.Material3.Button">
+        <item name="android:layout_height">52dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.ButtonLabel</item>
+        <item name="backgroundTint">?attr/colorErrorContainer</item>
+        <item name="android:textColor">?attr/colorError</item>
+        <item name="iconTint">?attr/colorError</item>
+        <item name="iconSize">20dp</item>
+        <item name="rippleColor">@color/danger_button_ripple</item>
+        <item name="cornerRadius">@dimen/card_corner_radius</item>
+    </style>
+
+    <style name="Widget.App.Scoreboard.Name" parent="TextAppearance.App.Redesign">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">12.5sp</item>
+        <item name="android:textColor">?attr/colorOutline</item>
+    </style>
+
+    <style name="Widget.App.Scoreboard.Total" parent="TextAppearance.App.Total">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <!--
+      ============ Tournament breakdown ============
+
+      Shared by the pinned score board and the chart screen. Both put three weighted columns
+      of numbers under three names, so the parts of a Seeger-Fabian total read the same
+      wherever they are shown.
+    -->
+
+    <!-- Names the row of values below it, full width so the columns stay on their grid. -->
+    <style name="Widget.App.Breakdown.Label" parent="TextAppearance.App.SectionLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginTop">14dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">?attr/colorOutlineVariant</item>
+    </style>
+
+    <style name="Widget.App.Breakdown.Row" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:baselineAligned">false</item>
+    </style>
+
+    <style name="Widget.App.Breakdown.Value" parent="TextAppearance.App.NumberInline">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <!-- The sum of the rows above, on the chart screen. -->
+    <style name="Widget.App.Breakdown.Value.Total">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Seat name over a breakdown column; tinted with the seat's chart colour in code. -->
+    <style name="Widget.App.Breakdown.Name" parent="TextAppearance.App.Redesign">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">12.5sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <!-- ============ Player statistics ============ -->
+
+    <style name="Widget.App.StatTile" parent="Widget.Material3.CardView.Filled">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <style name="Widget.App.StatTile.Content" parent="">
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingBottom">18dp</item>
+    </style>
+
+    <style name="Widget.App.StatTile.Value" parent="TextAppearance.App.Redesign.Mono">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:lineHeight">36sp</item>
+        <item name="lineHeight">36sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Widget.App.StatTile.Label" parent="TextAppearance.App.SectionLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Widget.App.StatProgress" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="trackThickness">6dp</item>
+        <item name="trackCornerRadius">3dp</item>
+        <item name="trackColor">?attr/colorSurfaceContainerHigh</item>
+        <item name="indicatorColor">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Icon, label and chevron inside a hairline action row. -->
+    <style name="Widget.App.PlayerActionRow" parent="">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:baselineAligned">false</item>
+    </style>
+
+    <!-- 28dp initials avatar, overlapped by -8dp in the quick-start row. -->
+    <style name="Widget.App.QuickStartAvatar" parent="">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:background">@drawable/bg_avatar_circle</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/app_sans</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <!-- ============ Round sheet ============ -->
+
+    <style name="Widget.App.Sheet.SectionLabel" parent="TextAppearance.App.SectionLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <!--
+      Filled selection chip. Selected reads as fill primary / text onPrimary, unselected as
+      surfaceContainerHigh / onSurfaceVariant, driven by the checked state selectors.
+    -->
+    <style name="Widget.App.Sheet.Chip" parent="Widget.Material3.Button.TextButton">
+        <item name="android:checkable">true</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/sheet_chip_text</item>
+        <item name="backgroundTint">@color/sheet_chip_background</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <!--
+      Plus/minus button of a counter. Looks like a sheet chip but is not checkable: it fires
+      an action rather than holding a selection, and a latched + would read as a chosen value.
+    -->
+    <style name="Widget.App.Sheet.Stepper" parent="Widget.App.Sheet.Chip">
+        <item name="android:checkable">false</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- Outlined on/off modifier. Transparent when off, tinted primary when on. -->
+    <style name="Widget.App.Sheet.Toggle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:checkable">true</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/sheet_toggle_text</item>
+        <item name="backgroundTint">@color/sheet_toggle_background</item>
+        <item name="strokeColor">@color/sheet_toggle_stroke</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <style name="Widget.App.Sheet.SaveButton" parent="Widget.Material3.Button">
+        <item name="android:layout_height">52dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.ButtonLabel</item>
+    </style>
+
+    <!-- Progress track inside the hero card. -->
+    <style name="Widget.App.Hero.Progress" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="trackThickness">4dp</item>
+        <item name="trackCornerRadius">2dp</item>
+        <item name="trackColor">@color/hero_track</item>
+        <item name="indicatorColor">@color/hero_negative</item>
+    </style>
+
+</resources>

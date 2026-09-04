@@ -1,68 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/home">
-
-    <fragment
-        android:id="@+id/home"
-        android:name="com.damhoe.skatscores.app.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_home_to_game"
-            app:destination="@id/game" />
-        <action
-            android:id="@+id/action_home_to_player_details"
-            app:destination="@id/player_details" />
-        <action
-            android:id="@+id/action_home_to_app_settings"
-            app:destination="@id/app_settings" />
-    </fragment>
-
-    <activity
-        android:id="@+id/game"
-        android:name="com.damhoe.skatscores.game.adapter.presentation.GameActivity"
-        tools:layout="@layout/activity_game">
-        <argument
-            android:name="gameId"
-            android:defaultValue="-1L"
-            app:argType="long" />
-    </activity>
-
-    <fragment
-        android:id="@+id/player_statistics"
-        android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerStatisticsFragment"
-        tools:layout="@layout/fragment_player_statistics" />
-    <fragment
-        android:id="@+id/player_details"
-        android:name="com.damhoe.skatscores.player.adapter.in.ui.PlayerDetailsFragment"
-        tools:layout="@layout/fragment_player_details">
-        <action
-            android:id="@+id/action_player_details_to_player_statistics"
-            app:destination="@id/player_statistics"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
-    </fragment>
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_graph"
+        app:startDestination="@id/libraryFragment">
 
     <dialog
-        android:id="@+id/app_settings"
-        android:name="com.damhoe.skatscores.app.settings.AppSettingsDialogFragment"
-        android:label="AppSettingsDialogFragment"
-        tools:layout="@layout/dialog_app_settings">
+            android:id="@+id/app_settings"
+            android:name="com.damhoe.skatscores.app.settings.AppSettingsSheetFragment"
+            tools:layout="@layout/sheet_app_settings">
         <action
-            android:id="@+id/action_app_settings_to_about"
-            app:destination="@id/about"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+                android:id="@+id/action_app_settings_to_about"
+                app:destination="@id/about"
+                app:popEnterAnim="@android:anim/slide_in_left"
+                app:popExitAnim="@android:anim/slide_out_right" />
     </dialog>
 
+    <!--
+      New lists are created in NewListSheetFragment, shown directly by LibraryFragment, so
+      there is no setup destination any more.
+    -->
+
     <fragment
-        android:id="@+id/about"
-        android:name="com.damhoe.skatscores.app.about.AboutFragment"
-        tools:layout="@layout/fragment_about" />
+            android:id="@+id/player_statistics"
+            android:name="com.damhoe.skatscores.player.adapter.presentation.PlayerStatisticsFragment"
+            tools:layout="@layout/fragment_player_statistics">
+        <argument
+                android:name="playerId"
+                app:argType="string" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/player_details"
+            android:name="com.damhoe.skatscores.player.adapter.presentation.PlayerDetailsFragment"
+            tools:layout="@layout/fragment_player_details">
+        <action
+                android:id="@+id/action_player_details_to_player_statistics"
+                app:destination="@id/player_statistics"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/fade_out" />
+        <argument
+                android:name="playerId"
+                app:argType="string" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/libraryFragment"
+            android:name="com.damhoe.skatscores.library.LibraryFragment"
+            tools:layout="@layout/fragment_library">
+        <action
+                android:id="@+id/action_libraryFragment_to_skatGameNavGraph"
+                app:destination="@id/skat_game_nav_graph">
+            <argument
+                    android:name="gameId"
+                    app:argType="string" />
+        </action>
+        <action
+                android:id="@+id/action_libraryFragment_to_doppelkopfGameNavGraph"
+                app:destination="@id/doppelkopf_game_nav_graph">
+            <argument
+                    android:name="gameId"
+                    app:argType="string" />
+        </action>
+        <action
+                android:id="@+id/action_home_to_app_settings"
+                app:destination="@id/app_settings" />
+        <!--
+          The two bottom-bar tabs are peers. Players sits on top of the lists rather than
+          beside them because the lists are the start destination, so singleTop keeps a
+          double tap from stacking a second copy; the players screen itself offers no way
+          back down except the tab, which pops rather than pushes.
+        -->
+        <action
+                android:id="@+id/action_library_to_playersFragment"
+                app:destination="@id/playersFragment"
+                app:launchSingleTop="true" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/about"
+            android:name="com.damhoe.skatscores.app.about.AboutFragment"
+            tools:layout="@layout/fragment_about" />
+    <fragment
+            android:id="@+id/playersFragment"
+            android:name="com.damhoe.skatscores.player.adapter.presentation.PlayersFragment"
+            tools:layout="@layout/fragment_players">
+        <action
+                android:id="@+id/action_playersFragment_to_player_details"
+                app:destination="@id/player_details" />
+    </fragment>
+
+    <navigation
+            android:id="@+id/skat_game_nav_graph"
+            android:label="SkatGameNavGraph"
+            app:startDestination="@id/skatGameFragment">
+
+        <!--
+          Rounds are entered and edited in RoundEntrySheetFragment, which is shown directly by
+          SkatGameFragment rather than being a navigation destination.
+        -->
+        <fragment
+                android:id="@+id/skatGameFragment"
+                android:name="com.damhoe.skatscores.game.skat.adapter.presentation.SkatGameFragment"
+                tools:layout="@layout/fragment_game">
+            <action
+                    android:id="@+id/action_skatGameFragment_to_skatGameGraphFragment"
+                    app:destination="@id/skatGameGraphFragment" />
+        </fragment>
+
+        <fragment
+                android:id="@+id/skatGameGraphFragment"
+                android:name="com.damhoe.skatscores.game.skat.adapter.presentation.GameGraphFragment"
+                tools:layout="@layout/fragment_game_graph" />
+    </navigation>
+
+    <!--
+      Doppelkopf gets a graph of its own rather than sharing the Skat one: the two games have
+      separate screens, and the graph is also the scope of the view model the game screen and
+      its chart share, so a single graph would hand a Doppelkopf list to the Skat view model.
+    -->
+    <navigation
+            android:id="@+id/doppelkopf_game_nav_graph"
+            android:label="DoppelkopfGameNavGraph"
+            app:startDestination="@id/doppelkopfGameFragment">
+
+        <!--
+          Rounds are entered and edited in DoppelkopfRoundEntrySheetFragment, which is shown
+          directly by DoppelkopfGameFragment rather than being a navigation destination.
+        -->
+        <fragment
+                android:id="@+id/doppelkopfGameFragment"
+                android:name="com.damhoe.skatscores.game.doppelkopf.adapter.presentation.DoppelkopfGameFragment"
+                tools:layout="@layout/fragment_doppelkopf_game">
+            <action
+                    android:id="@+id/action_doppelkopfGameFragment_to_doppelkopfGameGraphFragment"
+                    app:destination="@id/doppelkopfGameGraphFragment" />
+        </fragment>
+
+        <fragment
+                android:id="@+id/doppelkopfGameGraphFragment"
+                android:name="com.damhoe.skatscores.game.doppelkopf.adapter.presentation.DoppelkopfGameGraphFragment"
+                tools:layout="@layout/fragment_doppelkopf_game_graph" />
+    </navigation>
 
 </navigation>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 38 x 4dp drag handle at the top of a bottom sheet. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+    <corners android:radius="2dp" />
+    <solid android:color="?attr/colorOutlineVariant" />
+</shape>
