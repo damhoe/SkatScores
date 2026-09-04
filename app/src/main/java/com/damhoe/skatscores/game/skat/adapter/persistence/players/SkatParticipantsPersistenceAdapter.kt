@@ -5,6 +5,7 @@ import com.damhoe.skatscores.persistence.DatabaseConstants.SkatParticipantsTable
 import com.damhoe.skatscores.persistence.DatabaseHelper
 import com.damhoe.skatscores.persistence.mapToList
 import com.damhoe.skatscores.persistence.mapToOneOrNull
+import com.damhoe.skatscores.persistence.run
 import java.util.UUID
 import javax.inject.Inject
 

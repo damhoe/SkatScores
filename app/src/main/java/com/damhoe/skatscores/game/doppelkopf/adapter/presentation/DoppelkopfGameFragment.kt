@@ -17,6 +17,7 @@ import com.damhoe.skatscores.game.doppelkopf.adapter.presentation.scores.Doppelk
 import com.damhoe.skatscores.game.doppelkopf.adapter.presentation.scores.DoppelkopfRoundTextFactory
 import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfGame
 import com.damhoe.skatscores.game.doppelkopf.domain.scores.DoppelkopfScore
+import com.damhoe.skatscores.shared.shareList
 import com.damhoe.skatscores.shared.signed
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.Snackbar
@@ -34,6 +35,9 @@ class DoppelkopfGameFragment :
 
     private lateinit var binding: FragmentDoppelkopfGameBinding
     private lateinit var scoreAdapter: DoppelkopfScoreAdapter
+
+    /** Shared by the round log and the share sheet, so both describe a round the same way. */
+    private val roundText by lazy { DoppelkopfRoundTextFactory(requireContext()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
@@ -79,7 +83,7 @@ class DoppelkopfGameFragment :
 
     private fun setUpRecyclerView()
     {
-        scoreAdapter = DoppelkopfScoreAdapter(this, DoppelkopfRoundTextFactory(requireContext()))
+        scoreAdapter = DoppelkopfScoreAdapter(this, roundText)
         binding.scoresRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = scoreAdapter
@@ -91,6 +95,7 @@ class DoppelkopfGameFragment :
         binding.returnButton.setOnClickListener { findNavController().navigateUp() }
         binding.playersButton.setOnClickListener { showPlayerSeatsSheet() }
         binding.settingsButton.setOnClickListener { showGameSettingsSheet() }
+        binding.shareButton.setOnClickListener { shareGame() }
     }
 
     private fun setupBottomBar()
@@ -214,6 +219,24 @@ class DoppelkopfGameFragment :
                 }
             )
         )
+    }
+
+    /**
+     * Sends the list out as text: the standings first, then every round as the log describes
+     * it. Nothing is shared until the sheet the system opens is used, and a list with no
+     * rounds yet is still worth sending - it is the table and what it is called.
+     */
+    private fun shareGame()
+    {
+        val game = viewModel.game.value ?: return
+
+        if (!shareList(game.asSharedList(requireContext(), roundText)))
+        {
+            Snackbar
+                .make(binding.root, R.string.message_share_failed, Snackbar.LENGTH_LONG)
+                .setAnchorView(binding.bottomPill)
+                .show()
+        }
     }
 
     private fun showRoundSheet(scoreId: UUID?)

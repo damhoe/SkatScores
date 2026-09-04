@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS skat_participants (
     table_position VARCHAR(20),
     name VARCHAR(255) NOT NULL,
 
-    FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id) REFERENCES skat_games(id) ON DELETE CASCADE,
     FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE SET NULL,
 
     CONSTRAINT unique_table_position UNIQUE (game_id, table_position),

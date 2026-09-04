@@ -77,7 +77,10 @@
     <string name="title_same_round_again">Gleiche Runde nochmal</string>
     <string name="title_recently_played">Zuletzt gespielt</string>
     <string name="title_show_all">Alle</string>
-    <string name="title_no_running_list">Keine Liste läuft — starte eine neue.</string>
+    <string name="title_no_running_list">Keine Liste läuft</string>
+    <string name="text_no_running_list">Starte eine neue oder mach unten weiter.</string>
+    <string name="title_empty_lists">Noch keine Listen</string>
+    <string name="text_empty_lists">Tippe auf +, um eine Liste zu starten. Jede Runde, die du einträgst, landet hier.</string>
     <string name="description_quick_start">Neue Liste mit den gleichen Spielern starten</string>
     <string name="description_new_list">Neue Liste</string>
     <string name="message_list_deleted">Liste gelöscht</string>
@@ -90,6 +93,8 @@
     <string name="message_round_removed">Runde entfernt</string>
     <string name="description_undo">Letzte Runde zurücknehmen</string>
     <string name="description_share">Liste teilen</string>
+    <string name="format_share_footer">Gezählt mit %1$s</string>
+    <string name="message_share_failed">Keine App zum Teilen gefunden</string>
     <string name="description_close">Schließen</string>
     <string name="description_clear_player">Name löschen</string>
     <string name="menu_delete_list">Liste löschen</string>

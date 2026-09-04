@@ -88,13 +88,16 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
 
     override suspend fun get(id: UUID): Result<DoppelkopfGame?> = withContext(Dispatchers.IO) {
         gamesDao.get(id)
-            .map { dto ->
-                // A list whose seats cannot be read reads as no list at all: the screens that
-                // ask for one already handle a null by leaving.
-                val participants = loadParticipants(id) ?: return@map null
+            // mapCatching, not map: the row still has to be turned into a game, and a stored
+            // value the domain refuses belongs in the Result rather than thrown at the caller.
+            .mapCatching { dto ->
+                // A list whose seats or rounds cannot be read reads as no list at all: the
+                // screens that ask for one already handle a null by leaving.
+                val participants = loadParticipants(id) ?: return@mapCatching null
+                val scores = loadScores(id) ?: return@mapCatching null
                 dto?.toDoppelkopfGame(
                     participants = participants,
-                    scores = loadScores(id),
+                    scores = scores,
                 )
             }
     }
@@ -116,11 +119,22 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
                 .mapNotNull { dto ->
                     val participants = loadParticipants(dto.id) ?: return@mapNotNull null
                     // Scores are needed: the preview shows running totals and progress.
-                    val game = dto.toDoppelkopfGame(
-                        participants = participants,
-                        scores = loadScores(dto.id),
-                    )
-                    DoppelkopfGamePreview.mapFrom(game)
+                    val scores = loadScores(dto.id) ?: return@mapNotNull null
+
+                    // The domain can refuse a stored row too - a round count out of range, a
+                    // title that no longer validates - and that has to cost the one list
+                    // rather than the screen.
+                    runCatching {
+                        DoppelkopfGamePreview.mapFrom(
+                            dto.toDoppelkopfGame(
+                                participants = participants,
+                                scores = scores,
+                            )
+                        )
+                    }.getOrElse { e ->
+                        Log.e(TAG, "Could not read game ${dto.id}, skipping it", e)
+                        null
+                    }
                 }
                 .sortedByDescending { it.playedAt }
         },
@@ -154,6 +168,18 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
         return DoppelkopfParticipants(dtos.sortedBy { it.seat }.map { it.toParticipant() })
     }
 
-    private fun loadScores(gameId: UUID): List<DoppelkopfScore> =
-        scoresDao.getScoresForGame(gameId).map { it.toDoppelkopfScore() }
+    /**
+     * The rounds of a list, or null if they cannot be read.
+     *
+     * Empty is not the fallback: a list whose rounds failed to load would otherwise be shown
+     * with everybody on zero, which reads as a real standing rather than as a read that did
+     * not work.
+     */
+    private fun loadScores(gameId: UUID): List<DoppelkopfScore>? =
+        scoresDao.getScoresForGame(gameId)
+            .mapCatching { dtos -> dtos.map { it.toDoppelkopfScore() } }
+            .getOrElse { e ->
+                Log.e(TAG, "Error loading rounds for game $gameId", e)
+                null
+            }
 }

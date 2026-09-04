@@ -47,6 +47,17 @@
                     android:textAppearance="@style/TextAppearance.App.AppBarTitle"
                     tools:text="Doppelkopf 003" />
 
+            <!--
+              Actions on the list itself, mirroring the Skat screen: sharing the list, who is
+              playing it and its settings sit next to its name, while the bottom pill stays
+              about the rounds.
+            -->
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/shareButton"
+                    style="@style/Widget.App.AppBar.IconButton"
+                    android:contentDescription="@string/description_share"
+                    app:icon="@drawable/ic_share_24dp" />
+
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/playersButton"
                     style="@style/Widget.App.AppBar.IconButton"

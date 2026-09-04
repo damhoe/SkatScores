@@ -19,6 +19,7 @@ import com.damhoe.skatscores.game.skat.adapter.presentation.scores.RoundEntryShe
 import com.damhoe.skatscores.game.skat.adapter.presentation.scores.RoundTextFactory
 import com.damhoe.skatscores.game.skat.domain.SkatGame
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
+import com.damhoe.skatscores.shared.shareList
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +34,9 @@ class SkatGameFragment :
 
     private lateinit var binding: FragmentGameBinding
     private lateinit var scoreAdapter: SkatScoreAdapter
+
+    /** Shared by the round log and the share sheet, so both describe a round the same way. */
+    private val roundText by lazy { RoundTextFactory(requireContext()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
@@ -79,7 +83,7 @@ class SkatGameFragment :
 
     private fun setUpRecyclerView()
     {
-        scoreAdapter = SkatScoreAdapter(this, RoundTextFactory(requireContext()))
+        scoreAdapter = SkatScoreAdapter(this, roundText)
         binding.scoresRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = scoreAdapter
@@ -91,11 +95,7 @@ class SkatGameFragment :
         binding.returnButton.setOnClickListener { findNavController().navigateUp() }
         binding.playersButton.setOnClickListener { showPlayerSeatsSheet() }
         binding.settingsButton.setOnClickListener { showGameSettingsSheet() }
-        binding.shareButton.setOnClickListener {
-            Snackbar.make(binding.root, R.string.description_share, Snackbar.LENGTH_SHORT)
-                .setAnchorView(binding.bottomPill)
-                .show()
-        }
+        binding.shareButton.setOnClickListener { shareGame() }
     }
 
     /** The chevron is the affordance, the whole board is the target. */
@@ -263,6 +263,24 @@ class SkatGameFragment :
                 ),
                 null,
             )
+        }
+    }
+
+    /**
+     * Sends the list out as text: the standings first, then every round as the log describes
+     * it. Nothing is shared until the sheet the system opens is used, and a list with no
+     * rounds yet is still worth sending - it is the table and what it is called.
+     */
+    private fun shareGame()
+    {
+        val game = viewModel.skatGame.value ?: return
+
+        if (!shareList(game.asSharedList(requireContext(), roundText)))
+        {
+            Snackbar
+                .make(binding.root, R.string.message_share_failed, Snackbar.LENGTH_LONG)
+                .setAnchorView(binding.bottomPill)
+                .show()
         }
     }
 

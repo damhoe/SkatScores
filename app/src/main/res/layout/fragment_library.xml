@@ -14,11 +14,17 @@
             android:background="?android:attr/colorBackground"
             tools:context=".library.LibraryFragment">
 
+        <!--
+          fillViewport is what lets the empty state have a centre: with it the column below
+          is stretched to the height of the screen when it is shorter, so the weight on the
+          empty block has something to take.
+        -->
         <androidx.core.widget.NestedScrollView
                 android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:clipToPadding="false"
+                android:fillViewport="true"
                 android:paddingBottom="96dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -103,14 +109,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp" />
 
-                <!-- Empty state prompt, shown instead of the hero card -->
-                <TextView
-                        android:id="@+id/noRunningListHint"
+                <!-- Stands in for the hero card while no list of this game is running -->
+                <include
+                        android:id="@+id/noRunningList"
+                        layout="@layout/view_no_running_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
-                        android:text="@string/title_no_running_list"
-                        android:textAppearance="@style/TextAppearance.App.Meta"
                         android:visibility="gone"
                         tools:visibility="visible" />
 
@@ -173,6 +178,20 @@
                         android:overScrollMode="never"
                         tools:itemCount="4"
                         tools:listitem="@layout/item_game_preview" />
+
+                <!--
+                  5. Nothing recorded for this game yet. Everything above it except the
+                  greeting and the filters is hidden, and the weight hands it the rest of the
+                  screen so the prompt sits in the middle of it.
+                -->
+                <include
+                        android:id="@+id/emptyState"
+                        layout="@layout/view_empty_library"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
             </LinearLayout>
 

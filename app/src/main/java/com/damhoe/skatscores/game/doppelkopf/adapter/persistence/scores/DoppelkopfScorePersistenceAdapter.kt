@@ -6,6 +6,7 @@ import com.damhoe.skatscores.persistence.DatabaseHelper
 import com.damhoe.skatscores.persistence.getIntOrNull
 import com.damhoe.skatscores.persistence.mapToList
 import com.damhoe.skatscores.persistence.mapToOneOrNull
+import com.damhoe.skatscores.persistence.run
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,15 +18,17 @@ class DoppelkopfScorePersistenceAdapter @Inject constructor(
     val databaseHelper: DatabaseHelper,
 )
 {
-    fun getScoresForGame(gameId: UUID): List<DoppelkopfScoreDto>
+    fun getScoresForGame(gameId: UUID): Result<List<DoppelkopfScoreDto>>
     {
         return databaseHelper.readableDatabase.run {
             val query = "SELECT * FROM ${DoppelkopfScoresTable.TABLE_NAME}" +
                     " WHERE ${DoppelkopfScoresTable.COLUMN_GAME_ID} = ?" +
                     " ORDER BY ${DoppelkopfScoresTable.COLUMN_ROUND} ASC"
 
-            rawQuery(query, arrayOf(gameId.toString()))
+            val scores = rawQuery(query, arrayOf(gameId.toString()))
                 .mapToList { cursor -> DoppelkopfScoreDto.mapFrom(cursor) }
+
+            Result.success(scores)
         }
     }
 
@@ -123,7 +126,7 @@ class DoppelkopfScorePersistenceAdapter @Inject constructor(
                         " SET ${DoppelkopfScoresTable.COLUMN_ROUND} = ${DoppelkopfScoresTable.COLUMN_ROUND} - 1" +
                         " WHERE ${DoppelkopfScoresTable.COLUMN_GAME_ID} = ?" +
                         " AND ${DoppelkopfScoresTable.COLUMN_ROUND} > ?",
-                arrayOf(gameId.toString(), fromRound)
+                arrayOf<Any>(gameId.toString(), fromRound)
             )
 
             Result.success(Unit)

@@ -5,6 +5,7 @@ import com.damhoe.skatscores.persistence.DatabaseConstants.SkatGamesTable
 import com.damhoe.skatscores.persistence.DatabaseHelper
 import com.damhoe.skatscores.persistence.mapToList
 import com.damhoe.skatscores.persistence.mapToOneOrNull
+import com.damhoe.skatscores.persistence.run
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton

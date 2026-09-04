@@ -3,6 +3,7 @@ package com.damhoe.skatscores.game.skat.adapter.persistence.scores
 import com.damhoe.skatscores.game.skat.application.repository.SkatScoresRepository
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 import com.damhoe.skatscores.persistence.DatabaseChanges
+import com.damhoe.skatscores.persistence.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -11,6 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SkatScoreRepositoryImpl @Inject constructor(
+    private val dbHelper: DatabaseHelper,
     private val scoreDao: SkatScorePersistenceAdapter,
     private val databaseChanges: DatabaseChanges,
 ) : SkatScoresRepository
@@ -45,7 +47,13 @@ class SkatScoreRepositoryImpl @Inject constructor(
                 .onSuccess { databaseChanges.notifyChanged() }
         }
 
-    /** Removes a round and closes the gap it leaves in the round numbering. */
+    /**
+     * Removes a round and closes the gap it leaves in the round numbering.
+     *
+     * Both go in one transaction: rounds are dense and (game_id, round) is unique, so a
+     * delete whose shift did not follow leaves a hole that the next round played would try
+     * to reuse - and the insert would be refused from then on.
+     */
     override suspend fun delete(id: UUID, gameId: UUID): Result<Unit> =
         withContext(Dispatchers.IO) {
             val round = scoreDao.getRound(id).getOrNull()
@@ -53,8 +61,11 @@ class SkatScoreRepositoryImpl @Inject constructor(
                     NoSuchElementException("Unknown score $id")
                 )
 
-            scoreDao.delete(id)
-                .mapCatching { scoreDao.shiftRoundsDown(gameId, round).getOrThrow() }
+            dbHelper
+                .transaction {
+                    scoreDao.delete(id).getOrThrow()
+                    scoreDao.shiftRoundsDown(gameId, round).getOrThrow()
+                }
                 .onSuccess { databaseChanges.notifyChanged() }
         }
 }

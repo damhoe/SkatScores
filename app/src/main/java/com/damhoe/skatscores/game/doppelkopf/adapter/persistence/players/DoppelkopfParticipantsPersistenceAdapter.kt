@@ -4,6 +4,7 @@ import android.util.Log
 import com.damhoe.skatscores.persistence.DatabaseConstants.DoppelkopfParticipantsTable
 import com.damhoe.skatscores.persistence.DatabaseHelper
 import com.damhoe.skatscores.persistence.mapToList
+import com.damhoe.skatscores.persistence.run
 import java.util.UUID
 import javax.inject.Inject
 

@@ -6,6 +6,7 @@ import com.damhoe.skatscores.persistence.DatabaseHelper
 import com.damhoe.skatscores.persistence.getIntOrNull
 import com.damhoe.skatscores.persistence.mapToList
 import com.damhoe.skatscores.persistence.mapToOneOrNull
+import com.damhoe.skatscores.persistence.run
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,7 +18,7 @@ class SkatScorePersistenceAdapter @Inject constructor(
     val databaseHelper: DatabaseHelper
 )
 {
-    fun getScoresForGame(gameId: UUID): List<SkatScoreDto>
+    fun getScoresForGame(gameId: UUID): Result<List<SkatScoreDto>>
     {
         return databaseHelper.readableDatabase.run {
             val query = "SELECT * FROM ${SkatScoresTable.TABLE_NAME}" +
@@ -25,12 +26,12 @@ class SkatScorePersistenceAdapter @Inject constructor(
                     " ORDER BY ${SkatScoresTable.COLUMN_ROUND} ASC"
             val selectionArgs = arrayOf(gameId.toString())
 
-            val games = rawQuery(query, selectionArgs)
+            val scores = rawQuery(query, selectionArgs)
                 .mapToList { cursor ->
                     SkatScoreDto.mapFrom(cursor)
                 }
 
-            games
+            Result.success(scores)
         }
     }
 
@@ -133,7 +134,7 @@ class SkatScorePersistenceAdapter @Inject constructor(
                         " SET ${SkatScoresTable.COLUMN_ROUND} = ${SkatScoresTable.COLUMN_ROUND} - 1" +
                         " WHERE ${SkatScoresTable.COLUMN_GAME_ID} = ?" +
                         " AND ${SkatScoresTable.COLUMN_ROUND} > ?",
-                arrayOf(gameId.toString(), fromRound)
+                arrayOf<Any>(gameId.toString(), fromRound)
             )
 
             Result.success(Unit)

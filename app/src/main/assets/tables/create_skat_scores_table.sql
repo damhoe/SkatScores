@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS skat_scores (
     created_at TIMESTAMP DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
     updated_at TIMESTAMP DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
 
-    FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id) REFERENCES skat_games(id) ON DELETE CASCADE,
     FOREIGN KEY (skat_participant_id) REFERENCES skat_participants(id) ON DELETE CASCADE,
 
     CONSTRAINT unique_game_round UNIQUE (game_id, round)

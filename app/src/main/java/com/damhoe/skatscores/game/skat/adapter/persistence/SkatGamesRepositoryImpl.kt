@@ -95,13 +95,16 @@ class SkatGamesRepositoryImpl @Inject constructor(
 
     override suspend fun get(id: UUID): Result<SkatGame?> = withContext(Dispatchers.IO) {
         skatGamesDao.get(id)
-            .map { skatGameDto ->
-                // A list whose seats cannot be read reads as no list at all: the screens
-                // that ask for one already handle a null by leaving.
-                val participants = loadSkatParticipants(id) ?: return@map null
+            // mapCatching, not map: the row still has to be turned into a game, and a stored
+            // value the domain refuses belongs in the Result rather than thrown at the caller.
+            .mapCatching { skatGameDto ->
+                // A list whose seats or rounds cannot be read reads as no list at all: the
+                // screens that ask for one already handle a null by leaving.
+                val participants = loadSkatParticipants(id) ?: return@mapCatching null
+                val scores = loadSkatScores(id) ?: return@mapCatching null
                 skatGameDto?.toSkatGame(
                     participants = participants,
-                    scores = loadSkatScores(id))
+                    scores = scores)
             }
     }
 
@@ -127,13 +130,23 @@ class SkatGamesRepositoryImpl @Inject constructor(
                     .filter(keep)
                     // mapNotNull, so one unreadable list is left out of the home screen
                     // rather than emptying it.
-                    .mapNotNull {
+                    .mapNotNull { dto ->
                         // Scores are needed: the preview shows running totals and progress.
-                        val participants = loadSkatParticipants(it.id) ?: return@mapNotNull null
-                        val skatGame = it.toSkatGame(
-                            participants = participants,
-                            scores = loadSkatScores(it.id))
-                        SkatGamePreview.mapFrom(skatGame)
+                        val participants = loadSkatParticipants(dto.id)
+                            ?: return@mapNotNull null
+                        val scores = loadSkatScores(dto.id) ?: return@mapNotNull null
+
+                        // The domain can refuse a stored row too - a round count out of
+                        // range, a title that no longer validates - and that has to cost
+                        // the one list rather than the screen.
+                        runCatching {
+                            SkatGamePreview.mapFrom(
+                                dto.toSkatGame(participants = participants, scores = scores)
+                            )
+                        }.getOrElse { e ->
+                            Log.e(TAG, "Could not read game ${dto.id}, skipping it", e)
+                            null
+                        }
                     }
                     .sortedByDescending { it.playedAt }
             },
@@ -179,11 +192,22 @@ class SkatGamesRepositoryImpl @Inject constructor(
         )
     }
 
+    /**
+     * The rounds of a list, or null if they cannot be read.
+     *
+     * Empty is not the fallback: a list whose rounds failed to load would otherwise be shown
+     * with everybody on zero, which reads as a real standing rather than as a read that did
+     * not work.
+     */
     private fun loadSkatScores(
         gameId: UUID,
-    ): List<SkatScore>
+    ): List<SkatScore>?
     {
-        val scoresDtos = skatScoresPersistenceAdapter.getScoresForGame(gameId)
-        return scoresDtos.map { it.toSkatScore() }
+        return skatScoresPersistenceAdapter.getScoresForGame(gameId)
+            .mapCatching { dtos -> dtos.map { it.toSkatScore() } }
+            .getOrElse { e ->
+                Log.e(TAG, "Error loading rounds for game $gameId", e)
+                null
+            }
     }
 }

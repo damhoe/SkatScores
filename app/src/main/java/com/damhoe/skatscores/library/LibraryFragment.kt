@@ -134,6 +134,7 @@ class LibraryFragment :
     {
         binding.settingsButton.setOnClickListener { showAppSettingsDialog() }
         binding.addButton.setOnClickListener { showNewListSheet() }
+        binding.noRunningList.root.setOnClickListener { showNewListSheet() }
         binding.playersTab.setOnClickListener { navigateToPlayers() }
         binding.listsTab.setOnClickListener { binding.content.smoothScrollTo(0, 0) }
         binding.showAllLink.setOnClickListener { viewModel.showAllRecent() }
@@ -150,7 +151,10 @@ class LibraryFragment :
             )
         }
 
-        viewModel.activeList.observe(viewLifecycleOwner) { bindActiveList(it) }
+        viewModel.activeList.observe(viewLifecycleOwner) {
+            bindActiveList(it)
+            renderEmptyState()
+        }
 
         viewModel.quickStartTemplate.observe(viewLifecycleOwner) { template ->
             val hasTemplate = template != null
@@ -167,6 +171,7 @@ class LibraryFragment :
             gamePreviewAdapter.submitList(previews)
             binding.recentHeader.visibility =
                 if (previews.isEmpty()) View.GONE else View.VISIBLE
+            renderEmptyState()
         }
 
         viewModel.canShowMoreRecent.observe(viewLifecycleOwner) { canShowMore ->
@@ -186,11 +191,27 @@ class LibraryFragment :
         }
     }
 
+    /**
+     * The two ways home can be empty. With no list at all for the selected game the screen has
+     * nothing but its greeting and its filters, so the stack of empty slots gives way to one
+     * centred prompt; with lists but none of them running, only the hero card is missing and a
+     * placeholder holds its slot.
+     *
+     * Both observers call this because either can arrive first.
+     */
+    private fun renderEmptyState()
+    {
+        val hasActiveList = viewModel.activeList.value != null
+        val hasNoLists = !hasActiveList && viewModel.recentGames.value.isNullOrEmpty()
+
+        binding.emptyState.root.visibility = if (hasNoLists) View.VISIBLE else View.GONE
+        binding.noRunningList.root.visibility =
+            if (hasActiveList || hasNoLists) View.GONE else View.VISIBLE
+    }
+
     private fun bindActiveList(preview: ListPreview?)
     {
-        val hasActiveList = preview != null
-        binding.activeList.root.visibility = if (hasActiveList) View.VISIBLE else View.GONE
-        binding.noRunningListHint.visibility = if (hasActiveList) View.GONE else View.VISIBLE
+        binding.activeList.root.visibility = if (preview != null) View.VISIBLE else View.GONE
 
         if (preview == null) return
 

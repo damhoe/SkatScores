@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Soft circle behind a glyph: the empty-state badge and the no-list row's plus. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="oval">
+    <solid android:color="?attr/colorSurfaceContainer" />
+</shape>

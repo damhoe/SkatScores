@@ -1,9 +1,29 @@
-<vector android:height="24dp"
-    android:tint="?attr/colorControlNormal"
-    android:viewportHeight="24"
-    android:viewportWidth="24"
-    android:width="24dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@android:color/white"
-        android:pathData="M18,16.08c-0.76,0 -1.44,0.3 -1.96,0.77L8.91,12.7c0.05,-0.23 0.09,-0.46 0.09,-0.7s-0.04,-0.47 -0.09,-0.7l7.05,-4.11c0.54,0.5 1.25,0.81 2.04,0.81 1.66,0 3,-1.34 3,-3s-1.34,-3 -3,-3 -3,1.34 -3,3c0,0.24 0.04,0.47 0.09,0.7L8.04,9.81C7.5,9.31 6.79,9 6,9c-1.66,0 -3,1.34 -3,3s1.34,3 3,3c0.79,0 1.5,-0.31 2.04,-0.81l7.12,4.16c-0.05,0.21 -0.08,0.43 -0.08,0.65 0,1.61 1.31,2.92 2.92,2.92s2.92,-1.31 2.92,-2.92 -1.31,-2.92 -2.92,-2.92z"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Share: three nodes joined by two links.
+
+  Drawn on the 960 grid the other app bar icons use, as an outline of the same weight rather
+  than the solid classic glyph, which read a size larger than the people and settings icons it
+  sits between. The nodes are rings - an outer circle and an inner one wound the other way, so
+  the hole survives the default fill rule - and the links stop under the rings, where the
+  overlap is hidden.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="960"
+        android:viewportHeight="960"
+        android:tint="?attr/colorControlNormal">
+
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M590,220 A110,110 0 1,0 810,220 A110,110 0 1,0 590,220 Z
+                          M660,220 A40,40 0 1,1 740,220 A40,40 0 1,1 660,220 Z
+                          M150,480 A110,110 0 1,0 370,480 A110,110 0 1,0 150,480 Z
+                          M220,480 A40,40 0 1,1 300,480 A40,40 0 1,1 220,480 Z
+                          M590,740 A110,110 0 1,0 810,740 A110,110 0 1,0 590,740 Z
+                          M660,740 A40,40 0 1,1 740,740 A40,40 0 1,1 660,740 Z
+                          M359.59,461.80 L636.01,298.46 L600.41,238.20 L323.99,401.54 Z
+                          M323.99,558.46 L600.41,721.80 L636.01,661.54 L359.59,498.20 Z" />
+
 </vector>

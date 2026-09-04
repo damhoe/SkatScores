@@ -95,7 +95,10 @@
     <string name="title_same_round_again">Same round again</string>
     <string name="title_recently_played">Recently played</string>
     <string name="title_show_all">All</string>
-    <string name="title_no_running_list">No list running — start a new one.</string>
+    <string name="title_no_running_list">No list running</string>
+    <string name="text_no_running_list">Start a new one, or pick up one from below.</string>
+    <string name="title_empty_lists">No lists yet</string>
+    <string name="text_empty_lists">Tap + to start a list. Every round you score for your table lands here.</string>
     <string name="description_quick_start">Start a new list with the same players</string>
     <string name="description_new_list">New list</string>
     <string name="message_list_deleted">List deleted</string>
@@ -110,6 +113,9 @@
     <string name="message_round_removed">Round removed</string>
     <string name="description_undo">Undo last round</string>
     <string name="description_share">Share list</string>
+    <!-- Signature under a shared list. The app name is a proper noun, so only the wording around it moves. -->
+    <string name="format_share_footer">Scored with %1$s</string>
+    <string name="message_share_failed">No app to share with</string>
     <string name="description_close">Close</string>
     <string name="description_clear_player">Clear name</string>
     <string name="menu_delete_list">Delete list</string>

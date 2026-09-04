@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Home with nothing on it yet. It replaces the whole stack of empty slots - hero card,
+  quick start, recently played - with one centred prompt, so the screen has a middle
+  instead of a grey line under the filters.
+
+  The root is stretched by the weight it is given in fragment_library.xml, and its centre
+  gravity is what puts the block in the middle of whatever is left between the filters and
+  the bottom bar.
+
+  No button of its own: the centre button of the bottom bar already starts a list, so the
+  message names it rather than repeating it a hundred pixels higher up.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="24dp">
+
+        <ImageView
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:background="@drawable/bg_icon_circle"
+                android:contentDescription="@null"
+                android:padding="24dp"
+                android:src="@drawable/ic_lists_24dp"
+                app:tint="?attr/colorOutline" />
+
+        <TextView
+                android:id="@+id/emptyTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/title_empty_lists"
+                android:textAppearance="@style/TextAppearance.App.AppBarTitle" />
+
+        <TextView
+                android:id="@+id/emptyMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:lineSpacingExtra="3dp"
+                android:maxWidth="270dp"
+                android:text="@string/text_empty_lists"
+                android:textAppearance="@style/TextAppearance.App.Meta" />
+
+    </LinearLayout>
+
+</layout>
