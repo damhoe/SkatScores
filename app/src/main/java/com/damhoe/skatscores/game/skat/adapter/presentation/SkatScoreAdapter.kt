@@ -118,11 +118,23 @@ class SkatScoreAdapter(
         override fun areItemsTheSame(oldItem: Round, newItem: Round): Boolean =
             oldItem.score.id == newItem.score.id
 
-        // SkatScore subclasses are not data classes, so compare what the row actually shows.
+        // SkatScore subclasses are not data classes, so compare what the row actually shows:
+        // the title and subtitle come from the game and its options, not only from the points,
+        // so an edit from Hand to Schneider at the same value still has to redraw the row.
         override fun areContentsTheSame(oldItem: Round, newItem: Round): Boolean =
             oldItem.number == newItem.number &&
                     oldItem.score.declarerId == newItem.score.declarerId &&
                     oldItem.score.result == newItem.score.result &&
-                    oldItem.score.toPoints() == newItem.score.toPoints()
+                    oldItem.score.toPoints() == newItem.score.toPoints() &&
+                    shownFields(oldItem.score) == shownFields(newItem.score)
+
+        private fun shownFields(score: SkatScore): List<Any?> = when (score)
+        {
+            is SkatScore.Passe -> listOf(SkatScore.Passe::class)
+            is SkatScore.Overbid -> listOf(SkatScore.Overbid::class, score.suit, score.bid)
+            is SkatScore.Null -> listOf(SkatScore.Null::class, score.options)
+            is SkatScore.GrandOrSuit ->
+                listOf(SkatScore.GrandOrSuit::class, score.suit, score.spitzen, score.options)
+        }
     }
 }

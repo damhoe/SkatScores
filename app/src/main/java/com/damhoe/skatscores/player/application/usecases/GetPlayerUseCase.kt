@@ -9,9 +9,5 @@ class GetPlayerUseCase @Inject constructor(
     private val repository: PlayersRepository,
 )
 {
-    operator fun invoke(id: UUID): Result<Player?>
-    {
-        return repository.get(id)
-    }
+    suspend operator fun invoke(id: UUID): Result<Player?> = repository.get(id)
 }
-

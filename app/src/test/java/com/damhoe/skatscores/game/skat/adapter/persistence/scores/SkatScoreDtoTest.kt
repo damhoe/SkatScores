@@ -16,8 +16,8 @@ class SkatScoreDtoTest
     private val gameId = UUID.randomUUID()
     private val declarer = Participant.Guest(UUID.randomUUID(), PlayerName("Declarer"))
 
-    private fun roundTrip(score: SkatScore, round: Int = 0): SkatScore =
-        SkatScoreDto.mapFrom(score, gameId, round).toSkatScore()
+    private fun roundTrip(score: SkatScore, seq: String = "0"): SkatScore =
+        SkatScoreDto.mapFrom(score, gameId, seq).toSkatScore()
 
     @Test
     fun `overbid survives the round trip through the dto`()
@@ -38,11 +38,11 @@ class SkatScoreDtoTest
     {
         val score = SkatScore.Overbid.create(declarer, SkatSuit.GRAND, SkatBid(72))
 
-        val dto = SkatScoreDto.mapFrom(score, gameId, round = 3)
+        val dto = SkatScoreDto.mapFrom(score, gameId, seq = "3")
 
         assertEquals(SkatScoreType.OVERBID, dto.type)
         assertEquals(gameId, dto.gameId)
-        assertEquals(3, dto.round)
+        assertEquals("3", dto.seq)
         assertEquals(declarer.id, dto.skatParticipantId)
         assertEquals(SkatSuit.GRAND, dto.overbidSuit)
         assertEquals(72, dto.overbidBidValue)
@@ -53,7 +53,7 @@ class SkatScoreDtoTest
     {
         val score = SkatScore.Passe.create()
 
-        val dto = SkatScoreDto.mapFrom(score, gameId, round = 1)
+        val dto = SkatScoreDto.mapFrom(score, gameId, seq = "1")
         val restored = roundTrip(score)
 
         assertEquals(null, dto.skatParticipantId)

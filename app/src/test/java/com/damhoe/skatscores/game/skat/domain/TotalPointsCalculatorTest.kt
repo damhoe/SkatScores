@@ -146,13 +146,13 @@ class TotalPointsCalculatorTest
     @Test
     fun `an overbid game counts as lost for the declarer`()
     {
-        // Clubs raised above a bid of 40 -> 48, floored at 50 -> -50
+        // Clubs raised to reach a bid of 40 -> 48, lost -> doubled -> -96
         val scores = listOf(
             SkatScore.Overbid.create(forehand, SkatSuit.CLUBS, SkatBid(40))
         )
 
-        assertArrayEquals(intArrayOf(-50, 0, 0), calculator.calculateTotalPoints(scores, false))
-        assertArrayEquals(intArrayOf(-100, 40, 40), calculator.calculateTotalPoints(scores, true))
+        assertArrayEquals(intArrayOf(-96, 0, 0), calculator.calculateTotalPoints(scores, false))
+        assertArrayEquals(intArrayOf(-146, 40, 40), calculator.calculateTotalPoints(scores, true))
     }
 
     @Test

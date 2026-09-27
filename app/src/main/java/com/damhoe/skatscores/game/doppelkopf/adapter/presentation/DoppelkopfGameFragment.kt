@@ -104,13 +104,7 @@ class DoppelkopfGameFragment :
         binding.chartAction.setOnClickListener { navigateToGameGraph() }
         // The only way to remove a round, and it only ever removes the newest one. The rows
         // themselves just edit, so this carries the confirmation the row menu used to show.
-        binding.undoAction.setOnClickListener {
-            viewModel.removeLastScore()
-            Snackbar
-                .make(binding.root, R.string.message_round_removed, Snackbar.LENGTH_LONG)
-                .setAnchorView(binding.bottomPill)
-                .show()
-        }
+        binding.undoAction.setOnClickListener { viewModel.removeLastScore() }
     }
 
     private fun setupObservers()
@@ -123,14 +117,24 @@ class DoppelkopfGameFragment :
 
             val hasRounds = game.scores.isNotEmpty()
             binding.emptyRoundsHint.visibility = if (hasRounds) View.GONE else View.VISIBLE
-            binding.undoAction.isEnabled = hasRounds
-            binding.undoAction.alpha = if (hasRounds) 1f else 0.4f
+            bindUndoAction()
 
             bindScoreboard(game)
         }
 
         viewModel.participants.observe(viewLifecycleOwner) {
             scoreAdapter.setParticipants(it)
+        }
+
+        viewModel.isUndoing.observe(viewLifecycleOwner) { bindUndoAction() }
+
+        viewModel.roundRemovedEvent.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                Snackbar
+                    .make(binding.root, R.string.message_round_removed, Snackbar.LENGTH_LONG)
+                    .setAnchorView(binding.bottomPill)
+                    .show()
+            }
         }
 
         viewModel.navigateUpEvent.observe(viewLifecycleOwner) { event ->
@@ -142,7 +146,10 @@ class DoppelkopfGameFragment :
         }
     }
 
-    /** Each sheet reports back after saving so the board can pick up what changed. */
+    /**
+     * The board follows the database on its own, so a sheet reporting back only matters when
+     * it deleted the list.
+     */
     private fun listenForRoundChanges()
     {
         listOf(
@@ -159,11 +166,18 @@ class DoppelkopfGameFragment :
                 if (result.getBoolean(DoppelkopfGameSettingsSheetFragment.RESULT_DELETED, false))
                 {
                     findNavController().navigateUp()
-                    return@setFragmentResultListener
                 }
-                viewModel.refresh()
             }
         }
+    }
+
+    /** Undo needs a round to take back, and waits while one is already being taken back. */
+    private fun bindUndoAction()
+    {
+        val enabled = viewModel.game.value?.scores?.isNotEmpty() == true &&
+                viewModel.isUndoing.value != true
+        binding.undoAction.isEnabled = enabled
+        binding.undoAction.alpha = if (enabled) 1f else 0.4f
     }
 
     /** "Runde 9 / 16 · Gibt: Evi" — same shape as the library's active list card. */

@@ -32,11 +32,16 @@ class DoppelkopfTotalsCalculator(
 {
     private val seatCount = participants.asList().size
 
-    /** What a single round came to, including the extras if the list counts them. */
+    /**
+     * What a single round came to, including the extras if the list counts them. A solo never
+     * does (DDV): extras are only scored in a normal game, and in a solo the factor of three
+     * would have multiplied them on top.
+     */
     fun valueOf(score: DoppelkopfScore, countsExtraPoints: Boolean): Int
     {
         val base = score.toPoints()
-        return if (countsExtraPoints) base + score.value.extraPoints(score.winner) else base
+        val countsExtras = countsExtraPoints && !score.isSolo
+        return if (countsExtras) base + score.value.extraPoints(score.winner) else base
     }
 
     fun calculateTotalPoints(

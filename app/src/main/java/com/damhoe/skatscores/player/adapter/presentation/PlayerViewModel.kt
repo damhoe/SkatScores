@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
@@ -34,9 +33,9 @@ class PlayerViewModel @Inject internal constructor(
     private val players: StateFlow<List<Player>> = playerUseCases.getAllPlayers()
 
     /**
-     * Players with the lists each has taken part in, counted per game. The counts are fetched
-     * per player rather than carried on [Player]: they are derived from the games table, not
-     * stored on the profile - which is why this also has to be rebuilt whenever a list is
+     * Players with the lists each has taken part in, counted per game. The counts are read for
+     * everybody at once rather than carried on [Player]: they are derived from the games table,
+     * not stored on the profile - which is why this also has to be rebuilt whenever a list is
      * played, added or deleted, not only when the players themselves change.
      */
     val playerInfos: LiveData<List<PlayerInfo>> = combine(
@@ -44,13 +43,13 @@ class PlayerViewModel @Inject internal constructor(
         playerUseCases.statisticsChanges(),
     ) { players, _ ->
         val slots = avatarSlots(players)
+        val counts = playerUseCases.getListCounts().getOrDefault(emptyMap())
 
         players.map { player ->
             PlayerInfo(
                 playerId = player.id,
                 name = player.name,
-                listCounts = playerUseCases.getListCounts(player.id)
-                    .getOrDefault(ListCounts()),
+                listCounts = counts[player.id] ?: ListCounts(),
                 avatarSlot = slots[player.id] ?: 0,
             )
         }
@@ -103,7 +102,7 @@ class PlayerViewModel @Inject internal constructor(
             val player = players.value.firstOrNull { it.id == playerId }
             // The list is filled in the background, so a page opened before it arrives reads
             // the one profile it needs directly rather than deciding the player is gone.
-                ?: withContext(Dispatchers.IO) { playerUseCases.getPlayer(playerId).getOrNull() }
+                ?: playerUseCases.getPlayer(playerId).getOrNull()
 
             _playerDetails.postValue(player)
 

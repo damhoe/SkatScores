@@ -153,4 +153,17 @@ class DoppelkopfTotalsCalculatorTest
             assertEquals(totals[seat], seatHistory.last())
         }
     }
+
+    @Test
+    fun `a solo never counts extras, even on a list that does`()
+    {
+        // A won solo is worth 1; the fox recorded for Re must not add to it, let alone
+        // three times over for the soloist.
+        val scores = listOf(solo(0, RE, DoppelkopfRoundValue(extraPointsRe = 1)))
+
+        assertArrayEquals(
+            intArrayOf(3, -1, -1, -1),
+            calculator.calculateTotalPoints(scores, countsExtraPoints = true)
+        )
+    }
 }

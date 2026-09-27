@@ -10,6 +10,7 @@ import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfScoringMode
 import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfSettings
 import com.damhoe.skatscores.game.doppelkopf.domain.scores.DoppelkopfScore
 import com.damhoe.skatscores.persistence.DatabaseConstants.DoppelkopfGamesTable
+import com.damhoe.skatscores.persistence.Schema
 import com.damhoe.skatscores.persistence.getIntOrNull
 import com.damhoe.skatscores.persistence.getStringOrNull
 import com.damhoe.skatscores.persistence.getUuidOrNull
@@ -20,7 +21,6 @@ data class DoppelkopfGameDto(
     val id: UUID,
     val title: String,
     val playedAt: Instant,
-    val updatedAt: Instant?,
 
     // Settings
     val roundCount: Int,
@@ -29,10 +29,8 @@ data class DoppelkopfGameDto(
 {
     fun toContentValues() = contentValuesOf(
         DoppelkopfGamesTable.COLUMN_ID to id.toString(),
-        DoppelkopfGamesTable.COLUMN_TITLE to title,
-        DoppelkopfGamesTable.COLUMN_ROUND_COUNT to roundCount,
-        DoppelkopfGamesTable.COLUMN_SCORING_MODE to scoringMode.name,
-    )
+        DoppelkopfGamesTable.COLUMN_PLAYED_AT to Schema.timestamp(playedAt),
+    ).apply { putAll(settingsValues(title, roundCount, scoringMode)) }
 
     fun toDoppelkopfGame(
         participants: DoppelkopfParticipants,
@@ -51,11 +49,18 @@ data class DoppelkopfGameDto(
 
     companion object
     {
+        /** What the settings sheet can change; the rest of the row is fixed once written. */
+        fun settingsValues(title: String, roundCount: Int, scoringMode: DoppelkopfScoringMode) =
+            contentValuesOf(
+                DoppelkopfGamesTable.COLUMN_TITLE to title,
+                DoppelkopfGamesTable.COLUMN_ROUND_COUNT to roundCount,
+                DoppelkopfGamesTable.COLUMN_SCORING_MODE to scoringMode.name,
+            )
+
         fun mapFrom(game: DoppelkopfGame) = DoppelkopfGameDto(
             id = game.id,
             title = game.title.value,
             playedAt = game.playedAt,
-            updatedAt = null,
             roundCount = game.settings.roundCount.value,
             scoringMode = game.settings.scoringMode,
         )
@@ -67,8 +72,6 @@ data class DoppelkopfGameDto(
 
             val playedAt =
                 Instant.parse(cursor.getStringOrNull(DoppelkopfGamesTable.COLUMN_PLAYED_AT))
-            val updatedAt =
-                Instant.parse(cursor.getStringOrNull(DoppelkopfGamesTable.COLUMN_UPDATED_AT))
 
             val roundCount = cursor.getIntOrNull(DoppelkopfGamesTable.COLUMN_ROUND_COUNT)!!
 
@@ -80,7 +83,6 @@ data class DoppelkopfGameDto(
                 id = id,
                 title = title,
                 playedAt = playedAt,
-                updatedAt = updatedAt,
                 roundCount = roundCount,
                 scoringMode = scoringMode,
             )

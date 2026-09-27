@@ -146,4 +146,16 @@ class DoppelkopfRoundDraftTest
         assertTrue(reopened.isEditingExistingRound)
         assertEquals(score.id, reopened.toScore().id)
     }
+
+    @Test
+    fun `extras entered before switching to a solo are not carried into it`()
+    {
+        val draft = DoppelkopfRoundDraft.forNewRound()
+            .copy(extraPointsRe = 2, extraPointsKontra = 1)
+            .copy(kind = DoppelkopfRoundKind.SOLO, soloist = seats[0], winner = RE)
+
+        assertEquals(1, draft.points(countsExtraPoints = true))
+        assertEquals(0, draft.toScore().value.extraPointsRe)
+        assertEquals(0, draft.toScore().value.extraPointsKontra)
+    }
 }

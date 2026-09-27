@@ -31,6 +31,10 @@ enum class RoundGame
             NULL -> null
         }
 
+    /** A Grand is played with the four jacks alone, so it has at most four Spitzen. */
+    val maxSpitzen: Int
+        get() = if (this == GRAND) 4 else 11
+
     companion object
     {
         fun of(suit: SkatSuit) = when (suit)

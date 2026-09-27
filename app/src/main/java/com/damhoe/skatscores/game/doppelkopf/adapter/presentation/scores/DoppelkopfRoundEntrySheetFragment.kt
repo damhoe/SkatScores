@@ -152,12 +152,18 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
         }
 
         viewModel.countsExtraPoints.observe(viewLifecycleOwner) { counts ->
-            binding.extraPointsBlock.visibility = if (counts) View.VISIBLE else View.GONE
             // The preview has to follow the setting, not just the section's visibility.
-            viewModel.draft.value?.let { bindPointsPreview(it, counts) }
+            viewModel.draft.value?.let {
+                bindExtraPointsVisibility(it)
+                bindPointsPreview(it, counts)
+            }
         }
 
         viewModel.draft.observe(viewLifecycleOwner) { bindDraft(it) }
+
+        viewModel.isSaving.observe(viewLifecycleOwner) { saving ->
+            binding.saveButton.isEnabled = viewModel.draft.value?.isComplete == true && !saving
+        }
 
         viewModel.dismissEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -217,11 +223,20 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
         binding.extraRe.extraRemove.isEnabled = draft.extraPointsRe > 0
         binding.extraKontra.extraRemove.isEnabled = draft.extraPointsKontra > 0
 
-        binding.saveButton.isEnabled = draft.isComplete
+        bindExtraPointsVisibility(draft)
+
+        binding.saveButton.isEnabled = draft.isComplete && viewModel.isSaving.value != true
 
         bindPointsPreview(draft, viewModel.countsExtraPoints.value == true)
 
         isBinding = false
+    }
+
+    /** Extras only count in a normal game, so a solo hides the steppers even on a detailed list. */
+    private fun bindExtraPointsVisibility(draft: DoppelkopfRoundDraft)
+    {
+        val shown = viewModel.countsExtraPoints.value == true && !draft.isSolo
+        binding.extraPointsBlock.visibility = if (shown) View.VISIBLE else View.GONE
     }
 
     /**

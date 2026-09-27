@@ -10,7 +10,14 @@ import java.util.UUID
  */
 interface SkatScoresRepository
 {
-    suspend fun insert(score: SkatScore, gameId: UUID, round: Int): Result<Unit>
+    /** Appends [score] as the newest round of the list. */
+    suspend fun insert(score: SkatScore, gameId: UUID): Result<Unit>
+
     suspend fun update(score: SkatScore, gameId: UUID): Result<Unit>
-    suspend fun delete(id: UUID, gameId: UUID): Result<Unit>
+
+    /**
+     * Takes back the newest round of the list as the database has it. The id of the round
+     * removed, or null when there was none.
+     */
+    suspend fun deleteLast(gameId: UUID): Result<UUID?>
 }

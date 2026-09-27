@@ -1,32 +1,53 @@
 package com.damhoe.skatscores.persistence
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/** What a write touched, and so which screens have to read again. */
+enum class DataTopic
+{
+    /** The profiles themselves: names, who exists. */
+    PLAYERS,
+
+    /** Skat lists, their seats and their rounds. */
+    SKAT,
+
+    /** Doppelkopf lists, their seats and their rounds. */
+    DOPPELKOPF,
+}
+
 /**
- * One signal for "something in the database changed".
+ * The signal for "something in the database changed".
  *
  * The repositories answer with what a query returned at the moment it was asked, so nothing
  * would tell a screen already built that a list, a round or a player has been written since.
- * Every write bumps the revision here and the queries a screen is built from are collected
- * from it, which is what makes a new list show up on the home screen without restarting the
- * app.
+ * Every write bumps the topics it touched here, and the queries a screen is built from are
+ * collected from [changes] of the topics they read.
  *
- * One counter for the whole database is deliberate: the tables are small, writes are rare -
- * one per round played - and a per-table signal would have to know which screen cares about
- * which join.
+ * It used to be one counter for the whole database, so a player renamed reloaded every Skat
+ * and Doppelkopf list on the home screen, and a Skat round reloaded the Doppelkopf ones.
  */
 @Singleton
 class DatabaseChanges @Inject constructor()
 {
-    private val _revision = MutableStateFlow(0L)
+    private val revisions: Map<DataTopic, MutableStateFlow<Long>> =
+        DataTopic.entries.associateWith { MutableStateFlow(0L) }
 
-    /** Holds the current revision, so a new collector reads once straight away. */
-    val revision: StateFlow<Long> = _revision.asStateFlow()
+    fun notifyChanged(vararg topics: DataTopic) =
+        topics.forEach { topic -> revisions.getValue(topic).update { it + 1 } }
 
-    fun notifyChanged() = _revision.update { it + 1 }
+    /**
+     * Emits straight away, so a new collector reads once, and again after every write to any
+     * of [topics]. Conflated: a collector that is busy reading sees one emission for however
+     * many writes happened meanwhile.
+     */
+    fun changes(vararg topics: DataTopic): Flow<Unit>
+    {
+        require(topics.isNotEmpty()) { "Name at least one topic" }
+        return combine(topics.map { revisions.getValue(it) }) { }
+    }
 }

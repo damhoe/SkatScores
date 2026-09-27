@@ -25,71 +25,65 @@ class DatabaseHelper @Inject constructor(
     companion object
     {
         private const val TAG = "SkatScoreDatabase"
-
-        /**
-         * Every table the app owns, in dependency order. Each script is written with
-         * IF NOT EXISTS so that running the whole list is safe on an existing database,
-         * which is what an upgrade does.
-         */
-        private val CREATE_TABLE_SQL_FILES = listOf(
-            "tables/create_players_table.sql",
-            "tables/create_skat_games_table.sql",
-            "tables/create_skat_participants_table.sql",
-            "tables/create_skat_scores_table.sql",
-            "tables/create_doppelkopf_games_table.sql",
-            "tables/create_doppelkopf_participants_table.sql",
-            "tables/create_doppelkopf_scores_table.sql",
-        )
     }
+
+    init
+    {
+        // Readers get connections of their own and no longer queue behind a write - the home
+        // screen reloading while a round is saved, say.
+        setWriteAheadLoggingEnabled(true)
+    }
+
+    /*
+     * onCreate and onUpgrade run in one transaction that SQLiteOpenHelper only commits - and
+     * only then records the new version - if they return normally. Nothing in them catches:
+     * a statement that fails rolls the whole thing back, and the next open tries again.
+     * Swallowing it, as this used to, left a database at the new version with a table missing
+     * for good.
+     */
 
     override fun onCreate(database: SQLiteDatabase)
     {
-        CREATE_TABLE_SQL_FILES.forEach { executeSqlScript(database, it, context) }
+        Schema.create(database)
     }
 
-    private fun executeSqlScript(
-        db: SQLiteDatabase,
-        fileName: String,
-        context: Context,
-    )
-    {
-        val statements = try
-        {
-            // execSQL runs a single statement, so a script has to be handed to it one
-            // statement at a time or everything after the first one is silently dropped.
-            context.assets.open(fileName).bufferedReader().use { splitSqlStatements(it.readText()) }
-        } catch (e: Exception)
-        {
-            Log.e(TAG, "Could not read SQL script from assets/$fileName", e)
-            return
-        }
-
-        // Per statement, so that one that cannot be applied - an index an existing database
-        // already violates, say - does not take the rest of the script down with it.
-        statements.forEach { statement ->
-            try
-            {
-                db.execSQL(statement)
-            } catch (e: Exception)
-            {
-                Log.e(TAG, "Error executing statement from assets/$fileName: $statement", e)
-            }
-        }
-    }
-
-    /**
-     * Additive by design: every create script is IF NOT EXISTS, so an upgrade adds whatever
-     * tables a newer version introduced and leaves recorded lists alone. Dropping and
-     * recreating would take a user's whole history with it.
-     */
     override fun onUpgrade(
         database: SQLiteDatabase,
         oldVersion: Int,
         newVersion: Int,
     )
     {
-        Log.d(TAG, "Upgrading database from $oldVersion to $newVersion")
-        onCreate(database)
+        Log.i(TAG, "Upgrading database from $oldVersion to $newVersion")
+        Migrations.migrate(database, oldVersion, newVersion)
+    }
+
+    /**
+     * A database newer than this build - a backup restored onto an older install, a rolled-back
+     * update - is refused rather than recreated. SQLiteOpenHelper would throw here anyway; the
+     * point is to never "fix" it by dropping tables, which would take the user's lists with it.
+     */
+    override fun onDowngrade(
+        database: SQLiteDatabase,
+        oldVersion: Int,
+        newVersion: Int,
+    )
+    {
+        throw IllegalStateException(
+            "Database is at version $oldVersion, newer than this app's $newVersion." +
+                    " Refusing to downgrade, so nothing is lost."
+        )
+    }
+
+    /**
+     * Foreign keys are switched on here, after create or upgrade, rather than in onConfigure:
+     * a migration rebuilds tables, and with enforcement on, dropping the old table would
+     * cascade its delete into the new one. This goes through the helper's own setter so every
+     * pooled connection gets it, not just the one that happened to run a PRAGMA.
+     */
+    override fun onOpen(db: SQLiteDatabase)
+    {
+        super.onOpen(db)
+        if (!db.isReadOnly) db.setForeignKeyConstraintsEnabled(true)
     }
 
     /**
@@ -99,10 +93,6 @@ class DatabaseHelper @Inject constructor(
      * successful unless it does - and every adapter in this app reports failure as a
      * `Result` instead. So the body is expected to `getOrThrow()` each step, and the
      * exception that comes out is turned back into a `Result` here.
-     *
-     * Without that, a transaction whose first statement failed still committed the rest of
-     * itself, and the caller was handed the last statement's result as if it spoke for the
-     * whole: a list could be written with no seats, and reported as saved.
      */
     fun <T> transaction(operation: (db: SQLiteDatabase) -> T): Result<T>
     {
@@ -112,6 +102,23 @@ class DatabaseHelper @Inject constructor(
         } catch (e: Exception)
         {
             Log.e(TAG, "Error in transaction, rolled back", e)
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Runs several reads against one snapshot. A list read as three queries - the list, its
+     * seats, its rounds - could otherwise see a round saved in between the second and the
+     * third, or a list deleted halfway through.
+     */
+    fun <T> read(operation: (db: SQLiteDatabase) -> T): Result<T>
+    {
+        return try
+        {
+            Result.success(writableDatabase.transaction(exclusive = false) { operation(this) })
+        } catch (e: Exception)
+        {
+            Log.e(TAG, "Error reading", e)
             Result.failure(e)
         }
     }

@@ -126,6 +126,10 @@ class RoundEntrySheetFragment : BottomSheetDialogFragment()
             bindDraft(draft)
         }
 
+        viewModel.isSaving.observe(viewLifecycleOwner) { saving ->
+            binding.saveButton.isEnabled = !saving
+        }
+
         viewModel.dismissEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 setFragmentResult(REQUEST_KEY, bundleOf())
@@ -181,7 +185,11 @@ class RoundEntrySheetFragment : BottomSheetDialogFragment()
         binding.nullModifierBlock.visibility =
             if (draft.usesMultipliers) View.GONE else View.VISIBLE
 
-        binding.spitzenSlider.value = draft.spitzen.value.toFloat()
+        // The range first: a slider refuses a value outside it. An old round stored with more
+        // Spitzen than its game allows is shown at the maximum rather than crashing the sheet.
+        val maxSpitzen = draft.game.maxSpitzen.toFloat()
+        binding.spitzenSlider.valueTo = maxSpitzen
+        binding.spitzenSlider.value = draft.spitzen.value.toFloat().coerceAtMost(maxSpitzen)
         binding.spitzenValue.text = getString(R.string.format_spitzen, draft.spitzen.value)
 
         binding.modifierHand.isChecked = draft.hand

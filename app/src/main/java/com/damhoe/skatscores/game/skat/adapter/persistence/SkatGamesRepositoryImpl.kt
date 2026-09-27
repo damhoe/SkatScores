@@ -1,8 +1,10 @@
 package com.damhoe.skatscores.game.skat.adapter.persistence
 
 import android.util.Log
+import com.damhoe.skatscores.game.common.Title
 import com.damhoe.skatscores.game.skat.adapter.persistence.players.SkatParticipantDto
 import com.damhoe.skatscores.game.skat.adapter.persistence.players.SkatParticipantsPersistenceAdapter
+import com.damhoe.skatscores.game.skat.adapter.persistence.scores.SkatScoreDto
 import com.damhoe.skatscores.game.skat.adapter.persistence.scores.SkatScorePersistenceAdapter
 import com.damhoe.skatscores.game.skat.application.repository.SkatGamesRepository
 import com.damhoe.skatscores.game.skat.domain.SkatGame
@@ -11,19 +13,22 @@ import com.damhoe.skatscores.game.skat.domain.SkatParticipants
 import com.damhoe.skatscores.game.skat.domain.SkatPlayerPosition.FOREHAND
 import com.damhoe.skatscores.game.skat.domain.SkatPlayerPosition.MIDDLEHAND
 import com.damhoe.skatscores.game.skat.domain.SkatPlayerPosition.REARHAND
-import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
+import com.damhoe.skatscores.game.skat.domain.SkatSettings
+import com.damhoe.skatscores.persistence.DataTopic
 import com.damhoe.skatscores.persistence.DatabaseChanges
 import com.damhoe.skatscores.persistence.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
 class SkatGamesRepositoryImpl @Inject constructor(
     private val dbHelper: DatabaseHelper,
@@ -39,7 +44,7 @@ class SkatGamesRepositoryImpl @Inject constructor(
      * Every suspending call here hops to IO. The adapters below are blocking, and these are
      * called from viewModelScope, whose dispatcher is the main thread - so without this,
      * opening a list or saving a round was database work on the thread drawing the frame.
-     * The preview flows do the same with flowOn, further down.
+     * The flows do the same with flowOn, further down.
      */
 
     /**
@@ -55,126 +60,143 @@ class SkatGamesRepositoryImpl @Inject constructor(
                     SkatParticipantDto.mapManyFrom(game.participants, game.id)
                 ).getOrThrow()
             }
-            .onSuccess { databaseChanges.notifyChanged() }
+            .onSuccess { databaseChanges.notifyChanged(DataTopic.SKAT) }
     }
 
     /**
-     * Takes the seats and the rounds with it. The foreign keys declare ON DELETE CASCADE, but
-     * SQLite only honours that with foreign key enforcement switched on, which it is not by
-     * default on Android - so the children are removed here rather than assumed away. Left
-     * behind, the participant rows would keep counting towards the player statistics of a
-     * list that no longer exists.
+     * Marks the list deleted. Its seats and rounds stay in place under it, so the delete is a
+     * single change a sync could carry, and every read already leaves out what belongs to a
+     * deleted list - the player statistics included.
      */
-    override suspend fun delete(id: UUID): Result<SkatGame?> = withContext(Dispatchers.IO) {
-        val game = get(id).getOrElse { return@withContext Result.failure(it) }
-            ?: return@withContext Result.success(null)
-
-        dbHelper
-            .transaction {
-                skatScoresPersistenceAdapter.deleteAllOfGame(id).getOrThrow()
-                skatParticipantsPersistenceAdapter.deleteAllOfGame(id).getOrThrow()
-                skatGamesDao.delete(id).getOrThrow()
-            }
-            .onSuccess { databaseChanges.notifyChanged() }
-            // Half a deletion is worse than none: a failure here rolls the whole thing back
-            // and says so, rather than reporting the list gone while its rounds remain.
-            .map { game }
+    override suspend fun delete(id: UUID): Result<Unit> = withContext(Dispatchers.IO) {
+        skatGamesDao.softDelete(id)
+            .onSuccess { deleted -> if (deleted) databaseChanges.notifyChanged(DataTopic.SKAT) }
+            .map { }
     }
 
-    override suspend fun update(game: SkatGame): Result<Unit> = withContext(Dispatchers.IO) {
+    override suspend fun updateSettings(
+        id: UUID,
+        title: Title,
+        settings: SkatSettings,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        skatGamesDao
+            .updateSettings(
+                id = id,
+                title = title.value,
+                roundCount = settings.roundCount.value,
+                scoringMode = settings.scoringMode,
+            )
+            .onSuccess { databaseChanges.notifyChanged(DataTopic.SKAT) }
+    }
+
+    override suspend fun updateSeats(
+        id: UUID,
+        participants: SkatParticipants,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
         dbHelper
             .transaction {
-                skatGamesDao.update(SkatGameDto.mapFrom(game)).getOrThrow()
-
-                skatParticipantsPersistenceAdapter.update(
-                    SkatParticipantDto.mapManyFrom(game.participants, game.id)
-                ).getOrThrow()
+                skatParticipantsPersistenceAdapter
+                    .replaceSeats(SkatParticipantDto.mapManyFrom(participants, id))
+                    .getOrThrow()
             }
-            .onSuccess { databaseChanges.notifyChanged() }
+            .onSuccess { databaseChanges.notifyChanged(DataTopic.SKAT) }
     }
 
     override suspend fun get(id: UUID): Result<SkatGame?> = withContext(Dispatchers.IO) {
-        skatGamesDao.get(id)
-            // mapCatching, not map: the row still has to be turned into a game, and a stored
-            // value the domain refuses belongs in the Result rather than thrown at the caller.
-            .mapCatching { skatGameDto ->
-                // A list whose seats or rounds cannot be read reads as no list at all: the
-                // screens that ask for one already handle a null by leaving.
-                val participants = loadSkatParticipants(id) ?: return@mapCatching null
-                val scores = loadSkatScores(id) ?: return@mapCatching null
-                skatGameDto?.toSkatGame(
-                    participants = participants,
-                    scores = scores)
-            }
+        load(id)
     }
 
-    override fun getAllSince(oldest: Instant): Flow<List<SkatGamePreview>> =
-        previews { it.playedAt >= oldest }
+    override fun observe(id: UUID): Flow<SkatGame?> =
+        databaseChanges.changes(DataTopic.SKAT)
+            // Latest, not every: a read made stale by a newer write is dropped, never shown.
+            .mapLatest { load(id).getOrNull() }
+            .flowOn(Dispatchers.IO)
 
-    override fun getAll(): Flow<List<SkatGamePreview>> = previews { true }
+    /**
+     * The list, its seats and its rounds, read from one snapshot.
+     *
+     * mapCatching, not map: the rows still have to be turned into a game, and a stored value
+     * the domain refuses belongs in the Result rather than thrown at the caller.
+     */
+    private fun load(id: UUID): Result<SkatGame?> = dbHelper
+        .read {
+            val game = skatGamesDao.get(id).getOrThrow() ?: return@read null
+            val participants = skatParticipantsPersistenceAdapter.getAllOfGame(id).getOrThrow()
+            val scores = skatScoresPersistenceAdapter.getScoresForGame(id).getOrThrow()
+            Triple(game, participants, scores)
+        }
+        .mapCatching { rows ->
+            val (game, participants, scores) = rows ?: return@mapCatching null
+            // A list whose seats cannot be read reads as no list at all: the screens that ask
+            // for one already handle a null by leaving.
+            val seats = toSkatParticipants(id, participants) ?: return@mapCatching null
+            game.toSkatGame(participants = seats, scores = scores.map { it.toSkatScore() })
+        }
+
+    override fun getAllSince(oldest: Instant): Flow<List<SkatGamePreview>> = previews(oldest)
+
+    override fun getAll(): Flow<List<SkatGamePreview>> = previews(since = null)
 
     /**
      * Re-read on every change rather than once when this was called: the home screen keeps one
      * LiveData for the whole time it is open, so a list started, played or deleted since then
      * has to arrive on the same flow.
      */
-    private fun previews(keep: (SkatGameDto) -> Boolean): Flow<List<SkatGamePreview>> =
-        databaseChanges.revision
-            .map { loadPreviews(keep) }
+    private fun previews(since: Instant?): Flow<List<SkatGamePreview>> =
+        databaseChanges.changes(DataTopic.SKAT)
+            .mapLatest { loadPreviews(since) }
             .flowOn(Dispatchers.IO)
 
-    private fun loadPreviews(keep: (SkatGameDto) -> Boolean): List<SkatGamePreview> =
-        skatGamesDao.getAll().fold(
-            onSuccess = { dtoList ->
-                dtoList
-                    .filter(keep)
-                    // mapNotNull, so one unreadable list is left out of the home screen
-                    // rather than emptying it.
-                    .mapNotNull { dto ->
-                        // Scores are needed: the preview shows running totals and progress.
-                        val participants = loadSkatParticipants(dto.id)
-                            ?: return@mapNotNull null
-                        val scores = loadSkatScores(dto.id) ?: return@mapNotNull null
+    /**
+     * Three queries for the whole home screen - the lists, all their seats, all their rounds -
+     * rather than two more per list, read from one snapshot and put together here.
+     */
+    private fun loadPreviews(since: Instant?): List<SkatGamePreview> = dbHelper
+        .read {
+            Triple(
+                skatGamesDao.getAll(since).getOrThrow(),
+                skatParticipantsPersistenceAdapter.getAllOfLiveGames(since).getOrThrow()
+                    .groupBy { it.gameId },
+                skatScoresPersistenceAdapter.getScoresOfLiveGames(since).getOrThrow()
+                    .groupBy { it.gameId },
+            )
+        }
+        .map { (games, participantsByGame, scoresByGame) ->
+            // mapNotNull, so one unreadable list is left out of the home screen rather than
+            // emptying it. The domain can refuse a stored row too - a round count out of
+            // range, a title that no longer validates - and that has to cost the one list.
+            games.mapNotNull { dto -> toPreview(dto, participantsByGame, scoresByGame) }
+        }
+        .getOrElse { e ->
+            Log.e(TAG, "Error getting all games", e)
+            emptyList()
+        }
 
-                        // The domain can refuse a stored row too - a round count out of
-                        // range, a title that no longer validates - and that has to cost
-                        // the one list rather than the screen.
-                        runCatching {
-                            SkatGamePreview.mapFrom(
-                                dto.toSkatGame(participants = participants, scores = scores)
-                            )
-                        }.getOrElse { e ->
-                            Log.e(TAG, "Could not read game ${dto.id}, skipping it", e)
-                            null
-                        }
-                    }
-                    .sortedByDescending { it.playedAt }
-            },
-            onFailure = { e ->
-                Log.e(TAG, "Error getting all games", e)
-                emptyList()
-            }
-        )
+    private fun toPreview(
+        dto: SkatGameDto,
+        participantsByGame: Map<UUID, List<SkatParticipantDto>>,
+        scoresByGame: Map<UUID, List<SkatScoreDto>>,
+    ): SkatGamePreview? = runCatching {
+        val seats = toSkatParticipants(dto.id, participantsByGame[dto.id].orEmpty())
+            ?: return null
+        val scores = scoresByGame[dto.id].orEmpty().map { it.toSkatScore() }
+        SkatGamePreview.mapFrom(dto.toSkatGame(participants = seats, scores = scores))
+    }.getOrElse { e ->
+        Log.e(TAG, "Could not read game ${dto.id}, skipping it", e)
+        null
+    }
 
     /**
-     * The three seats of a list, or null if they cannot be read.
+     * The three seats of a list, or null if one is missing.
      *
-     * A seat missing used to be an assertion, which turned a list saved without its seats -
-     * or a failed read - into an NPE thrown inside the previews flow, taking the home screen
-     * down with it rather than the one list it could not read. Saves are atomic now, so this
-     * should not happen; a list that predates that, or a read that fails, is skipped instead
-     * of being fatal.
+     * A seat missing used to be an assertion, which turned one unreadable list into an NPE
+     * thrown inside the previews flow, taking the home screen down with it.
      */
-    private fun loadSkatParticipants(
+    private fun toSkatParticipants(
         gameId: UUID,
+        participantDtos: List<SkatParticipantDto>,
     ): SkatParticipants?
     {
-        val participantDtos = skatParticipantsPersistenceAdapter.getAllOfGame(gameId)
-            .getOrElse { e ->
-                Log.e(TAG, "Error loading skat players for game $gameId", e)
-                emptyList()
-            }
-
         val forehand = participantDtos.find { it.tablePosition == FOREHAND }
         val middlehand = participantDtos.find { it.tablePosition == MIDDLEHAND }
         val rearhand = participantDtos.find { it.tablePosition == REARHAND }
@@ -190,24 +212,5 @@ class SkatGamesRepositoryImpl @Inject constructor(
             middleHand = middlehand.toSkatParticipant(),
             rearHand = rearhand.toSkatParticipant(),
         )
-    }
-
-    /**
-     * The rounds of a list, or null if they cannot be read.
-     *
-     * Empty is not the fallback: a list whose rounds failed to load would otherwise be shown
-     * with everybody on zero, which reads as a real standing rather than as a read that did
-     * not work.
-     */
-    private fun loadSkatScores(
-        gameId: UUID,
-    ): List<SkatScore>?
-    {
-        return skatScoresPersistenceAdapter.getScoresForGame(gameId)
-            .mapCatching { dtos -> dtos.map { it.toSkatScore() } }
-            .getOrElse { e ->
-                Log.e(TAG, "Error loading rounds for game $gameId", e)
-                null
-            }
     }
 }

@@ -114,7 +114,7 @@ class RoundDraftTest
 
         assertFalse(draft.usesMultipliers)
         assertEquals(NullOptions.HAND_OUVERT, score.options)
-        assertEquals(56, draft.points)
+        assertEquals(59, draft.points)
     }
 
     @Test

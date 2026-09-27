@@ -80,9 +80,10 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details)
         // so it asks first - the same door the lists have had all along.
         binding.buttonDelete.setOnClickListener {
             val player = viewModel.playerDetails.value ?: return@setOnClickListener
+            // No navigateUp here: removing clears the player shown, and the observer below
+            // leaves on that. Leaving here as well popped the players list too.
             requireContext().confirmPlayerDeletion(player.name.value) {
                 viewModel.removePlayer(player)
-                findNavController().navigateUp()
             }
         }
     }

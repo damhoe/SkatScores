@@ -3,7 +3,6 @@ package com.damhoe.skatscores.game.doppelkopf.application.usecases
 import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
-import com.damhoe.skatscores.game.common.Participant
 import com.damhoe.skatscores.game.common.Title
 import com.damhoe.skatscores.game.doppelkopf.application.repository.DoppelkopfGamesRepository
 import com.damhoe.skatscores.game.doppelkopf.application.repository.DoppelkopfScoresRepository
@@ -13,6 +12,7 @@ import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfParticipants
 import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfSettings
 import com.damhoe.skatscores.game.doppelkopf.domain.scores.DoppelkopfScore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
@@ -23,10 +23,11 @@ import javax.inject.Inject
  * gathers Skat's.
  *
  * As there, deleting a single round is deliberately absent: a round is only ever removed
- * through [RemoveLastDoppelkopfScoreUseCase], so the round numbering cannot develop holes.
+ * through [RemoveLastDoppelkopfScoreUseCase].
  */
 data class DoppelkopfGameUseCases @Inject constructor(
     val getGame: GetDoppelkopfGameUseCase,
+    val observeGame: ObserveDoppelkopfGameUseCase,
     val createGame: CreateDoppelkopfGameUseCase,
     val deleteGame: DeleteDoppelkopfGameUseCase,
     val updateGame: UpdateDoppelkopfGameUseCase,
@@ -68,12 +69,22 @@ class GetDoppelkopfGameUseCase @Inject constructor(
     suspend operator fun invoke(id: UUID): Result<DoppelkopfGame?> = repository.get(id)
 }
 
+/**
+ * A list as it is now and after every write to it, so a screen never works from a copy that
+ * is out of date. Null once the list is gone.
+ */
+class ObserveDoppelkopfGameUseCase @Inject constructor(
+    private val repository: DoppelkopfGamesRepository,
+)
+{
+    operator fun invoke(id: UUID): Flow<DoppelkopfGame?> = repository.observe(id)
+}
+
 class DeleteDoppelkopfGameUseCase @Inject constructor(
     private val repository: DoppelkopfGamesRepository,
 )
 {
-    suspend operator fun invoke(id: UUID): Result<DoppelkopfGame?> =
-        withContext(Dispatchers.IO) { repository.delete(id) }
+    suspend operator fun invoke(id: UUID): Result<Unit> = repository.delete(id)
 }
 
 class GetDoppelkopfGamePreviewsUseCase @Inject constructor(
@@ -91,22 +102,10 @@ data class UpdateDoppelkopfGameCommand(
 
 class UpdateDoppelkopfGameUseCase @Inject constructor(
     private val repository: DoppelkopfGamesRepository,
-    private val getGame: GetDoppelkopfGameUseCase,
 )
 {
-    suspend operator fun invoke(command: UpdateDoppelkopfGameCommand): Result<DoppelkopfGame> =
-        getGame(command.id).fold(
-            onSuccess = { game ->
-                if (game == null)
-                {
-                    return Result.failure(Exception("Game not found with ID: ${command.id}"))
-                }
-
-                val updated = game.copy(title = command.title, settings = command.settings)
-                repository.update(updated).map { updated }
-            },
-            onFailure = { Result.failure(it) },
-        )
+    suspend operator fun invoke(command: UpdateDoppelkopfGameCommand): Result<Unit> =
+        repository.updateSettings(command.id, command.title, command.settings)
 }
 
 data class UpdateDoppelkopfParticipantsCommand(
@@ -114,49 +113,29 @@ data class UpdateDoppelkopfParticipantsCommand(
     val participants: DoppelkopfParticipants,
 )
 
+/**
+ * Changes who sits at the seats of a running list. A change is a correction: each seat keeps
+ * its participant id, so the rounds already recorded are credited to the name now on it.
+ */
 class UpdateDoppelkopfParticipantsUseCase @Inject constructor(
     private val repository: DoppelkopfGamesRepository,
-    private val getGame: GetDoppelkopfGameUseCase,
 )
 {
-    suspend operator fun invoke(
-        command: UpdateDoppelkopfParticipantsCommand,
-    ): Result<DoppelkopfGame> = getGame(command.id).fold(
-        onSuccess = { game ->
-            if (game == null)
-            {
-                return Result.failure(Exception("Game not found with ID: ${command.id}"))
-            }
-
-            // A seat keeps its participant id even when another person takes it over,
-            // otherwise the rounds already recorded lose their score board column.
-            val seats: List<Participant> = command.participants.asList()
-                .mapIndexed { seat, participant ->
-                    participant.withId(game.participants.asList()[seat].id)
-                }
-
-            val updated = game.copy(participants = DoppelkopfParticipants(seats))
-            repository.update(updated).map { updated }
-        },
-        onFailure = { Result.failure(it) },
-    )
+    suspend operator fun invoke(command: UpdateDoppelkopfParticipantsCommand): Result<Unit> =
+        repository.updateSeats(command.id, command.participants)
 }
 
 class AddScoreToDoppelkopfGameUseCase @Inject constructor(
     private val scoreRepository: DoppelkopfScoresRepository,
 )
 {
+    /** Appends [score] as the newest round; where it lands is the database's call. */
     suspend operator fun invoke(
         game: DoppelkopfGame,
         score: DoppelkopfScore,
-    ): Result<DoppelkopfGame>
-    {
-        val result = game.addScore(score)
-
-        return scoreRepository
-            .insert(score = result.score, gameId = game.id, round = result.round)
-            .map { result.updatedGame }
-    }
+    ): Result<DoppelkopfGame> = scoreRepository
+        .insert(score = score, gameId = game.id)
+        .map { game.addScore(score).updatedGame }
 }
 
 class UpdateDoppelkopfScoreUseCase @Inject constructor(
@@ -171,17 +150,14 @@ class UpdateDoppelkopfScoreUseCase @Inject constructor(
         .map { game.updateScore(score) }
 }
 
-/** Undo for the bottom bar: drops the most recently played round. */
+/**
+ * Undo for the bottom bar: drops the most recently played round of the list as the database
+ * has it. True when a round was removed.
+ */
 class RemoveLastDoppelkopfScoreUseCase @Inject constructor(
     private val scoreRepository: DoppelkopfScoresRepository,
 )
 {
-    suspend operator fun invoke(game: DoppelkopfGame): Result<DoppelkopfGame>
-    {
-        val lastScore = game.scores.lastOrNull() ?: return Result.success(game)
-
-        return scoreRepository
-            .delete(id = lastScore.id, gameId = game.id)
-            .map { game.removeScore(lastScore.id) }
-    }
+    suspend operator fun invoke(gameId: UUID): Result<Boolean> =
+        scoreRepository.deleteLast(gameId).map { it != null }
 }

@@ -12,7 +12,6 @@ import com.damhoe.skatscores.game.skat.domain.Spitzen
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 import java.util.UUID
-import kotlin.math.max
 
 private const val CLUBS_POINTS = 12
 private const val SPADES_POINTS = 11
@@ -81,10 +80,12 @@ sealed class SkatScore(
                 SkatSuit.GRAND -> GRAND_POINTS
             }
 
+            // ISkO: the game is worth the lowest multiple of its base value that reaches the
+            // bid, and it counts as lost - so, like every lost game, twice that, negative.
             var points = suitValue
             while (points < bid.value) points += suitValue
 
-            return -max(points, 50)
+            return -2 * points
         }
     }
 
@@ -124,8 +125,8 @@ sealed class SkatScore(
                 when (it)
                 {
                     NullOptions.HAND -> 35
-                    NullOptions.OUVERT -> 45
-                    NullOptions.HAND_OUVERT -> 56
+                    NullOptions.OUVERT -> 46
+                    NullOptions.HAND_OUVERT -> 59
                 }
             } ?: 23)
             .let { if (wonOrLost == LOST) -2 * it else it }

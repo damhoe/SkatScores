@@ -5,12 +5,10 @@ import com.damhoe.skatscores.player.domain.ListCounts
 import java.util.UUID
 import javax.inject.Inject
 
+/** Lists every registered player appears in, split by game, read in one go. */
 class GetListCountsUseCase @Inject constructor(
     private val repository: PlayerStatisticsRepository,
 )
 {
-    suspend operator fun invoke(playerId: UUID): Result<ListCounts>
-    {
-        return repository.getListCounts(playerId)
-    }
+    suspend operator fun invoke(): Result<Map<UUID, ListCounts>> = repository.getAllListCounts()
 }

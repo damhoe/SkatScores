@@ -67,6 +67,10 @@ dependencies {
 
     // Testing
     testImplementation("junit:junit:4.13.2")
+    // Real SQLite on the JVM, for the migration and repository tests.
+    testImplementation("org.robolectric:robolectric:4.16")
+    testImplementation("androidx.test:core-ktx:1.7.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
     androidTestImplementation("org.junit.jupiter:junit-jupiter:6.1.3")

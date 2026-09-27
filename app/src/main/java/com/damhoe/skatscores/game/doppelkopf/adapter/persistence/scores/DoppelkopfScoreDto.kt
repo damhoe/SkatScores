@@ -22,7 +22,8 @@ enum class DoppelkopfScoreType
 data class DoppelkopfScoreDto(
     val id: UUID,
     val gameId: UUID,
-    val round: Int,
+    /** Where the round sorts in its list; see [RoundSequence]. */
+    val seq: String,
     val type: DoppelkopfScoreType,
     val winner: DoppelkopfParty,
 
@@ -43,7 +44,7 @@ data class DoppelkopfScoreDto(
     fun toContentValues() = contentValuesOf(
         DoppelkopfScoresTable.COLUMN_ID to id.toString(),
         DoppelkopfScoresTable.COLUMN_GAME_ID to gameId.toString(),
-        DoppelkopfScoresTable.COLUMN_ROUND to round,
+        DoppelkopfScoresTable.COLUMN_SEQ to seq,
         DoppelkopfScoresTable.COLUMN_SCORE_TYPE to type.name,
         DoppelkopfScoresTable.COLUMN_WINNER to winner.name,
         DoppelkopfScoresTable.COLUMN_RE_PARTICIPANT_1 to reParticipant1?.toString(),
@@ -57,6 +58,13 @@ data class DoppelkopfScoreDto(
         DoppelkopfScoresTable.COLUMN_EXTRA_POINTS_RE to extraPointsRe,
         DoppelkopfScoresTable.COLUMN_EXTRA_POINTS_KONTRA to extraPointsKontra,
     )
+
+    /** What an edit may change: everything but which list the round is in and where. */
+    fun toEditContentValues() = toContentValues().apply {
+        remove(DoppelkopfScoresTable.COLUMN_ID)
+        remove(DoppelkopfScoresTable.COLUMN_GAME_ID)
+        remove(DoppelkopfScoresTable.COLUMN_SEQ)
+    }
 
     fun toDoppelkopfScore(): DoppelkopfScore
     {
@@ -93,14 +101,14 @@ data class DoppelkopfScoreDto(
         fun mapFrom(
             score: DoppelkopfScore,
             gameId: UUID,
-            round: Int,
+            seq: String,
         ): DoppelkopfScoreDto
         {
             val value = score.value
             val common = DoppelkopfScoreDto(
                 id = score.id,
                 gameId = gameId,
-                round = round,
+                seq = seq,
                 type = DoppelkopfScoreType.NORMAL,
                 winner = score.winner,
                 winLevel = value.winLevel,
@@ -134,7 +142,7 @@ data class DoppelkopfScoreDto(
         fun mapFrom(cursor: Cursor): DoppelkopfScoreDto = DoppelkopfScoreDto(
             id = cursor.getUuidOrNull(DoppelkopfScoresTable.COLUMN_ID)!!,
             gameId = cursor.getUuidOrNull(DoppelkopfScoresTable.COLUMN_GAME_ID)!!,
-            round = cursor.getIntOrNull(DoppelkopfScoresTable.COLUMN_ROUND)!!,
+            seq = cursor.getStringOrNull(DoppelkopfScoresTable.COLUMN_SEQ)!!,
             type = DoppelkopfScoreType.valueOf(
                 cursor.getStringOrNull(DoppelkopfScoresTable.COLUMN_SCORE_TYPE)!!
             ),

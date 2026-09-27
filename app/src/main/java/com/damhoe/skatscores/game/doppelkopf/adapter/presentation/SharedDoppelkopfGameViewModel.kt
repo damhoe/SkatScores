@@ -19,9 +19,8 @@ import javax.inject.Inject
  * Holds the game shown by [DoppelkopfGameFragment], and shared with the chart screen through
  * the Doppelkopf navigation graph.
  *
- * Editing surfaces (round sheet, settings sheet) own their own saves and report back with a
- * fragment result, so this only loads, refreshes and applies the one action that lives on the
- * game screen itself.
+ * The game is observed, not loaded: every write to it - from the round sheet, the settings or
+ * seats sheet, or undo here - arrives on its own, so undo never acts on an outdated copy.
  */
 @HiltViewModel
 class SharedDoppelkopfGameViewModel @Inject constructor(
@@ -37,43 +36,57 @@ class SharedDoppelkopfGameViewModel @Inject constructor(
     private val _navigateUpEvent = MutableLiveData<Event<Unit>>()
     val navigateUpEvent: LiveData<Event<Unit>> = _navigateUpEvent
 
+    /** True while an undo is on its way to the database; the button waits for it. */
+    private val _isUndoing = MutableLiveData(false)
+    val isUndoing: LiveData<Boolean> = _isUndoing
+
+    /** Fires once a round has actually been taken back. */
+    private val _roundRemovedEvent = MutableLiveData<Event<Unit>>()
+    val roundRemovedEvent: LiveData<Event<Unit>> = _roundRemovedEvent
+
     val gameId: UUID? = savedStateHandle.get<String>(ARG_GAME_ID)
         ?.let { UUID.fromString(it) }
-        ?.also { load(it) }
-        ?: _navigateUpEvent.postValue(Event(Unit)).let { null }
 
-    fun refresh()
+    init
     {
-        gameId?.let { load(it) }
+        if (gameId == null) _navigateUpEvent.value = Event(Unit) else observe(gameId)
     }
 
-    private fun load(gameId: UUID)
-    {
-        viewModelScope.launch {
-            useCases.getGame(gameId)
-                .onSuccess { game ->
-                    if (game == null)
-                    {
-                        _navigateUpEvent.postValue(Event(Unit))
-                        return@launch
-                    }
-                    _game.postValue(game)
+    /**
+     * A list that cannot be read when the screen opens sends the user back. One that goes away
+     * later was deleted from the settings sheet, which leaves the screen itself.
+     */
+    private fun observe(gameId: UUID) = viewModelScope.launch {
+        var hasLoaded = false
+
+        useCases.observeGame(gameId).collect { game ->
+            when
+            {
+                game != null ->
+                {
+                    hasLoaded = true
+                    _game.value = game
                 }
-                .onFailure { _navigateUpEvent.postValue(Event(Unit)) }
+
+                !hasLoaded -> _navigateUpEvent.value = Event(Unit)
+            }
         }
     }
 
     /**
      * Undo in the bottom bar: drops the round that was played last, and the only way a round
-     * is ever removed. A round in the middle of the log can be edited from its row, but not
-     * deleted, so the numbering cannot develop holes.
+     * is ever removed. A second tap while the first is on its way is ignored.
      */
     fun removeLastScore()
     {
+        val gameId = gameId ?: return
+        if (_isUndoing.value == true) return
+
+        _isUndoing.value = true
         viewModelScope.launch {
-            val currentGame = _game.value ?: return@launch
-            useCases.removeLastScore(currentGame)
-                .onSuccess { updated -> _game.postValue(updated) }
+            useCases.removeLastScore(gameId)
+                .onSuccess { removed -> if (removed) _roundRemovedEvent.value = Event(Unit) }
+            _isUndoing.value = false
         }
     }
 

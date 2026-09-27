@@ -54,6 +54,13 @@ class RoundEntryViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<Event<String>>()
     val errorMessage: LiveData<Event<String>> = _errorMessage
 
+    /**
+     * True from the tap on save until the write comes back. A second tap in between would
+     * otherwise record the same round twice.
+     */
+    private val _isSaving = MutableLiveData(false)
+    val isSaving: LiveData<Boolean> = _isSaving
+
     init
     {
         if (gameId == null) _dismissEvent.postValue(Event(Unit)) else load(gameId)
@@ -108,7 +115,11 @@ class RoundEntryViewModel @Inject constructor(
             if (game == RoundGame.NULL && draft.result == RoundResult.OVERBID) RoundResult.LOST
             else draft.result
 
-        draft.copy(game = game, result = result)
+        // Switching to Grand brings more Spitzen than a Grand can have down to its maximum.
+        val spitzen =
+            if (draft.spitzen.value > game.maxSpitzen) Spitzen(game.maxSpitzen) else draft.spitzen
+
+        draft.copy(game = game, result = result, spitzen = spitzen)
     }
 
     fun setSpitzen(value: Int) = edit { draft ->
@@ -141,8 +152,11 @@ class RoundEntryViewModel @Inject constructor(
 
     fun save()
     {
+        if (_isSaving.value == true) return
         val draft = _draft.value ?: return
         val game = game ?: return
+
+        _isSaving.value = true
 
         viewModelScope.launch {
             val result =
@@ -157,6 +171,7 @@ class RoundEntryViewModel @Inject constructor(
             result.fold(
                 onSuccess = { _dismissEvent.postValue(Event(Unit)) },
                 onFailure = {
+                    _isSaving.value = false
                     _errorMessage.postValue(Event(it.message ?: "Could not save round"))
                 }
             )

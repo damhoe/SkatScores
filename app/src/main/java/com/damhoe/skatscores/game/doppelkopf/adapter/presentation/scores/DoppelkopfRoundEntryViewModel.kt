@@ -58,6 +58,13 @@ class DoppelkopfRoundEntryViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<Event<String>>()
     val errorMessage: LiveData<Event<String>> = _errorMessage
 
+    /**
+     * True from the tap on save until the write comes back. A second tap in between would
+     * otherwise record the same round twice.
+     */
+    private val _isSaving = MutableLiveData(false)
+    val isSaving: LiveData<Boolean> = _isSaving
+
     val soloKindOptions: List<DoppelkopfSoloKind> = DoppelkopfSoloKind.entries
     val winLevelOptions: List<DoppelkopfWinLevel> = DoppelkopfWinLevel.entries
     val absageOptions: List<DoppelkopfWinLevel> = DoppelkopfWinLevel.Absagen
@@ -158,9 +165,12 @@ class DoppelkopfRoundEntryViewModel @Inject constructor(
 
     fun save()
     {
+        if (_isSaving.value == true) return
         val draft = _draft.value ?: return
         val game = game ?: return
         if (!draft.isComplete) return
+
+        _isSaving.value = true
 
         viewModelScope.launch {
             val result =
@@ -175,6 +185,7 @@ class DoppelkopfRoundEntryViewModel @Inject constructor(
             result.fold(
                 onSuccess = { _dismissEvent.postValue(Event(Unit)) },
                 onFailure = {
+                    _isSaving.value = false
                     _errorMessage.postValue(Event(it.message ?: "Could not save round"))
                 }
             )

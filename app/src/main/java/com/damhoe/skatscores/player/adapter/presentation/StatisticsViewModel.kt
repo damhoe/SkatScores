@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.damhoe.skatscores.player.application.usecases.PlayerUseCases
 import com.damhoe.skatscores.player.domain.PlayerStatistics
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -29,16 +30,22 @@ class StatisticsViewModel @Inject constructor(
 
     init
     {
-        playerId?.let { load(it) }
+        playerId?.let { observe(it) }
     }
 
-    private fun load(playerId: UUID) = viewModelScope.launch {
-        playerUseCases.getPlayer(playerId)
-            .onSuccess { player -> player?.let { _playerName.postValue(it.name.value) } }
+    /**
+     * Read again whenever a list, round or the player behind these numbers changes, so the
+     * screen does not keep showing what was true when it opened.
+     */
+    private fun observe(playerId: UUID) = viewModelScope.launch {
+        playerUseCases.statisticsChanges().collectLatest {
+            playerUseCases.getPlayer(playerId)
+                .onSuccess { player -> player?.let { _playerName.value = it.name.value } }
 
-        playerUseCases.getStatistics(playerId)
-            .onSuccess { _statistics.postValue(it) }
-            .onFailure { _statistics.postValue(null) }
+            playerUseCases.getStatistics(playerId)
+                .onSuccess { _statistics.value = it }
+                .onFailure { _statistics.value = null }
+        }
     }
 
     companion object

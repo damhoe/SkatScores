@@ -57,14 +57,15 @@ data class DoppelkopfRoundDraft(
     val isComplete: Boolean
         get() = if (isSolo) soloist != null else reSeats.size == RE_SEAT_COUNT
 
+    /** A solo has no extras (DDV), so whatever the stepper held is not carried into it. */
     val value: DoppelkopfRoundValue
         get() = DoppelkopfRoundValue(
             winLevel = winLevel,
             absage = absage,
             reAnnounced = reAnnounced,
             kontraAnnounced = kontraAnnounced,
-            extraPointsRe = extraPointsRe,
-            extraPointsKontra = extraPointsKontra,
+            extraPointsRe = if (isSolo) 0 else extraPointsRe,
+            extraPointsKontra = if (isSolo) 0 else extraPointsKontra,
         )
 
     /**

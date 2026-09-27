@@ -45,6 +45,12 @@ class DoppelkopfPlayerSeatsViewModel @Inject constructor(
     /** What load() found, so save() can skip a write nothing changed. */
     private var loadedNames: List<String>? = null
 
+    /**
+     * Who sat where when the sheet opened. A seat whose name was not touched keeps this, link
+     * and all: resolving it by name again would unlink it from a player renamed since.
+     */
+    private var loadedSeats: List<Participant> = emptyList()
+
     /** Seat index to problem, empty while the seats are ready to save. */
     private val _seatErrors = MutableLiveData<Map<Int, SeatError>>(emptyMap())
     val seatErrors: LiveData<Map<Int, SeatError>> = _seatErrors
@@ -79,7 +85,8 @@ class DoppelkopfPlayerSeatsViewModel @Inject constructor(
                     return@launch
                 }
 
-                val names = game.participants.asList().map { it.displayName }
+                loadedSeats = game.participants.asList()
+                val names = loadedSeats.map { it.displayName }
                 loadedNames = names
                 update(names)
                 _loaded.postValue(Event(names))
@@ -138,8 +145,9 @@ class DoppelkopfPlayerSeatsViewModel @Inject constructor(
         }
 
         val registered = allRegisteredPlayers.value
-        val seats = names.map { rawName ->
+        val seats = names.mapIndexed { seat, rawName ->
             val name = PlayerName.create(rawName.trim()).getOrNull() ?: return
+            loadedSeats.getOrNull(seat)?.takeIf { it.name == name }?.let { return@mapIndexed it }
             // A name matching a registered player keeps that seat linked to the profile, so a
             // player's record follows them from list to list and across both games.
             Participant.resolve(name, registered)
