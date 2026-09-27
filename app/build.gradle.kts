@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -7,6 +9,14 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("keystore.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+
+fun signingValue(property: String, environmentVariable: String): String? =
+    keystoreProperties.getProperty(property) ?: System.getenv(environmentVariable)
+
 android {
     namespace = "com.damhoe.skatscores"
 
@@ -15,7 +25,7 @@ android {
     defaultConfig {
         applicationId = "com.damhoe.skatscores"
         minSdk = 30
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -25,8 +35,24 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        // The upload key. Its location and passwords come from keystore.properties (never
+        // committed; see keystore.properties.example) or, on a build server, the environment.
+        // Without either, release builds are left unsigned rather than failing.
+        create("release") {
+            val storePath = signingValue("storeFile", "SKATSCORES_UPLOAD_STORE_FILE")
+            if (storePath != null) {
+                storeFile = rootProject.file(storePath)
+                storePassword = signingValue("storePassword", "SKATSCORES_UPLOAD_STORE_PASSWORD")
+                keyAlias = signingValue("keyAlias", "SKATSCORES_UPLOAD_KEY_ALIAS")
+                keyPassword = signingValue("keyPassword", "SKATSCORES_UPLOAD_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         getByName("release") {
+            signingConfig = signingConfigs.getByName("release").takeIf { it.storeFile != null }
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
