@@ -44,10 +44,6 @@ class SkatParticipantsPersistenceAdapter @Inject constructor(
         }
     }
 
-    /**
-     * The seats of every list still there, in one query rather than one per list - the home
-     * screen needs all of them at once.
-     */
     fun getAllOfLiveGames(since: Instant? = null): Result<List<SkatParticipantDto>>
     {
         return databaseHelper.readableDatabase.run {
@@ -64,13 +60,9 @@ class SkatParticipantsPersistenceAdapter @Inject constructor(
     }
 
     /**
-     * Writes who sits where, keeping each seat's row (and so its id, which the rounds point at).
-     *
-     * In two passes: names and player links are unique per list, so moving "Anna" from one seat
-     * to another while "Ben" moves the other way would collide half-way through if written seat
-     * by seat. The first pass parks every seat on a name nobody can type - its own id - and
-     * unlinks it; the second writes the real values. A seat that is not there fails the whole
-     * write rather than being skipped.
+     * Keeps each seat's row id, which the rounds reference. Two passes because names and player
+     * links are unique per list: swapping two people seat by seat would collide, so every seat
+     * is first parked on a unique placeholder.
      */
     fun replaceSeats(skatPlayers: List<SkatParticipantDto>): Result<Unit>
     {

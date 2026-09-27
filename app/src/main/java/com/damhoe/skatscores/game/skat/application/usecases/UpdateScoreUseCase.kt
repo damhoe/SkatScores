@@ -5,7 +5,6 @@ import com.damhoe.skatscores.game.skat.domain.SkatGame
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 import javax.inject.Inject
 
-/** Replaces one round of a game with an edited version, keeping its position in the list. */
 class UpdateScoreUseCase @Inject constructor(
     private val scoreRepository: SkatScoresRepository
 )

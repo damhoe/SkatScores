@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Doppelkopf score chart. Same shell as the Skat one, minus the breakdown card underneath: a
-  Doppelkopf total is the sum of the rounds a seat won and lost with nothing added on top, so
-  the chart and its legend are the whole story and the page does not need to scroll.
-
-  The legend doubles as the readout - dragging on the chart moves the values to the picked
-  round, so there is no separate tooltip layer.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -88,7 +80,6 @@
                         android:orientation="horizontal"
                         app:layout_constraintTop_toBottomOf="@id/readoutLabel" />
 
-                <!-- Cumulative totals or the points scored in each round. -->
                 <LinearLayout
                         android:id="@+id/modeRow"
                         android:layout_width="match_parent"

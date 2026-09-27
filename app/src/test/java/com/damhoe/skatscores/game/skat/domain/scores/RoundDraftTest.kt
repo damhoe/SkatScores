@@ -144,8 +144,6 @@ class RoundDraftTest
         assertEquals(-40, lost.points)
     }
 
-    // ---- Round trips: reopening an existing round must not lose anything ----
-
     private fun assertRoundTrips(score: SkatScore)
     {
         val draft = RoundDraft.fromScore(score, participants)
@@ -161,7 +159,6 @@ class RoundDraftTest
     fun `every grand or suit option round trips through a draft`()
     {
         GrandOrSuitOptions.entries
-            // The declarer keeps this combination, but it has no multiplier of its own.
             .filterNot { it == GrandOrSuitOptions.SCHWARZ_ANNOUNCED_NOT_SCHNEIDER }
             .forEach { options ->
                 assertRoundTrips(

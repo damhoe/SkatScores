@@ -19,11 +19,6 @@ class PlayerStatisticsRepositoryImpl @Inject constructor(
     override val changes: Flow<Unit> =
         databaseChanges.changes(DataTopic.PLAYERS, DataTopic.SKAT, DataTopic.DOPPELKOPF)
 
-    /*
-     * Both hop to IO: the adapter below is blocking, and these are called straight from
-     * viewModelScope - the main thread.
-     */
-
     override suspend fun getAllListCounts(): Result<Map<UUID, ListCounts>> =
         withContext(Dispatchers.IO) { statisticsDao.getAllListCounts() }
 

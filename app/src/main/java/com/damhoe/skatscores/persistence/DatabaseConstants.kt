@@ -5,13 +5,8 @@ object DatabaseConstants
     const val DATABASE_NAME = "skat_scores"
 
     /**
-     * Columns every table that will one day sync carries, maintained by the app on each write
-     * rather than by triggers, so a sync layer can later set them itself.
-     *
-     * - `updated_at`: when the row last changed, ISO-8601 UTC with milliseconds.
-     * - `version`: bumped on every change; the basis for optimistic concurrency.
-     * - `deleted_at`: a tombstone. Deleted rows stay, so a delete can travel to another device;
-     *   every read filters them out.
+     * Maintained by the app, not triggers, so a sync layer can set them. `deleted_at` is a
+     * tombstone that every read filters out.
      */
     object SyncColumns
     {
@@ -46,8 +41,8 @@ object DatabaseConstants
     {
         const val TABLE_NAME: String = "skat_participants"
         const val COLUMN_ID: String = "id"
-        const val COLUMN_GAME_ID: String = "game_id" // Foreign key to skat_games.id
-        const val COLUMN_PLAYER_ID: String = "player_id" // Foreign key to players.id
+        const val COLUMN_GAME_ID: String = "game_id"
+        const val COLUMN_PLAYER_ID: String = "player_id"
         const val COLUMN_TABLE_POSITION: String = "table_position"
         const val COLUMN_NAME: String = "name"
     }
@@ -56,10 +51,10 @@ object DatabaseConstants
     {
         const val TABLE_NAME = "skat_scores"
         const val COLUMN_ID = "id"
-        const val COLUMN_GAME_ID = "game_id"    // Foreign key to skat_games.id
-        const val COLUMN_SKAT_PARTICIPANTS_ID = "skat_participant_id" // Foreign key to skat_participants.id nullable
+        const val COLUMN_GAME_ID = "game_id"   
+        const val COLUMN_SKAT_PARTICIPANTS_ID = "skat_participant_id"
 
-        /** Orders the rounds of a list; see [RoundSequence]. The round number is its position. */
+        /** See [RoundSequence]. */
         const val COLUMN_SEQ = "seq"
 
         const val COLUMN_SCORE_TYPE = "score_type"
@@ -94,8 +89,8 @@ object DatabaseConstants
     {
         const val TABLE_NAME: String = "doppelkopf_participants"
         const val COLUMN_ID: String = "id"
-        const val COLUMN_GAME_ID: String = "game_id" // Foreign key to doppelkopf_games.id
-        const val COLUMN_PLAYER_ID: String = "player_id" // Foreign key to players.id
+        const val COLUMN_GAME_ID: String = "game_id"
+        const val COLUMN_PLAYER_ID: String = "player_id"
         const val COLUMN_SEAT: String = "seat"
         const val COLUMN_NAME: String = "name"
     }
@@ -104,9 +99,9 @@ object DatabaseConstants
     {
         const val TABLE_NAME = "doppelkopf_scores"
         const val COLUMN_ID = "id"
-        const val COLUMN_GAME_ID = "game_id" // Foreign key to doppelkopf_games.id
+        const val COLUMN_GAME_ID = "game_id"
 
-        /** Orders the rounds of a list; see [RoundSequence]. The round number is its position. */
+        /** See [RoundSequence]. */
         const val COLUMN_SEQ = "seq"
 
         const val COLUMN_SCORE_TYPE = "score_type"
@@ -128,7 +123,6 @@ object DatabaseConstants
         const val COLUMN_CREATED_AT = "created_at"
     }
 
-    /** Small key-value store for facts about this database itself, like which device it is. */
     object SyncMetaTable
     {
         const val TABLE_NAME = "sync_meta"

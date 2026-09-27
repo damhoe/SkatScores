@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  The three parts a tournament total is made of, one column per seat. Shared by the pinned
-  score board and the chart screen so the two can never disagree about what they show or in
-  which order.
-
-  Row labels are full-width lines above their values rather than a leading label column: that
-  keeps the three value columns on the same grid as whatever names the including layout puts
-  above them.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
 

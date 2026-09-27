@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  New Doppelkopf list, reached from the centre FAB on home while the Doppelkopf filter is
-  selected: name, round count, scoring mode, Start.
-
-  Who sits at the table is not asked here, the same as for a Skat list: the four seats start as
-  placeholders and are filled in the game view, which is also where they can be changed later.
-
-  Round-count chips are populated from DoppelkopfRoundCount.ALLOWED_VALUES at runtime rather
-  than hardcoded here, so the sheet can only ever offer values the domain accepts. Those values
-  are all multiples of four, so the deal comes back round to every seat the same number of
-  times.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -36,7 +24,6 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/bg_drag_handle" />
 
-            <!-- Header -->
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,7 +53,6 @@
 
             </LinearLayout>
 
-            <!-- List name -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/title_list_name" />
@@ -92,19 +78,16 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Round count -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/settingsRoundCountTitle" />
 
-            <!-- Filled by the fragment: rows of three chips, one per allowed round count. -->
             <LinearLayout
                     android:id="@+id/roundCountRows"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
-            <!-- Scoring mode -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/settingsScoringTitle" />
@@ -132,7 +115,6 @@
 
             </LinearLayout>
 
-            <!-- The one setting that changes what a round is worth, so it says what it does. -->
             <TextView
                     android:id="@+id/scoringHint"
                     android:layout_width="match_parent"

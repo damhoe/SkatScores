@@ -30,17 +30,9 @@ class PlayerRepositoryImpl @Inject constructor(
     private val databaseChanges: DatabaseChanges,
 ) : PlayersRepository
 {
-    /** Lives as long as the process, like this repository: the list belongs to no screen. */
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val processScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    /**
-     * Read again after every write to the players, the newest read winning. This used to be
-     * refreshed by hand after each write, from as many coroutines at once, and a slow first
-     * read could land after a newer one - a player added at startup then vanished from the
-     * list. It is empty for a moment at startup, so everything reading it has to be able to
-     * wait: the screens collect it, and the one place that needs a player before it arrives
-     * asks [get].
-     */
+    /** Empty until the first read completes; use [get] when a player is needed right away. */
     override val allPlayers: StateFlow<List<Player>> =
         databaseChanges.changes(DataTopic.PLAYERS)
             .mapLatest {
@@ -52,19 +44,13 @@ class PlayerRepositoryImpl @Inject constructor(
                     }
             }
             .flowOn(Dispatchers.IO)
-            .stateIn(scope, SharingStarted.Eagerly, emptyList())
-
-    /*
-     * Every suspending call here hops to IO. The adapter below it is blocking, and these are
-     * called from viewModelScope, whose dispatcher is the main thread.
-     */
+            .stateIn(processScope, SharingStarted.Eagerly, emptyList())
 
     override suspend fun insert(player: Player): Result<Unit> = withContext(Dispatchers.IO) {
         playerDao.insert(PlayerDto.mapFrom(player))
             .onSuccess { databaseChanges.notifyChanged(DataTopic.PLAYERS) }
     }
 
-    /** Deleting takes the player off every list, so the lists are told as well. */
     override suspend fun delete(id: UUID): Result<Player?> = withContext(Dispatchers.IO) {
         dbHelper
             .transaction { playerDao.delete(id).getOrThrow() }
@@ -76,13 +62,13 @@ class PlayerRepositoryImpl @Inject constructor(
         playerDao.get(id).mapCatching { it?.toPlayer() }
     }
 
-    /** A new name reaches the seats linked to the player, so the lists are told as well. */
     override suspend fun update(player: Player): Result<Unit> = withContext(Dispatchers.IO) {
         dbHelper
             .transaction { playerDao.rename(PlayerDto.mapFrom(player)).getOrThrow() }
             .onSuccess { notifyEverything() }
     }
 
+    /** Player writes also change seats in the lists. */
     private fun notifyEverything() = databaseChanges.notifyChanged(
         DataTopic.PLAYERS,
         DataTopic.SKAT,

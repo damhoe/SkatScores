@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Pinned Doppelkopf scoreboard: round progress, then four columns of name and running total.
-  Four seats rather than Skat's three, which is why this is its own view instead of a wider
-  version of view_scoreboard.
-
-  A won - lost - solos line sat under each total until it was removed: three bare numbers with
-  no labels told a reader who did not already know the format nothing at all. Nothing is lost
-  by dropping it here - a Doppelkopf total is the plain sum of the rounds a seat won and lost,
-  with nothing added on top that would need explaining.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">

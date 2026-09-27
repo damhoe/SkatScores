@@ -2,12 +2,6 @@ package com.damhoe.skatscores.game.doppelkopf.domain
 
 import com.damhoe.skatscores.game.doppelkopf.domain.scores.DoppelkopfScore
 
-/**
- * What one seat's total is made of.
- *
- * The counts are what the score board shows under each total: how a seat has fared on either
- * side of the table, and how often it has gone alone.
- */
 data class DoppelkopfSeatRecord(
     val roundsWon: Int,
     val roundsLost: Int,
@@ -16,27 +10,14 @@ data class DoppelkopfSeatRecord(
     val total: Int,
 )
 
-/**
- * Aggregates the rounds of a Doppelkopf list into one point value per seat.
- *
- * Seats are indexed in the order of [DoppelkopfParticipants.asList], which is also the column
- * order of the score board. Every round is zero-sum: what the winning party gains, the losing
- * party gives up, and a soloist wins or loses three times what a single opponent does.
- *
- * With [DoppelkopfScoringMode.DETAILED] the extras collected during play are added to the
- * value of the round, netted in favour of whoever won it.
- */
+/** Seats are indexed as in [DoppelkopfParticipants.asList]; every round is zero-sum. */
 class DoppelkopfTotalsCalculator(
     private val participants: DoppelkopfParticipants,
 )
 {
     private val seatCount = participants.asList().size
 
-    /**
-     * What a single round came to, including the extras if the list counts them. A solo never
-     * does (DDV): extras are only scored in a normal game, and in a solo the factor of three
-     * would have multiplied them on top.
-     */
+    /** Extras never count in a solo (DDV). */
     fun valueOf(score: DoppelkopfScore, countsExtraPoints: Boolean): Int
     {
         val base = score.toPoints()
@@ -62,7 +43,6 @@ class DoppelkopfTotalsCalculator(
         return totals
     }
 
-    /** One entry per seat, in the column order of the score board. */
     fun calculateRecords(
         scores: List<DoppelkopfScore>,
         countsExtraPoints: Boolean,
@@ -100,10 +80,7 @@ class DoppelkopfTotalsCalculator(
         }
     }
 
-    /**
-     * Running totals per seat, starting at 0 before the first round, with one entry
-     * appended per played round.
-     */
+    /** Per seat: 0, then the running total after each round. */
     fun createPointsHistory(
         scores: List<DoppelkopfScore>,
         countsExtraPoints: Boolean,

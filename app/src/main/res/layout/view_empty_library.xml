@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Home with nothing on it yet. It replaces the whole stack of empty slots - hero card,
-  quick start, recently played - with one centred prompt, so the screen has a middle
-  instead of a grey line under the filters.
-
-  The root is stretched by the weight it is given in fragment_library.xml, and its centre
-  gravity is what puts the block in the middle of whatever is left between the filters and
-  the bottom bar.
-
-  No button of its own: the centre button of the bottom bar already starts a list, so the
-  message names it rather than repeating it a hundred pixels higher up.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 

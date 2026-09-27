@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Pinned scoreboard. Replaces item_score_header.xml + item_score_footer.xml: round progress,
-  names and running totals in one card. The dealer is named in the progress line.
-
-  With tournament scoring the card carries the Seeger-Fabian breakdown in an expandable block
-  with the parts the total is made of, collapsed by default because the card is pinned above
-  the round log and every dp it takes is a dp the log loses. A won - lost - defended line sat
-  under each total until it was removed: three bare numbers with no labels told a reader who
-  did not already know the format nothing at all.
-
-  The breakdown values reuse the three weighted columns of the totals rather than sitting in a
-  table with a leading label column, so every number stays under the name it belongs to. That
-  is why the row labels are full-width lines above their values instead of a first cell.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -35,7 +21,6 @@
                 android:paddingEnd="12dp"
                 android:paddingBottom="18dp">
 
-            <!-- Round progress lives here rather than under the app bar title. -->
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -55,12 +40,7 @@
                         android:textAppearance="@style/TextAppearance.App.SectionLabel"
                         tools:text="Runde 14 / 24 · Gibt: Evi" />
 
-                <!--
-                  Affordance only. The target is the whole card, which keeps the chevron at
-                  24dp instead of the 48dp box a tappable icon would need - height the pinned
-                  card would take from the round log below it. The card carries the action
-                  label for TalkBack, so this stays out of the accessibility tree.
-                -->
+                <!-- Decorative: the whole card is the target and carries the TalkBack action. -->
                 <ImageView
                         android:id="@+id/breakdownToggle"
                         android:layout_width="24dp"
@@ -138,7 +118,6 @@
 
             </LinearLayout>
 
-            <!-- Expanded tier: where the totals above come from. -->
             <LinearLayout
                     android:id="@+id/breakdown"
                     android:layout_width="match_parent"

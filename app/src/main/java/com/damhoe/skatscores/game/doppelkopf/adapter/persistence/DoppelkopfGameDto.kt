@@ -22,7 +22,6 @@ data class DoppelkopfGameDto(
     val title: String,
     val playedAt: Instant,
 
-    // Settings
     val roundCount: Int,
     val scoringMode: DoppelkopfScoringMode,
 )
@@ -49,7 +48,6 @@ data class DoppelkopfGameDto(
 
     companion object
     {
-        /** What the settings sheet can change; the rest of the row is fixed once written. */
         fun settingsValues(title: String, roundCount: Int, scoringMode: DoppelkopfScoringMode) =
             contentValuesOf(
                 DoppelkopfGamesTable.COLUMN_TITLE to title,

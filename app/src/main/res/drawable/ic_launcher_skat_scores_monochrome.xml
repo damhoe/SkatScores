@@ -1,5 +1,4 @@
-<!-- Themed-icon layer (Android 13+): the launcher foreground with the cards as outlines,
-     since the system tints everything drawn here in one colour. -->
+<!-- Themed icon: cards as outlines, since the system tints everything in one colour. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"

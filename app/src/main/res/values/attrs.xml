@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="colorCategorySubtitle" format="color" />
-    <!-- Colors of the suit icons -->
     <attr name="colorClubs" format="color" />
     <attr name="colorSpades" format="color" />
     <attr name="colorHearts" format="color" />
@@ -15,16 +14,10 @@
         <attr name="gridColor" format="color" />
     </declare-styleable>
 
-
-    <!--
-      Chart series colours, one per seat in table order. The fourth is only reached by a
-      Doppelkopf table; a Skat chart stops at three.
-    -->
     <attr name="colorChartSeries1" format="color" />
     <attr name="colorChartSeries2" format="color" />
     <attr name="colorChartSeries3" format="color" />
     <attr name="colorChartSeries4" format="color" />
 
-    <!-- Hairline outline used by unselected chips and the quick-start row. -->
     <attr name="colorHairline" format="color" />
 </resources>

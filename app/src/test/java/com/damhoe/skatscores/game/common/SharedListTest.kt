@@ -4,11 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/**
- * The shape of a shared list. The text is what leaves the app, so this pins down what a
- * reader gets: standings before rounds, places that survive a tie, and no empty section left
- * behind by a list that has nothing to say there yet.
- */
 class SharedListTest
 {
     @Test
@@ -50,7 +45,7 @@ class SharedListTest
             ),
         ).asShareText()
 
-        // Second place is skipped, the way a scoreboard skips it: two seats hold the first.
+        // Two seats share first place, so there is no second.
         assertTrue(text.contains("1. Marlon +40"))
         assertTrue(text.contains("1. Evi +40"))
         assertTrue(text.contains("3. Timo -80"))

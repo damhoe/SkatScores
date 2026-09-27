@@ -40,17 +40,6 @@ class SkatGamesRepositoryImpl @Inject constructor(
 {
     private val TAG = SkatGamesRepositoryImpl::class.java.simpleName
 
-    /*
-     * Every suspending call here hops to IO. The adapters below are blocking, and these are
-     * called from viewModelScope, whose dispatcher is the main thread - so without this,
-     * opening a list or saving a round was database work on the thread drawing the frame.
-     * The flows do the same with flowOn, further down.
-     */
-
-    /**
-     * A list and its seats go in together or not at all: getOrThrow is what makes the
-     * transaction roll back, and a list written without its seats cannot be read back.
-     */
     override suspend fun save(game: SkatGame): Result<Unit> = withContext(Dispatchers.IO) {
         dbHelper
             .transaction {
@@ -63,11 +52,7 @@ class SkatGamesRepositoryImpl @Inject constructor(
             .onSuccess { databaseChanges.notifyChanged(DataTopic.SKAT) }
     }
 
-    /**
-     * Marks the list deleted. Its seats and rounds stay in place under it, so the delete is a
-     * single change a sync could carry, and every read already leaves out what belongs to a
-     * deleted list - the player statistics included.
-     */
+    /** Soft delete; seats and rounds stay and are hidden with the list. */
     override suspend fun delete(id: UUID): Result<Unit> = withContext(Dispatchers.IO) {
         skatGamesDao.softDelete(id)
             .onSuccess { deleted -> if (deleted) databaseChanges.notifyChanged(DataTopic.SKAT) }
@@ -108,16 +93,10 @@ class SkatGamesRepositoryImpl @Inject constructor(
 
     override fun observe(id: UUID): Flow<SkatGame?> =
         databaseChanges.changes(DataTopic.SKAT)
-            // Latest, not every: a read made stale by a newer write is dropped, never shown.
             .mapLatest { load(id).getOrNull() }
             .flowOn(Dispatchers.IO)
 
-    /**
-     * The list, its seats and its rounds, read from one snapshot.
-     *
-     * mapCatching, not map: the rows still have to be turned into a game, and a stored value
-     * the domain refuses belongs in the Result rather than thrown at the caller.
-     */
+    /** Null also when the seats are incomplete. Domain validation failures become failures. */
     private fun load(id: UUID): Result<SkatGame?> = dbHelper
         .read {
             val game = skatGamesDao.get(id).getOrThrow() ?: return@read null
@@ -127,8 +106,6 @@ class SkatGamesRepositoryImpl @Inject constructor(
         }
         .mapCatching { rows ->
             val (game, participants, scores) = rows ?: return@mapCatching null
-            // A list whose seats cannot be read reads as no list at all: the screens that ask
-            // for one already handle a null by leaving.
             val seats = toSkatParticipants(id, participants) ?: return@mapCatching null
             game.toSkatGame(participants = seats, scores = scores.map { it.toSkatScore() })
         }
@@ -137,20 +114,12 @@ class SkatGamesRepositoryImpl @Inject constructor(
 
     override fun getAll(): Flow<List<SkatGamePreview>> = previews(since = null)
 
-    /**
-     * Re-read on every change rather than once when this was called: the home screen keeps one
-     * LiveData for the whole time it is open, so a list started, played or deleted since then
-     * has to arrive on the same flow.
-     */
     private fun previews(since: Instant?): Flow<List<SkatGamePreview>> =
         databaseChanges.changes(DataTopic.SKAT)
             .mapLatest { loadPreviews(since) }
             .flowOn(Dispatchers.IO)
 
-    /**
-     * Three queries for the whole home screen - the lists, all their seats, all their rounds -
-     * rather than two more per list, read from one snapshot and put together here.
-     */
+    /** Three queries in total, grouped here, instead of two per list. */
     private fun loadPreviews(since: Instant?): List<SkatGamePreview> = dbHelper
         .read {
             Triple(
@@ -162,9 +131,6 @@ class SkatGamesRepositoryImpl @Inject constructor(
             )
         }
         .map { (games, participantsByGame, scoresByGame) ->
-            // mapNotNull, so one unreadable list is left out of the home screen rather than
-            // emptying it. The domain can refuse a stored row too - a round count out of
-            // range, a title that no longer validates - and that has to cost the one list.
             games.mapNotNull { dto -> toPreview(dto, participantsByGame, scoresByGame) }
         }
         .getOrElse { e ->
@@ -172,6 +138,7 @@ class SkatGamesRepositoryImpl @Inject constructor(
             emptyList()
         }
 
+    /** Null for an unreadable list, so one bad list does not empty the home screen. */
     private fun toPreview(
         dto: SkatGameDto,
         participantsByGame: Map<UUID, List<SkatParticipantDto>>,
@@ -186,12 +153,6 @@ class SkatGamesRepositoryImpl @Inject constructor(
         null
     }
 
-    /**
-     * The three seats of a list, or null if one is missing.
-     *
-     * A seat missing used to be an assertion, which turned one unreadable list into an NPE
-     * thrown inside the previews flow, taking the home screen down with it.
-     */
     private fun toSkatParticipants(
         gameId: UUID,
         participantDtos: List<SkatParticipantDto>,

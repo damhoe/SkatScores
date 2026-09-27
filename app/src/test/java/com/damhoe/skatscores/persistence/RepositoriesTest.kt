@@ -36,7 +36,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.util.UUID
 
-/** The repositories against a real database, foreign keys and all. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class RepositoriesTest
@@ -100,7 +99,6 @@ class RepositoriesTest
         assertEquals(second.id, scores.deleteLast(game.id).getOrThrow())
         assertEquals(listOf(first.id), roundsOf(game))
 
-        // The slot of the undone round is not reused, and nothing blocks the next save.
         val third = SkatScore.Passe.create()
         scores.insert(third, game.id).getOrThrow()
         assertEquals(listOf(first.id, third.id), roundsOf(game))
@@ -151,7 +149,6 @@ class RepositoriesTest
 
         val seats = games.get(game.id).getOrThrow()!!.participants
         assertEquals(listOf("Ben", "Anna", "Cleo"), seats.asList().map { it.name.value })
-        // Seats keep their ids, so recorded rounds stay in their column.
         assertEquals(listOf(anna.id, ben.id, cleo.id), seats.asList().map { it.id })
     }
 
@@ -180,7 +177,6 @@ class RepositoriesTest
         assertTrue(seat is Participant.Guest)
         assertEquals("Anna", seat.name.value)
         assertNull(players.get(anna.id).getOrThrow())
-        // The unique name only binds players still there.
         players.insert(Player(name = PlayerName("Anna"))).getOrThrow()
     }
 

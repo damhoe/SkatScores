@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Game screen: app bar, pinned scoreboard, newest-first round log, floating bottom bar.
-  Replaces the 3-column table of dashes and its header/footer rows.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -14,12 +10,6 @@
             android:background="?android:attr/colorBackground"
             tools:context=".game.skat.adapter.presentation.SkatGameFragment">
 
-        <!--
-          1. App bar. A single line: the round count used to be squeezed underneath the title
-          and had no room to breathe, so it now lives in the scoreboard card where progress
-          belongs anyway. That leaves the title on one comfortable baseline among the 44dp
-          icon buttons.
-        -->
         <LinearLayout
                 android:id="@+id/appBar"
                 android:layout_width="match_parent"
@@ -52,12 +42,6 @@
                     android:textAppearance="@style/TextAppearance.App.AppBarTitle"
                     tools:text="Stammtisch 010" />
 
-            <!--
-              Actions on the list itself. The bottom pill is about the rounds, so sharing the
-              list, who is playing it and its settings belong up here next to its name rather
-              than mixed in among undo and the chart. Players get an icon of their own because
-              a substitution mid-evening is the likeliest edit of the three.
-            -->
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/shareButton"
                     style="@style/Widget.App.AppBar.IconButton"
@@ -78,7 +62,6 @@
 
         </LinearLayout>
 
-        <!-- 2. Pinned scoreboard -->
         <include
                 android:id="@+id/scoreboard"
                 layout="@layout/view_scoreboard"
@@ -89,7 +72,6 @@
                 android:layout_marginEnd="@dimen/game_side_padding"
                 app:layout_constraintTop_toBottomOf="@id/appBar" />
 
-        <!-- 3. Round log -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/scoresRv"
                 android:layout_width="match_parent"
@@ -118,11 +100,6 @@
                 app:layout_constraintTop_toTopOf="@id/scoresRv"
                 tools:visibility="visible" />
 
-        <!--
-          4. Bottom bar. Three round actions - look at them, add one, take the last one back -
-          around a single axis. With one slot either side of the centre button the bar no longer
-          has to span the screen to stay balanced, so it wraps its content and sits centred.
-        -->
         <com.google.android.material.card.MaterialCardView
                 android:id="@+id/bottomPill"
                 style="@style/Widget.App.BottomPill"
@@ -145,7 +122,6 @@
                         android:contentDescription="@string/title_statistics"
                         app:icon="@drawable/ic_chart_24dp" />
 
-                <!-- Cradle for the centre button. -->
                 <Space
                         android:layout_width="@dimen/bottom_pill_cradle_width"
                         android:layout_height="match_parent" />

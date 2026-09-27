@@ -18,10 +18,6 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * Creates a Doppelkopf list from the home FAB: name, round count and scoring mode. Players are
- * chosen in the game view, so the sheet does not ask for them.
- */
 @AndroidEntryPoint
 class NewDoppelkopfListSheetFragment : BottomSheetDialogFragment()
 {
@@ -30,10 +26,9 @@ class NewDoppelkopfListSheetFragment : BottomSheetDialogFragment()
 
     private var roundCountChips: Map<DoppelkopfRoundCount, MaterialButton> = emptyMap()
 
-    /** Set while pushing state into the controls, so their listeners do not echo back. */
+    /** Suppresses control listeners while state is pushed into the controls. */
     private var isBinding = false
 
-    /** Errors only surface once the name has been touched, not on a freshly opened sheet. */
     private var titleTouched = false
 
     override fun onCreateView(
@@ -56,7 +51,6 @@ class NewDoppelkopfListSheetFragment : BottomSheetDialogFragment()
         prefillFromArguments()
     }
 
-    /** One chip per value the domain accepts, in rows of three. */
     private fun buildRoundCountChips()
     {
         roundCountChips = binding.roundCountRows.fillWithChipRows(
@@ -150,10 +144,6 @@ class NewDoppelkopfListSheetFragment : BottomSheetDialogFragment()
         private const val ARG_TITLE = "title"
         private const val ARG_ROUND_COUNT = "roundCount"
 
-        /**
-         * @param suggestedTitle name to start from, usually derived from the last list
-         * @param suggestedRoundCount round count to start from, usually the last list's
-         */
         fun newInstance(
             suggestedTitle: String? = null,
             suggestedRoundCount: Int? = null,

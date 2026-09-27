@@ -9,14 +9,9 @@ import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfSoloKind
 import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfWinLevel
 import com.damhoe.skatscores.game.doppelkopf.domain.scores.DoppelkopfScore
 
-/**
- * Turns a Doppelkopf round into the lines shown in the round log, e.g. "Solo · Damen" over
- * "Marlon · keine 60 · Re". Both the log and the round sheet read their labels from here so the
- * wording cannot drift apart.
- */
+/** E.g. "Solo · Damen" over "Marlon · keine 60 · Re"; shared by the round log and sharing. */
 class DoppelkopfRoundTextFactory(private val context: Context)
 {
-    /** What was played: a normal round, or which solo. */
     fun titleOf(score: DoppelkopfScore): String = when (score)
     {
         is DoppelkopfScore.Normal -> context.getString(R.string.label_round_normal)
@@ -26,7 +21,6 @@ class DoppelkopfRoundTextFactory(private val context: Context)
         )
     }
 
-    /** Who was Re, how clearly it went, and what was announced. */
     fun subtitleOf(score: DoppelkopfScore, participants: DoppelkopfParticipants): String
     {
         val parts = mutableListOf(reNames(score, participants))
@@ -41,7 +35,6 @@ class DoppelkopfRoundTextFactory(private val context: Context)
         return parts.filter { it.isNotEmpty() }.joinToString(SEPARATOR)
     }
 
-    /** The seats that played as Re, which is the soloist on their own in a solo. */
     private fun reNames(
         score: DoppelkopfScore,
         participants: DoppelkopfParticipants,
@@ -49,7 +42,6 @@ class DoppelkopfRoundTextFactory(private val context: Context)
         .filter { score.partyOf(it.id) == DoppelkopfParty.RE }
         .joinToString(", ") { it.displayName }
 
-    /** Re, Kontra, or both - whichever was called before the round was played. */
     private fun announcementLabel(score: DoppelkopfScore): String?
     {
         val announcements = buildList {

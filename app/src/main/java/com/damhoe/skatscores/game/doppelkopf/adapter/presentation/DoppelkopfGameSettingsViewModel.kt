@@ -24,15 +24,10 @@ data class DoppelkopfSettingsDraft(
     val title: String = "",
     val roundCount: DoppelkopfRoundCount? = null,
     val scoringMode: DoppelkopfScoringMode = DoppelkopfGameDefaults.ScoringMode,
-    /** Rounds already played; the list cannot be shortened below this. */
+    /** The round count cannot go below this. */
     val roundsPlayed: Int = 0,
 )
 
-/**
- * Everything about a running Doppelkopf list that is not a round and not who is playing it: the
- * name, the round count and the scoring mode. The four seats are their own screen,
- * [DoppelkopfPlayerSeatsViewModel].
- */
 @HiltViewModel
 class DoppelkopfGameSettingsViewModel @Inject constructor(
     private val useCases: DoppelkopfGameUseCases,
@@ -51,7 +46,7 @@ class DoppelkopfGameSettingsViewModel @Inject constructor(
     private val _canSave = MutableLiveData(false)
     val canSave: LiveData<Boolean> = _canSave
 
-    /** Fires once, so the text fields are written by the load and by nobody else after it. */
+    /** One-shot, so only the initial load writes into the fields. */
     private val _loaded = MutableLiveData<Event<DoppelkopfSettingsDraft>>()
     val loaded: LiveData<Event<DoppelkopfSettingsDraft>> = _loaded
 
@@ -95,7 +90,6 @@ class DoppelkopfGameSettingsViewModel @Inject constructor(
         )
     }
 
-    /** A round count can only be chosen if the list has not already passed it. */
     fun isSelectable(roundCount: DoppelkopfRoundCount): Boolean =
         roundCount.value >= (_draft.value?.roundsPlayed ?: 0)
 
@@ -152,10 +146,6 @@ class DoppelkopfGameSettingsViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Deletes the list this sheet was opened on. The fragment confirms first; on success the
-     * game screen has nothing left to show, so it closes itself.
-     */
     fun deleteGame()
     {
         val gameId = gameId ?: return

@@ -2,29 +2,18 @@ package com.damhoe.skatscores.persistence
 
 import android.database.sqlite.SQLiteDatabase
 import com.damhoe.skatscores.persistence.DatabaseConstants.SyncMetaTable
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Hands out the `seq` a new round is ordered by: a hybrid logical clock.
- *
- * A seq is `<13-digit wall-clock millis>-<4-digit counter>-<device id>`. The fields have fixed
- * widths, so comparing two seqs as text compares them in time order, which is what
- * `ORDER BY seq` relies on. Rounds are then numbered by their position, not stored with one.
- *
- * Why not just the next round number:
- * - Removing a round no longer renumbers every round after it.
- * - Two devices adding a round to the same list while apart would both claim number N. Two
- *   seqs never collide - the device id breaks the tie - so the rounds merge in time order.
- *
- * A new seq always sorts after the newest round already in the list ([next]'s `after`), even
- * if this device's clock has gone backwards since, so a round played now never lands in the
- * middle of the list.
+ * Hybrid logical clock for ordering rounds. A seq is `<13-digit millis>-<4-digit counter>-<device>`;
+ * the fixed widths make text order equal time order, and the device id keeps rounds written on
+ * different devices from colliding.
  */
 @Singleton
 class RoundSequence @Inject constructor()
 {
-    /** Replaceable so tests can pin the time. */
     internal var clock: () -> Long = System::currentTimeMillis
 
     private var lastMillis = 0L
@@ -34,9 +23,8 @@ class RoundSequence @Inject constructor()
     private var deviceId: String? = null
 
     /**
-     * The seq for a round written now, sorting after [after] and after every seq this device
-     * handed out before. Call it inside the transaction that inserts the round, with [after]
-     * read in the same transaction, so nothing can slip in between.
+     * A seq sorting after [after] and after every seq handed out before, even if the clock went
+     * backwards. Call inside the insert transaction, with [after] read in that transaction.
      */
     @Synchronized
     fun next(db: SQLiteDatabase, after: String?): String
@@ -82,15 +70,14 @@ class RoundSequence @Inject constructor()
 
     companion object
     {
-        /** What rounds written before seqs existed carry as their device; see [Migrations]. */
+        /** Device part of seqs derived from pre-seq round numbers; see [Migrations]. */
         const val LEGACY_DEVICE = "legacy"
 
         private const val MAX_COUNTER = 9999
 
         fun format(millis: Long, counter: Int, device: String): String =
-            "%013d-%04d-%s".format(java.util.Locale.ROOT, millis, counter, device)
+            "%013d-%04d-%s".format(Locale.ROOT, millis, counter, device)
 
-        /** Millis and counter of a seq; the device id is only a tie-breaker. */
         fun parse(seq: String): Pair<Long, Int>?
         {
             val parts = seq.split('-', limit = 3)

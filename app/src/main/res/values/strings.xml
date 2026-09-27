@@ -52,10 +52,6 @@
     <string name="description_diamonds">Diamonds</string>
     <string name="text_info_no_players">Create player profiles for your games.</string>
     <string name="description_create_new_profile">Create a new profile</string>
-    <string name="passe_text">This game was passed.</string>
-    <string name="overbid_text">It was overbidden.</string>
-    <string name="won_text">Won</string>
-    <string name="lost_text">Lost</string>
     <string name="title_library">Lists</string>
     <string name="title_players_short">Players</string>
     <string name="language_preference_title">Language</string>
@@ -74,7 +70,6 @@
     <string name="title_game_settings">Settings</string>
     <string name="title_bidding">Bidding value</string>
 
-    <!-- Home / Game redesign -->
     <string name="greeting_morning">Good morning</string>
     <string name="greeting_afternoon">Good afternoon</string>
     <string name="greeting_evening">Good evening</string>
@@ -104,7 +99,6 @@
     <string name="message_round_removed">Round removed</string>
     <string name="description_undo">Undo last round</string>
     <string name="description_share">Share list</string>
-    <!-- Signature under a shared list. The app name is a proper noun, so only the wording around it moves. -->
     <string name="format_share_footer">Scored with %1$s</string>
     <string name="message_share_failed">No app to share with</string>
     <string name="description_close">Close</string>
@@ -121,7 +115,6 @@
     <string name="error_duplicate_players">Players need different names</string>
     <string name="label_game_type_skat" translatable="false">Skat</string>
     <string name="label_game_type_doppelkopf" translatable="false">Doppelkopf</string>
-    <!-- "2 Skat". The game names are proper nouns, so only the number moves. -->
     <string name="format_game_list_count" translatable="false">%1$d %2$s</string>
     <string name="label_no_lists_yet">No lists yet</string>
     <string name="text_edit_players_hint">Rounds already recorded stay with their seat.</string>
@@ -152,7 +145,6 @@
         <item quantity="other">%d rounds already played</item>
     </plurals>
 
-    <!-- Doppelkopf -->
     <string name="title_new_doppelkopf_list">New Doppelkopf list</string>
     <string name="default_doppelkopf_list_title">Doppelkopf</string>
     <string name="description_new_doppelkopf_list">New Doppelkopf list</string>
@@ -195,7 +187,6 @@
     <string name="label_minus" translatable="false">−</string>
     <string name="format_solo_round">Solo · %s</string>
 
-    <!-- Statistics -->
     <string name="format_rounds_in_lists">%1$s in %2$s</string>
     <plurals name="label_round_count">
         <item quantity="one">1 round</item>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Starts a new list with the players and round count of the most recent one. -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -22,10 +21,6 @@
             android:paddingEnd="16dp"
             android:paddingBottom="13dp">
 
-        <!--
-          Overlapping initials avatars, one per seat. The fourth only appears for a
-          Doppelkopf table; a Skat row hides it rather than leaving a gap.
-        -->
         <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="28dp">

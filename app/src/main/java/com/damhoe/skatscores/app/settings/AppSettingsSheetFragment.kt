@@ -14,7 +14,6 @@ import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-/** Theme, language and a way into About. */
 @AndroidEntryPoint
 class AppSettingsSheetFragment : BottomSheetDialogFragment()
 {
@@ -27,7 +26,6 @@ class AppSettingsSheetFragment : BottomSheetDialogFragment()
     @Inject
     lateinit var settingsManager: SettingsManager
 
-    // Preference values, read once so the chips and the stored setting cannot drift apart.
     private lateinit var systemTheme: String
     private lateinit var dayTheme: String
     private lateinit var nightTheme: String
@@ -85,19 +83,17 @@ class AppSettingsSheetFragment : BottomSheetDialogFragment()
         checkOnly(current, chips.values)
     }
 
-    /** Empty is "follow the system", which is also where a new install starts. */
     private fun setupLanguageChips()
     {
         val chips = mapOf(
             german to binding.languageGerman,
             english to binding.languageEnglish,
-            "" to binding.languageSystem,
+            SettingsManager.SYSTEM_LANGUAGE to binding.languageSystem,
         )
 
         chips.forEach { (value, chip) ->
             chip.setOnClickListener {
                 checkOnly(chip, chips.values)
-                // Recreates the activity in the new language, taking this sheet with it.
                 settingsManager.setLanguage(value)
             }
         }
@@ -106,7 +102,7 @@ class AppSettingsSheetFragment : BottomSheetDialogFragment()
         checkOnly(current, chips.values)
     }
 
-    /** Chips are independently checkable, so the others have to be cleared explicitly. */
+    /** The chips are independently checkable. */
     private fun checkOnly(selected: MaterialButton, all: Collection<MaterialButton>)
     {
         all.forEach { it.isChecked = it == selected }

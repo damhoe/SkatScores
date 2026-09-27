@@ -44,7 +44,6 @@ class DoppelkopfParticipantsPersistenceAdapter @Inject constructor(
         }
     }
 
-    /** The seats of every list still there, in one query rather than one per list. */
     fun getAllOfLiveGames(): Result<List<DoppelkopfParticipantDto>>
     {
         return databaseHelper.readableDatabase.run {
@@ -61,12 +60,7 @@ class DoppelkopfParticipantsPersistenceAdapter @Inject constructor(
         }
     }
 
-    /**
-     * Writes who sits where, keeping each seat's row (and so its id, which the rounds point at).
-     *
-     * In two passes, because names and player links are unique per list and swapping two
-     * people written seat by seat would collide half-way; see the Skat adapter's replaceSeats.
-     */
+    /** Keeps each seat's row id; two passes for the same reason as the Skat replaceSeats. */
     fun replaceSeats(participants: List<DoppelkopfParticipantDto>): Result<Unit>
     {
         return databaseHelper.writableDatabase.run {

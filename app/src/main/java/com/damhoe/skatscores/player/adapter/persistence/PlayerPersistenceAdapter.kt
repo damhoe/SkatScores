@@ -15,24 +15,19 @@ import java.util.UUID
 import javax.inject.Inject
 
 /**
- * The `players` rows. A deleted profile keeps its row with `deleted_at` set, so every read here
- * leaves those out, and its name is free to be used again.
- *
- * The database handles are taken per call rather than held in fields. Holding them opened the
- * database in the constructor - which on a first launch also creates every table - on
- * whatever thread Hilt happened to build this on, which is the main one.
+ * Deleted profiles are tombstoned, never read, and free their name. Database handles are taken
+ * per call: holding one would open the database on whichever thread builds this.
  */
 class PlayerPersistenceAdapter @Inject constructor(
     private val databaseHelper: DatabaseHelper,
 )
 {
-    /** The seat tables and their link column, for the writes a profile carries into lists. */
-    private val seatTables = listOf(
+    private val seatTablesWithPlayerColumn = listOf(
         SkatParticipantsTable.TABLE_NAME to SkatParticipantsTable.COLUMN_PLAYER_ID,
         DoppelkopfParticipantsTable.TABLE_NAME to DoppelkopfParticipantsTable.COLUMN_PLAYER_ID,
     )
 
-    /** A name already taken by another profile is refused by the unique index, as a failure. */
+    /** Fails when another live profile has the name. */
     fun insert(player: PlayerDto): Result<Unit>
     {
         return databaseHelper.writableDatabase.run {
@@ -69,13 +64,8 @@ class PlayerPersistenceAdapter @Inject constructor(
     }
 
     /**
-     * Renames the profile, and the seats linked to it with it: a seat carries its own copy of
-     * the name, which is what its list shows and what the seats sheet matches on. A list where
-     * somebody else already sits under the new name keeps the old one on that seat - still
-     * linked, so it still counts towards this player.
-     *
-     * Call inside a transaction. No rows updated means the name was refused or the profile is
-     * gone; either way it did not happen.
+     * Also renames the linked seats, which keep their own copy of the name. A list where another
+     * seat already has the new name keeps the old one (still linked). Call inside a transaction.
      */
     fun rename(player: PlayerDto): Result<Unit>
     {
@@ -88,14 +78,13 @@ class PlayerPersistenceAdapter @Inject constructor(
             )
             check(rowsAffected > 0) { "Failed to update player ${player.id}" }
 
-            seatTables.forEach { (table, playerIdColumn) ->
+            seatTablesWithPlayerColumn.forEach { (table, playerIdColumn) ->
                 updateStamped(
                     table,
-                    // Both seat tables call the column "name".
-                    contentValuesOf(SkatParticipantsTable.COLUMN_NAME to player.name),
+                    contentValuesOf(SEAT_NAME_COLUMN to player.name),
                     "$playerIdColumn = ?",
                     arrayOf(player.id.toString()),
-                    conflict = "OR IGNORE",
+                    ignoreConflicts = true,
                 )
             }
 
@@ -104,11 +93,8 @@ class PlayerPersistenceAdapter @Inject constructor(
     }
 
     /**
-     * Deletes the profile and takes it off every list: the seats it sat in stay, under the same
-     * name, as guests. The schema declares this (ON DELETE SET NULL), but a profile is only
-     * marked deleted, never removed, so it has to be done here.
-     *
-     * Call inside a transaction. Returns the profile as it was, or null if there was none.
+     * Its seats stay as guests. Done by hand because ON DELETE SET NULL never fires for a soft
+     * delete. Call inside a transaction; null when there was no such profile.
      */
     fun delete(id: UUID): Result<PlayerDto?>
     {
@@ -121,7 +107,7 @@ class PlayerPersistenceAdapter @Inject constructor(
                 arrayOf(id.toString()),
             )
 
-            seatTables.forEach { (table, playerIdColumn) ->
+            seatTablesWithPlayerColumn.forEach { (table, playerIdColumn) ->
                 updateStamped(
                     table,
                     contentValuesOf(playerIdColumn to null),
@@ -132,5 +118,11 @@ class PlayerPersistenceAdapter @Inject constructor(
 
             Result.success(player)
         }
+    }
+
+    private companion object
+    {
+        // Same column name in both seat tables.
+        const val SEAT_NAME_COLUMN = SkatParticipantsTable.COLUMN_NAME
     }
 }

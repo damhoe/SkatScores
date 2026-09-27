@@ -36,7 +36,6 @@ class DoppelkopfGameFragment :
     private lateinit var binding: FragmentDoppelkopfGameBinding
     private lateinit var scoreAdapter: DoppelkopfScoreAdapter
 
-    /** Shared by the round log and the share sheet, so both describe a round the same way. */
     private val roundText by lazy { DoppelkopfRoundTextFactory(requireContext()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
@@ -49,7 +48,7 @@ class DoppelkopfGameFragment :
         setupAppBar()
         setupBottomBar()
         setupObservers()
-        listenForRoundChanges()
+        leaveWhenListIsDeleted()
     }
 
     private fun applyInsets()
@@ -102,8 +101,6 @@ class DoppelkopfGameFragment :
     {
         binding.editScoreButton.setOnClickListener { showRoundSheet(scoreId = null) }
         binding.chartAction.setOnClickListener { navigateToGameGraph() }
-        // The only way to remove a round, and it only ever removes the newest one. The rows
-        // themselves just edit, so this carries the confirmation the row menu used to show.
         binding.undoAction.setOnClickListener { viewModel.removeLastScore() }
     }
 
@@ -146,32 +143,19 @@ class DoppelkopfGameFragment :
         }
     }
 
-    /**
-     * The board follows the database on its own, so a sheet reporting back only matters when
-     * it deleted the list.
-     */
-    private fun listenForRoundChanges()
+    private fun leaveWhenListIsDeleted()
     {
-        listOf(
-            DoppelkopfRoundEntrySheetFragment.REQUEST_KEY,
+        parentFragmentManager.setFragmentResultListener(
             DoppelkopfGameSettingsSheetFragment.REQUEST_KEY,
-            DoppelkopfPlayerSeatsSheetFragment.REQUEST_KEY,
-        ).forEach { requestKey ->
-            parentFragmentManager.setFragmentResultListener(
-                requestKey,
-                viewLifecycleOwner
-            ) { _, result ->
-                // The settings sheet can delete the list it was opened on; there is no game
-                // left to refresh into, so leave for the library instead.
-                if (result.getBoolean(DoppelkopfGameSettingsSheetFragment.RESULT_DELETED, false))
-                {
-                    findNavController().navigateUp()
-                }
+            viewLifecycleOwner
+        ) { _, result ->
+            if (result.getBoolean(DoppelkopfGameSettingsSheetFragment.RESULT_DELETED, false))
+            {
+                findNavController().navigateUp()
             }
         }
     }
 
-    /** Undo needs a round to take back, and waits while one is already being taken back. */
     private fun bindUndoAction()
     {
         val enabled = viewModel.game.value?.scores?.isNotEmpty() == true &&
@@ -180,7 +164,7 @@ class DoppelkopfGameFragment :
         binding.undoAction.alpha = if (enabled) 1f else 0.4f
     }
 
-    /** "Runde 9 / 16 · Gibt: Evi" — same shape as the library's active list card. */
+    /** "Runde 9 / 16 · Gibt: Evi" */
     private fun progressLabelFor(game: DoppelkopfGame): String
     {
         val rounds = getString(
@@ -235,11 +219,6 @@ class DoppelkopfGameFragment :
         )
     }
 
-    /**
-     * Sends the list out as text: the standings first, then every round as the log describes
-     * it. Nothing is shared until the sheet the system opens is used, and a list with no
-     * rounds yet is still worth sending - it is the table and what it is called.
-     */
     private fun shareGame()
     {
         val game = viewModel.game.value ?: return
@@ -269,7 +248,6 @@ class DoppelkopfGameFragment :
         )
     }
 
-    /** The seats are their own sheet, so that a substitution is one tap from the board. */
     private fun showPlayerSeatsSheet()
     {
         val gameId = viewModel.gameId ?: return

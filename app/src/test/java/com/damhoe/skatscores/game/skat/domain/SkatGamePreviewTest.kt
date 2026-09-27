@@ -88,7 +88,7 @@ class SkatGamePreviewTest
     @Test
     fun `dealer rotates from the last seat and never goes out of range`()
     {
-        // Forehand is left of the dealer, so before the first round the last seat deals.
+        // The last seat deals the first round.
         val dealers = (0..4).map { playedRounds ->
             SkatGamePreview
                 .mapFrom(game(rounds = 9, scores = List(playedRounds) {

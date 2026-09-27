@@ -36,8 +36,6 @@ class MainActivity : AppCompatActivity()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        // The language is not applied here: AppCompat restores the one chosen, and a new
-        // install follows the system. See SettingsManager.currentLanguage.
         viewModel.theme.observe(this) {
             settingsManager.setTheme(it)
         }

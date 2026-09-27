@@ -1,10 +1,6 @@
 package com.damhoe.skatscores.persistence
 
-/**
- * The databases earlier builds created, statement for statement, so the migrations can be run
- * against the real thing. Version 1 differs from 2 in having no Doppelkopf tables and in its
- * foreign keys naming a `games` table that never existed.
- */
+/** Schemas of earlier builds, verbatim. Version 1 references a nonexistent `games` table. */
 object LegacySchemas
 {
     private fun skat(gamesTable: String) = listOf(

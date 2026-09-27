@@ -25,7 +25,7 @@ data class SkatScoreDto(
     val id: UUID,
     val gameId: UUID,
     val skatParticipantId: UUID? = null,
-    /** Where the round sorts in its list; see [RoundSequence]. */
+    /** See [RoundSequence]. */
     val seq: String,
     val type: SkatScoreType,
 
@@ -56,7 +56,6 @@ data class SkatScoreDto(
         SkatScoresTable.COLUMN_GRAND_OR_SUIT_OPTIONS to grandOrSuitOptions?.name,
     )
 
-    /** What an edit may change: everything but which list the round is in and where. */
     fun toEditContentValues() = toContentValues().apply {
         remove(SkatScoresTable.COLUMN_ID)
         remove(SkatScoresTable.COLUMN_GAME_ID)

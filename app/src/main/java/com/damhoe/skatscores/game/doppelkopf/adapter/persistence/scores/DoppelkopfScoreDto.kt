@@ -22,7 +22,7 @@ enum class DoppelkopfScoreType
 data class DoppelkopfScoreDto(
     val id: UUID,
     val gameId: UUID,
-    /** Where the round sorts in its list; see [RoundSequence]. */
+    /** See [RoundSequence]. */
     val seq: String,
     val type: DoppelkopfScoreType,
     val winner: DoppelkopfParty,
@@ -59,7 +59,6 @@ data class DoppelkopfScoreDto(
         DoppelkopfScoresTable.COLUMN_EXTRA_POINTS_KONTRA to extraPointsKontra,
     )
 
-    /** What an edit may change: everything but which list the round is in and where. */
     fun toEditContentValues() = toContentValues().apply {
         remove(DoppelkopfScoresTable.COLUMN_ID)
         remove(DoppelkopfScoresTable.COLUMN_GAME_ID)

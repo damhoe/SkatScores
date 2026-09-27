@@ -13,10 +13,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * The `doppelkopf_games` rows. A deleted list keeps its row with `deleted_at` set, so every
- * read here leaves those out; see [SyncColumns].
- */
+/** Deleted lists are tombstoned and never read. */
 @Singleton
 class DoppelkopfGamesPersistenceAdapter @Inject constructor(
     val databaseHelper: DatabaseHelper,
@@ -30,10 +27,7 @@ class DoppelkopfGamesPersistenceAdapter @Inject constructor(
         }
     }
 
-    /**
-     * Marks the list deleted; its seats and rounds stay with it and are hidden along with it.
-     * False when there was no such list, or it was already deleted.
-     */
+    /** False when the list does not exist or is already deleted. */
     fun softDelete(id: UUID): Result<Boolean>
     {
         return databaseHelper.writableDatabase.run {
@@ -75,7 +69,6 @@ class DoppelkopfGamesPersistenceAdapter @Inject constructor(
         }
     }
 
-    /** Title and settings only; fails when the list is gone. */
     fun updateSettings(
         id: UUID,
         title: String,

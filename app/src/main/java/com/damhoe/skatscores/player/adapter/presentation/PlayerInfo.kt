@@ -8,6 +8,6 @@ data class PlayerInfo(
     val playerId: UUID,
     val name: PlayerName,
     val listCounts: ListCounts,
-    /** Which colour of the avatar palette this player carries; see [PlayerAvatar]. */
+    /** See [PlayerAvatar]. */
     val avatarSlot: Int,
 )

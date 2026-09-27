@@ -1,6 +1,7 @@
 package com.damhoe.skatscores.game.doppelkopf.domain
 
 import com.damhoe.skatscores.game.common.Title
+import com.damhoe.skatscores.game.common.dealerSeat
 import com.damhoe.skatscores.game.doppelkopf.domain.scores.DoppelkopfScore
 import java.time.Instant
 import java.time.Instant.now
@@ -19,17 +20,7 @@ data class DoppelkopfGame(
 
     val countsExtraPoints = settings.countsExtraPoints
 
-    val dealerPosition = calculateDealerPosition()
-
-    private fun calculateDealerPosition(): Int
-    {
-        val firstDealerPosition = 0
-        val currentRound: Int = scores.size
-        val playerCount = participants.asList().size
-        // floorMod, not %: before the first round the offset is negative and Kotlin's
-        // remainder would return -1 instead of the last seat.
-        return Math.floorMod(firstDealerPosition - 1 + currentRound, playerCount)
-    }
+    val dealerPosition = dealerSeat(roundsPlayed = scores.size, participants.asList().size)
 
     companion object
     {
@@ -48,12 +39,10 @@ data class DoppelkopfGame(
 
     fun calculateTotalPoints() = totalsCalculator.calculateTotalPoints(scores, countsExtraPoints)
 
-    /** What each seat's total is made of - shown under the totals on the score board. */
     fun calculateRecords() = totalsCalculator.calculateRecords(scores, countsExtraPoints)
 
     fun createPointsHistory() = totalsCalculator.createPointsHistory(scores, countsExtraPoints)
 
-    /** What one recorded round came to, for the round log. */
     fun valueOf(score: DoppelkopfScore) = totalsCalculator.valueOf(score, countsExtraPoints)
 
     fun addScore(score: DoppelkopfScore): AddedScoreToDoppelkopfGame

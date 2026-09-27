@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Round sheet. One surface for entering a new round and for editing an existing one: every
-  field of every score type is reachable, and the footer previews the points live.
-  Replaces the six-fragment score flow (who won -> result -> suit -> spitzen -> multipliers).
-
-  The chip rows are plain LinearLayouts rather than MaterialButtonToggleGroups: the group
-  fuses its children into a connected bar and strips their inner corners, and exclusivity is
-  enforced in the fragment anyway so that a restored draft selects the right chip.
+  Chip rows are LinearLayouts, not toggle groups, which would fuse the chips into one bar.
+  Single selection is enforced in the fragment.
 -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -33,7 +28,6 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/bg_drag_handle" />
 
-            <!-- Header -->
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -64,7 +58,6 @@
 
             </LinearLayout>
 
-            <!-- Who plays? Three seats plus Passe. -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/title_who_plays" />
@@ -108,7 +101,6 @@
 
             </LinearLayout>
 
-            <!-- Everything below only applies when somebody played. -->
             <LinearLayout
                     android:id="@+id/gameDetails"
                     android:layout_width="match_parent"
@@ -182,7 +174,6 @@
 
                 </LinearLayout>
 
-                <!-- Mit / Ohne and win levels. Meaningless for a Null game. -->
                 <LinearLayout
                         android:id="@+id/multiplierBlock"
                         android:layout_width="match_parent"
@@ -291,7 +282,6 @@
 
                 </LinearLayout>
 
-                <!-- A Null game only has Hand and Ouvert. -->
                 <LinearLayout
                         android:id="@+id/nullModifierBlock"
                         android:layout_width="match_parent"
@@ -334,7 +324,6 @@
 
                 </LinearLayout>
 
-                <!-- Result -->
                 <TextView
                         style="@style/Widget.App.Sheet.SectionLabel"
                         android:text="@string/title_result" />
@@ -373,7 +362,6 @@
 
                 </LinearLayout>
 
-                <!-- Bidding value, only needed for an overbid round. -->
                 <LinearLayout
                         android:id="@+id/bidBlock"
                         android:layout_width="match_parent"
@@ -395,7 +383,6 @@
 
             </LinearLayout>
 
-            <!-- Footer: live points preview and save -->
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

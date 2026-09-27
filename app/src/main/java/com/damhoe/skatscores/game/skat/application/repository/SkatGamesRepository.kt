@@ -13,23 +13,19 @@ interface SkatGamesRepository
 {
     suspend fun save(game: SkatGame): Result<Unit>
 
-    /** Deletes the list with its seats and rounds. Deleting one that is gone is not an error. */
+    /** Deleting a missing list succeeds. */
     suspend fun delete(id: UUID): Result<Unit>
 
     suspend fun updateSettings(id: UUID, title: Title, settings: SkatSettings): Result<Unit>
 
-    /**
-     * Who sits where. Each seat keeps its participant id, so the rounds already recorded stay
-     * in their column; see UpdateSkatParticipantsUseCase.
-     */
+    /** Seats keep their participant ids, so recorded rounds follow the new names. */
     suspend fun updateSeats(id: UUID, participants: SkatParticipants): Result<Unit>
 
     suspend fun get(id: UUID): Result<SkatGame?>
 
-    /** The list as it is now and after every write to it; null once it is gone. */
+    /** Emits after every write to the list; null once it is gone. */
     fun observe(id: UUID): Flow<SkatGame?>
 
-    /** Both re-read on every write, so a collector stays in step with the database. */
     fun getAllSince(oldest: Instant): Flow<List<SkatGamePreview>>
     fun getAll(): Flow<List<SkatGamePreview>>
 }

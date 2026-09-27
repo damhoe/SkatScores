@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.SheetDoppelkopfRoundEntryBinding
@@ -27,10 +26,6 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
 
-/**
- * Enters a new Doppelkopf round or edits an existing one on a single surface, with a live
- * points preview.
- */
 @AndroidEntryPoint
 class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
 {
@@ -40,10 +35,10 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
     private var soloKindChips: Map<DoppelkopfSoloKind, MaterialButton> = emptyMap()
     private var winLevelChips: Map<DoppelkopfWinLevel, MaterialButton> = emptyMap()
 
-    /** Absage chips, plus a "none" entry for a round played without one. */
+    /** Keyed by level; null is "no Absage". */
     private var absageChips: Map<DoppelkopfWinLevel?, MaterialButton> = emptyMap()
 
-    /** Set while pushing state into the controls, so their listeners do not echo back. */
+    /** Suppresses control listeners while state is pushed into the controls. */
     private var isBinding = false
 
     override fun onCreateView(
@@ -65,10 +60,7 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
         setupObservers()
     }
 
-    /**
-     * A round has more to say than fits in the collapsed peek height, and a sheet that opens
-     * half-drawn hides the save button behind a drag.
-     */
+    /** Opens expanded so the save button is not hidden below the peek height. */
     override fun onStart()
     {
         super.onStart()
@@ -92,8 +84,6 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
             onClick = { viewModel.setWinLevel(it) },
         )
 
-        // Null leads the row: most rounds are played without an Absage, so "none" is the
-        // resting state rather than something the user has to clear.
         val absageValues: List<DoppelkopfWinLevel?> = listOf(null) + viewModel.absageOptions
         absageChips = binding.absageRows.fillWithChipRows(
             values = absageValues,
@@ -152,7 +142,6 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
         }
 
         viewModel.countsExtraPoints.observe(viewLifecycleOwner) { counts ->
-            // The preview has to follow the setting, not just the section's visibility.
             viewModel.draft.value?.let {
                 bindExtraPointsVisibility(it)
                 bindPointsPreview(it, counts)
@@ -167,7 +156,6 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
 
         viewModel.dismissEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
-                setFragmentResult(REQUEST_KEY, bundleOf())
                 dismiss()
             }
         }
@@ -232,17 +220,13 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
         isBinding = false
     }
 
-    /** Extras only count in a normal game, so a solo hides the steppers even on a detailed list. */
+    /** Extras never count in a solo. */
     private fun bindExtraPointsVisibility(draft: DoppelkopfRoundDraft)
     {
         val shown = viewModel.countsExtraPoints.value == true && !draft.isSolo
         binding.extraPointsBlock.visibility = if (shown) View.VISIBLE else View.GONE
     }
 
-    /**
-     * Seats are a multi-select in a normal round and a single choice in a solo, so the label
-     * and the hint change with the round kind rather than leaving the user to guess.
-     */
     private fun bindSeatSelection(draft: DoppelkopfRoundDraft)
     {
         val seats = viewModel.participants.value?.asList().orEmpty()
@@ -263,10 +247,7 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
         )
     }
 
-    /**
-     * MaterialButtonToggleGroup only enforces single selection for user taps, so restoring a
-     * draft has to clear the others explicitly.
-     */
+    /** Toggle groups enforce single selection only for user taps. */
     private fun checkOnly(selected: MaterialButton, vararg all: MaterialButton)
     {
         all.forEach { it.isChecked = it == selected }
@@ -292,7 +273,6 @@ class DoppelkopfRoundEntrySheetFragment : BottomSheetDialogFragment()
     companion object
     {
         const val TAG = "DoppelkopfRoundEntrySheet"
-        const val REQUEST_KEY = "DoppelkopfRoundEntryRequest"
 
         fun newInstance(gameId: UUID, scoreId: UUID? = null) =
             DoppelkopfRoundEntrySheetFragment().apply {

@@ -9,8 +9,7 @@ data class SkatGameUseCases @Inject constructor(
     val createSkatGame: CreateSkatGameUseCase,
     val addScoreToSkatGame: AddScoreToSkatGameUseCase,
     val updateScore: UpdateScoreUseCase,
-    // No delete-by-id here on purpose: a round is only ever removed through removeLastScore.
-    // Exposing more would hand every caller a delete-any-round door that the UI does not have.
+    // Deliberately no delete-by-id: only the newest round can be removed.
     val removeLastScore: RemoveLastScoreUseCase,
     val updateSkatGame: UpdateSkatGameUseCase,
     val updateSkatParticipants: UpdateSkatParticipantsUseCase,

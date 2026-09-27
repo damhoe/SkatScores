@@ -33,10 +33,6 @@ class StatisticsViewModel @Inject constructor(
         playerId?.let { observe(it) }
     }
 
-    /**
-     * Read again whenever a list, round or the player behind these numbers changes, so the
-     * screen does not keep showing what was true when it opened.
-     */
     private fun observe(playerId: UUID) = viewModelScope.launch {
         playerUseCases.statisticsChanges().collectLatest {
             playerUseCases.getPlayer(playerId)

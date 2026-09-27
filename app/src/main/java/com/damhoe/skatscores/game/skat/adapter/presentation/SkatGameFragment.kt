@@ -35,7 +35,6 @@ class SkatGameFragment :
     private lateinit var binding: FragmentGameBinding
     private lateinit var scoreAdapter: SkatScoreAdapter
 
-    /** Shared by the round log and the share sheet, so both describe a round the same way. */
     private val roundText by lazy { RoundTextFactory(requireContext()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
@@ -49,7 +48,7 @@ class SkatGameFragment :
         setupScoreboard()
         setupBottomBar()
         setupObservers()
-        listenForRoundChanges()
+        leaveWhenListIsDeleted()
     }
 
     private fun applyInsets()
@@ -98,7 +97,6 @@ class SkatGameFragment :
         binding.shareButton.setOnClickListener { shareGame() }
     }
 
-    /** The chevron is the affordance, the whole board is the target. */
     private fun setupScoreboard()
     {
         binding.scoreboard.scoreboardCard.setOnClickListener { viewModel.toggleBreakdown() }
@@ -108,8 +106,6 @@ class SkatGameFragment :
     {
         binding.editScoreButton.setOnClickListener { showRoundSheet(scoreId = null) }
         binding.chartAction.setOnClickListener { navigateToGameGraph() }
-        // The only way to remove a round, and it only ever removes the newest one. The rows
-        // themselves just edit, so this carries the confirmation the row menu used to show.
         binding.undoAction.setOnClickListener { viewModel.removeLastScore() }
     }
 
@@ -159,32 +155,19 @@ class SkatGameFragment :
         }
     }
 
-    /**
-     * The board follows the database on its own, so a sheet reporting back only matters when
-     * it deleted the list.
-     */
-    private fun listenForRoundChanges()
+    private fun leaveWhenListIsDeleted()
     {
-        listOf(
-            RoundEntrySheetFragment.REQUEST_KEY,
+        parentFragmentManager.setFragmentResultListener(
             GameSettingsSheetFragment.REQUEST_KEY,
-            PlayerSeatsSheetFragment.REQUEST_KEY,
-        ).forEach { requestKey ->
-            parentFragmentManager.setFragmentResultListener(
-                requestKey,
-                viewLifecycleOwner
-            ) { _, result ->
-                // The settings sheet can delete the list it was opened on; there is no game
-                // left to refresh into, so leave for the library instead.
-                if (result.getBoolean(GameSettingsSheetFragment.RESULT_DELETED, false))
-                {
-                    findNavController().navigateUp()
-                }
+            viewLifecycleOwner
+        ) { _, result ->
+            if (result.getBoolean(GameSettingsSheetFragment.RESULT_DELETED, false))
+            {
+                findNavController().navigateUp()
             }
         }
     }
 
-    /** Undo needs a round to take back, and waits while one is already being taken back. */
     private fun bindUndoAction()
     {
         val enabled = viewModel.skatGame.value?.scores?.isNotEmpty() == true &&
@@ -193,7 +176,7 @@ class SkatGameFragment :
         binding.undoAction.alpha = if (enabled) 1f else 0.4f
     }
 
-    /** "Runde 6 / 24 · Gibt: Evi" — same shape as the library's active list card. */
+    /** "Runde 6 / 24 · Gibt: Evi" */
     private fun progressLabelFor(game: SkatGame): String
     {
         val rounds = getString(
@@ -252,10 +235,6 @@ class SkatGameFragment :
         )
     }
 
-    /**
-     * The breakdown belongs to tournament scoring only; in simple scoring the board stays the
-     * name and the total it has always been, with nothing to expand.
-     */
     private fun applyBreakdownState(isTournamentScoring: Boolean, isExpanded: Boolean)
     {
         binding.scoreboard.apply {
@@ -266,8 +245,7 @@ class SkatGameFragment :
                 if (isTournamentScoring && isExpanded) View.VISIBLE else View.GONE
 
             scoreboardCard.isClickable = isTournamentScoring
-            // Relabels the tap without a contentDescription on the card, which would hide the
-            // names and totals inside it from TalkBack.
+            // Not a contentDescription, which would hide the card's content from TalkBack.
             ViewCompat.replaceAccessibilityAction(
                 scoreboardCard,
                 AccessibilityActionCompat.ACTION_CLICK,
@@ -280,11 +258,6 @@ class SkatGameFragment :
         }
     }
 
-    /**
-     * Sends the list out as text: the standings first, then every round as the log describes
-     * it. Nothing is shared until the sheet the system opens is used, and a list with no
-     * rounds yet is still worth sending - it is the table and what it is called.
-     */
     private fun shareGame()
     {
         val game = viewModel.skatGame.value ?: return
@@ -313,7 +286,6 @@ class SkatGameFragment :
         )
     }
 
-    /** The seats are their own sheet, so that a substitution is one tap from the board. */
     private fun showPlayerSeatsSheet()
     {
         val gameId = viewModel.skatGameId ?: return

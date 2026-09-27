@@ -73,7 +73,6 @@ data class SkatParticipantDto(
             tablePosition: SkatPlayerPosition,
         ): SkatParticipantDto
         {
-            // Keep the participant id: scores reference it to find their score board column.
             return SkatParticipantDto(
                 id = participant.id,
                 gameId = gameId,

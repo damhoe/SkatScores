@@ -9,10 +9,6 @@ class AddScoreToSkatGameUseCase @Inject constructor(
     private val scoreRepository: SkatScoresRepository
 )
 {
-    /**
-     * Appends [score] as the newest round. Where it lands is decided by the database at the
-     * moment of writing, not by how many rounds [skatGame] held when it was read.
-     */
     suspend operator fun invoke(
         skatGame: SkatGame,
         score: SkatScore

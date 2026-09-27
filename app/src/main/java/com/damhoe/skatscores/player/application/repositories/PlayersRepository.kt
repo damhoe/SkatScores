@@ -8,7 +8,7 @@ interface PlayersRepository
 {
     suspend fun insert(player: Player): Result<Unit>
 
-    /** Also takes the player off every list they sat in; the seats stay, as guests. */
+    /** The player's seats stay as guests. */
     suspend fun delete(id: UUID): Result<Player?>
 
     /** Also renames the seats linked to the player. */
@@ -16,6 +16,5 @@ interface PlayersRepository
 
     suspend fun get(id: UUID): Result<Player?>
 
-    /** The registered players, kept current. */
     val allPlayers: StateFlow<List<Player>>
 }

@@ -1,9 +1,5 @@
 <resources>
-
-    <!--
-      Redesign tokens. The hero card is a fixed brand-coloured surface: it keeps the same
-      indigo fill in both themes, so it is not a light/dark pair.
-    -->
+    <!-- The same in both themes. -->
     <color name="hero_surface">#535CA8</color>
     <color name="hero_on_surface">#FFFFFF</color>
     <color name="hero_on_surface_muted">#B8FFFFFF</color>
@@ -11,22 +7,14 @@
     <color name="hero_negative">#E4A89C</color>
     <color name="hero_track">#38FFFFFF</color>
 
-    <!-- Hairline outline for unselected chips and quick-start row, 1dp. -->
     <color name="md_theme_light_hairline">#d4d7de</color>
     <color name="md_theme_dark_hairline">#2b2e33</color>
 
-    <!--
-      Red suits. A warm terracotta rather than colorError: a suit is information, not an
-      alarm, and this keeps it clear of the pink used for negative scores.
-    -->
+    <!-- Not colorError: a suit is information, not an alarm. -->
     <color name="md_theme_light_suit_red">#a95d4c</color>
     <color name="md_theme_dark_suit_red">#E4A89C</color>
 
-    <!--
-      Chart series colours, one per seat in table order. Separated by hue rather than by
-      lightness so the lines stay tellable apart in both themes. The fourth is only reached by
-      a Doppelkopf table, and sits in the gap the first three leave between green and indigo.
-    -->
+    <!-- Separated by hue rather than lightness, so the lines stay distinct in both themes. -->
     <color name="md_theme_light_chart_series_1">#535CA8</color>
     <color name="md_theme_light_chart_series_2">#a95d4c</color>
     <color name="md_theme_light_chart_series_3">#3F6B44</color>
@@ -36,21 +24,7 @@
     <color name="md_theme_dark_chart_series_3">#A5D6A7</color>
     <color name="md_theme_dark_chart_series_4">#E8C77A</color>
 
-    <!--
-      Avatar palette. Six hues that tell one player from another, drawn from the app's own
-      colours rather than from a general-purpose set: the first four are the chart series in
-      order - brand indigo, the warm red the suits use, the chart green and gold - and the last
-      two fill the gaps those leave, so a player's colour belongs to this app and not to
-      whatever palette it came from.
-
-      They used to be picked for maximum separation alone, which put a hot pink and an electric
-      violet next to a muted indigo page and read as somebody else's brand.
-
-      Each is used at full strength for the initial and at low alpha for the circle behind it,
-      so both tones come from one entry. The light set is deep enough to read as text on the
-      page; the dark set is the same hue lifted to sit on a dark background, so a player keeps
-      their colour identity when the theme flips.
-    -->
+    <!-- Used at full strength for the initial and at low alpha for the circle behind it. -->
     <color name="md_theme_light_avatar_1">#535CA8</color>
     <color name="md_theme_light_avatar_2">#A95D4C</color>
     <color name="md_theme_light_avatar_3">#3F6B44</color>

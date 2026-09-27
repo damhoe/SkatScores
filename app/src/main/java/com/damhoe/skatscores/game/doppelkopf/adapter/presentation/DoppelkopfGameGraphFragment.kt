@@ -20,21 +20,16 @@ import com.damhoe.skatscores.shared.signed
 import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 
-/** How the chart reads a list: totals as they stood, or what each round was worth. */
 private enum class ChartMode
 {
     CUMULATIVE,
     PER_ROUND,
 }
 
-/** Points per seat over the rounds of a Doppelkopf list, with a draggable readout. */
 @AndroidEntryPoint
 class DoppelkopfGameGraphFragment : Fragment(R.layout.fragment_doppelkopf_game_graph)
 {
-    /**
-     * The same instance the game screen uses. A fragment-scoped view model would get its own
-     * SavedStateHandle without the gameId and would have no game to draw.
-     */
+    /** Nav-graph scoped: a fragment-scoped instance would lack the gameId argument. */
     private val viewModel: SharedDoppelkopfGameViewModel by hiltNavGraphViewModels(
         R.id.doppelkopf_game_nav_graph
     )
@@ -133,8 +128,7 @@ class DoppelkopfGameGraphFragment : Fragment(R.layout.fragment_doppelkopf_game_g
                 values = when (mode)
                 {
                     ChartMode.CUMULATIVE -> totals
-                    // What each round was worth, keeping the leading 0 so both modes share an
-                    // x axis where index 0 is "before the first round".
+                    // Keeps the leading 0 so both modes share the x axis.
                     ChartMode.PER_ROUND ->
                         listOf(0) + totals.zipWithNext { before, after -> after - before }
                 },
@@ -172,7 +166,7 @@ class DoppelkopfGameGraphFragment : Fragment(R.layout.fragment_doppelkopf_game_g
         }
     }
 
-    /** Legend doubles as the readout: null shows where the list stands, a round shows that round. */
+    /** The legend is the readout: null shows the current standings. */
     private fun showReadoutFor(round: Int?)
     {
         binding.readoutLabel.text = when
@@ -189,7 +183,6 @@ class DoppelkopfGameGraphFragment : Fragment(R.layout.fragment_doppelkopf_game_g
         }
     }
 
-    /** Four seats rather than Skat's three, so the palette has a fourth colour. */
     @AttrRes
     private fun seriesColorAttr(seat: Int): Int = when (seat % 4)
     {

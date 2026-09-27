@@ -42,7 +42,6 @@ class MigrationsTest
         context.deleteDatabase(name)
     }
 
-    /** A database as an earlier build left it. */
     private fun createLegacy(version: Int, schema: List<String>, fill: (SQLiteDatabase) -> Unit)
     {
         object : SQLiteOpenHelper(context, name, null, version)
@@ -82,7 +81,7 @@ class MigrationsTest
                     )
                 )
             }
-        // Inserted as round 2, 0, 1 - the order has to come from the number, not the rowid.
+        // Out of order, so the order must come from the round number.
         listOf(2, 0, 1).forEach { round ->
             db.execSQL(
                 "INSERT INTO skat_scores (id, game_id, skat_participant_id, round, score_type," +
@@ -124,7 +123,6 @@ class MigrationsTest
         val loaded = skatRepository(db).get(game).getOrThrow()
 
         assertEquals(3, loaded!!.scores.size)
-        // Every reference now points at a row that exists.
         db.readableDatabase.rawQuery("PRAGMA foreign_key_check", null).use {
             assertEquals(0, it.count)
         }
@@ -201,7 +199,7 @@ class MigrationsTest
         assertEquals(fresh, upgraded)
     }
 
-    /** Columns and indexes of every table, ignoring how the CREATE statement was spelled. */
+    /** Ignores how the CREATE statements are spelled. */
     private fun describe(db: SQLiteDatabase): Map<String, List<String>>
     {
         val tables = db.rawQuery(

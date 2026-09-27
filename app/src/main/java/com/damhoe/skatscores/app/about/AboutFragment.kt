@@ -21,12 +21,9 @@ class AboutFragment : Fragment(R.layout.fragment_about)
 
         applyInsets()
 
-        // The header is this screen's own, not a toolbar wired to the navigation graph: a
-        // NavController-driven toolbar adopts the next destination's label while the pop
-        // animation is still running, which flashed that label over this screen.
+        // Own header, not a NavController toolbar, which shows the next label during the pop.
         binding.backButton.setOnClickListener { findNavController().navigateUp() }
 
-        // From the installed package, so it can never fall behind the release again.
         val versionName = requireContext().packageManager
             .getPackageInfo(requireContext().packageName, 0)
             .versionName

@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  New-list sheet, reached from the centre FAB on home: name, round count, scoring mode, Start.
-
-  Who sits at the table is not asked here. A new list starts with placeholder seats and the
-  players are picked in the game view, which is also where they can be changed later, so there
-  is one place to learn instead of two.
-
-  Round-count chips are populated from SkatRoundCount.ALLOWED_VALUES at runtime rather than
-  hardcoded here, so the sheet can only ever offer values the domain accepts.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -34,7 +24,6 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/bg_drag_handle" />
 
-            <!-- Header -->
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -64,7 +53,6 @@
 
             </LinearLayout>
 
-            <!-- List name -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/title_list_name" />
@@ -90,19 +78,16 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Round count -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/settingsRoundCountTitle" />
 
-            <!-- Filled by the fragment: rows of three chips, one per allowed round count. -->
             <LinearLayout
                     android:id="@+id/roundCountRows"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
-            <!-- Scoring mode -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/settingsScoringTitle" />

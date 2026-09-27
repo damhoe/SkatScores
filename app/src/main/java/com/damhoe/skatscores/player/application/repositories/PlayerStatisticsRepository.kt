@@ -7,15 +7,11 @@ import java.util.UUID
 
 interface PlayerStatisticsRepository
 {
-    /** Lists every registered player appears in, split by game; absent means none. */
+    /** Players without a list are absent. */
     suspend fun getAllListCounts(): Result<Map<UUID, ListCounts>>
 
     suspend fun getPlayerStatistics(playerId: UUID): Result<PlayerStatistics>
 
-    /**
-     * Emits at once and again whenever a list, round or player these numbers are read from
-     * changes. They are counted on demand rather than stored, so nothing else would tell a
-     * screen showing them that they have moved on.
-     */
+    /** Emits immediately and whenever a list, round or player changes. */
     val changes: Flow<Unit>
 }

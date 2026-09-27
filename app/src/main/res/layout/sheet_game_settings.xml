@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Everything about a running list that is not a round and not who is playing it, reached from
-  the game screen's app bar. The seats sat here for a while and are back in sheet_player_seats,
-  next door: they are edited far more often than a list's name, length or scoring, and an app
-  bar button of their own says so.
-
-  Round-count chips are filled from SkatRoundCount.ALLOWED_VALUES at runtime; values below the
-  number of rounds already played are disabled rather than hidden.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -57,7 +48,6 @@
 
             </LinearLayout>
 
-            <!-- List name -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/title_list_name" />
@@ -83,7 +73,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Round count -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/settingsRoundCountTitle" />
@@ -104,7 +93,6 @@
                     tools:text="6 rounds already played"
                     tools:visibility="visible" />
 
-            <!-- Scoring mode -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/settingsScoringTitle" />
@@ -139,10 +127,6 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/dialog_title_button_save" />
 
-            <!--
-              The running list is the one place the recent rows never show - the hero card
-              holds it - so without this button it could not be deleted at all.
-            -->
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/deleteButton"
                     style="@style/Widget.App.DangerButton"

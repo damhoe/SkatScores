@@ -63,7 +63,6 @@ class PlayerStatisticsFragment : Fragment(R.layout.fragment_player_statistics)
 
     private fun updateUi(statistics: PlayerStatistics?)
     {
-        // Rates need rounds behind them to mean anything.
         val hasRounds = statistics != null && statistics.hasRounds
         binding.statsContent.visibility = if (hasRounds) View.VISIBLE else View.GONE
         binding.emptyHint.visibility = if (hasRounds) View.GONE else View.VISIBLE
@@ -77,7 +76,7 @@ class PlayerStatisticsFragment : Fragment(R.layout.fragment_player_statistics)
         bindDoppelkopf(statistics.doppelkopf)
     }
 
-    /** A game the player has never sat down to is left out rather than shown at zero. */
+    /** Hidden when the player has no rounds in this game. */
     private fun bindSkat(statistics: SkatPlayerStatistics)
     {
         binding.skatSection.visibility = if (statistics.hasRounds) View.VISIBLE else View.GONE
@@ -147,7 +146,7 @@ class PlayerStatisticsFragment : Fragment(R.layout.fragment_player_statistics)
         )
     }
 
-    /** "3 rounds in 2 lists" - both halves are plurals, so a single one still reads right. */
+    /** "3 rounds in 2 lists", each half pluralised on its own. */
     private fun roundsSummary(rounds: Int, lists: Int): String
     {
         val roundsLabel =

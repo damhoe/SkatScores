@@ -13,10 +13,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * The theme choice. The language is not kept here: it belongs to AppCompat and the system;
- * see [SettingsManager.currentLanguage].
- */
+/** Theme only; the language lives in AppCompat, see [SettingsManager.currentLanguage]. */
 @Singleton
 class SettingsStorageManager @Inject constructor(
     @ApplicationContext context: Context

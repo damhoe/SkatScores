@@ -6,12 +6,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-/**
- * When a list was played, in the shortest form the locale offers, e.g. "Sa, 21. Feb".
- *
- * Uses the platform's best pattern for the skeleton rather than a fixed pattern so the day and
- * month order follow the device locale.
- */
+/** E.g. "Sa, 21. Feb", in the device locale's order. */
 fun Instant.asListDate(): String
 {
     val locale = Locale.getDefault()

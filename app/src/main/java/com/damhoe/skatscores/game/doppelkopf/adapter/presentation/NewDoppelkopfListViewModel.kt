@@ -19,12 +19,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * A new Doppelkopf list while it is being set up.
- *
- * Seats are deliberately absent, as for a Skat list: a new list starts with placeholder players
- * and they are chosen in the game view.
- */
+/** No seats: a new list starts with placeholder players. */
 data class NewDoppelkopfListDraft(
     val title: String = "",
     val roundCount: DoppelkopfRoundCount = DoppelkopfGameDefaults.RoundCount,
@@ -61,7 +56,6 @@ class NewDoppelkopfListViewModel @Inject constructor(
     fun setScoringMode(scoringMode: DoppelkopfScoringMode) =
         edit { it.copy(scoringMode = scoringMode) }
 
-    /** Starts from a suggested name and round count, usually taken from the last list. */
     fun prefill(title: String, roundCount: DoppelkopfRoundCount?) = edit { draft ->
         draft.copy(title = title, roundCount = roundCount ?: draft.roundCount)
     }
@@ -89,7 +83,6 @@ class NewDoppelkopfListViewModel @Inject constructor(
                         scoringMode = draft.scoringMode,
                     ),
                     title = title,
-                    // No participants: the use case seats placeholder guests.
                 )
             ).fold(
                 onSuccess = { game -> _navigateToGame.postValue(Event(game.id)) },

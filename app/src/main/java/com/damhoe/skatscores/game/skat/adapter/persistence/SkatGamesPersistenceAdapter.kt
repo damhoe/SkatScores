@@ -15,10 +15,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * The `skat_games` rows. A deleted list keeps its row with `deleted_at` set, so every read here
- * leaves those out; see [SyncColumns].
- */
+/** Deleted lists are tombstoned and never read. */
 @Singleton
 class SkatGamesPersistenceAdapter @Inject constructor(
     val databaseHelper: DatabaseHelper,
@@ -32,10 +29,7 @@ class SkatGamesPersistenceAdapter @Inject constructor(
         }
     }
 
-    /**
-     * Marks the list deleted; its seats and rounds stay with it and are hidden along with it.
-     * False when there was no such list, or it was already deleted.
-     */
+    /** False when the list does not exist or is already deleted. */
     fun softDelete(id: UUID): Result<Boolean>
     {
         return databaseHelper.writableDatabase.run {
@@ -62,7 +56,7 @@ class SkatGamesPersistenceAdapter @Inject constructor(
         }
     }
 
-    /** Newest first; with [since], only the lists played from then on. */
+    /** Newest first. */
     fun getAll(since: Instant? = null): Result<List<SkatGameDto>>
     {
         return databaseHelper.readableDatabase.run {
@@ -77,7 +71,6 @@ class SkatGamesPersistenceAdapter @Inject constructor(
         }
     }
 
-    /** Title and settings only; fails when the list is gone. */
     fun updateSettings(
         id: UUID,
         title: String,
@@ -100,10 +93,7 @@ class SkatGamesPersistenceAdapter @Inject constructor(
 
     companion object
     {
-        /**
-         * Which lists count as there, for this table and for the seat and round queries that
-         * join onto it. [alias] is how the query names `skat_games`, if it does.
-         */
+        /** WHERE condition for live lists; [alias] is the query's name for `skat_games`. */
         fun liveGamesCondition(since: Instant?, alias: String? = null): String
         {
             val prefix = alias?.let { "$it." }.orEmpty()

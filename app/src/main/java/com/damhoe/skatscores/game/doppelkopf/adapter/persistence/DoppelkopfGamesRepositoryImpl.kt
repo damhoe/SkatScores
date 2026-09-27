@@ -36,17 +36,6 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
     private val databaseChanges: DatabaseChanges,
 ) : DoppelkopfGamesRepository
 {
-    /*
-     * Every suspending call here hops to IO. The adapters below are blocking, and these are
-     * called from viewModelScope, whose dispatcher is the main thread - so without this,
-     * opening a list or saving a round was database work on the thread drawing the frame.
-     * The flows do the same with flowOn, further down.
-     */
-
-    /**
-     * A list and its seats go in together or not at all: getOrThrow is what makes the
-     * transaction roll back, and a list written without its seats cannot be read back.
-     */
     override suspend fun save(game: DoppelkopfGame): Result<Unit> = withContext(Dispatchers.IO) {
         dbHelper
             .transaction {
@@ -58,10 +47,7 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
             .onSuccess { databaseChanges.notifyChanged(DataTopic.DOPPELKOPF) }
     }
 
-    /**
-     * Marks the list deleted. Its seats and rounds stay in place under it, and every read
-     * already leaves out what belongs to a deleted list - the player statistics included.
-     */
+    /** Soft delete; seats and rounds stay and are hidden with the list. */
     override suspend fun delete(id: UUID): Result<Unit> = withContext(Dispatchers.IO) {
         gamesDao.softDelete(id)
             .onSuccess { deleted ->
@@ -104,11 +90,10 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
 
     override fun observe(id: UUID): Flow<DoppelkopfGame?> =
         databaseChanges.changes(DataTopic.DOPPELKOPF)
-            // Latest, not every: a read made stale by a newer write is dropped, never shown.
             .mapLatest { load(id).getOrNull() }
             .flowOn(Dispatchers.IO)
 
-    /** The list, its seats and its rounds, read from one snapshot. */
+    /** Null also when the seats are incomplete. Domain validation failures become failures. */
     private fun load(id: UUID): Result<DoppelkopfGame?> = dbHelper
         .read {
             val game = gamesDao.get(id).getOrThrow() ?: return@read null
@@ -118,8 +103,6 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
         }
         .mapCatching { rows ->
             val (game, participants, scores) = rows ?: return@mapCatching null
-            // A list whose seats cannot be read reads as no list at all: the screens that ask
-            // for one already handle a null by leaving.
             val seats = toParticipants(id, participants) ?: return@mapCatching null
             game.toDoppelkopfGame(
                 participants = seats,
@@ -127,17 +110,12 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
             )
         }
 
-    /**
-     * Re-read on every change rather than once when this was called: the home screen keeps one
-     * LiveData for the whole time it is open, so a list started, played or deleted since then
-     * has to arrive on the same flow.
-     */
     override fun getAll(): Flow<List<DoppelkopfGamePreview>> =
         databaseChanges.changes(DataTopic.DOPPELKOPF)
             .mapLatest { loadPreviews() }
             .flowOn(Dispatchers.IO)
 
-    /** Three queries for the whole home screen, read from one snapshot. */
+    /** Three queries in total, grouped here, instead of two per list. */
     private fun loadPreviews(): List<DoppelkopfGamePreview> = dbHelper
         .read {
             Triple(
@@ -147,8 +125,6 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
             )
         }
         .map { (games, participantsByGame, scoresByGame) ->
-            // mapNotNull, so one unreadable list is left out of the home screen rather than
-            // emptying it.
             games.mapNotNull { dto -> toPreview(dto, participantsByGame, scoresByGame) }
         }
         .getOrElse { e ->
@@ -156,6 +132,7 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
             emptyList()
         }
 
+    /** Null for an unreadable list, so one bad list does not empty the home screen. */
     private fun toPreview(
         dto: DoppelkopfGameDto,
         participantsByGame: Map<UUID, List<DoppelkopfParticipantDto>>,
@@ -165,18 +142,10 @@ class DoppelkopfGamesRepositoryImpl @Inject constructor(
         val scores = scoresByGame[dto.id].orEmpty().map { it.toDoppelkopfScore() }
         DoppelkopfGamePreview.mapFrom(dto.toDoppelkopfGame(participants = seats, scores = scores))
     }.getOrElse { e ->
-        // The domain can refuse a stored row too - a round count out of range, a title that
-        // no longer validates - and that has to cost the one list rather than the screen.
         Log.e(TAG, "Could not read game ${dto.id}, skipping it", e)
         null
     }
 
-    /**
-     * The four seats of a list, or null if they are not all there.
-     *
-     * This used to fall back to placeholder seats, which kept the screen alive but showed a
-     * real list under invented names. Skipping it says the same thing honestly.
-     */
     private fun toParticipants(
         gameId: UUID,
         dtos: List<DoppelkopfParticipantDto>,

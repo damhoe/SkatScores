@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Android 11, which data_extraction_rules.xml does not reach. Same content. -->
+<!-- Android 11; same content as data_extraction_rules.xml. -->
 <full-backup-content>
     <include domain="database" path="." />
     <include domain="file" path="." />

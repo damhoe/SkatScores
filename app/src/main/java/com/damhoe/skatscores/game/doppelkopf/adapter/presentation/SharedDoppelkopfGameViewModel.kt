@@ -16,13 +16,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * Holds the game shown by [DoppelkopfGameFragment], and shared with the chart screen through
- * the Doppelkopf navigation graph.
- *
- * The game is observed, not loaded: every write to it - from the round sheet, the settings or
- * seats sheet, or undo here - arrives on its own, so undo never acts on an outdated copy.
- */
+/** Shared with the chart screen. Observes the game, so writes from any sheet arrive by themselves. */
 @HiltViewModel
 class SharedDoppelkopfGameViewModel @Inject constructor(
     private val useCases: DoppelkopfGameUseCases,
@@ -37,17 +31,12 @@ class SharedDoppelkopfGameViewModel @Inject constructor(
     private val _navigateUpEvent = MutableLiveData<Event<Unit>>()
     val navigateUpEvent: LiveData<Event<Unit>> = _navigateUpEvent
 
-    /** True while an undo is on its way to the database; the button waits for it. */
     private val _isUndoing = MutableLiveData(false)
     val isUndoing: LiveData<Boolean> = _isUndoing
 
-    /**
-     * When the last undo finished. An undo is over in a few milliseconds, faster than a
-     * double tap, so waiting for it alone let one accidental double tap take back two rounds.
-     */
+    /** An undo finishes faster than a double tap, so a cooldown is needed as well. */
     private var lastUndoAt = 0L
 
-    /** Fires once a round has actually been taken back. */
     private val _roundRemovedEvent = MutableLiveData<Event<Unit>>()
     val roundRemovedEvent: LiveData<Event<Unit>> = _roundRemovedEvent
 
@@ -59,10 +48,7 @@ class SharedDoppelkopfGameViewModel @Inject constructor(
         if (gameId == null) _navigateUpEvent.value = Event(Unit) else observe(gameId)
     }
 
-    /**
-     * A list that cannot be read when the screen opens sends the user back. One that goes away
-     * later was deleted from the settings sheet, which leaves the screen itself.
-     */
+    /** A later null means the settings sheet deleted the list; that sheet navigates away. */
     private fun observe(gameId: UUID) = viewModelScope.launch {
         var hasLoaded = false
 
@@ -80,10 +66,6 @@ class SharedDoppelkopfGameViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Undo in the bottom bar: drops the round that was played last, and the only way a round
-     * is ever removed. A second tap while the first is on its way is ignored.
-     */
     fun removeLastScore()
     {
         val gameId = gameId ?: return

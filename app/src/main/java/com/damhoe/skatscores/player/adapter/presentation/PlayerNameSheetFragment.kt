@@ -12,18 +12,12 @@ import com.damhoe.skatscores.databinding.SheetPlayerNameBinding
 import com.damhoe.skatscores.player.domain.PlayerName
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-/**
- * Asks for a player name, for a new player or a rename.
- *
- * The sheet only validates and reports back; the caller owns the player, so it decides what
- * the name is for. Names are unique, which is why the taken-name check is passed in rather
- * than done here.
- */
+/** Validates and reports the name back; the caller supplies the names already taken. */
 class PlayerNameSheetFragment : BottomSheetDialogFragment()
 {
     private lateinit var binding: SheetPlayerNameBinding
 
-    /** Names already in use, excluding the one being edited. */
+    /** Excluding the name being edited. */
     private val takenNames: List<String>
         get() = arguments?.getStringArrayList(ARG_TAKEN_NAMES).orEmpty()
 
@@ -56,7 +50,6 @@ class PlayerNameSheetFragment : BottomSheetDialogFragment()
         binding.nameEditText.setSelection(initialName.length)
         binding.nameEditText.doAfterTextChanged { validate(it?.toString().orEmpty()) }
 
-        // Nothing typed yet is not an error, but it is not saveable either.
         binding.saveButton.isEnabled = false
     }
 

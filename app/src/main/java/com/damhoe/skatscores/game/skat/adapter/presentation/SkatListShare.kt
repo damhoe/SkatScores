@@ -11,11 +11,7 @@ import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 import com.damhoe.skatscores.shared.asListDate
 import com.damhoe.skatscores.shared.signed
 
-/**
- * A Skat list as text to share. The rounds read the way the round log does - same labels from
- * the same [RoundTextFactory] - so a shared list and the screen it came from cannot say
- * different things about the same round.
- */
+/** Uses the round log's [RoundTextFactory], so both describe a round identically. */
 fun SkatGame.asSharedList(context: Context, roundText: RoundTextFactory): SharedList
 {
     val names = participants.asList().map { it.displayName }
@@ -42,7 +38,6 @@ fun SkatGame.asSharedList(context: Context, roundText: RoundTextFactory): Shared
     )
 }
 
-/** A passed round has no declarer and is worth nothing, so it is named and left at that. */
 private fun SkatGame.sharedRound(
     number: Int,
     score: SkatScore,

@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Who sits at the three seats of a running list, reached from the game screen's app bar.
-
-  The seats were a section of sheet_game_settings for a while. They are their own sheet again
-  because swapping a player is the edit that happens mid-evening, while a list's name, length
-  and scoring are set once - and a room of its own is what lets the app bar advertise it with
-  an icon of its own.
-
-  Each field clears from its end icon: a field that already holds a name filters the suggestion
-  list down to that name, so emptying it is how you get to picking somebody else.
-
-  The boxes carry the ExposedDropdownMenu style even though their end icon clears rather than
-  drops down. That style is the one whose theme overlay gives an AutoCompleteTextView the
-  outlined-box metrics; under the plain OutlinedBox style it keeps the theme default, which is
-  the filled-box one - 24dp of top padding - and the text sits low in the frame.
+  The fields use the ExposedDropdownMenu style for its outlined-box metrics, although their end
+  icon clears the text.
 -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -48,7 +36,6 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                <!-- The same icon the app bar button carries, so the two read as one door. -->
                 <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"

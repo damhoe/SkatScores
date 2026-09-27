@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Hero card for the list that is currently running. Fixed indigo brand surface in both
-  themes, so its content colours are literal rather than ?attr-based.
--->
+<!-- The surface is the same in both themes, so the content colours are literal. -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -26,7 +23,6 @@
             android:paddingEnd="20dp"
             android:paddingBottom="18dp">
 
-        <!-- Title row -->
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,7 +52,6 @@
 
         </LinearLayout>
 
-        <!-- Standings: one column per seat -->
         <LinearLayout
                 android:id="@+id/standings"
                 android:layout_width="match_parent"
@@ -142,7 +137,6 @@
 
             </LinearLayout>
 
-            <!-- Only a Doppelkopf table fills this column; a Skat list hides it. -->
             <LinearLayout
                     android:id="@+id/player4Column"
                     android:layout_width="0dp"
@@ -174,7 +168,6 @@
 
         </LinearLayout>
 
-        <!-- Progress -->
         <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/roundProgress"
                 style="@style/Widget.App.Hero.Progress"
@@ -193,7 +186,6 @@
                 android:textColor="@color/hero_on_surface_muted"
                 tools:text="Runde 12 / 24 · Gibt: Evi" />
 
-        <!-- Action: a single primary button; the whole card already opens the list. -->
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/keepPlayingButton"
                 style="@style/Widget.App.Hero.Button"

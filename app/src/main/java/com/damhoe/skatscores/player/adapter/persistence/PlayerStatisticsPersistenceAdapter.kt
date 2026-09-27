@@ -22,12 +22,8 @@ import java.util.UUID
 import javax.inject.Inject
 
 /**
- * A player's record, read straight out of the two sets of score tables.
- *
- * Both games link their seats to the same `players` row, so every query here starts from the
- * seats carrying this player's id and joins that list's rounds onto them. Deleted lists and
- * undone rounds are left out. Each game's record is one query adding up conditional counts,
- * rather than a query per number as it used to be.
+ * Queries start from the seats linked to the player and join that list's rounds. Deleted lists
+ * and undone rounds are excluded.
  */
 class PlayerStatisticsPersistenceAdapter @Inject constructor(
     private val dbHelper: DatabaseHelper,
@@ -40,11 +36,7 @@ class PlayerStatisticsPersistenceAdapter @Inject constructor(
         )
     }
 
-    /**
-     * Lists each registered player appears in, per game, for everybody at once: the players
-     * screen shows all of them, and asked one player at a time that was two queries a player.
-     * Players without a list are absent from the map.
-     */
+    /** Players without a list are absent from the map. */
     fun getAllListCounts(): Result<Map<UUID, ListCounts>> = dbHelper.read { db ->
         val skat = countListsPerPlayer(
             db,
@@ -91,11 +83,9 @@ class PlayerStatisticsPersistenceAdapter @Inject constructor(
         }
     }
 
-    // --- Skat -----------------------------------------------------------------------------
-
     private fun readSkatStatistics(db: SQLiteDatabase, playerId: UUID): SkatPlayerStatistics
     {
-        val listsPlayed = countLists(
+        val listsPlayed = countLiveLists(
             db,
             playerId,
             SkatParticipantsTable.TABLE_NAME,
@@ -131,14 +121,12 @@ class PlayerStatisticsPersistenceAdapter @Inject constructor(
         }
     }
 
-    // --- Doppelkopf -----------------------------------------------------------------------
-
     private fun readDoppelkopfStatistics(
         db: SQLiteDatabase,
         playerId: UUID,
     ): DoppelkopfPlayerStatistics
     {
-        val listsPlayed = countLists(
+        val listsPlayed = countLiveLists(
             db,
             playerId,
             DoppelkopfParticipantsTable.TABLE_NAME,
@@ -178,8 +166,7 @@ class PlayerStatisticsPersistenceAdapter @Inject constructor(
         }
     }
 
-    /** Lists still there that this player sat in. */
-    private fun countLists(
+    private fun countLiveLists(
         db: SQLiteDatabase,
         playerId: UUID,
         participantsTable: String,
@@ -207,21 +194,14 @@ class PlayerStatisticsPersistenceAdapter @Inject constructor(
         private const val SKAT_RESULT = "scores.${SkatScoresTable.COLUMN_WON_OR_LOST}"
         private const val SKAT_TYPE = "scores.${SkatScoresTable.COLUMN_SCORE_TYPE}"
 
-        /**
-         * The declarer column holds a participant id, so it is compared against the seat this
-         * player held in that list - not against a table position.
-         */
         const val PLAYER_DECLARED = "$SKAT_DECLARER = $SKAT_SEAT"
 
-        /** Passed rounds have no declarer at all, so they are not defended either. */
+        /** Passed rounds have no declarer and count as neither. */
         const val PLAYER_DEFENDED = "$SKAT_DECLARER IS NOT NULL AND $SKAT_DECLARER != $SKAT_SEAT"
 
         val SKAT_DECLARER_WON = "$SKAT_RESULT = '${WonOrLost.WON.name}'"
 
-        /**
-         * An overbid round records no result, because it is lost by definition; counting it
-         * here keeps a defender's record honest.
-         */
+        /** Overbid rounds store no result but are lost. */
         val SKAT_DECLARER_LOST = "($SKAT_RESULT = '${WonOrLost.LOST.name}'" +
                 " OR $SKAT_TYPE = '${SkatScoreType.OVERBID.name}')"
 
@@ -232,7 +212,6 @@ class PlayerStatisticsPersistenceAdapter @Inject constructor(
         private const val DK_RE_2 = "scores.${DoppelkopfScoresTable.COLUMN_RE_PARTICIPANT_2}"
         private const val DK_TYPE = "scores.${DoppelkopfScoresTable.COLUMN_SCORE_TYPE}"
 
-        /** The soloist is Re on their own; in a normal round Re is the pair of queens. */
         val PLAYER_WAS_RE =
             "(($DK_TYPE = '${DoppelkopfScoreType.SOLO.name}' AND $DK_SOLOIST = $DK_SEAT)" +
                     " OR ($DK_TYPE = '${DoppelkopfScoreType.NORMAL.name}'" +
@@ -242,10 +221,6 @@ class PlayerStatisticsPersistenceAdapter @Inject constructor(
 
         const val PLAYER_PLAYED_SOLO = "$DK_SOLOIST = $DK_SEAT"
 
-        /**
-         * The player ends up on the winning side: either they were Re and Re won, or they
-         * were not Re and Kontra won.
-         */
         val PLAYER_WON =
             "(($PLAYER_WAS_RE AND $DK_WINNER = '${DoppelkopfParty.RE.name}')" +
                     " OR (NOT $PLAYER_WAS_RE" +

@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Score chart. Same shell as the game screen: 60dp single-line header, 16dp gutters, card
-  surface for the plot.
-
-  The legend doubles as the readout - dragging on the chart moves the values to the picked
-  round, so there is no separate tooltip layer.
-
-  Everything below the app bar scrolls, because tournament lists add the breakdown card under
-  the chart. The chart itself stays a match_constraint with a minimum height, so with the
-  breakdown gone (simple scoring, or no round played yet) fillViewport hands it the whole
-  screen exactly as before, and with the breakdown there it gives up as much height as it can
-  spare before the page starts scrolling.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -57,6 +44,10 @@
 
         </LinearLayout>
 
+        <!--
+          The chart has a minimum height; without the breakdown card, fillViewport gives it the
+          whole screen.
+        -->
         <androidx.core.widget.NestedScrollView
                 android:id="@+id/contentScroll"
                 android:layout_width="match_parent"
@@ -71,7 +62,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                <!-- What the numbers mean: the final total, or the round being inspected. -->
                 <TextView
                         android:id="@+id/readoutLabel"
                         android:layout_width="match_parent"
@@ -94,7 +84,6 @@
                         android:orientation="horizontal"
                         app:layout_constraintTop_toBottomOf="@id/readoutLabel" />
 
-                <!-- Cumulative totals or the points scored in each round. -->
                 <LinearLayout
                         android:id="@+id/modeRow"
                         android:layout_width="match_parent"
@@ -160,10 +149,6 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!--
-                  Where the totals in the legend come from. Tournament lists only - with simple
-                  scoring the chart is the whole story.
-                -->
                 <LinearLayout
                         android:id="@+id/breakdownSection"
                         android:layout_width="match_parent"
@@ -200,7 +185,6 @@
                                 android:paddingEnd="12dp"
                                 android:paddingBottom="18dp">
 
-                            <!-- Same three columns as the legend, in the same seat order. -->
                             <LinearLayout style="@style/Widget.App.Breakdown.Row">
 
                                 <TextView

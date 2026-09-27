@@ -24,12 +24,6 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * Who sits at the four seats of a running Doppelkopf list. Its own screen rather than a section
- * of the settings sheet, for the same reason as
- * [com.damhoe.skatscores.game.skat.adapter.presentation.PlayerSeatsViewModel]: swapping a
- * player is the edit that happens mid-evening.
- */
 @HiltViewModel
 class DoppelkopfPlayerSeatsViewModel @Inject constructor(
     private val useCases: DoppelkopfGameUseCases,
@@ -44,23 +38,21 @@ class DoppelkopfPlayerSeatsViewModel @Inject constructor(
         MutableLiveData(List(DoppelkopfParticipants.SEAT_COUNT) { "" })
     val seatNames: LiveData<List<String>> = _seatNames
 
-    /** What load() found, so save() can skip a write nothing changed. */
     private var loadedNames: List<String>? = null
 
     /**
-     * Who sat where when the sheet opened. A seat whose name was not touched keeps this, link
-     * and all: resolving it by name again would unlink it from a player renamed since.
+     * Unchanged seats are saved as loaded: resolving them by name again would unlink a player
+     * renamed since.
      */
     private var loadedSeats: List<Participant> = emptyList()
 
-    /** Seat index to problem, empty while the seats are ready to save. */
     private val _seatErrors = MutableLiveData<Map<Int, SeatError>>(emptyMap())
     val seatErrors: LiveData<Map<Int, SeatError>> = _seatErrors
 
     private val _canSave = MutableLiveData(false)
     val canSave: LiveData<Boolean> = _canSave
 
-    /** Fires once, so the text fields are written by the load and by nobody else after it. */
+    /** One-shot, so only the initial load writes into the fields. */
     private val _loaded = MutableLiveData<Event<List<String>>>()
     val loaded: LiveData<Event<List<String>>> = _loaded
 
@@ -112,10 +104,7 @@ class DoppelkopfPlayerSeatsViewModel @Inject constructor(
         _canSave.value = problems.isEmpty()
     }
 
-    /**
-     * Names have to be present and distinct: participants are unique per (list, name) in the
-     * database, so duplicates would fail the update rather than the user.
-     */
+    /** Names are unique per list in the database, so duplicates are caught here. */
     private fun validateSeats(names: List<String>): Map<Int, SeatError>
     {
         val trimmed = names.map { it.trim() }
@@ -150,8 +139,6 @@ class DoppelkopfPlayerSeatsViewModel @Inject constructor(
         val seats = names.mapIndexed { seat, rawName ->
             val name = PlayerName.create(rawName.trim()).getOrNull() ?: return
             loadedSeats.getOrNull(seat)?.takeIf { it.name == name }?.let { return@mapIndexed it }
-            // A name matching a registered player keeps that seat linked to the profile, so a
-            // player's record follows them from list to list and across both games.
             Participant.resolve(name, registered)
         }
 

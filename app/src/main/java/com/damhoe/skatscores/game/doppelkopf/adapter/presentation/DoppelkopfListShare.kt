@@ -10,11 +10,6 @@ import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfGame
 import com.damhoe.skatscores.shared.asListDate
 import com.damhoe.skatscores.shared.signed
 
-/**
- * A Doppelkopf list as text to share. Every round is won by one of the two parties, so each
- * line carries the winning side next to what the round was worth, the way the badge does in
- * the round log.
- */
 fun DoppelkopfGame.asSharedList(
     context: Context,
     roundText: DoppelkopfRoundTextFactory,

@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  One played round in the log. Tap it to edit that round; there is no menu on the row, and
-  only the newest round can be removed - that is what the undo action in the bottom bar does.
-
-  The side gutters live here rather than on the RecyclerView so the press state spans the
-  whole width of the screen.
--->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"

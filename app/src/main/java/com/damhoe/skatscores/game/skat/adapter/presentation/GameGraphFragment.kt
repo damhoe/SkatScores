@@ -20,21 +20,16 @@ import com.damhoe.skatscores.plot.presentation.ScoreChartView
 import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 
-/** How the chart reads a list: totals as they stood, or what each round was worth. */
 private enum class ChartMode
 {
     CUMULATIVE,
     PER_ROUND,
 }
 
-/** Points per seat over the rounds of a list, with a draggable readout. */
 @AndroidEntryPoint
 class GameGraphFragment : Fragment(R.layout.fragment_game_graph)
 {
-    /**
-     * The same instance the game screen uses. A fragment-scoped view model would get its own
-     * SavedStateHandle without the gameId and would have no game to draw.
-     */
+    /** Nav-graph scoped: a fragment-scoped instance would lack the gameId argument. */
     private val viewModel: SharedSkatGameViewModel by hiltNavGraphViewModels(R.id.skat_game_nav_graph)
 
     private lateinit var binding: FragmentGameGraphBinding
@@ -68,8 +63,6 @@ class GameGraphFragment : Fragment(R.layout.fragment_game_graph)
                 binding.appBar.paddingRight,
                 binding.appBar.paddingBottom
             )
-            // Padding rather than a margin on the card: the content scrolls now, so the gap
-            // above the navigation bar has to sit inside the scrolling area.
             binding.contentScroll.setPadding(
                 binding.contentScroll.paddingLeft,
                 binding.contentScroll.paddingTop,
@@ -113,8 +106,6 @@ class GameGraphFragment : Fragment(R.layout.fragment_game_graph)
         binding.legend.visibility = if (hasRounds) View.VISIBLE else View.GONE
         binding.readoutLabel.visibility = if (hasRounds) View.VISIBLE else View.GONE
 
-        // Nothing to break down before the first round, and nothing to break down at all
-        // unless the list is scored Seeger-Fabian.
         val hasBreakdown = hasRounds && game.isTournamentScoring
         binding.breakdownSection.visibility = if (hasBreakdown) View.VISIBLE else View.GONE
 
@@ -128,11 +119,6 @@ class GameGraphFragment : Fragment(R.layout.fragment_game_graph)
         if (hasBreakdown) bindBreakdownCard(game)
     }
 
-    /**
-     * The parts of each seat's total, under the chart. The legend above shows where the list
-     * stands - or the round being dragged over - so this card is the one place the numbers
-     * behind that total are spelled out and add up in view.
-     */
     private fun bindBreakdownCard(game: SkatGame)
     {
         val breakdowns = game.calculateBreakdown()
@@ -141,7 +127,6 @@ class GameGraphFragment : Fragment(R.layout.fragment_game_graph)
         binding.apply {
             listOf(breakdownName1, breakdownName2, breakdownName3).forEachIndexed { seat, view ->
                 view.text = names.getOrNull(seat).orEmpty()
-                // Tied to the chart by colour, the way the legend is.
                 view.setTextColor(MaterialColors.getColor(view, seriesColorAttr(seat)))
             }
 
@@ -165,8 +150,7 @@ class GameGraphFragment : Fragment(R.layout.fragment_game_graph)
                 values = when (mode)
                 {
                     ChartMode.CUMULATIVE -> totals
-                    // What each round was worth, keeping the leading 0 so both modes share an
-                    // x axis where index 0 is "before the first round".
+                    // Keeps the leading 0 so both modes share the x axis.
                     ChartMode.PER_ROUND ->
                         listOf(0) + totals.zipWithNext { before, after -> after - before }
                 },
@@ -204,7 +188,7 @@ class GameGraphFragment : Fragment(R.layout.fragment_game_graph)
         }
     }
 
-    /** Legend doubles as the readout: null shows where the list stands, a round shows that round. */
+    /** The legend is the readout: null shows the current standings. */
     private fun showReadoutFor(round: Int?)
     {
         binding.readoutLabel.text = when

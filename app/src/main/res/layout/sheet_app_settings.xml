@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  App settings. Replaces the AlertDialog built from dialog_app_settings.xml: radio groups
-  become the same selection chips the rest of the app uses, so a two-option choice reads at a
-  glance instead of as a form.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -53,7 +48,6 @@
 
             </LinearLayout>
 
-            <!-- Theme -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/theme_preference_title" />
@@ -89,7 +83,6 @@
 
             </LinearLayout>
 
-            <!-- Language -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/language_preference_title" />
@@ -125,7 +118,6 @@
 
             </LinearLayout>
 
-            <!-- About -->
             <com.google.android.material.card.MaterialCardView
                     android:id="@+id/aboutRow"
                     style="@style/Widget.App.OutlinedRow"

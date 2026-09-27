@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Who sits at the four seats of a running Doppelkopf list, reached from the game screen's app
-  bar. The same sheet as sheet_player_seats but for a table of four, which is why it is its own
-  layout rather than a taller version of the Skat one - including its note on why the boxes
-  carry the ExposedDropdownMenu style while their end icon clears the field.
+  The fields use the ExposedDropdownMenu style for its outlined-box metrics, although their end
+  icon clears the text.
 -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -38,7 +36,6 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                <!-- The same icon the app bar button carries, so the two read as one door. -->
                 <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -139,7 +136,6 @@
                         tools:text="Daniel" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/player4Input"

@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Doppelkopf game screen: app bar, pinned four-column scoreboard, newest-first round log,
-  floating bottom bar. Same shape as the Skat screen, so the two games read the same way, but
-  its own layout because the board carries four seats and the round rows say different things.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -47,11 +42,6 @@
                     android:textAppearance="@style/TextAppearance.App.AppBarTitle"
                     tools:text="Doppelkopf 003" />
 
-            <!--
-              Actions on the list itself, mirroring the Skat screen: sharing the list, who is
-              playing it and its settings sit next to its name, while the bottom pill stays
-              about the rounds.
-            -->
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/shareButton"
                     style="@style/Widget.App.AppBar.IconButton"
@@ -132,7 +122,6 @@
                         android:contentDescription="@string/title_statistics"
                         app:icon="@drawable/ic_chart_24dp" />
 
-                <!-- Cradle for the centre button. -->
                 <Space
                         android:layout_width="@dimen/bottom_pill_cradle_width"
                         android:layout_height="match_parent" />

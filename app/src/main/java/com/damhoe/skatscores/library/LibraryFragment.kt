@@ -47,10 +47,6 @@ class LibraryFragment :
         listenForNewLists()
     }
 
-    /**
-     * One listener for the whole screen: the helpers in InsetsManager each consume the insets,
-     * so they cannot be combined on sibling views.
-     */
     private fun applyInsets()
     {
         val scrollBottomPadding = binding.content.paddingBottom
@@ -103,7 +99,6 @@ class LibraryFragment :
         }
     }
 
-    /** Long press on a row: confirm, then the list is gone. */
     private fun askBeforeDeleting(preview: ListPreview)
     {
         requireContext().confirmListDeletion(
@@ -118,10 +113,6 @@ class LibraryFragment :
         }
     }
 
-    /**
-     * Game-type filters. The two games keep separate lists, separate setup and separate
-     * scoring, so this row picks which of them the whole screen is about.
-     */
     private fun setupGameTypeFilters()
     {
         binding.filterSkat.setOnClickListener { viewModel.selectGameType(GameType.SKAT) }
@@ -192,12 +183,8 @@ class LibraryFragment :
     }
 
     /**
-     * The two ways home can be empty. With no list at all for the selected game the screen has
-     * nothing but its greeting and its filters, so the stack of empty slots gives way to one
-     * centred prompt; with lists but none of them running, only the hero card is missing and a
-     * placeholder holds its slot.
-     *
-     * Both observers call this because either can arrive first.
+     * No lists at all: one centred prompt. Lists but none running: a placeholder for the hero
+     * card. Called by both observers, since either can arrive first.
      */
     private fun renderEmptyState()
     {
@@ -223,7 +210,6 @@ class LibraryFragment :
             bindStanding(player2Name, player2Total, preview, seat = 1)
             bindStanding(player3Name, player3Total, preview, seat = 2)
 
-            // The fourth column only belongs to a Doppelkopf table.
             val hasFourthSeat = preview.playerNames.size > 3
             player4Column.visibility = if (hasFourthSeat) View.VISIBLE else View.GONE
             if (hasFourthSeat) bindStanding(player4Name, player4Total, preview, seat = 3)
@@ -287,10 +273,7 @@ class LibraryFragment :
         LibraryFragmentDirections.actionHomeToAppSettings()
     )
 
-    /**
-     * Opens the new-list sheet for the game currently selected, prefilled from the most recent
-     * list so the usual case is "change nothing and hit Start".
-     */
+    /** Prefilled from the most recent list. */
     private fun showNewListSheet()
     {
         val template = viewModel.quickStartTemplate.value

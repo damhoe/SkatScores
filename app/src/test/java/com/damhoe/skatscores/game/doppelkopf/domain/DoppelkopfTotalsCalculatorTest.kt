@@ -50,9 +50,7 @@ class DoppelkopfTotalsCalculatorTest
             normal(reSeats = listOf(0, 2), winner = KONTRA),
         )
 
-        // Round 1: Re is seats 0 and 1, so they take 1 each and seats 2 and 3 give 1 each.
-        // Round 2: Re is seats 0 and 2, and Kontra - seats 1 and 3 - wins it for 2, because
-        // beating the elders is worth a point on top of the win.
+        // Round 1: Re (0, 1) wins 1. Round 2: Kontra (1, 3) wins 2, gegen die Alten.
         assertArrayEquals(
             intArrayOf(-1, 3, -3, 1),
             calculator.calculateTotalPoints(scores, countsExtraPoints = false)
@@ -157,8 +155,7 @@ class DoppelkopfTotalsCalculatorTest
     @Test
     fun `a solo never counts extras, even on a list that does`()
     {
-        // A won solo is worth 1; the fox recorded for Re must not add to it, let alone
-        // three times over for the soloist.
+        // The fox must not count, let alone three times for the soloist.
         val scores = listOf(solo(0, RE, DoppelkopfRoundValue(extraPointsRe = 1)))
 
         assertArrayEquals(

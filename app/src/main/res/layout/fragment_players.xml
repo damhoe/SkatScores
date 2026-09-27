@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Saved players. A peer of home rather than a sub-screen, so it carries the same floating
-  bottom bar with the two tabs and a centre FAB - here the FAB adds a player.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -14,12 +10,6 @@
             android:background="?android:attr/colorBackground"
             tools:context=".player.adapter.presentation.PlayersFragment">
 
-        <!--
-          Header, not an app bar: no back arrow, and the screen title on the gutter at the
-          size home uses. The two tabs are peers, so neither is reached by going down into it
-          - the way back to the lists is the tab that says Lists, not an arrow that undoes a
-          step the reader did not take.
-        -->
         <LinearLayout
                 android:id="@+id/appBar"
                 android:layout_width="match_parent"
@@ -100,7 +90,6 @@
                         app:icon="@drawable/ic_lists_24dp"
                         app:iconTint="?attr/colorOutline" />
 
-                <!-- Cradle for the centre button. -->
                 <Space
                         android:layout_width="@dimen/bottom_pill_cradle_width"
                         android:layout_height="match_parent" />

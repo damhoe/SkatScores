@@ -19,25 +19,24 @@ class SettingsManager @Inject constructor(
     }
 
     /**
-     * The app's language as a language tag ("de", "en"), or empty when it follows the system.
-     *
-     * AppCompat is the one place this is kept: on Android 13+ it is the per-app language the
-     * system settings show and change, and below that AppCompat stores it itself. The app used
-     * to keep its own copy, defaulting to German, and pushed it on every start - so an English
-     * phone opened in German, and a language picked in the system settings was overwritten on
-     * the next launch.
+     * A language tag or [SYSTEM_LANGUAGE]. AppCompat is the only store, so this stays in sync
+     * with the system's per-app language setting.
      */
     fun currentLanguage(): String = AppCompatDelegate.getApplicationLocales()
         .get(0)
         ?.language
-        .orEmpty()
+        ?: SYSTEM_LANGUAGE
 
-    /** [languageTag] empty follows the system language again. */
     fun setLanguage(languageTag: String)
     {
         val appLocales =
-            if (languageTag.isEmpty()) LocaleListCompat.getEmptyLocaleList()
+            if (languageTag == SYSTEM_LANGUAGE) LocaleListCompat.getEmptyLocaleList()
             else LocaleListCompat.forLanguageTags(languageTag)
         AppCompatDelegate.setApplicationLocales(appLocales)
+    }
+
+    companion object
+    {
+        const val SYSTEM_LANGUAGE = ""
     }
 }

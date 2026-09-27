@@ -16,10 +16,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * The rounds of Skat lists, in `seq` order. An undone round keeps its row with `deleted_at`
- * set; every read here leaves those out.
- */
+/** Rounds in `seq` order; undone rounds are tombstoned and never read. */
 @Singleton
 class SkatScorePersistenceAdapter @Inject constructor(
     val databaseHelper: DatabaseHelper
@@ -40,7 +37,6 @@ class SkatScorePersistenceAdapter @Inject constructor(
         }
     }
 
-    /** The rounds of every list still there, in one query; grouped by list by the caller. */
     fun getScoresOfLiveGames(since: Instant? = null): Result<List<SkatScoreDto>>
     {
         return databaseHelper.readableDatabase.run {
@@ -58,10 +54,7 @@ class SkatScorePersistenceAdapter @Inject constructor(
         }
     }
 
-    /**
-     * The highest seq ever given to a round of this list, undone ones included, so a new round
-     * never reuses the slot of one that was taken back.
-     */
+    /** Includes undone rounds, so a new round never takes an undone round's slot. */
     fun lastSeq(gameId: UUID): Result<String?>
     {
         return databaseHelper.readableDatabase.run {
@@ -84,10 +77,7 @@ class SkatScorePersistenceAdapter @Inject constructor(
         }
     }
 
-    /**
-     * Replaces a round in place. The row keeps its id and seq, so its position in the list
-     * does not move. Fails when the round is gone - undone meanwhile, say.
-     */
+    /** Keeps id and seq; fails when the round has been undone. */
     fun update(score: SkatScoreDto): Result<Unit>
     {
         return databaseHelper.writableDatabase.run {
@@ -105,10 +95,7 @@ class SkatScorePersistenceAdapter @Inject constructor(
         }
     }
 
-    /**
-     * Takes back the newest round of the list, whichever that is in the database at the moment
-     * this runs - not whichever a screen last showed. Null when the list has no rounds.
-     */
+    /** The id of the round taken back, or null when the list has none. */
     fun softDeleteLast(gameId: UUID): Result<UUID?>
     {
         return databaseHelper.writableDatabase.run {

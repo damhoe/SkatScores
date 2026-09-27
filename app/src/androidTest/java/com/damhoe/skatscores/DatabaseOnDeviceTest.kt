@@ -9,10 +9,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/**
- * What the unit tests cannot vouch for: the database as the device's own SQLite opens it.
- * The migrations and repositories are covered on the JVM (see the Robolectric tests).
- */
+/** The database on the device's own SQLite; logic is covered by the Robolectric tests. */
 @RunWith(AndroidJUnit4::class)
 class DatabaseOnDeviceTest
 {

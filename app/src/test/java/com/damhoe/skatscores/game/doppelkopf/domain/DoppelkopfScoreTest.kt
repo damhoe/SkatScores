@@ -8,7 +8,6 @@ import org.junit.Assert.assertEquals
 import java.util.UUID
 import org.junit.Test
 
-/** What a round is worth, before it is spread over the seats. */
 class DoppelkopfScoreTest
 {
     private val alice = UUID.randomUUID()
@@ -41,8 +40,7 @@ class DoppelkopfScoreTest
     @Test
     fun `the levels below 90 are cumulative`()
     {
-        // Holding the other side under 60 also holds it under 90, so the round is worth the
-        // win plus both levels.
+        // Win + keine 90 + keine 60.
         val value = DoppelkopfRoundValue(winLevel = DoppelkopfWinLevel.NO_60)
 
         assertEquals(3, normal(value = value).toPoints())
@@ -59,7 +57,6 @@ class DoppelkopfScoreTest
     @Test
     fun `beating the elders is worth an extra point`()
     {
-        // The same round won by Kontra is worth one more than won by Re.
         assertEquals(1, normal(winner = RE).toPoints())
         assertEquals(2, normal(winner = KONTRA).toPoints())
     }
@@ -76,9 +73,9 @@ class DoppelkopfScoreTest
     {
         val bothCalled = DoppelkopfRoundValue(reAnnounced = true, kontraAnnounced = true)
 
-        // 1 for the win + 2 + 2. Announcements count for the winner however called them.
+        // 1 for the win + 2 + 2.
         assertEquals(5, normal(winner = RE, value = bothCalled).toPoints())
-        // Same round taken by Kontra: the extra point for beating the elders on top.
+        // Plus 1 for "gegen die Alten".
         assertEquals(6, normal(winner = KONTRA, value = bothCalled).toPoints())
     }
 
@@ -90,15 +87,14 @@ class DoppelkopfScoreTest
             absage = DoppelkopfWinLevel.NO_60,
         )
 
-        // 3 for winning under 60, plus 2 for having announced it in advance.
+        // 3 for winning under 60, plus 2 for the Absage.
         assertEquals(5, normal(value = value).toPoints())
     }
 
     @Test
     fun `an announcement counts even when the round was not won that clearly`()
     {
-        // Announcing "keine 90" and then only just winning still pays for the announcement:
-        // what was announced and what was reached are recorded separately on purpose.
+        // The Absage pays even when the level was not reached.
         val value = DoppelkopfRoundValue(
             winLevel = DoppelkopfWinLevel.WON,
             absage = DoppelkopfWinLevel.NO_90,

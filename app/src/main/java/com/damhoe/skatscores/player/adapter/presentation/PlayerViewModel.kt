@@ -25,19 +25,10 @@ class PlayerViewModel @Inject internal constructor(
     private val playerUseCases: PlayerUseCases,
 ) : ViewModel()
 {
-    /**
-     * The registered players, held by the repository rather than by an observer here: screens
-     * that only read [playerNames] or [loadPlayerById] never observe a list, and a LiveData
-     * nobody observes has no value to read.
-     */
+    /** A StateFlow, not LiveData: some screens read it without observing. */
     private val players: StateFlow<List<Player>> = playerUseCases.getAllPlayers()
 
-    /**
-     * Players with the lists each has taken part in, counted per game. The counts are read for
-     * everybody at once rather than carried on [Player]: they are derived from the games table,
-     * not stored on the profile - which is why this also has to be rebuilt whenever a list is
-     * played, added or deleted, not only when the players themselves change.
-     */
+    /** Rebuilt on list changes too, since the counts come from the lists. */
     val playerInfos: LiveData<List<PlayerInfo>> = combine(
         players,
         playerUseCases.statisticsChanges(),
@@ -56,32 +47,18 @@ class PlayerViewModel @Inject internal constructor(
     }.flowOn(Dispatchers.IO).asLiveData()
 
     /**
-     * A palette slot per player, dealt out in the order the profiles were created.
-     *
-     * Dealing rather than hashing is what keeps the colours apart: with a colour per player id
-     * the first handful collided more often than not. In creation order the first six players
-     * are six different colours, and a new profile is always dealt last, so nobody who already
-     * has a colour loses it when somebody joins.
-     *
-     * Deleting a profile does shift the players created after it along by one. That is the
-     * price of not storing the colour on the row, and it only happens on an action that is
-     * already confirmed and rare.
+     * Dealt in creation order, so the first six players get six different colours and a new
+     * player never changes anyone else's. Deleting a player shifts later ones by one.
      */
     private fun avatarSlots(players: List<Player>): Map<UUID, Int> = players
-        // Created within the same millisecond is unlikely but must still be an order, or two
-        // players could swap colours between reads.
+        // The id breaks ties so the order is stable.
         .sortedWith(compareBy({ it.createdAt }, { it.id.toString() }))
         .withIndex()
         .associate { (slot, player) -> player.id to slot }
 
-    /** Which player the details screen is showing, so its avatar can follow the list. */
     private val loadedPlayerId = MutableStateFlow<UUID?>(null)
 
-    /**
-     * The same slot the list gives this player, so their page shows the colour they have.
-     * Observed rather than asked for once: the list is filled in the background, and a slot
-     * read before it arrives would be everybody's first colour.
-     */
+    /** Observed, because the player list may still be loading. */
     val avatarSlot: LiveData<Int> = combine(players, loadedPlayerId) { players, id ->
         id?.let { avatarSlots(players)[it] } ?: 0
     }.asLiveData()
@@ -100,8 +77,6 @@ class PlayerViewModel @Inject internal constructor(
 
         viewModelScope.launch {
             val player = players.value.firstOrNull { it.id == playerId }
-            // The list is filled in the background, so a page opened before it arrives reads
-            // the one profile it needs directly rather than deciding the player is gone.
                 ?: playerUseCases.getPlayer(playerId).getOrNull()
 
             _playerDetails.postValue(player)

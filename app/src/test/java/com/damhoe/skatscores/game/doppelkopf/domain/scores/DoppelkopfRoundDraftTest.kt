@@ -46,8 +46,6 @@ class DoppelkopfRoundDraftTest
     @Test
     fun `a third tap replaces the oldest seat rather than being ignored`()
     {
-        // Otherwise a user who picked the wrong pair would have to unselect before selecting,
-        // which reads as a dead chip.
         val draft = DoppelkopfRoundDraft.forNewRound()
             .toggleReSeat(seats[0].id)
             .toggleReSeat(seats[1].id)
@@ -73,7 +71,6 @@ class DoppelkopfRoundDraftTest
         val draft = DoppelkopfRoundDraft.forNewRound().toggleReSeat(seats[0].id)
 
         assertEquals(RE, draft.partyOf(seats[0].id))
-        // One queen placed says nothing about where the other one is.
         assertEquals(null, draft.partyOf(seats[3].id))
     }
 

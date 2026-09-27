@@ -23,15 +23,10 @@ data class GameSettingsDraft(
     val title: String = "",
     val roundCount: SkatRoundCount? = null,
     val scoringMode: SkatScoringMode = SkatScoringMode.CLASSIC,
-    /** Rounds already played; the list cannot be shortened below this. */
+    /** The round count cannot go below this. */
     val roundsPlayed: Int = 0,
 )
 
-/**
- * Everything about a running list that is not a round and not who is playing it: the name, the
- * round count and the scoring mode. The seats are their own screen, [PlayerSeatsViewModel],
- * because they are the thing that gets edited mid-evening.
- */
 @HiltViewModel
 class GameSettingsViewModel @Inject constructor(
     private val skatGameUseCases: SkatGameUseCases,
@@ -50,7 +45,7 @@ class GameSettingsViewModel @Inject constructor(
     private val _canSave = MutableLiveData(false)
     val canSave: LiveData<Boolean> = _canSave
 
-    /** Fires once, so the text fields are written by the load and by nobody else after it. */
+    /** One-shot, so only the initial load writes into the fields. */
     private val _loaded = MutableLiveData<Event<GameSettingsDraft>>()
     val loaded: LiveData<Event<GameSettingsDraft>> = _loaded
 
@@ -94,7 +89,6 @@ class GameSettingsViewModel @Inject constructor(
         )
     }
 
-    /** A round count can only be chosen if the list has not already passed it. */
     fun isSelectable(roundCount: SkatRoundCount): Boolean =
         roundCount.value >= (_draft.value?.roundsPlayed ?: 0)
 
@@ -150,10 +144,6 @@ class GameSettingsViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Deletes the list this sheet was opened on. The fragment confirms first; on success the
-     * game screen has nothing left to show, so it closes itself.
-     */
     fun deleteGame()
     {
         val gameId = gameId ?: return

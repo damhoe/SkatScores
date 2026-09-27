@@ -6,12 +6,7 @@ import com.damhoe.skatscores.player.domain.PlayerName
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
-/**
- * The four people at a Doppelkopf table, in seat order.
- *
- * Doppelkopf is played by exactly four, so unlike Skat the seats have no names of their own -
- * who is Re and who is Kontra is decided per round, not by where somebody sits.
- */
+/** Seats have no roles of their own: Re and Kontra are decided per round. */
 @Parcelize
 data class DoppelkopfParticipants(
     val seats: List<Participant>,
@@ -24,19 +19,15 @@ data class DoppelkopfParticipants(
         }
     }
 
-    /** The participants in table order, i.e. the column order used on the score board. */
+    /** Table order, which is also the score board's column order. */
     fun asList(): List<Participant> = seats
 
-    /** Column of the given participant on the score board, or null if not at this table. */
     fun seatOf(participantId: UUID): Int? =
         seats.indexOfFirst { it.id == participantId }.takeIf { it >= 0 }
 
     fun find(participantId: UUID): Participant? = seats.firstOrNull { it.id == participantId }
 
-    /**
-     * The same people at the same seats, but as fresh participants. Used when starting a new
-     * list from an old one: participant ids are per-list, so they must not be shared.
-     */
+    /** Same people and seats with new ids; participant ids belong to one list. */
     fun asNewParticipants(): DoppelkopfParticipants =
         DoppelkopfParticipants(seats.map { it.withId(UUID.randomUUID()) })
 
@@ -44,10 +35,7 @@ data class DoppelkopfParticipants(
     {
         const val SEAT_COUNT = 4
 
-        /**
-         * Placeholder seats for a list that has just been created. These are visible until
-         * the players are picked in the game view, so they read as slots to fill.
-         */
+        /** Placeholder guests until the players are picked. */
         fun createNew(): DoppelkopfParticipants = DoppelkopfParticipants(
             List(SEAT_COUNT) { seat -> Participant.Guest(PlayerName("Player ${seat + 1}")) }
         )

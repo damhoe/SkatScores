@@ -15,30 +15,21 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 /**
- * The current shape of the database, and the only place it is written down.
- *
- * A fresh install runs [create]; an existing one reaches the same shape through [Migrations].
- * Each table is a function of its name so a migration can build the new version next to the
- * old one (`skat_games_new`), copy the rows across and swap them - SQLite cannot add a
- * constraint or drop a column in place.
- *
- * Every foreign key names the final table, never a `_new` one: the migration renames the new
- * tables into place, and a reference to a temporary name would be left dangling.
+ * The current schema; [Migrations] brings older databases here. Tables take their name as a
+ * parameter so a migration can build `<table>_new` beside the old one. Foreign keys always name
+ * the final table, since the `_new` tables are renamed into place.
  */
 object Schema
 {
     const val VERSION = 3
 
-    /**
-     * The one timestamp format in the database: ISO-8601 UTC with milliseconds, which
-     * [java.time.Instant.parse] reads and which sorts as text in time order.
-     */
+    /** ISO-8601 UTC with milliseconds: parseable by [Instant.parse], sorts as text. */
     const val NOW = "strftime('%Y-%m-%dT%H:%M:%fZ', 'now')"
 
     private val TIMESTAMP_FORMAT: DateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneOffset.UTC)
 
-    /** [instant] the way [NOW] writes it, so the two compare as text. */
+    /** Same format as [NOW], so the two compare as text. */
     fun timestamp(instant: Instant): String = TIMESTAMP_FORMAT.format(instant)
 
     private const val SYNC_COLUMNS = """
@@ -66,7 +57,7 @@ object Schema
             deleted_at TEXT
         )"""
 
-    /** Seats live and die with their list, so they carry no tombstone of their own. */
+    /** No `deleted_at`: seats are hidden with their list. */
     fun createSkatParticipants(table: String = SkatParticipantsTable.TABLE_NAME) = """
         CREATE TABLE $table (
             id TEXT PRIMARY KEY NOT NULL,
@@ -79,11 +70,7 @@ object Schema
             UNIQUE (game_id, name)
         )"""
 
-    /**
-     * Rounds are ordered by `seq` (see [RoundSequence]) and not numbered: a dense round number
-     * had to be rewritten for every later round whenever one was removed, and two devices
-     * adding a round at the same time would both have claimed the same number.
-     */
+    /** Rounds are ordered by `seq` (see [RoundSequence]); the round number is the position. */
     fun createSkatScores(table: String = SkatScoresTable.TABLE_NAME) = """
         CREATE TABLE $table (
             id TEXT PRIMARY KEY NOT NULL,
@@ -129,7 +116,7 @@ object Schema
             UNIQUE (game_id, name)
         )"""
 
-    /** The seat columns hold participant ids but are not foreign keys, as before. */
+    /** The Re and soloist columns hold participant ids but are not foreign keys. */
     fun createDoppelkopfScores(table: String = DoppelkopfScoresTable.TABLE_NAME) = """
         CREATE TABLE $table (
             id TEXT PRIMARY KEY NOT NULL,
@@ -160,15 +147,7 @@ object Schema
             value TEXT NOT NULL
         )"""
 
-    /**
-     * The indexes of the current version. Created after the tables are in place under their
-     * final names, since an index belongs to the table it was created on.
-     *
-     * - A player name is unique among the players still there; a deleted one frees its name.
-     * - Every lookup by `player_id` - statistics, list counts, unlinking a deleted player -
-     *   used to scan the whole participants table, because the only index started with
-     *   `game_id`.
-     */
+    /** Created once the tables have their final names. Deleted players free their name. */
     val INDEXES = listOf(
         """CREATE UNIQUE INDEX idx_players_live_name
             ON players(name) WHERE deleted_at IS NULL""",
@@ -183,7 +162,6 @@ object Schema
         "CREATE INDEX idx_doppelkopf_participants_player ON doppelkopf_participants(player_id)",
     )
 
-    /** A fresh database at [VERSION]. */
     fun create(db: SQLiteDatabase)
     {
         listOf(
@@ -202,10 +180,7 @@ object Schema
         seedDeviceId(db)
     }
 
-    /**
-     * Names this installation for [RoundSequence]. Generated once and kept; a device that
-     * restores a backup of another carries its id along, which only costs a tie-breaker.
-     */
+    /** Identifies this installation in [RoundSequence]; a restored backup carries it along. */
     fun seedDeviceId(db: SQLiteDatabase)
     {
         db.execSQL(

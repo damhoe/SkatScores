@@ -11,11 +11,7 @@ import com.damhoe.skatscores.game.skat.domain.scores.RoundGame
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 import com.damhoe.skatscores.game.skat.domain.scores.SkatSuit
 
-/**
- * Turns a round into the two lines shown in the round log, e.g. "Clubs · Hand" over
- * "Marlon · Won · 3×". Both the log and the round sheet read their labels from here so the
- * wording cannot drift apart.
- */
+/** E.g. "Clubs · Hand" over "Marlon · Won · 3×"; shared by the round log, sheet and sharing. */
 class RoundTextFactory(private val context: Context)
 {
     fun titleOf(score: SkatScore): String
@@ -36,7 +32,6 @@ class RoundTextFactory(private val context: Context)
     {
         val declarerName = score.declarerId
             ?.let { id -> participants.asList().firstOrNull { it.id == id }?.displayName }
-        // Nobody played, so there is nothing to say about it beyond the title.
             ?: return NO_DETAIL
 
         val parts = mutableListOf(declarerName, resultLabel(score))
@@ -70,7 +65,7 @@ class RoundTextFactory(private val context: Context)
         }
     )
 
-    /** Only the modifiers that are actually set, in the order the sheet shows them. */
+    /** In the order the sheet shows them. */
     private fun modifierLabels(draft: RoundDraft): List<String> = buildList {
         if (draft.hand) add(context.getString(R.string.label_hand))
         if (draft.announced && draft.schwarz) add(context.getString(R.string.label_schwarz_announced))
@@ -84,13 +79,9 @@ class RoundTextFactory(private val context: Context)
     {
         private const val SEPARATOR = " · "
 
-        /** Shown instead of a subtitle when a round has nothing to describe. */
         private const val NO_DETAIL = "–"
 
-        /**
-         * [RoundDraft.fromScore] only needs participants to resolve the declarer, which the
-         * title does not use.
-         */
+        /** Only used to resolve the declarer, which the title ignores. */
         private val participantsUnused = SkatParticipants.createNew()
 
         fun suitOf(score: SkatScore): SkatSuit? = when (score)
@@ -110,7 +101,6 @@ class RoundTextFactory(private val context: Context)
             SkatSuit.GRAND -> null
         }
 
-        /** Suits carry their own ink: black for clubs and spades, warm red for the others. */
         @AttrRes
         fun suitColorAttrOf(suit: SkatSuit): Int = when (suit)
         {

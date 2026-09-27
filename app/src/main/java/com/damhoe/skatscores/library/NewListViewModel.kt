@@ -19,12 +19,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * A new list while it is being set up.
- *
- * Seats are deliberately absent: a new list starts with placeholder players and they are
- * chosen in the game view.
- */
+/** No seats: a new list starts with placeholder players. */
 data class NewListDraft(
     val title: String = "",
     val roundCount: SkatRoundCount = SkatGameDefaults.RoundCount,
@@ -60,7 +55,6 @@ class NewListViewModel @Inject constructor(
 
     fun setScoringMode(scoringMode: SkatScoringMode) = edit { it.copy(scoringMode = scoringMode) }
 
-    /** Starts from a suggested name and round count, usually taken from the last list. */
     fun prefill(title: String, roundCount: SkatRoundCount?)
     {
         edit { draft ->
@@ -92,7 +86,6 @@ class NewListViewModel @Inject constructor(
                     ),
                     title = title,
                     playerCount = SkatGameDefaults.PlayerCount,
-                    // No participants: the use case seats placeholder guests.
                 )
             ).fold(
                 onSuccess = { game -> _navigateToGame.postValue(Event(game.id)) },

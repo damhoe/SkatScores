@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Stands in for the hero card when nothing is running but earlier lists are still on the
-  screen. It keeps the slot filled with something tappable - the same new-list sheet the
-  centre button opens - rather than leaving a stray line of grey text above quick start.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 

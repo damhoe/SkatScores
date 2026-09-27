@@ -11,12 +11,8 @@ data class UpdateSkatParticipantsCommand(
 )
 
 /**
- * Changes who sits at the seats of a running list.
- *
- * A change is a correction: a seat keeps its participant id whoever takes it over, so the
- * rounds already recorded stay in that column and are credited to the name now on it - which
- * is right for filling in "Player 1" or fixing a mix-up. Swapping two people moves their
- * rounds with the names, for the same reason.
+ * A seat change is a correction: the seat keeps its participant id, so its recorded rounds are
+ * credited to the new name.
  */
 class UpdateSkatParticipantsUseCase @Inject constructor(
     private val skatGameRepository: SkatGamesRepository,

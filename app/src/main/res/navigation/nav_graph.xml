@@ -16,11 +16,6 @@
                 app:popExitAnim="@android:anim/slide_out_right" />
     </dialog>
 
-    <!--
-      New lists are created in NewListSheetFragment, shown directly by LibraryFragment, so
-      there is no setup destination any more.
-    -->
-
     <fragment
             android:id="@+id/player_statistics"
             android:name="com.damhoe.skatscores.player.adapter.presentation.PlayerStatisticsFragment"
@@ -67,12 +62,7 @@
         <action
                 android:id="@+id/action_home_to_app_settings"
                 app:destination="@id/app_settings" />
-        <!--
-          The two bottom-bar tabs are peers. Players sits on top of the lists rather than
-          beside them because the lists are the start destination, so singleTop keeps a
-          double tap from stacking a second copy; the players screen itself offers no way
-          back down except the tab, which pops rather than pushes.
-        -->
+        <!-- singleTop, so a double tap on the tab does not stack a second players screen. -->
         <action
                 android:id="@+id/action_library_to_playersFragment"
                 app:destination="@id/playersFragment"
@@ -97,10 +87,6 @@
             android:label="SkatGameNavGraph"
             app:startDestination="@id/skatGameFragment">
 
-        <!--
-          Rounds are entered and edited in RoundEntrySheetFragment, which is shown directly by
-          SkatGameFragment rather than being a navigation destination.
-        -->
         <fragment
                 android:id="@+id/skatGameFragment"
                 android:name="com.damhoe.skatscores.game.skat.adapter.presentation.SkatGameFragment"
@@ -116,20 +102,12 @@
                 tools:layout="@layout/fragment_game_graph" />
     </navigation>
 
-    <!--
-      Doppelkopf gets a graph of its own rather than sharing the Skat one: the two games have
-      separate screens, and the graph is also the scope of the view model the game screen and
-      its chart share, so a single graph would hand a Doppelkopf list to the Skat view model.
-    -->
+    <!-- A graph of its own: it scopes the view model shared by the game and chart screens. -->
     <navigation
             android:id="@+id/doppelkopf_game_nav_graph"
             android:label="DoppelkopfGameNavGraph"
             app:startDestination="@id/doppelkopfGameFragment">
 
-        <!--
-          Rounds are entered and edited in DoppelkopfRoundEntrySheetFragment, which is shown
-          directly by DoppelkopfGameFragment rather than being a navigation destination.
-        -->
         <fragment
                 android:id="@+id/doppelkopfGameFragment"
                 android:name="com.damhoe.skatscores.game.doppelkopf.adapter.presentation.DoppelkopfGameFragment"

@@ -23,19 +23,16 @@ inline fun <T> SQLiteDatabase.run(block: SQLiteDatabase.() -> Result<T>): Result
 }
 
 /**
- * An UPDATE that also stamps the row the way every write to a syncable table must: `updated_at`
- * set to now and `version` bumped by one. ContentValues cannot express `version + 1`, hence a
- * statement of its own. Returns the number of rows changed.
- *
- * [conflict] goes between UPDATE and the table, e.g. "OR IGNORE" to skip the rows a unique
- * constraint refuses instead of failing the whole statement.
+ * UPDATE that also sets `updated_at` and bumps `version`, as every write to a syncable table
+ * must. With [ignoreConflicts], rows a unique constraint refuses are skipped instead of failing
+ * the statement. Returns the number of rows changed.
  */
 fun SQLiteDatabase.updateStamped(
     table: String,
     values: ContentValues,
     where: String,
     whereArgs: Array<out Any?>,
-    conflict: String = "",
+    ignoreConflicts: Boolean = false,
 ): Int
 {
     val keys = values.keySet().toList()
@@ -44,15 +41,11 @@ fun SQLiteDatabase.updateStamped(
         assignments = keys.map { "$it = ?" },
         args = keys.map { values.get(it) } + whereArgs,
         where = where,
-        conflict = conflict,
+        conflict = if (ignoreConflicts) "OR IGNORE" else "",
     )
 }
 
-/**
- * Marks the rows deleted rather than removing them, so the delete is a change like any other
- * that a sync can carry; see [SyncColumns.COLUMN_DELETED_AT]. Rows already deleted are left
- * alone. Returns the number of rows newly deleted.
- */
+/** Tombstones rows not yet deleted; returns how many were newly deleted. */
 fun SQLiteDatabase.softDelete(table: String, where: String, whereArgs: Array<out Any?>): Int =
     executeStamped(
         table = table,

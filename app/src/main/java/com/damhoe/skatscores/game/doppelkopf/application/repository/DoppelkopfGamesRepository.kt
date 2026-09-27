@@ -12,17 +12,17 @@ interface DoppelkopfGamesRepository
 {
     suspend fun save(game: DoppelkopfGame): Result<Unit>
 
-    /** Deletes the list with its seats and rounds. Deleting one that is gone is not an error. */
+    /** Deleting a missing list succeeds. */
     suspend fun delete(id: UUID): Result<Unit>
 
     suspend fun updateSettings(id: UUID, title: Title, settings: DoppelkopfSettings): Result<Unit>
 
-    /** Who sits where; each seat keeps its participant id, so recorded rounds stay put. */
+    /** Seats keep their participant ids, so recorded rounds follow the new names. */
     suspend fun updateSeats(id: UUID, participants: DoppelkopfParticipants): Result<Unit>
 
     suspend fun get(id: UUID): Result<DoppelkopfGame?>
 
-    /** The list as it is now and after every write to it; null once it is gone. */
+    /** Emits after every write to the list; null once it is gone. */
     fun observe(id: UUID): Flow<DoppelkopfGame?>
 
     fun getAll(): Flow<List<DoppelkopfGamePreview>>

@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Doppelkopf round sheet. One surface for entering a new round and for editing an existing one,
-  with a live points preview in the footer.
-
-  The order follows the round itself: who was Re, who won, how clearly, what was announced, and
-  finally the extras. The party section is the only one that has to be filled in - until both
-  queens are placed (or a soloist picked) there is nothing to save, so Save stays disabled and
-  the hint says what is missing.
-
-  The chip rows are plain LinearLayouts rather than MaterialButtonToggleGroups, matching the
-  Skat sheet: the group fuses its children into a connected bar and strips their inner corners,
-  and exclusivity is enforced in the fragment anyway so that a restored draft selects the right
-  chip.
+  Chip rows are LinearLayouts, not toggle groups, which would fuse the chips into one bar.
+  Single selection is enforced in the fragment.
 -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -38,7 +28,6 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/bg_drag_handle" />
 
-            <!-- Header -->
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -69,7 +58,6 @@
 
             </LinearLayout>
 
-            <!-- Normal or solo -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/title_round_kind" />
@@ -97,7 +85,6 @@
 
             </LinearLayout>
 
-            <!-- Who was Re. Two seats for a normal round, one for a solo. -->
             <TextView
                     android:id="@+id/seatsLabel"
                     style="@style/Widget.App.Sheet.SectionLabel"
@@ -158,7 +145,6 @@
                     android:textAppearance="@style/TextAppearance.App.Meta"
                     tools:text="Mark the two players who had the queens of clubs." />
 
-            <!-- Which solo was played. Only shown for a solo. -->
             <LinearLayout
                     android:id="@+id/soloKindBlock"
                     android:layout_width="match_parent"
@@ -171,7 +157,6 @@
                         style="@style/Widget.App.Sheet.SectionLabel"
                         android:text="@string/title_solo_kind" />
 
-                <!-- Filled by the fragment: one chip per solo the domain knows. -->
                 <LinearLayout
                         android:id="@+id/soloKindRows"
                         android:layout_width="match_parent"
@@ -180,7 +165,6 @@
 
             </LinearLayout>
 
-            <!-- Winner -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/title_winner" />
@@ -210,7 +194,6 @@
 
             </LinearLayout>
 
-            <!-- How clearly it was won. Cumulative, so one chip says it all. -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/title_win_level" />
@@ -221,7 +204,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
-            <!-- Re / Kontra called during the round. -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/title_dk_announcements" />
@@ -249,7 +231,6 @@
 
             </LinearLayout>
 
-            <!-- Levels announced in advance. -->
             <TextView
                     style="@style/Widget.App.Sheet.SectionLabel"
                     android:text="@string/title_dk_absage" />
@@ -260,7 +241,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
-            <!-- Extras. Only a list scored with them shows this at all. -->
             <LinearLayout
                     android:id="@+id/extraPointsBlock"
                     android:layout_width="match_parent"
@@ -295,7 +275,6 @@
 
             </LinearLayout>
 
-            <!-- Footer: live points preview and save -->
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  One player in the chart legend: colour swatch, name, and the value at whatever round is
-  selected (or the final total when nothing is).
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
 

@@ -24,7 +24,6 @@ data class SkatGameDto(
     val playedAt: Instant,
     val playerCount: SkatPlayerCount,
 
-    // Settings
     val roundCount: Int,
     val scoringMode: SkatScoringMode,
 )
@@ -56,7 +55,6 @@ data class SkatGameDto(
 
     companion object
     {
-        /** What the settings sheet can change; the rest of the row is fixed once written. */
         fun settingsValues(title: String, roundCount: Int, scoringMode: SkatScoringMode) =
             contentValuesOf(
                 SkatGamesTable.COLUMN_TITLE to title,

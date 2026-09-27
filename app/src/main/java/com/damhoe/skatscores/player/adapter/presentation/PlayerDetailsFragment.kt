@@ -76,12 +76,9 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details)
                     .actionPlayerDetailsToPlayerStatistics(args.playerId)
             )
         }
-        // Deleting a profile takes the player off every list they sat in and cannot be undone,
-        // so it asks first - the same door the lists have had all along.
         binding.buttonDelete.setOnClickListener {
             val player = viewModel.playerDetails.value ?: return@setOnClickListener
-            // No navigateUp here: removing clears the player shown, and the observer below
-            // leaves on that. Leaving here as well popped the players list too.
+            // The playerDetails observer navigates up once the player is cleared.
             requireContext().confirmPlayerDeletion(player.name.value) {
                 viewModel.removePlayer(player)
             }
@@ -94,26 +91,18 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details)
             player?.let { updateUi(it) } ?: findNavController().navigateUp()
         }
 
-        // Separate from the player: the colour comes from where this player sits among all of
-        // them, and that list arrives on its own schedule.
         viewModel.avatarSlot.observe(viewLifecycleOwner) { slot ->
             PlayerAvatar.bind(binding.initial, slot)
         }
 
-        // Statistics arrive after the player, so the counts are bound separately.
         viewModel.playerStatistics.observe(viewLifecycleOwner) { statistics ->
-            // Profiles are shared, so the lists are named by game rather than added up.
             binding.numberGames.text =
                 resources.listCountLabel(statistics?.listCounts ?: ListCounts())
 
-            // The statistics row carries its own headline number, so the row says what is
-            // behind it rather than being a label and a chevron.
             val rounds = statistics?.totalRoundsPlayed ?: 0
             binding.statsValue.text =
                 resources.getQuantityString(R.plurals.label_round_count, rounds, rounds)
 
-            // Rates need rounds behind them, so the row only opens once there are any; an
-            // empty page reached from a live-looking row reads as a dead end.
             binding.buttonStats.isEnabled = rounds > 0
             binding.buttonStats.alpha = if (rounds > 0) 1f else 0.5f
         }
@@ -141,7 +130,6 @@ class PlayerDetailsFragment : Fragment(R.layout.fragment_player_details)
             .newInstance(
                 titleRes = R.string.dialog_title_edit_player_name,
                 initialName = player.name.value,
-                // The player keeps their own name, so it must not read as taken.
                 takenNames = viewModel.playerNames().filterNot { it == player.name.value },
             )
             .show(parentFragmentManager, PlayerNameSheetFragment.TAG)

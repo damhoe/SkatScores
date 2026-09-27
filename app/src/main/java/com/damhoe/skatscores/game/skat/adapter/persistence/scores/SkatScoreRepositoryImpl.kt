@@ -20,17 +20,7 @@ class SkatScoreRepositoryImpl @Inject constructor(
     private val databaseChanges: DatabaseChanges,
 ) : SkatScoresRepository
 {
-    /*
-     * Every suspending call here hops to IO. The adapter below is blocking, and these are
-     * called from viewModelScope, whose dispatcher is the main thread - so without this,
-     * writing a round was database work on the thread drawing the frame.
-     */
-
-    /**
-     * Appends a round. Where it goes is decided here, inside the write, from what the database
-     * holds at that moment - not from a round count a screen read earlier, which an undo in
-     * between would have made stale.
-     */
+    /** The position is decided inside the write, from what the database holds then. */
     override suspend fun insert(score: SkatScore, gameId: UUID): Result<Unit> =
         withContext(Dispatchers.IO) {
             dbHelper
@@ -41,11 +31,9 @@ class SkatScoreRepositoryImpl @Inject constructor(
                 .onSuccess { databaseChanges.notifyChanged(DataTopic.SKAT) }
         }
 
-    /** Replaces a round with an edited version; it keeps its place in the list. */
     override suspend fun update(score: SkatScore, gameId: UUID): Result<Unit> =
         withContext(Dispatchers.IO) {
-            // The seq is not written on an edit, so any value does here.
-            scoreDao.update(SkatScoreDto.mapFrom(score, gameId, seq = ""))
+            scoreDao.update(SkatScoreDto.mapFrom(score, gameId, SEQ_IGNORED_ON_UPDATE))
                 .onSuccess { databaseChanges.notifyChanged(DataTopic.SKAT) }
         }
 
@@ -57,4 +45,9 @@ class SkatScoreRepositoryImpl @Inject constructor(
                     if (removed != null) databaseChanges.notifyChanged(DataTopic.SKAT)
                 }
         }
+
+    private companion object
+    {
+        const val SEQ_IGNORED_ON_UPDATE = ""
+    }
 }

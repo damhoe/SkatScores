@@ -10,6 +10,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * onCreate and onUpgrade run in one transaction that is only committed, with the new version,
+ * if they return normally; nothing in them may swallow an exception.
+ */
 @Singleton
 class DatabaseHelper @Inject constructor(
     @param:ApplicationContext val context: Context,
@@ -29,18 +33,8 @@ class DatabaseHelper @Inject constructor(
 
     init
     {
-        // Readers get connections of their own and no longer queue behind a write - the home
-        // screen reloading while a round is saved, say.
         setWriteAheadLoggingEnabled(true)
     }
-
-    /*
-     * onCreate and onUpgrade run in one transaction that SQLiteOpenHelper only commits - and
-     * only then records the new version - if they return normally. Nothing in them catches:
-     * a statement that fails rolls the whole thing back, and the next open tries again.
-     * Swallowing it, as this used to, left a database at the new version with a table missing
-     * for good.
-     */
 
     override fun onCreate(database: SQLiteDatabase)
     {
@@ -57,11 +51,7 @@ class DatabaseHelper @Inject constructor(
         Migrations.migrate(database, oldVersion, newVersion)
     }
 
-    /**
-     * A database newer than this build - a backup restored onto an older install, a rolled-back
-     * update - is refused rather than recreated. SQLiteOpenHelper would throw here anyway; the
-     * point is to never "fix" it by dropping tables, which would take the user's lists with it.
-     */
+    /** Refuses rather than recreating the database, which would lose every list. */
     override fun onDowngrade(
         database: SQLiteDatabase,
         oldVersion: Int,
@@ -75,10 +65,8 @@ class DatabaseHelper @Inject constructor(
     }
 
     /**
-     * Foreign keys are switched on here, after create or upgrade, rather than in onConfigure:
-     * a migration rebuilds tables, and with enforcement on, dropping the old table would
-     * cascade its delete into the new one. This goes through the helper's own setter so every
-     * pooled connection gets it, not just the one that happened to run a PRAGMA.
+     * Foreign keys are enabled here rather than in onConfigure: migrations rebuild tables, and
+     * dropping an old table with enforcement on would cascade into the new one.
      */
     override fun onOpen(db: SQLiteDatabase)
     {
@@ -87,12 +75,8 @@ class DatabaseHelper @Inject constructor(
     }
 
     /**
-     * Runs [operation] as one unit of work, rolling back if any part of it fails.
-     *
-     * The body has to throw for that to happen - androidx's transaction marks the work
-     * successful unless it does - and every adapter in this app reports failure as a
-     * `Result` instead. So the body is expected to `getOrThrow()` each step, and the
-     * exception that comes out is turned back into a `Result` here.
+     * Rolls back when [operation] throws. Adapters report failure as a `Result`, so the body
+     * must `getOrThrow()` each step for a failure to roll back.
      */
     fun <T> transaction(operation: (db: SQLiteDatabase) -> T): Result<T>
     {
@@ -106,11 +90,7 @@ class DatabaseHelper @Inject constructor(
         }
     }
 
-    /**
-     * Runs several reads against one snapshot. A list read as three queries - the list, its
-     * seats, its rounds - could otherwise see a round saved in between the second and the
-     * third, or a list deleted halfway through.
-     */
+    /** Several reads against one consistent snapshot. */
     fun <T> read(operation: (db: SQLiteDatabase) -> T): Result<T>
     {
         return try

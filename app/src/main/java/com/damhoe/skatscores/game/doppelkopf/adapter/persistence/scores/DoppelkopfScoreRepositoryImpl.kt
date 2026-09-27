@@ -20,16 +20,7 @@ class DoppelkopfScoreRepositoryImpl @Inject constructor(
     private val databaseChanges: DatabaseChanges,
 ) : DoppelkopfScoresRepository
 {
-    /*
-     * Every suspending call here hops to IO. The adapter below is blocking, and these are
-     * called from viewModelScope, whose dispatcher is the main thread - so without this,
-     * writing a round was database work on the thread drawing the frame.
-     */
-
-    /**
-     * Appends a round. Where it goes is decided here, inside the write, from what the database
-     * holds at that moment - not from a round count a screen read earlier.
-     */
+    /** The position is decided inside the write, from what the database holds then. */
     override suspend fun insert(score: DoppelkopfScore, gameId: UUID): Result<Unit> =
         withContext(Dispatchers.IO) {
             dbHelper
@@ -40,11 +31,9 @@ class DoppelkopfScoreRepositoryImpl @Inject constructor(
                 .onSuccess { databaseChanges.notifyChanged(DataTopic.DOPPELKOPF) }
         }
 
-    /** Replaces a round with an edited version; it keeps its place in the list. */
     override suspend fun update(score: DoppelkopfScore, gameId: UUID): Result<Unit> =
         withContext(Dispatchers.IO) {
-            // The seq is not written on an edit, so any value does here.
-            scoreDao.update(DoppelkopfScoreDto.mapFrom(score, gameId, seq = ""))
+            scoreDao.update(DoppelkopfScoreDto.mapFrom(score, gameId, SEQ_IGNORED_ON_UPDATE))
                 .onSuccess { databaseChanges.notifyChanged(DataTopic.DOPPELKOPF) }
         }
 
@@ -56,4 +45,9 @@ class DoppelkopfScoreRepositoryImpl @Inject constructor(
                     if (removed != null) databaseChanges.notifyChanged(DataTopic.DOPPELKOPF)
                 }
         }
+
+    private companion object
+    {
+        const val SEQ_IGNORED_ON_UPDATE = ""
+    }
 }

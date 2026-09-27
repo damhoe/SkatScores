@@ -15,10 +15,6 @@ sealed interface Participant :
         get() = name.value
     val name: PlayerName
 
-    /**
-     * The same participant under an existing id. Used to keep a seat's identity stable when
-     * the person sitting there is replaced, so that recorded scores keep their column.
-     */
     fun withId(id: UUID): Participant = when (this)
     {
         is Registered -> copy(id = id)
@@ -56,10 +52,7 @@ sealed interface Participant :
 
     companion object
     {
-        /**
-         * Turns a typed name into a participant: a name that matches a registered player
-         * links the seat to that profile, anything else becomes a guest.
-         */
+        /** A name matching a registered player (ignoring case) links to that profile. */
         fun resolve(name: PlayerName, registeredPlayers: List<Player>): Participant
         {
             val player = registeredPlayers

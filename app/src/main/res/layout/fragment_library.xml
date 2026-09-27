@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Home. A plain vertical stack on the background colour: the illustration header, the
-  overlapping sheet and the -36dp offset of the old layout are gone.
--->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -15,9 +11,9 @@
             tools:context=".library.LibraryFragment">
 
         <!--
-          fillViewport is what lets the empty state have a centre: with it the column below
-          is stretched to the height of the screen when it is shorter, so the weight on the
-          empty block has something to take.
+          fillViewport lets the empty state's weight take the rest of the screen. The column
+          does not clip to its padding, so the recent list can reach the edges via a negative
+          margin.
         -->
         <androidx.core.widget.NestedScrollView
                 android:id="@+id/content"
@@ -29,11 +25,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-            <!--
-              clipToPadding is off so the recent-lists RecyclerView can pull itself back out
-              to the screen edges with a negative margin; everything else in here stays on
-              the gutter.
-            -->
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -42,7 +33,6 @@
                     android:paddingStart="@dimen/screen_side_padding"
                     android:paddingEnd="@dimen/screen_side_padding">
 
-                <!-- 1. Header row -->
                 <LinearLayout
                         android:id="@+id/headerRow"
                         android:layout_width="match_parent"
@@ -72,11 +62,6 @@
 
                 </LinearLayout>
 
-                <!--
-                  2. Game-type filters. Lists never mix, so this picks which game the whole
-                  screen below is about: the running list, quick start and recently played all
-                  follow it, and the centre button opens that game's setup sheet.
-                -->
                 <LinearLayout
                         android:id="@+id/gameTypeFilters"
                         android:layout_width="match_parent"
@@ -101,7 +86,6 @@
 
                 </LinearLayout>
 
-                <!-- 3. Active-list hero card -->
                 <include
                         android:id="@+id/activeList"
                         layout="@layout/view_active_list_card"
@@ -109,7 +93,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp" />
 
-                <!-- Stands in for the hero card while no list of this game is running -->
                 <include
                         android:id="@+id/noRunningList"
                         layout="@layout/view_no_running_list"
@@ -119,7 +102,6 @@
                         android:visibility="gone"
                         tools:visibility="visible" />
 
-                <!-- 3. Quick start -->
                 <TextView
                         android:id="@+id/quickStartLabel"
                         android:layout_width="match_parent"
@@ -135,7 +117,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp" />
 
-                <!-- 4. Recently played -->
                 <LinearLayout
                         android:id="@+id/recentHeader"
                         android:layout_width="match_parent"
@@ -179,11 +160,6 @@
                         tools:itemCount="4"
                         tools:listitem="@layout/item_game_preview" />
 
-                <!--
-                  5. Nothing recorded for this game yet. Everything above it except the
-                  greeting and the filters is hidden, and the weight hands it the rest of the
-                  screen so the prompt sits in the middle of it.
-                -->
                 <include
                         android:id="@+id/emptyState"
                         layout="@layout/view_empty_library"
@@ -197,7 +173,6 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <!-- 5. Bottom bar: floating pill with a straddling centre FAB -->
         <com.google.android.material.card.MaterialCardView
                 android:id="@+id/bottomPill"
                 style="@style/Widget.App.BottomPill"
@@ -225,7 +200,6 @@
                         app:icon="@drawable/ic_lists_24dp"
                         app:iconTint="?attr/colorPrimary" />
 
-                <!-- Cradle for the centre button. -->
                 <Space
                         android:layout_width="@dimen/bottom_pill_cradle_width"
                         android:layout_height="match_parent" />

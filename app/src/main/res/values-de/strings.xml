@@ -1,4 +1,3 @@
-<!-- values-de/strings.xml -->
 <resources>
     <string name="title_statistics">Statistik</string>
     <string name="title_new_game">Neue Liste</string>
@@ -38,10 +37,6 @@
     <string name="description_diamonds">Karo</string>
     <string name="text_info_no_players">Erstelle Spieler*innenprofile für deine Listen.</string>
     <string name="description_create_new_profile">Erstelle ein neues Profil.</string>
-    <string name="passe_text">Es wurde eingepasst.</string>
-    <string name="overbid_text">Es wurde überreizt.</string>
-    <string name="won_text">Gewonnen</string>
-    <string name="lost_text">Verloren</string>
     <string name="title_library">Listen</string>
     <string name="title_players_short">Spieler</string>
     <string name="language_preference_title">Sprache</string>
@@ -60,7 +55,6 @@
     <string name="title_game_settings">Optionen</string>
     <string name="title_bidding">Reizwert</string>
 
-    <!-- Home / Game redesign -->
     <string name="greeting_morning">Guten Morgen</string>
     <string name="greeting_afternoon">Guten Tag</string>
     <string name="greeting_evening">Guten Abend</string>
@@ -130,7 +124,6 @@
         <item quantity="other">%d Runden schon gespielt</item>
     </plurals>
 
-    <!-- Doppelkopf -->
     <string name="title_new_doppelkopf_list">Neue Doppelkopf-Liste</string>
     <string name="default_doppelkopf_list_title">Doppelkopf</string>
     <string name="description_new_doppelkopf_list">Neue Doppelkopf-Liste</string>
@@ -165,7 +158,6 @@
     <string name="format_points_for_party">Punkte für %s</string>
     <string name="format_solo_round">Solo · %s</string>
 
-    <!-- Statistik -->
     <string name="format_rounds_in_lists">%1$s in %2$s</string>
     <plurals name="label_round_count">
         <item quantity="one">1 Runde</item>
