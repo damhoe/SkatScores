@@ -53,7 +53,8 @@ android {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release").takeIf { it.storeFile != null }
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -81,13 +82,10 @@ android {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.8.0")
-    implementation("androidx.compose.material3:material3:1.4.0")
     implementation("com.google.android.material:material:1.14.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.2")
     implementation("androidx.navigation:navigation-fragment-ktx:2.10.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.10.0")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("androidx.activity:activity:1.13.0")
     implementation("androidx.hilt:hilt-navigation-fragment:1.4.0")
 
@@ -99,7 +97,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
-    androidTestImplementation("org.junit.jupiter:junit-jupiter:6.1.3")
 
     // Livecycle
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.11.0")

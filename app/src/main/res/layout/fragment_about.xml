@@ -87,7 +87,7 @@
                         android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:lineSpacingMultiplier="1.35"
-                        android:text="@string/text_about"
+                        tools:text="@string/text_about"
                         android:textAppearance="@style/TextAppearance.App.Meta"
                         tools:ignore="TextContrastCheck" />
 

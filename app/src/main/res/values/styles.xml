@@ -3,8 +3,6 @@
 
     <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="colorPrimaryDark">?attr/colorSecondary</item>
         <!--
           No android:fontFamily here on purpose - see the type scale below. A family set on
@@ -48,8 +46,6 @@
     -->
     <style name="Theme.App.Dark" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
         <!-- No android:fontFamily here either; the scale carries it. -->
         <item name="textAppearanceDisplayLarge">@style/TextAppearance.App.M3.DisplayLarge</item>
         <item name="textAppearanceDisplayMedium">@style/TextAppearance.App.M3.DisplayMedium</item>

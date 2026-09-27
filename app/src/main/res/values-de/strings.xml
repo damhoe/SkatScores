@@ -15,7 +15,7 @@
     <string name="hint_player2">Spieler 2</string>
     <string name="hint_player1">Spieler 1</string>
     <string name="default_list_title">Liste</string>
-    <string name="text_about">Version 1.0 (2023)\nCopyright © Genf 2023\nDiese App wurde von Damian Hoedtke entwickelt.</string>
+    <string name="text_about">Version %1$s\nDiese App wurde von Damian Hoedtke entwickelt.</string>
     <string name="description_new_score">Neuer Eintrag</string>
     <string name="german">Deutsch</string>
     <string name="english">Englisch</string>
@@ -46,11 +46,6 @@
     <string name="title_players_short">Spieler</string>
     <string name="language_preference_title">Sprache</string>
     <string name="theme_preference_title">Design</string>
-    <string name="system_preference_category_title">System</string>
-    <string name="behavior_preference_category_title">Funktion</string>
-    <string name="badge_preference_title">Zeige offene Listen als Badge</string>
-    <string name="other_preference_category_title">Sonstiges</string>
-    <string name="about_preference_title">Über die App</string>
     <string name="hint_player_name">Name</string>
     <string name="dialog_title_create_player">Erstelle Spieler*in</string>
     <string name="dialog_title_button_cancel">Abbrechen</string>

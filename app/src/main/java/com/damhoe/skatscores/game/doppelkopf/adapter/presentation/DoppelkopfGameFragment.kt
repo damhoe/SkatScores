@@ -139,7 +139,7 @@ class DoppelkopfGameFragment :
 
         viewModel.navigateUpEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
-                Snackbar.make(requireView(), "Failed to load game details.", Snackbar.LENGTH_LONG)
+                Snackbar.make(requireView(), R.string.error_load_list, Snackbar.LENGTH_LONG)
                     .show()
                 findNavController().navigateUp()
             }

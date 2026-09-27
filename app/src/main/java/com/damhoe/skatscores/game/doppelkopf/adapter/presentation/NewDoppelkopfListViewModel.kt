@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.game.doppelkopf.adapter.presentation
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -46,8 +48,8 @@ class NewDoppelkopfListViewModel @Inject constructor(
     private val _navigateToGame = MutableLiveData<Event<UUID>>()
     val navigateToGame: LiveData<Event<UUID>> = _navigateToGame
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
 
     val roundCountOptions: List<DoppelkopfRoundCount> =
         DoppelkopfRoundCount.ALLOWED_VALUES.map { DoppelkopfRoundCount(it) }
@@ -92,7 +94,7 @@ class NewDoppelkopfListViewModel @Inject constructor(
             ).fold(
                 onSuccess = { game -> _navigateToGame.postValue(Event(game.id)) },
                 onFailure = {
-                    _errorMessage.postValue(Event(it.message ?: "Could not create list"))
+                    _errorMessage.postValue(userError(R.string.error_create_list, it))
                 }
             )
         }

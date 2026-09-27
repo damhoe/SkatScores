@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.game.doppelkopf.adapter.presentation
 
+import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -39,6 +40,12 @@ class SharedDoppelkopfGameViewModel @Inject constructor(
     /** True while an undo is on its way to the database; the button waits for it. */
     private val _isUndoing = MutableLiveData(false)
     val isUndoing: LiveData<Boolean> = _isUndoing
+
+    /**
+     * When the last undo finished. An undo is over in a few milliseconds, faster than a
+     * double tap, so waiting for it alone let one accidental double tap take back two rounds.
+     */
+    private var lastUndoAt = 0L
 
     /** Fires once a round has actually been taken back. */
     private val _roundRemovedEvent = MutableLiveData<Event<Unit>>()
@@ -81,17 +88,21 @@ class SharedDoppelkopfGameViewModel @Inject constructor(
     {
         val gameId = gameId ?: return
         if (_isUndoing.value == true) return
+        if (SystemClock.elapsedRealtime() - lastUndoAt < UNDO_COOLDOWN_MS) return
 
         _isUndoing.value = true
         viewModelScope.launch {
             useCases.removeLastScore(gameId)
                 .onSuccess { removed -> if (removed) _roundRemovedEvent.value = Event(Unit) }
+            lastUndoAt = SystemClock.elapsedRealtime()
             _isUndoing.value = false
         }
     }
 
     companion object
     {
+        private const val UNDO_COOLDOWN_MS = 700L
+
         const val ARG_GAME_ID = "gameId"
     }
 }

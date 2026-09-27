@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.library
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -132,8 +134,8 @@ class LibraryViewModel @Inject constructor(
     private val _navigateToGame = MutableLiveData<Event<OpenList>>()
     val navigateToGame: LiveData<Event<OpenList>> = _navigateToGame
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
 
     private fun withoutActiveList(): List<ListPreview>
     {
@@ -202,7 +204,7 @@ class LibraryViewModel @Inject constructor(
             onSuccess = { game ->
                 _navigateToGame.postValue(Event(OpenList(GameType.SKAT, game.id)))
             },
-            onFailure = { _errorMessage.postValue(Event(it.message ?: "Could not start list")) }
+            onFailure = { _errorMessage.postValue(userError(R.string.error_start_list, it)) }
         )
     }
 
@@ -227,7 +229,7 @@ class LibraryViewModel @Inject constructor(
             onSuccess = { game ->
                 _navigateToGame.postValue(Event(OpenList(GameType.DOPPELKOPF, game.id)))
             },
-            onFailure = { _errorMessage.postValue(Event(it.message ?: "Could not start list")) }
+            onFailure = { _errorMessage.postValue(userError(R.string.error_start_list, it)) }
         )
     }
 

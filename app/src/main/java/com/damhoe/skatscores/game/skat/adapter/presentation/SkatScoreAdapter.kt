@@ -126,15 +126,15 @@ class SkatScoreAdapter(
                     oldItem.score.declarerId == newItem.score.declarerId &&
                     oldItem.score.result == newItem.score.result &&
                     oldItem.score.toPoints() == newItem.score.toPoints() &&
-                    shownFields(oldItem.score) == shownFields(newItem.score)
+                    shownKey(oldItem.score) == shownKey(newItem.score)
 
-        private fun shownFields(score: SkatScore): List<Any?> = when (score)
+        private fun shownKey(score: SkatScore): String = when (score)
         {
-            is SkatScore.Passe -> listOf(SkatScore.Passe::class)
-            is SkatScore.Overbid -> listOf(SkatScore.Overbid::class, score.suit, score.bid)
-            is SkatScore.Null -> listOf(SkatScore.Null::class, score.options)
+            is SkatScore.Passe -> "passe"
+            is SkatScore.Overbid -> "overbid|${score.suit.name}|${score.bid.value}"
+            is SkatScore.Null -> "null|${score.options?.name}"
             is SkatScore.GrandOrSuit ->
-                listOf(SkatScore.GrandOrSuit::class, score.suit, score.spitzen, score.options)
+                "suit|${score.suit.name}|${score.spitzen.value}|${score.options?.name}"
         }
     }
 }

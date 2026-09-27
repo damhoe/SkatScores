@@ -1,15 +1,12 @@
 package com.damhoe.skatscores
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.navigateUp
 import com.damhoe.skatscores.app.settings.AppSettingsViewModel
@@ -35,23 +32,15 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
 
-        if (savedInstanceState != null && Build.VERSION.SDK_INT >= 35) {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-        }
         enableEdgeToEdge()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        viewModel.language.observe(this) {
-            settingsManager.setLanguage(it)
-        }
+        // The language is not applied here: AppCompat restores the one chosen, and a new
+        // install follows the system. See SettingsManager.currentLanguage.
         viewModel.theme.observe(this) {
             settingsManager.setTheme(it)
         }
-
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
-        val navController = navHostFragment!!.navController
     }
 
     val appBarConfiguration: AppBarConfiguration

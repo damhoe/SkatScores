@@ -115,6 +115,14 @@
                         android:layout_weight="1"
                         android:text="@string/english" />
 
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/languageSystem"
+                        style="@style/Widget.App.Sheet.Chip"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/mode_system_title" />
+
             </LinearLayout>
 
             <!-- About -->

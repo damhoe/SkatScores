@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.game.skat.adapter.presentation
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -66,8 +68,8 @@ class PlayerSeatsViewModel @Inject constructor(
     private val _dismissEvent = MutableLiveData<Event<Unit>>()
     val dismissEvent: LiveData<Event<Unit>> = _dismissEvent
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
 
     val allRegisteredPlayers: StateFlow<List<Player>> = playerUseCases.getAllPlayers()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
@@ -163,7 +165,7 @@ class PlayerSeatsViewModel @Inject constructor(
             ).fold(
                 onSuccess = { _dismissEvent.postValue(Event(Unit)) },
                 onFailure = {
-                    _errorMessage.postValue(Event(it.message ?: "Could not save players"))
+                    _errorMessage.postValue(userError(R.string.error_save_players, it))
                 }
             )
         }

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_player_name_exists">Ein/e Spieler*in mit diesem Namen existiert bereits.</string>
+    <string name="error_load_list">Diese Liste konnte nicht geöffnet werden.</string>
+    <string name="error_save_settings">Die Einstellungen konnten nicht gespeichert werden.</string>
+    <string name="error_delete_list">Die Liste konnte nicht gelöscht werden.</string>
+    <string name="error_save_players">Die Spieler*innen konnten nicht gespeichert werden.</string>
+    <string name="error_create_list">Die Liste konnte nicht angelegt werden.</string>
+    <string name="error_save_round">Die Runde konnte nicht gespeichert werden.</string>
+    <string name="error_start_list">Die Liste konnte nicht gestartet werden.</string>
 </resources>

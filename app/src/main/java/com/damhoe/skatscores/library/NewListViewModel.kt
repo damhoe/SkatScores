@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.library
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -46,8 +48,8 @@ class NewListViewModel @Inject constructor(
     private val _navigateToGame = MutableLiveData<Event<UUID>>()
     val navigateToGame: LiveData<Event<UUID>> = _navigateToGame
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
 
     val roundCountOptions: List<SkatRoundCount> =
         SkatRoundCount.ALLOWED_VALUES.map { SkatRoundCount(it) }
@@ -95,7 +97,7 @@ class NewListViewModel @Inject constructor(
             ).fold(
                 onSuccess = { game -> _navigateToGame.postValue(Event(game.id)) },
                 onFailure = {
-                    _errorMessage.postValue(Event(it.message ?: "Could not create list"))
+                    _errorMessage.postValue(userError(R.string.error_create_list, it))
                 }
             )
         }

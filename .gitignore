@@ -18,3 +18,10 @@ local.properties
 keystore.properties
 *.jks
 *.keystore
+
+# Per-developer IDE state: devices, deployment targets, assistant settings.
+/.idea/appInsightsSettings.xml
+/.idea/deploymentTargetDropDown.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deviceManager.xml
+/.idea/studiobot.xml

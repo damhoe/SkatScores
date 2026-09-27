@@ -25,6 +25,13 @@ class AboutFragment : Fragment(R.layout.fragment_about)
         // NavController-driven toolbar adopts the next destination's label while the pop
         // animation is still running, which flashed that label over this screen.
         binding.backButton.setOnClickListener { findNavController().navigateUp() }
+
+        // From the installed package, so it can never fall behind the release again.
+        val versionName = requireContext().packageManager
+            .getPackageInfo(requireContext().packageName, 0)
+            .versionName
+            .orEmpty()
+        binding.text.text = getString(R.string.text_about, versionName)
     }
 
     private fun applyInsets()

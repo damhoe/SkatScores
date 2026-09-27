@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.game.skat.adapter.presentation.scores
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -51,8 +53,8 @@ class RoundEntryViewModel @Inject constructor(
     private val _dismissEvent = MutableLiveData<Event<Unit>>()
     val dismissEvent: LiveData<Event<Unit>> = _dismissEvent
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
 
     /**
      * True from the tap on save until the write comes back. A second tap in between would
@@ -172,7 +174,7 @@ class RoundEntryViewModel @Inject constructor(
                 onSuccess = { _dismissEvent.postValue(Event(Unit)) },
                 onFailure = {
                     _isSaving.value = false
-                    _errorMessage.postValue(Event(it.message ?: "Could not save round"))
+                    _errorMessage.postValue(userError(R.string.error_save_round, it))
                 }
             )
         }

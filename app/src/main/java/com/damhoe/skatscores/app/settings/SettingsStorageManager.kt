@@ -13,6 +13,10 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * The theme choice. The language is not kept here: it belongs to AppCompat and the system;
+ * see [SettingsManager.currentLanguage].
+ */
 @Singleton
 class SettingsStorageManager @Inject constructor(
     @ApplicationContext context: Context
@@ -24,21 +28,14 @@ class SettingsStorageManager @Inject constructor(
     private val storage = context.dataStore
 
     private val defaultTheme = context.getString(R.string.system_theme_preference_value)
-    private val defaultLanguage = context.getString(R.string.german_preference_value)
 
     companion object
     {
         val THEME = stringPreferencesKey("themePreference")
-        val LANGUAGE = stringPreferencesKey("languagePreference")
     }
 
     val themeFlow: Flow<String> = storage.data
         .map { preferences -> preferences[THEME] ?: defaultTheme }
 
     suspend fun setTheme(theme: String) = storage.edit { it[THEME] = theme }
-
-    val languageFlow: Flow<String> = storage.data
-        .map { preferences -> preferences[LANGUAGE] ?: defaultLanguage }
-
-    suspend fun setLanguage(language: String) = storage.edit { it[LANGUAGE] = language }
 }

@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="app_languages">
-        <item>@string/german</item>
-        <item>@string/english</item>
-    </string-array>
-
-    <string-array name="app_languages_values">
-        <item>@string/german_preference_value</item>
-        <item>@string/english_preference_value</item>
-    </string-array>
-
-    <string-array name="ui_modes">
-        <item>@string/mode_day_title</item>
-        <item>@string/mode_night_title</item>
-        <item>@string/mode_system_title</item>
-    </string-array>
-
-    <string-array name="ui_modes_values">
-        <item>@string/day_theme_preference_value</item>
-        <item>@string/night_theme_preference_value</item>
-        <item>@string/system_theme_preference_value</item>
-    </string-array>
-
     <!--
       Per-player avatar hues, picked by player id. values-night carries the dark set under the
       same name, so the lookup in PlayerAvatar stays theme-agnostic.
@@ -36,13 +14,4 @@
         <item>@color/md_theme_light_avatar_6</item>
     </array>
 
-    <integer-array name="allowed_rounds">
-        <item>3</item>
-        <item>6</item>
-        <item>9</item>
-        <item>12</item>
-        <item>18</item>
-        <item>24</item>
-        <item>32</item>
-    </integer-array>
 </resources>

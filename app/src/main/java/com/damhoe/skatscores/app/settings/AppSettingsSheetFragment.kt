@@ -24,6 +24,9 @@ class AppSettingsSheetFragment : BottomSheetDialogFragment()
     lateinit var viewModelFactory: ViewModelFactory
     private val viewModel: AppSettingsViewModel by viewModels({ requireActivity() }) { viewModelFactory }
 
+    @Inject
+    lateinit var settingsManager: SettingsManager
+
     // Preference values, read once so the chips and the stored setting cannot drift apart.
     private lateinit var systemTheme: String
     private lateinit var dayTheme: String
@@ -82,21 +85,24 @@ class AppSettingsSheetFragment : BottomSheetDialogFragment()
         checkOnly(current, chips.values)
     }
 
+    /** Empty is "follow the system", which is also where a new install starts. */
     private fun setupLanguageChips()
     {
         val chips = mapOf(
             german to binding.languageGerman,
             english to binding.languageEnglish,
+            "" to binding.languageSystem,
         )
 
         chips.forEach { (value, chip) ->
             chip.setOnClickListener {
-                viewModel.setLanguage(value)
                 checkOnly(chip, chips.values)
+                // Recreates the activity in the new language, taking this sheet with it.
+                settingsManager.setLanguage(value)
             }
         }
 
-        val current = chips[viewModel.language.value] ?: binding.languageGerman
+        val current = chips[settingsManager.currentLanguage()] ?: binding.languageSystem
         checkOnly(current, chips.values)
     }
 

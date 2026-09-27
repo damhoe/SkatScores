@@ -115,12 +115,18 @@ class DoppelkopfScoreAdapter(
         override fun areItemsTheSame(oldItem: Round, newItem: Round): Boolean =
             oldItem.score.id == newItem.score.id
 
-        // DoppelkopfScore subclasses are not data classes, so compare what the row shows.
+        // DoppelkopfScore subclasses are not data classes, so compare what the row shows -
+        // including who played Re and which solo, so editing only those still redraws it.
         override fun areContentsTheSame(oldItem: Round, newItem: Round): Boolean =
             oldItem.number == newItem.number &&
                     oldItem.value == newItem.value &&
-                    oldItem.score.winner == newItem.score.winner &&
-                    oldItem.score.soloistId == newItem.score.soloistId &&
-                    oldItem.score.value == newItem.score.value
+                    oldItem.score.value == newItem.score.value &&
+                    shownKey(oldItem.score) == shownKey(newItem.score)
+
+        private fun shownKey(score: DoppelkopfScore): String = when (score)
+        {
+            is DoppelkopfScore.Normal -> "normal|${score.reSeats.sorted()}"
+            is DoppelkopfScore.Solo -> "solo|${score.soloist}|${score.soloKind.name}"
+        } + "|${score.winner.name}"
     }
 }
