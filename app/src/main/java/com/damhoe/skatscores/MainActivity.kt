@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
+        // Before super.onCreate, so the first frame already uses the stored theme.
+        (application as SkatScoresApp).applyStoredTheme()
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
