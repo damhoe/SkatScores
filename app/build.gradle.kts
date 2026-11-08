@@ -84,15 +84,15 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("com.google.android.material:material:1.14.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.2")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.10.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.10.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.10.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.10.2")
     implementation("androidx.activity:activity:1.13.0")
     implementation("androidx.hilt:hilt-navigation-fragment:1.4.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
     // Real SQLite on the JVM, for the migration and repository tests.
-    testImplementation("org.robolectric:robolectric:4.16")
+    testImplementation("org.robolectric:robolectric:4.17")
     testImplementation("androidx.test:core-ktx:1.7.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
@@ -108,8 +108,8 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.60.1")
 
     // Data store
-    implementation("androidx.datastore:datastore-core-android:1.2.1")
-    implementation("androidx.datastore:datastore-preferences:1.2.1")
+    implementation("androidx.datastore:datastore-core-android:1.3.0")
+    implementation("androidx.datastore:datastore-preferences:1.3.0")
 
 
     // Coroutines
