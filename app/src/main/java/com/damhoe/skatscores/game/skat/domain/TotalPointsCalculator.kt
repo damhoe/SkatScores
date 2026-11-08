@@ -3,21 +3,13 @@ package com.damhoe.skatscores.game.skat.domain
 import com.damhoe.skatscores.game.common.WonOrLost.LOST
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 
-/**
- * What one seat's total is made of.
- *
- * The parts are what the score board shows when the tournament breakdown is expanded, and
- * they add up to [total] by construction, so the board can never disagree with the sum
- * printed above it.
- */
 data class SeatBreakdown(
-    /** Sum of the game values of the rounds this seat declared - no bonuses. */
+    /** Game values of the rounds this seat declared, without bonuses. */
     val gameValue: Int,
     val declarerWins: Int,
     val declarerLosses: Int,
-    /** Rounds this seat defended and the declarer lost. */
     val defenderWins: Int,
-    /** ±50 per declared game, won or lost. */
+    /** ±50 per declared game. */
     val soloBonus: Int,
     /** 40 per round in [defenderWins]. */
     val againstBonus: Int,
@@ -27,14 +19,9 @@ data class SeatBreakdown(
 }
 
 /**
- * Aggregates the scores of a game into one point value per seat.
- *
- * Seats are indexed in the order of [SkatParticipants.asList], which is also the column
- * order of the score board. The game value of a round always goes to the declarer only.
- *
- * With [SkatScoringMode.TOURNAMENT] (Seeger-Fabian) two bonuses are added on top:
- * the declarer gets [BONUS_SOLO] for a won and -[BONUS_SOLO] for a lost game, and every
- * defender gets [BONUS_AGAINST] whenever the declarer loses.
+ * Seats are indexed as in [SkatParticipants.asList]. The game value goes to the declarer only.
+ * Tournament scoring (Seeger-Fabian) adds ±[BONUS_SOLO] for the declarer and [BONUS_AGAINST]
+ * for each defender when the declarer loses.
  */
 class TotalPointsCalculator(
     private val participants: SkatParticipants,
@@ -53,7 +40,6 @@ class TotalPointsCalculator(
         isTournamentScoring: Boolean
     ): IntArray = calculateBreakdown(scores).toPoints(isTournamentScoring)
 
-    /** One entry per seat, in the column order of the score board. */
     fun calculateBreakdown(scores: List<SkatScore>): List<SeatBreakdown>
     {
         val gameValue = IntArray(seatCount)
@@ -63,7 +49,6 @@ class TotalPointsCalculator(
 
         for (score in scores)
         {
-            // Passed rounds, and rounds whose declarer has left the table, pay nobody.
             val declarerSeat = seatOf(score) ?: continue
 
             gameValue[declarerSeat] += score.toPoints()
@@ -94,10 +79,7 @@ class TotalPointsCalculator(
         }
     }
 
-    /**
-     * Running totals per seat, starting at 0 before the first round, with one entry
-     * appended per played round.
-     */
+    /** Per seat: 0, then the running total after each round. */
     fun createPointsHistory(
         scores: List<SkatScore>,
         isTournamentScoring: Boolean
@@ -107,7 +89,6 @@ class TotalPointsCalculator(
 
         for (score in scores)
         {
-            // One round at a time through the same aggregation the totals use.
             val points = calculateBreakdown(listOf(score)).toPoints(isTournamentScoring)
             pointsHistory.forEachIndexed { seat, seatHistory ->
                 seatHistory.add(seatHistory.last() + points[seat])
@@ -122,10 +103,7 @@ class TotalPointsCalculator(
             this[seat].let { if (isTournamentScoring) it.total else it.gameValue }
         }
 
-    /**
-     * Seat of the declarer, or null for a passed round and for scores whose declarer is
-     * not at this table any more.
-     */
+    /** Null for a passed round or a declarer no longer at the table. */
     private fun seatOf(score: SkatScore): Int? =
         score.declarerId?.let { participants.seatOf(it) }
 }

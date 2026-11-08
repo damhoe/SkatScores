@@ -42,13 +42,10 @@ class GamePreviewAdapter(private val itemClickListener: GamePreviewItemClickList
             preview.playerNames.joinToString(", ")
         )
 
-        // Only a played list has a leader worth showing.
         holder.winnerDelta.text = preview.leaderTotal?.let { signed(it) }.orEmpty()
 
         holder.itemView.setOnClickListener { itemClickListener.notifySelect(preview) }
 
-        // Deleting a list is a long press rather than a swipe: a swipe was too easy to trigger
-        // by accident on a row that is mostly there to be opened.
         holder.itemView.setOnLongClickListener {
             itemClickListener.notifyDelete(preview)
             true
@@ -63,14 +60,7 @@ class GamePreviewAdapter(private val itemClickListener: GamePreviewItemClickList
         val winnerDelta: TextView = itemView.findViewById(R.id.winnerDelta)
     }
 
-    /**
-     * 1dp hairline between rows, matching the handoff's divider.
-     *
-     * [inset] is the row's own side gutter in pixels. The rows run the full width of the
-     * screen so that a press or a swipe reaches the edges, but the hairline still stops
-     * where the text does - a divider that ran edge to edge would read as a section break
-     * rather than as a separator between two rows.
-     */
+    /** [inset]: the row's side gutter in pixels, so the line stops where the text does. */
     class DividerDecoration(
         private val color: Int,
         private val inset: Int = 0,

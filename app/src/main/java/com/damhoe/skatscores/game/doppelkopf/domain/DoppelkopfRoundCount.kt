@@ -3,12 +3,7 @@ package com.damhoe.skatscores.game.doppelkopf.domain
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-/**
- * How many rounds a Doppelkopf list runs for.
- *
- * Only multiples of four are offered, so that the deal comes back round to every seat the
- * same number of times.
- */
+/** Multiples of four, so every seat deals equally often. */
 @JvmInline
 @Parcelize
 value class DoppelkopfRoundCount(val value: Int) : Parcelable

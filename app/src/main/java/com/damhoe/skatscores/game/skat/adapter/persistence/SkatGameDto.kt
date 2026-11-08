@@ -11,6 +11,7 @@ import com.damhoe.skatscores.game.skat.domain.SkatScoringMode
 import com.damhoe.skatscores.game.skat.domain.SkatSettings
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 import com.damhoe.skatscores.persistence.DatabaseConstants.SkatGamesTable
+import com.damhoe.skatscores.persistence.Schema
 import com.damhoe.skatscores.persistence.getIntOrNull
 import com.damhoe.skatscores.persistence.getStringOrNull
 import com.damhoe.skatscores.persistence.getUuidOrNull
@@ -21,21 +22,17 @@ data class SkatGameDto(
     val id: UUID,
     val title: String,
     val playedAt: Instant,
-    val updatedAt: Instant?,
     val playerCount: SkatPlayerCount,
 
-    // Settings
     val roundCount: Int,
     val scoringMode: SkatScoringMode,
 )
 {
     fun toContentValues() = contentValuesOf(
         SkatGamesTable.COLUMN_ID to id.toString(),
-        SkatGamesTable.COLUMN_TITLE to title,
-        SkatGamesTable.COLUMN_PLAYER_COUNT to playerCount.ordinal,
-        SkatGamesTable.COLUMN_ROUND_COUNT to roundCount,
-        SkatGamesTable.COLUMN_SCORING_MODE to scoringMode.name,
-    )
+        SkatGamesTable.COLUMN_PLAYED_AT to Schema.timestamp(playedAt),
+        SkatGamesTable.COLUMN_PLAYER_COUNT to playerCount.name,
+    ).apply { putAll(settingsValues(title, roundCount, scoringMode)) }
 
     fun toSkatGame(
         participants: SkatParticipants,
@@ -58,13 +55,19 @@ data class SkatGameDto(
 
     companion object
     {
+        fun settingsValues(title: String, roundCount: Int, scoringMode: SkatScoringMode) =
+            contentValuesOf(
+                SkatGamesTable.COLUMN_TITLE to title,
+                SkatGamesTable.COLUMN_ROUND_COUNT to roundCount,
+                SkatGamesTable.COLUMN_SCORING_MODE to scoringMode.name,
+            )
+
         fun mapFrom(game: SkatGame): SkatGameDto
         {
             return SkatGameDto(
                 id = game.id,
                 title = game.title.value,
                 playedAt = game.playedAt,
-                updatedAt = null,
                 playerCount = SkatPlayerCount.THREE_PLAYERS,
                 roundCount = game.settings.roundCount.value,
                 scoringMode = game.settings.scoringMode,
@@ -79,11 +82,9 @@ data class SkatGameDto(
             val playedAtString = cursor.getStringOrNull(SkatGamesTable.COLUMN_PLAYED_AT)
             val playedAt = Instant.parse(playedAtString)
 
-            val updatedAtString = cursor.getStringOrNull(SkatGamesTable.COLUMN_UPDATED_AT)
-            val updatedAt = Instant.parse(updatedAtString)
-
-            val playerCountInt = cursor.getIntOrNull(SkatGamesTable.COLUMN_PLAYER_COUNT)!!
-            val playerCount = SkatPlayerCount.entries[playerCountInt]
+            val playerCount = SkatPlayerCount.valueOf(
+                cursor.getStringOrNull(SkatGamesTable.COLUMN_PLAYER_COUNT)!!
+            )
 
             val roundCount = cursor.getIntOrNull(SkatGamesTable.COLUMN_ROUND_COUNT)!!
 
@@ -95,7 +96,6 @@ data class SkatGameDto(
                 title = title,
                 playerCount = playerCount,
                 playedAt = playedAt,
-                updatedAt = updatedAt,
                 roundCount = roundCount,
                 scoringMode = scoringMode
             )

@@ -25,7 +25,8 @@ data class SkatScoreDto(
     val id: UUID,
     val gameId: UUID,
     val skatParticipantId: UUID? = null,
-    val round: Int,
+    /** See [RoundSequence]. */
+    val seq: String,
     val type: SkatScoreType,
 
     val wonOrLost: WonOrLost? = null,
@@ -45,7 +46,7 @@ data class SkatScoreDto(
         SkatScoresTable.COLUMN_GAME_ID to gameId.toString(),
         SkatScoresTable.COLUMN_SKAT_PARTICIPANTS_ID to skatParticipantId?.toString(),
         SkatScoresTable.COLUMN_SCORE_TYPE to type.name,
-        SkatScoresTable.COLUMN_ROUND to round,
+        SkatScoresTable.COLUMN_SEQ to seq,
         SkatScoresTable.COLUMN_WON_OR_LOST to wonOrLost?.name,
         SkatScoresTable.COLUMN_OVERBID_SUIT to overbidSuit?.name,
         SkatScoresTable.COLUMN_OVERBID_BID_VALUE to overbidBidValue,
@@ -54,6 +55,12 @@ data class SkatScoreDto(
         SkatScoresTable.COLUMN_GRAND_OR_SUIT_SPITZEN_VALUE to grandOrSuitSpitzenValue,
         SkatScoresTable.COLUMN_GRAND_OR_SUIT_OPTIONS to grandOrSuitOptions?.name,
     )
+
+    fun toEditContentValues() = toContentValues().apply {
+        remove(SkatScoresTable.COLUMN_ID)
+        remove(SkatScoresTable.COLUMN_GAME_ID)
+        remove(SkatScoresTable.COLUMN_SEQ)
+    }
 
     fun toSkatScore(): SkatScore
     {
@@ -93,7 +100,7 @@ data class SkatScoreDto(
         fun mapFrom(
             skatScore: SkatScore,
             gameId: UUID,
-            round: Int,
+            seq: String,
         ): SkatScoreDto
         {
             return when (skatScore)
@@ -102,14 +109,14 @@ data class SkatScoreDto(
                     id = skatScore.id,
                     gameId = gameId,
                     type = SkatScoreType.PASSE,
-                    round = round,
+                    seq = seq,
                 )
 
                 is SkatScore.Overbid -> SkatScoreDto(
                     id = skatScore.id,
                     gameId = gameId,
                     type = SkatScoreType.OVERBID,
-                    round = round,
+                    seq = seq,
                     skatParticipantId = skatScore.skatParticipant,
                     overbidSuit = skatScore.suit,
                     overbidBidValue = skatScore.bid.value
@@ -119,7 +126,7 @@ data class SkatScoreDto(
                     id = skatScore.id,
                     gameId = gameId,
                     type = SkatScoreType.NULL,
-                    round = round,
+                    seq = seq,
                     skatParticipantId = skatScore.skatParticipant,
                     wonOrLost = skatScore.wonOrLost,
                     nullOptions = skatScore.options
@@ -129,7 +136,7 @@ data class SkatScoreDto(
                     id = skatScore.id,
                     gameId = gameId,
                     type = SkatScoreType.GRAND_OR_SUIT,
-                    round = round,
+                    seq = seq,
                     skatParticipantId = skatScore.skatParticipant,
                     wonOrLost = skatScore.wonOrLost,
                     grandOrSuitSuit = skatScore.suit,
@@ -145,7 +152,7 @@ data class SkatScoreDto(
             val gameId = cursor.getUuidOrNull(SkatScoresTable.COLUMN_GAME_ID)!!
             val skatParticipantId =
                 cursor.getUuidOrNull(SkatScoresTable.COLUMN_SKAT_PARTICIPANTS_ID)
-            val round = cursor.getIntOrNull(SkatScoresTable.COLUMN_ROUND)!!
+            val seq = cursor.getStringOrNull(SkatScoresTable.COLUMN_SEQ)!!
             val typeString = cursor.getStringOrNull(SkatScoresTable.COLUMN_SCORE_TYPE)!!
             val type = SkatScoreType.valueOf(typeString)
             val wonOrLost = cursor.getStringOrNull(SkatScoresTable.COLUMN_WON_OR_LOST)
@@ -168,7 +175,7 @@ data class SkatScoreDto(
                 gameId = gameId,
                 type = type,
                 skatParticipantId = skatParticipantId,
-                round = round,
+                seq = seq,
                 wonOrLost = wonOrLost,
                 overbidSuit = overbidSuit,
                 overbidBidValue = overbidBidValue,

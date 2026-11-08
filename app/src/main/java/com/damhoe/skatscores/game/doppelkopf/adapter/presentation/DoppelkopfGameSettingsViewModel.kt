@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.game.doppelkopf.adapter.presentation
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -22,15 +24,10 @@ data class DoppelkopfSettingsDraft(
     val title: String = "",
     val roundCount: DoppelkopfRoundCount? = null,
     val scoringMode: DoppelkopfScoringMode = DoppelkopfGameDefaults.ScoringMode,
-    /** Rounds already played; the list cannot be shortened below this. */
+    /** The round count cannot go below this. */
     val roundsPlayed: Int = 0,
 )
 
-/**
- * Everything about a running Doppelkopf list that is not a round and not who is playing it: the
- * name, the round count and the scoring mode. The four seats are their own screen,
- * [DoppelkopfPlayerSeatsViewModel].
- */
 @HiltViewModel
 class DoppelkopfGameSettingsViewModel @Inject constructor(
     private val useCases: DoppelkopfGameUseCases,
@@ -49,7 +46,7 @@ class DoppelkopfGameSettingsViewModel @Inject constructor(
     private val _canSave = MutableLiveData(false)
     val canSave: LiveData<Boolean> = _canSave
 
-    /** Fires once, so the text fields are written by the load and by nobody else after it. */
+    /** One-shot, so only the initial load writes into the fields. */
     private val _loaded = MutableLiveData<Event<DoppelkopfSettingsDraft>>()
     val loaded: LiveData<Event<DoppelkopfSettingsDraft>> = _loaded
 
@@ -59,8 +56,8 @@ class DoppelkopfGameSettingsViewModel @Inject constructor(
     private val _deletedEvent = MutableLiveData<Event<Unit>>()
     val deletedEvent: LiveData<Event<Unit>> = _deletedEvent
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
 
     val roundCountOptions: List<DoppelkopfRoundCount> =
         DoppelkopfRoundCount.ALLOWED_VALUES.map { DoppelkopfRoundCount(it) }
@@ -93,7 +90,6 @@ class DoppelkopfGameSettingsViewModel @Inject constructor(
         )
     }
 
-    /** A round count can only be chosen if the list has not already passed it. */
     fun isSelectable(roundCount: DoppelkopfRoundCount): Boolean =
         roundCount.value >= (_draft.value?.roundsPlayed ?: 0)
 
@@ -144,16 +140,12 @@ class DoppelkopfGameSettingsViewModel @Inject constructor(
             ).fold(
                 onSuccess = { _dismissEvent.postValue(Event(Unit)) },
                 onFailure = {
-                    _errorMessage.postValue(Event(it.message ?: "Could not save settings"))
+                    _errorMessage.postValue(userError(R.string.error_save_settings, it))
                 }
             )
         }
     }
 
-    /**
-     * Deletes the list this sheet was opened on. The fragment confirms first; on success the
-     * game screen has nothing left to show, so it closes itself.
-     */
     fun deleteGame()
     {
         val gameId = gameId ?: return
@@ -162,7 +154,7 @@ class DoppelkopfGameSettingsViewModel @Inject constructor(
             useCases.deleteGame(gameId).fold(
                 onSuccess = { _deletedEvent.postValue(Event(Unit)) },
                 onFailure = {
-                    _errorMessage.postValue(Event(it.message ?: "Could not delete list"))
+                    _errorMessage.postValue(userError(R.string.error_delete_list, it))
                 }
             )
         }

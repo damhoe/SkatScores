@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  One row in "Recently played". The row itself opens the list; the old Fortsetzen and
-  delete buttons are gone — delete is swipe-to-dismiss with an undo snackbar.
--->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"

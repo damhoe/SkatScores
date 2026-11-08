@@ -1,6 +1,7 @@
 package com.damhoe.skatscores.game.skat.domain
 
 import com.damhoe.skatscores.game.common.Title
+import com.damhoe.skatscores.game.common.dealerSeat
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 import java.time.Instant
 import java.time.Instant.now
@@ -19,17 +20,7 @@ data class SkatGame(
 
     val isTournamentScoring = settings.scoringMode == SkatScoringMode.TOURNAMENT
 
-    val dealerPosition = calculateDealerPosition()
-
-    private fun calculateDealerPosition(): Int
-    {
-        val firstDealerPosition = 0
-        val currentRound: Int = scores.size
-        val playerCount = participants.asList().size
-        // floorMod, not %: before the first round the offset is negative and Kotlin's
-        // remainder would return -1 instead of the last seat.
-        return Math.floorMod(firstDealerPosition - 1 + currentRound, playerCount)
-    }
+    val dealerPosition = dealerSeat(roundsPlayed = scores.size, participants.asList().size)
 
     companion object
     {
@@ -52,7 +43,6 @@ data class SkatGame(
     fun calculateTotalPoints() =
         totalPointsCalculator.calculateTotalPoints(scores, isTournamentScoring)
 
-    /** What each seat's total is made of - shown by the tournament breakdown. */
     fun calculateBreakdown() = totalPointsCalculator.calculateBreakdown(scores)
 
     fun createPointsHistory() =

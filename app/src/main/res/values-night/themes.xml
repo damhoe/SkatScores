@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.SkatScores" parent="Theme.App.Dark">
-        <!-- Colors -->
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
@@ -35,7 +34,6 @@
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
         <item name="colorControlNormal">@color/md_theme_dark_onSurface</item>
         <item name="colorCategorySubtitle">@color/md_theme_dark_tertiary</item>
-        <!-- Suits read as ink and warm red, not as body text and an error state. -->
         <item name="colorClubs">@color/md_theme_dark_onSurfaceVariant</item>
         <item name="colorSpades">@color/md_theme_dark_onSurfaceVariant</item>
         <item name="colorHearts">@color/md_theme_dark_suit_red</item>

@@ -1,14 +1,17 @@
 package com.damhoe.skatscores.game.skat.adapter.persistence.players
 
-import android.util.Log
+import androidx.core.content.contentValuesOf
+import com.damhoe.skatscores.game.skat.adapter.persistence.SkatGamesPersistenceAdapter.Companion.liveGamesCondition
+import com.damhoe.skatscores.game.skat.adapter.persistence.SkatGamesPersistenceAdapter.Companion.sinceArgs
+import com.damhoe.skatscores.persistence.DatabaseConstants.SkatGamesTable
 import com.damhoe.skatscores.persistence.DatabaseConstants.SkatParticipantsTable
 import com.damhoe.skatscores.persistence.DatabaseHelper
 import com.damhoe.skatscores.persistence.mapToList
-import com.damhoe.skatscores.persistence.mapToOneOrNull
+import com.damhoe.skatscores.persistence.run
+import com.damhoe.skatscores.persistence.updateStamped
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
-
-private const val TAG = "SkatParticipantsAdapter"
 
 class SkatParticipantsPersistenceAdapter @Inject constructor(
     val databaseHelper: DatabaseHelper,
@@ -18,90 +21,10 @@ class SkatParticipantsPersistenceAdapter @Inject constructor(
     {
         return databaseHelper.writableDatabase.run {
             skatPlayers.forEach { skatPlayer ->
-                val rowId = insert(
-                    SkatParticipantsTable.TABLE_NAME,
-                    null,
-                    skatPlayer.toContentValues()
-                )
-
-                if (rowId > 0)
-                {
-                    Log.d(TAG, "Inserted SkatPlayer: ${skatPlayer.id}")
-                    Result.success(Unit)
-                } else
-                {
-                    val errorMessage = "Failed to insert SkatPlayer: ${skatPlayer.id}"
-                    throw IllegalStateException(errorMessage)
-                }
+                insertOrThrow(SkatParticipantsTable.TABLE_NAME, null, skatPlayer.toContentValues())
             }
 
             Result.success(Unit)
-        }
-    }
-
-    fun get(id: UUID): Result<SkatParticipantDto?>
-    {
-        return databaseHelper.readableDatabase.run {
-            val query =
-                "SELECT * FROM ${SkatParticipantsTable.TABLE_NAME} WHERE ${SkatParticipantsTable.COLUMN_ID} = ?"
-            val selectionArgs = arrayOf(id.toString())
-
-            val skatPlayerDto = rawQuery(query, selectionArgs)
-                .mapToOneOrNull { cursor ->
-                    SkatParticipantDto.mapFromCursor(cursor)
-                }
-
-            Result.success(skatPlayerDto)
-        }
-    }
-
-    fun delete(id: UUID): Result<Unit>
-    {
-        return databaseHelper.writableDatabase.run {
-            val whereClause = "${SkatParticipantsTable.COLUMN_ID} = ?"
-            val whereArgs = arrayOf(id.toString())
-
-            val rowsAffected = this.delete(
-                SkatParticipantsTable.TABLE_NAME,
-                whereClause,
-                whereArgs
-            )
-
-            if (rowsAffected > 0)
-            {
-                Log.d(TAG, "Deleted SkatPlayer with ID: $id. Rows affected: $rowsAffected")
-                Result.success(Unit)
-            } else
-            {
-                val errorMessage = "No SkatPlayer found with ID: $id to delete."
-                Log.w(TAG, errorMessage)
-                Result.failure(NoSuchElementException(errorMessage))
-            }
-        }
-    }
-
-    fun deleteAllOfGame(gameId: UUID): Result<Unit>
-    {
-        return databaseHelper.writableDatabase.run {
-            val whereClause = "${SkatParticipantsTable.COLUMN_GAME_ID} = ?"
-            val whereArgs = arrayOf(gameId.toString())
-
-            val rowsAffected = this.delete(
-                SkatParticipantsTable.TABLE_NAME,
-                whereClause,
-                whereArgs
-            )
-
-            if (rowsAffected > 0)
-            {
-                Log.d(TAG, "Deleted $rowsAffected SkatPlayers for Game ID: $gameId.")
-                Result.success(Unit)
-            } else
-            {
-                val errorMessage = "No SkatPlayers found for Game ID: $gameId to delete."
-                Log.w(TAG, errorMessage)
-                Result.failure(NoSuchElementException(errorMessage))
-            }
         }
     }
 
@@ -121,37 +44,58 @@ class SkatParticipantsPersistenceAdapter @Inject constructor(
         }
     }
 
-    fun update(skatPlayers: List<SkatParticipantDto>): Result<Unit> {
-        return try {
-            databaseHelper.writableDatabase.run {
-                try
-                {
-                    skatPlayers.forEach { skatPlayer ->
-                        val whereClause = "${SkatParticipantsTable.COLUMN_TABLE_POSITION} = ? AND ${SkatParticipantsTable.COLUMN_GAME_ID} = ?"
-                        val whereArgs = arrayOf(skatPlayer.tablePosition.toString(), skatPlayer.gameId.toString())
+    fun getAllOfLiveGames(since: Instant? = null): Result<List<SkatParticipantDto>>
+    {
+        return databaseHelper.readableDatabase.run {
+            val query = "SELECT p.* FROM ${SkatParticipantsTable.TABLE_NAME} p" +
+                    " INNER JOIN ${SkatGamesTable.TABLE_NAME} g" +
+                    " ON g.${SkatGamesTable.COLUMN_ID} = p.${SkatParticipantsTable.COLUMN_GAME_ID}" +
+                    " WHERE ${liveGamesCondition(since, alias = "g")}"
 
-                        val rowsAffected = update(
-                            SkatParticipantsTable.TABLE_NAME,
-                            skatPlayer.toUpdateContentValues(),
-                            whereClause,
-                            whereArgs
-                        )
+            val participants = rawQuery(query, sinceArgs(since))
+                .mapToList { cursor -> SkatParticipantDto.mapFromCursor(cursor) }
 
-                        if (rowsAffected == 0)
-                        {
-                            // This could happen if you try to update a participant
-                            // that was somehow deleted or not yet inserted.
-                            Log.w(TAG, "No row found to update for Participant: ${skatPlayer.id}")
-                        }
-                    }
-                    Result.success(Unit)
-                } finally
-                {
-                }
+            Result.success(participants)
+        }
+    }
+
+    /**
+     * Keeps each seat's row id, which the rounds reference. Two passes because names and player
+     * links are unique per list: swapping two people seat by seat would collide, so every seat
+     * is first parked on a unique placeholder.
+     */
+    fun replaceSeats(skatPlayers: List<SkatParticipantDto>): Result<Unit>
+    {
+        return databaseHelper.writableDatabase.run {
+            val seatCondition = "${SkatParticipantsTable.COLUMN_GAME_ID} = ?" +
+                    " AND ${SkatParticipantsTable.COLUMN_TABLE_POSITION} = ?"
+
+            fun seatArgs(dto: SkatParticipantDto) =
+                arrayOf(dto.gameId.toString(), dto.tablePosition.toString())
+
+            skatPlayers.forEach { dto ->
+                val parked = update(
+                    SkatParticipantsTable.TABLE_NAME,
+                    contentValuesOf(
+                        SkatParticipantsTable.COLUMN_NAME to "#${dto.id}",
+                        SkatParticipantsTable.COLUMN_PLAYER_ID to null,
+                    ),
+                    seatCondition,
+                    seatArgs(dto),
+                )
+                check(parked == 1) { "No seat ${dto.tablePosition} in list ${dto.gameId}" }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error updating participants", e)
-            Result.failure(e)
+
+            skatPlayers.forEach { dto ->
+                updateStamped(
+                    SkatParticipantsTable.TABLE_NAME,
+                    dto.toUpdateContentValues(),
+                    seatCondition,
+                    seatArgs(dto),
+                )
+            }
+
+            Result.success(Unit)
         }
     }
 }

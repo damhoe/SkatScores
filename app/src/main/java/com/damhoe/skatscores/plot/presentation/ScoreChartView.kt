@@ -18,12 +18,8 @@ import com.google.android.material.color.MaterialColors
 import kotlin.math.roundToInt
 
 /**
- * The score chart: one line per seat over the rounds of a list.
- *
- * Deliberately narrow. A list is at most 32 rounds of three players, so the whole series
- * always fits and there is no viewport to pan or zoom - dragging picks a round to read
- * instead, which is the question the chart is actually asked. Everything measurable is
- * computed when the data or the size changes, never per frame.
+ * One line per seat. A list is short enough to always fit, so there is no pan or zoom;
+ * dragging selects a round. Layout is computed on data or size change, never per frame.
  */
 class ScoreChartView @JvmOverloads constructor(
     context: Context,
@@ -31,14 +27,14 @@ class ScoreChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : View(context, attrs, defStyleAttr)
 {
-    /** One player's values, indexed by round. Index 0 is the state before the first round. */
+    /** Index 0 is before the first round. */
     data class Series(
         val label: String,
         @ColorInt val color: Int,
         val values: List<Int>,
     )
 
-    /** Called with the picked round, or null once the selection is cleared. */
+    /** Null when the selection is cleared. */
     var onRoundSelected: ((Int?) -> Unit)? = null
 
     var series: List<Series> = emptyList()
@@ -49,11 +45,9 @@ class ScoreChartView @JvmOverloads constructor(
 
     private var axis: ChartAxis = ChartAxis.of(emptyList())
 
-    /** Number of played rounds; the x axis runs 0..roundCount. */
+    /** The x axis runs 0..roundCount. */
     private val roundCount: Int
         get() = (series.firstOrNull()?.values?.size ?: 1) - 1
-
-    // ---- Paints and reusable scratch, allocated once ----
 
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -93,8 +87,6 @@ class ScoreChartView @JvmOverloads constructor(
     private var labelColor = 0
     private var surfaceColor = 0
 
-    // ---- Plot area, recomputed on size or data change ----
-
     private var plotLeft = 0f
     private var plotTop = 0f
     private var plotRight = 0f
@@ -115,8 +107,7 @@ class ScoreChartView @JvmOverloads constructor(
         gridColor = MaterialColors.getColor(this, R.attr.colorSurfaceContainerHighest)
         zeroColor = MaterialColors.getColor(this, R.attr.colorOutlineVariant)
         labelColor = MaterialColors.getColor(this, R.attr.colorOutline)
-        // Markers punch a hole in the line they sit on, so this has to be the colour of the
-        // card behind the chart - see cardBackgroundColor in fragment_game_graph.
+        // Markers are hollowed out with this; must match the chart card's background.
         surfaceColor = MaterialColors.getColor(this, R.attr.colorSurfaceContainerLow)
 
         gridPaint.color = gridColor
@@ -152,12 +143,7 @@ class ScoreChartView @JvmOverloads constructor(
         measurePlotArea()
     }
 
-    /**
-     * Leaves room for the widest y label on the left and one line of x labels below.
-     *
-     * Padding is part of the budget: it is what keeps the end markers and the corner-most
-     * labels clear of the rounded corners of the card this sits in.
-     */
+    /** Padding keeps end markers and corner labels clear of the card's rounded corners. */
     private fun measurePlotArea()
     {
         val widestLabel = axis.ticks
@@ -201,7 +187,6 @@ class ScoreChartView @JvmOverloads constructor(
     {
         axis.ticks.forEach { tick ->
             val y = yOf(tick)
-            // The zero line carries meaning in skat: it separates ahead from behind.
             val paint = if (tick == 0) zeroLinePaint else gridPaint
             canvas.drawLine(plotLeft, y, plotRight, y, paint)
 
@@ -237,7 +222,6 @@ class ScoreChartView @JvmOverloads constructor(
         }
     }
 
-    /** Keep labels from colliding on a long list. */
     private fun xLabelStep(): Int = when
     {
         roundCount <= 6 -> 1
@@ -255,8 +239,6 @@ class ScoreChartView @JvmOverloads constructor(
 
     private fun drawSeries(canvas: Canvas)
     {
-        // Markers on every point only stay legible on a short list; otherwise just the ends
-        // and the selected round get one.
         val markEveryPoint = roundCount <= MARKERS_UP_TO_ROUNDS
 
         series.forEach { line ->
@@ -299,8 +281,6 @@ class ScoreChartView @JvmOverloads constructor(
         canvas.drawCircle(x, y, radius, linePaint)
     }
 
-    // ---- Selection ----
-
     override fun onTouchEvent(event: MotionEvent): Boolean
     {
         if (series.isEmpty() || roundCount <= 0) return false
@@ -334,7 +314,6 @@ class ScoreChartView @JvmOverloads constructor(
         return true
     }
 
-    /** Snaps to the nearest round so a value can be read exactly rather than interpolated. */
     private fun selectRoundAt(x: Float)
     {
         val plotWidth = plotRight - plotLeft
@@ -394,7 +373,6 @@ class ScoreChartView @JvmOverloads constructor(
     {
         private const val SAMPLE_DIGITS = "0123456789-"
 
-        /** Above this many rounds, per-point markers turn into clutter. */
         private const val MARKERS_UP_TO_ROUNDS = 12
     }
 }

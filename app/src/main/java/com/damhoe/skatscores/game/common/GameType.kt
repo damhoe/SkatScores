@@ -1,12 +1,6 @@
 package com.damhoe.skatscores.game.common
 
-/**
- * The card game a list is scored with.
- *
- * Lists never mix: a list belongs to one game from the moment it is created, and each game
- * keeps its own tables, setup, settings and round entry. Player profiles are the one thing
- * both share.
- */
+/** Each game has its own tables and screens; only player profiles are shared. */
 enum class GameType
 {
     SKAT,

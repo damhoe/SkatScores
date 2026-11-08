@@ -3,27 +3,22 @@ package com.damhoe.skatscores.game.doppelkopf.domain
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-/**
- * Which solo was played.
- *
- * Every solo is worth the same - the soloist plays for three - so this is recorded for the
- * round log rather than for the scoring.
- */
+/** Informational only: every solo scores the same. */
 @Parcelize
 enum class DoppelkopfSoloKind : Parcelable
 {
-    /** Farbsolo: one suit is trump instead of diamonds. */
+    /** Farbsolo. */
     SUIT,
 
-    /** Damensolo: only the queens are trump. */
+    /** Damensolo. */
     QUEENS,
 
-    /** Bubensolo: only the jacks are trump. */
+    /** Bubensolo. */
     JACKS,
 
     /** Assensolo. */
     ACES,
 
-    /** Fleischloser: no trumps at all. */
+    /** Fleischloser. */
     FLESHLESS,
 }

@@ -32,8 +32,7 @@ class PlayerStatisticsTest
     @Test
     fun `solo win rate is measured against the rounds this player declared`()
     {
-        // 8 of 16 declared rounds won, out of 48 rounds played. The rate is 50%, not 8/48:
-        // dividing by the total rounds would silently punish a player who rarely declares.
+        // 8 of 16 declared rounds won, out of 48 played: 50%, not 8/48.
         val stats = skat(
             roundsPlayed = 48,
             soloRoundsPlayed = 16,
@@ -78,8 +77,6 @@ class PlayerStatisticsTest
     @Test
     fun `a player in a list with no rounds yet has nothing to report`()
     {
-        // Guards are tied to each denominator, so a list count above zero cannot let a
-        // zero round count through into a division.
         val stats = PlayerStatistics(skat = skat(listsPlayed = 3, roundsPlayed = 0))
 
         assertFalse(stats.hasRounds)
@@ -105,8 +102,6 @@ class PlayerStatisticsTest
         assertEquals(1.0, stats.defenderWinRate, 0.0001)
     }
 
-    // --- Both games together ---------------------------------------------------------------
-
     @Test
     fun `counts span both games, because profiles are shared`()
     {
@@ -123,8 +118,6 @@ class PlayerStatisticsTest
     @Test
     fun `a player with only Doppelkopf rounds still has something to report`()
     {
-        // The screen hides a game with no rounds, so a Doppelkopf-only player must not read
-        // as having played nothing at all.
         val stats = PlayerStatistics(
             doppelkopf = DoppelkopfPlayerStatistics(listsPlayed = 1, roundsPlayed = 16),
         )
@@ -149,7 +142,6 @@ class PlayerStatisticsTest
 
         assertEquals(20.0 / 32, stats.winRate, 0.0001)
         assertEquals(4.0 / 32, stats.soloShare, 0.0001)
-        // Solo win rate is out of the solos played, not out of every round.
         assertEquals(3.0 / 4, stats.soloWinRate, 0.0001)
         assertEquals(12.0 / 16, stats.reWinRate, 0.0001)
     }

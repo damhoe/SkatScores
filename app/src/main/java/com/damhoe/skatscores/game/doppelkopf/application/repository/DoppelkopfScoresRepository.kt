@@ -5,7 +5,10 @@ import java.util.UUID
 
 interface DoppelkopfScoresRepository
 {
-    suspend fun insert(score: DoppelkopfScore, gameId: UUID, round: Int): Result<Unit>
+    suspend fun insert(score: DoppelkopfScore, gameId: UUID): Result<Unit>
+
     suspend fun update(score: DoppelkopfScore, gameId: UUID): Result<Unit>
-    suspend fun delete(id: UUID, gameId: UUID): Result<Unit>
+
+    /** The id of the round removed, or null when the list had none. */
+    suspend fun deleteLast(gameId: UUID): Result<UUID?>
 }

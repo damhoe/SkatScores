@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.damhoe.skatscores.R
 import com.damhoe.skatscores.databinding.SheetRoundEntryBinding
@@ -22,10 +21,6 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
 
-/**
- * Enters a new round or edits an existing one on a single surface, with a live points preview.
- * Replaces the who-won / result / suit / spitzen / multipliers fragment chain.
- */
 @AndroidEntryPoint
 class RoundEntrySheetFragment : BottomSheetDialogFragment()
 {
@@ -34,7 +29,7 @@ class RoundEntrySheetFragment : BottomSheetDialogFragment()
 
     private val biddingValues = SkatBid.BiddingValues.toList()
 
-    /** Set while pushing state into the controls, so their listeners do not echo back. */
+    /** Suppresses control listeners while state is pushed into the controls. */
     private var isBinding = false
 
     override fun onCreateView(
@@ -126,9 +121,12 @@ class RoundEntrySheetFragment : BottomSheetDialogFragment()
             bindDraft(draft)
         }
 
+        viewModel.isSaving.observe(viewLifecycleOwner) { saving ->
+            binding.saveButton.isEnabled = !saving
+        }
+
         viewModel.dismissEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
-                setFragmentResult(REQUEST_KEY, bundleOf())
                 dismiss()
             }
         }
@@ -175,13 +173,15 @@ class RoundEntrySheetFragment : BottomSheetDialogFragment()
             binding.gameClubs, binding.gameGrand, binding.gameNull
         )
 
-        // Spitzen and win levels only matter outside a Null game.
         binding.multiplierBlock.visibility =
             if (draft.usesMultipliers) View.VISIBLE else View.GONE
         binding.nullModifierBlock.visibility =
             if (draft.usesMultipliers) View.GONE else View.VISIBLE
 
-        binding.spitzenSlider.value = draft.spitzen.value.toFloat()
+        // Range before value: the slider throws on a value outside its range.
+        val maxSpitzen = draft.game.maxSpitzen.toFloat()
+        binding.spitzenSlider.valueTo = maxSpitzen
+        binding.spitzenSlider.value = draft.spitzen.value.toFloat().coerceAtMost(maxSpitzen)
         binding.spitzenValue.text = getString(R.string.format_spitzen, draft.spitzen.value)
 
         binding.modifierHand.isChecked = draft.hand
@@ -192,7 +192,6 @@ class RoundEntrySheetFragment : BottomSheetDialogFragment()
         binding.nullModifierHand.isChecked = draft.hand
         binding.nullModifierOuvert.isChecked = draft.ouvert
 
-        // Announcing only means something once Schneider or Schwarz is set.
         binding.modifierAnnounced.isEnabled = draft.schneider || draft.schwarz
 
         checkOnly(
@@ -231,10 +230,7 @@ class RoundEntrySheetFragment : BottomSheetDialogFragment()
         checkOnly(selected, *allButtons.toTypedArray())
     }
 
-    /**
-     * MaterialButtonToggleGroup only enforces single selection for user taps, so restoring a
-     * draft has to clear the others explicitly.
-     */
+    /** Toggle groups enforce single selection only for user taps. */
     private fun checkOnly(selected: MaterialButton, vararg all: MaterialButton)
     {
         all.forEach { it.isChecked = it == selected }
@@ -265,7 +261,6 @@ class RoundEntrySheetFragment : BottomSheetDialogFragment()
     companion object
     {
         const val TAG = "RoundEntrySheetFragment"
-        const val REQUEST_KEY = "RoundEntryRequest"
 
         fun newInstance(gameId: UUID, scoreId: UUID? = null) = RoundEntrySheetFragment().apply {
             arguments = bundleOf(

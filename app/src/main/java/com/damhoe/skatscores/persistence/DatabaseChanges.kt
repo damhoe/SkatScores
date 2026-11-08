@@ -1,32 +1,40 @@
 package com.damhoe.skatscores.persistence
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import javax.inject.Singleton
 
+enum class DataTopic
+{
+    PLAYERS,
+
+    /** Skat lists with their seats and rounds. */
+    SKAT,
+
+    /** Doppelkopf lists with their seats and rounds. */
+    DOPPELKOPF,
+}
+
 /**
- * One signal for "something in the database changed".
- *
- * The repositories answer with what a query returned at the moment it was asked, so nothing
- * would tell a screen already built that a list, a round or a player has been written since.
- * Every write bumps the revision here and the queries a screen is built from are collected
- * from it, which is what makes a new list show up on the home screen without restarting the
- * app.
- *
- * One counter for the whole database is deliberate: the tables are small, writes are rare -
- * one per round played - and a per-table signal would have to know which screen cares about
- * which join.
+ * Change signal per topic. Every write notifies the topics it touched; screens re-query when a
+ * topic they read changes.
  */
 @Singleton
 class DatabaseChanges @Inject constructor()
 {
-    private val _revision = MutableStateFlow(0L)
+    private val revisions: Map<DataTopic, MutableStateFlow<Long>> =
+        DataTopic.entries.associateWith { MutableStateFlow(0L) }
 
-    /** Holds the current revision, so a new collector reads once straight away. */
-    val revision: StateFlow<Long> = _revision.asStateFlow()
+    fun notifyChanged(vararg topics: DataTopic) =
+        topics.forEach { topic -> revisions.getValue(topic).update { it + 1 } }
 
-    fun notifyChanged() = _revision.update { it + 1 }
+    /** Emits immediately and after each write to any of [topics]; conflated. */
+    fun changes(vararg topics: DataTopic): Flow<Unit>
+    {
+        require(topics.isNotEmpty()) { "Name at least one topic" }
+        return combine(topics.map { revisions.getValue(it) }) { }
+    }
 }

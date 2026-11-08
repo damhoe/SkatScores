@@ -20,8 +20,7 @@ class ChartAxisTest
     @Test
     fun `range never collapses when every value is the same`()
     {
-        // A game of nothing but passes: without a floor the chart would divide by zero
-        // mapping points to pixels.
+        // Only passes: the minimum span prevents a zero-height range.
         val axis = ChartAxis.of(listOf(0, 0, 0, 0))
 
         assertTrue(axis.span >= 40)

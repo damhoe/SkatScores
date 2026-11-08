@@ -14,7 +14,6 @@ import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-/** Theme, language and a way into About. */
 @AndroidEntryPoint
 class AppSettingsSheetFragment : BottomSheetDialogFragment()
 {
@@ -24,7 +23,9 @@ class AppSettingsSheetFragment : BottomSheetDialogFragment()
     lateinit var viewModelFactory: ViewModelFactory
     private val viewModel: AppSettingsViewModel by viewModels({ requireActivity() }) { viewModelFactory }
 
-    // Preference values, read once so the chips and the stored setting cannot drift apart.
+    @Inject
+    lateinit var settingsManager: SettingsManager
+
     private lateinit var systemTheme: String
     private lateinit var dayTheme: String
     private lateinit var nightTheme: String
@@ -78,7 +79,7 @@ class AppSettingsSheetFragment : BottomSheetDialogFragment()
             }
         }
 
-        val current = chips[viewModel.theme.value] ?: binding.themeSystem
+        val current = chips[viewModel.theme.value] ?: binding.themeDark
         checkOnly(current, chips.values)
     }
 
@@ -87,20 +88,21 @@ class AppSettingsSheetFragment : BottomSheetDialogFragment()
         val chips = mapOf(
             german to binding.languageGerman,
             english to binding.languageEnglish,
+            SettingsManager.SYSTEM_LANGUAGE to binding.languageSystem,
         )
 
         chips.forEach { (value, chip) ->
             chip.setOnClickListener {
-                viewModel.setLanguage(value)
                 checkOnly(chip, chips.values)
+                settingsManager.setLanguage(value)
             }
         }
 
-        val current = chips[viewModel.language.value] ?: binding.languageGerman
+        val current = chips[settingsManager.currentLanguage()] ?: binding.languageSystem
         checkOnly(current, chips.values)
     }
 
-    /** Chips are independently checkable, so the others have to be cleared explicitly. */
+    /** The chips are independently checkable. */
     private fun checkOnly(selected: MaterialButton, all: Collection<MaterialButton>)
     {
         all.forEach { it.isChecked = it == selected }

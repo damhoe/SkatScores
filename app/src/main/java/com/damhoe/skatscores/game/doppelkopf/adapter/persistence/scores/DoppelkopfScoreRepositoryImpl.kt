@@ -2,7 +2,10 @@ package com.damhoe.skatscores.game.doppelkopf.adapter.persistence.scores
 
 import com.damhoe.skatscores.game.doppelkopf.application.repository.DoppelkopfScoresRepository
 import com.damhoe.skatscores.game.doppelkopf.domain.scores.DoppelkopfScore
+import com.damhoe.skatscores.persistence.DataTopic
 import com.damhoe.skatscores.persistence.DatabaseChanges
+import com.damhoe.skatscores.persistence.DatabaseHelper
+import com.damhoe.skatscores.persistence.RoundSequence
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -11,50 +14,40 @@ import javax.inject.Singleton
 
 @Singleton
 class DoppelkopfScoreRepositoryImpl @Inject constructor(
+    private val dbHelper: DatabaseHelper,
     private val scoreDao: DoppelkopfScorePersistenceAdapter,
+    private val roundSequence: RoundSequence,
     private val databaseChanges: DatabaseChanges,
 ) : DoppelkopfScoresRepository
 {
-    /*
-     * Every suspending call here hops to IO. The adapter below is blocking, and these are
-     * called from viewModelScope, whose dispatcher is the main thread - so without this,
-     * writing a round was database work on the thread drawing the frame.
-     */
+    /** The position is decided inside the write, from what the database holds then. */
+    override suspend fun insert(score: DoppelkopfScore, gameId: UUID): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            dbHelper
+                .transaction { db ->
+                    val seq = roundSequence.next(db, after = scoreDao.lastSeq(gameId).getOrThrow())
+                    scoreDao.insert(DoppelkopfScoreDto.mapFrom(score, gameId, seq)).getOrThrow()
+                }
+                .onSuccess { databaseChanges.notifyChanged(DataTopic.DOPPELKOPF) }
+        }
 
-    override suspend fun insert(
-        score: DoppelkopfScore,
-        gameId: UUID,
-        round: Int,
-    ): Result<Unit> = withContext(Dispatchers.IO) {
-        scoreDao.insert(DoppelkopfScoreDto.mapFrom(score, gameId, round))
-            .onSuccess { databaseChanges.notifyChanged() }
-    }
-
-    /**
-     * Replaces a round with an edited version. The stored round number is kept, so the
-     * position of the round in the list does not move.
-     */
     override suspend fun update(score: DoppelkopfScore, gameId: UUID): Result<Unit> =
         withContext(Dispatchers.IO) {
-            val round = scoreDao.getRound(score.id).getOrNull()
-                ?: return@withContext Result.failure(
-                    NoSuchElementException("Unknown score ${score.id}")
-                )
-
-            scoreDao.update(DoppelkopfScoreDto.mapFrom(score, gameId, round))
-                .onSuccess { databaseChanges.notifyChanged() }
+            scoreDao.update(DoppelkopfScoreDto.mapFrom(score, gameId, SEQ_IGNORED_ON_UPDATE))
+                .onSuccess { databaseChanges.notifyChanged(DataTopic.DOPPELKOPF) }
         }
 
-    /** Removes a round and closes the gap it leaves in the round numbering. */
-    override suspend fun delete(id: UUID, gameId: UUID): Result<Unit> =
+    override suspend fun deleteLast(gameId: UUID): Result<UUID?> =
         withContext(Dispatchers.IO) {
-            val round = scoreDao.getRound(id).getOrNull()
-                ?: return@withContext Result.failure(
-                    NoSuchElementException("Unknown score $id")
-                )
-
-            scoreDao.delete(id)
-                .mapCatching { scoreDao.shiftRoundsDown(gameId, round).getOrThrow() }
-                .onSuccess { databaseChanges.notifyChanged() }
+            dbHelper
+                .transaction { scoreDao.softDeleteLast(gameId).getOrThrow() }
+                .onSuccess { removed ->
+                    if (removed != null) databaseChanges.notifyChanged(DataTopic.DOPPELKOPF)
+                }
         }
+
+    private companion object
+    {
+        const val SEQ_IGNORED_ON_UPDATE = ""
+    }
 }

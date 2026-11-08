@@ -4,6 +4,17 @@ object DatabaseConstants
 {
     const val DATABASE_NAME = "skat_scores"
 
+    /**
+     * Maintained by the app, not triggers, so a sync layer can set them. `deleted_at` is a
+     * tombstone that every read filters out.
+     */
+    object SyncColumns
+    {
+        const val COLUMN_UPDATED_AT = "updated_at"
+        const val COLUMN_VERSION = "version"
+        const val COLUMN_DELETED_AT = "deleted_at"
+    }
+
     object PlayersTable
     {
         const val TABLE_NAME: String = "players"
@@ -11,7 +22,6 @@ object DatabaseConstants
         const val COLUMN_NAME: String = "name"
 
         const val COLUMN_CREATED_AT = "created_at"
-        const val COLUMN_UPDATED_AT = "updated_at"
     }
 
     object SkatGamesTable
@@ -25,15 +35,14 @@ object DatabaseConstants
         const val COLUMN_SCORING_MODE: String = "scoring_mode"
 
         const val COLUMN_PLAYED_AT = "played_at"
-        const val COLUMN_UPDATED_AT = "updated_at"
     }
 
     object SkatParticipantsTable
     {
         const val TABLE_NAME: String = "skat_participants"
         const val COLUMN_ID: String = "id"
-        const val COLUMN_GAME_ID: String = "game_id" // Foreign key to games.id
-        const val COLUMN_PLAYER_ID: String = "player_id" // Foreign key to players.id
+        const val COLUMN_GAME_ID: String = "game_id"
+        const val COLUMN_PLAYER_ID: String = "player_id"
         const val COLUMN_TABLE_POSITION: String = "table_position"
         const val COLUMN_NAME: String = "name"
     }
@@ -42,9 +51,11 @@ object DatabaseConstants
     {
         const val TABLE_NAME = "skat_scores"
         const val COLUMN_ID = "id"
-        const val COLUMN_GAME_ID = "game_id"    // Foreign key to games.id
-        const val COLUMN_SKAT_PARTICIPANTS_ID = "skat_participant_id" // Foreign key to skat_participants.id nullable
-        const val COLUMN_ROUND = "round"
+        const val COLUMN_GAME_ID = "game_id"   
+        const val COLUMN_SKAT_PARTICIPANTS_ID = "skat_participant_id"
+
+        /** See [RoundSequence]. */
+        const val COLUMN_SEQ = "seq"
 
         const val COLUMN_SCORE_TYPE = "score_type"
 
@@ -60,7 +71,6 @@ object DatabaseConstants
         const val COLUMN_GRAND_OR_SUIT_OPTIONS = "grand_or_suit_options"
 
         const val COLUMN_CREATED_AT = "created_at"
-        const val COLUMN_UPDATED_AT = "updated_at"
     }
 
     object DoppelkopfGamesTable
@@ -73,15 +83,14 @@ object DatabaseConstants
         const val COLUMN_SCORING_MODE: String = "scoring_mode"
 
         const val COLUMN_PLAYED_AT = "played_at"
-        const val COLUMN_UPDATED_AT = "updated_at"
     }
 
     object DoppelkopfParticipantsTable
     {
         const val TABLE_NAME: String = "doppelkopf_participants"
         const val COLUMN_ID: String = "id"
-        const val COLUMN_GAME_ID: String = "game_id" // Foreign key to doppelkopf_games.id
-        const val COLUMN_PLAYER_ID: String = "player_id" // Foreign key to players.id
+        const val COLUMN_GAME_ID: String = "game_id"
+        const val COLUMN_PLAYER_ID: String = "player_id"
         const val COLUMN_SEAT: String = "seat"
         const val COLUMN_NAME: String = "name"
     }
@@ -90,8 +99,10 @@ object DatabaseConstants
     {
         const val TABLE_NAME = "doppelkopf_scores"
         const val COLUMN_ID = "id"
-        const val COLUMN_GAME_ID = "game_id" // Foreign key to doppelkopf_games.id
-        const val COLUMN_ROUND = "round"
+        const val COLUMN_GAME_ID = "game_id"
+
+        /** See [RoundSequence]. */
+        const val COLUMN_SEQ = "seq"
 
         const val COLUMN_SCORE_TYPE = "score_type"
         const val COLUMN_WINNER = "winner"
@@ -110,6 +121,14 @@ object DatabaseConstants
         const val COLUMN_EXTRA_POINTS_KONTRA = "extra_points_kontra"
 
         const val COLUMN_CREATED_AT = "created_at"
-        const val COLUMN_UPDATED_AT = "updated_at"
+    }
+
+    object SyncMetaTable
+    {
+        const val TABLE_NAME = "sync_meta"
+        const val COLUMN_KEY = "key"
+        const val COLUMN_VALUE = "value"
+
+        const val KEY_DEVICE_ID = "device_id"
     }
 }

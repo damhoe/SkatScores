@@ -16,22 +16,17 @@ import com.damhoe.skatscores.game.doppelkopf.domain.scores.DoppelkopfScore
 import com.damhoe.skatscores.shared.signed
 import com.google.android.material.color.MaterialColors
 
-/** Tapping a round opens it for editing. */
 interface DoppelkopfScoreActionListener
 {
     fun notifyEdit(score: DoppelkopfScore)
 }
 
-/**
- * The round log: one row per played round, newest first. Each row says who was Re, how the
- * round went and what it was worth to the winning party.
- */
+/** The round log, newest first. */
 class DoppelkopfScoreAdapter(
     private val listener: DoppelkopfScoreActionListener,
     private val textFactory: DoppelkopfRoundTextFactory,
 ) : ListAdapter<DoppelkopfScoreAdapter.Round, RoundViewHolder>(RoundDiffCallback())
 {
-    /** A score together with the round number it was played in and what it came to. */
     data class Round(val number: Int, val score: DoppelkopfScore, val value: Int)
 
     private var participants: DoppelkopfParticipants? = null
@@ -42,7 +37,7 @@ class DoppelkopfScoreAdapter(
         notifyItemRangeChanged(0, itemCount)
     }
 
-    /** Scores arrive in playing order; the log shows the newest round at the top. */
+    /** [scores] in playing order. */
     fun submitScores(scores: List<DoppelkopfScore>, valueOf: (DoppelkopfScore) -> Int)
     {
         submitList(
@@ -77,7 +72,6 @@ class DoppelkopfScoreAdapter(
         holder.itemView.setOnClickListener { listener.notifyEdit(score) }
     }
 
-    /** The side that took the round; the value below it is what that side scored. */
     private fun bindPartyBadge(holder: RoundViewHolder, winner: DoppelkopfParty)
     {
         holder.partyBadge.text = textFactory.partyLabel(winner)
@@ -119,8 +113,13 @@ class DoppelkopfScoreAdapter(
         override fun areContentsTheSame(oldItem: Round, newItem: Round): Boolean =
             oldItem.number == newItem.number &&
                     oldItem.value == newItem.value &&
-                    oldItem.score.winner == newItem.score.winner &&
-                    oldItem.score.soloistId == newItem.score.soloistId &&
-                    oldItem.score.value == newItem.score.value
+                    oldItem.score.value == newItem.score.value &&
+                    shownKey(oldItem.score) == shownKey(newItem.score)
+
+        private fun shownKey(score: DoppelkopfScore): String = when (score)
+        {
+            is DoppelkopfScore.Normal -> "normal|${score.reSeats.sorted()}"
+            is DoppelkopfScore.Solo -> "solo|${score.soloist}|${score.soloKind.name}"
+        } + "|${score.winner.name}"
     }
 }

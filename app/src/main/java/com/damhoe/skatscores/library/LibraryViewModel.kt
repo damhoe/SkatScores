@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.library
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,16 +33,9 @@ import javax.inject.Inject
 
 private const val RECENT_LIMIT = 5
 
-/** Where a tap on a list has to go: the two games have separate screens. */
 data class OpenList(val gameType: GameType, val gameId: UUID)
 
-/**
- * Home.
- *
- * Skat and Doppelkopf lists never mix, so the screen shows one game at a time and the filter
- * row at the top picks which. Everything below it - the running list, quick start, recently
- * played - follows that choice.
- */
+/** Home shows one game at a time, picked by the filter row. */
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
     private val getGamePreviewsUseCase: GetGamePreviewsUseCase,
@@ -60,7 +55,7 @@ class LibraryViewModel @Inject constructor(
 
     private val showAllRecent = MutableLiveData(false)
 
-    /** The lists of the selected game, newest first. */
+    /** Newest first. */
     private val lists: LiveData<List<ListPreview>> =
         MediatorLiveData<List<ListPreview>>().apply {
             fun update()
@@ -77,16 +72,13 @@ class LibraryViewModel @Inject constructor(
             addSource(_gameType) { update() }
         }
 
-    /** The most recently played list of the selected game that still has rounds left. */
+    /** The most recent list that still has rounds left. */
     val activeList: LiveData<ListPreview?> =
         MediatorLiveData<ListPreview?>().apply {
             addSource(lists) { previews -> value = previews.firstOrNull { it.isRunning } }
         }
 
-    /**
-     * Everything except the list already shown in the hero card, capped until the user asks
-     * for all of them.
-     */
+    /** Without the active list; capped until the user asks for all. */
     val recentGames: LiveData<List<ListPreview>> =
         MediatorLiveData<List<ListPreview>>().apply {
             fun update()
@@ -98,7 +90,6 @@ class LibraryViewModel @Inject constructor(
             addSource(showAllRecent) { update() }
         }
 
-    /** True while [recentGames] is capped and there is more to show. */
     val canShowMoreRecent: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
         fun update()
         {
@@ -108,7 +99,7 @@ class LibraryViewModel @Inject constructor(
         addSource(showAllRecent) { update() }
     }
 
-    /** The list a quick start would be modelled on: the most recent one with known players. */
+    /** The most recent list with known players. */
     val quickStartTemplate: LiveData<ListPreview?> =
         MediatorLiveData<ListPreview?>().apply {
             fun update()
@@ -132,8 +123,8 @@ class LibraryViewModel @Inject constructor(
     private val _navigateToGame = MutableLiveData<Event<OpenList>>()
     val navigateToGame: LiveData<Event<OpenList>> = _navigateToGame
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
 
     private fun withoutActiveList(): List<ListPreview>
     {
@@ -142,7 +133,6 @@ class LibraryViewModel @Inject constructor(
         return previews.filter { it.gameId != activeId }
     }
 
-    /** Switching game resets how much of the recent list is unfolded. */
     fun selectGameType(gameType: GameType)
     {
         if (_gameType.value == gameType) return
@@ -156,10 +146,6 @@ class LibraryViewModel @Inject constructor(
         showAllRecent.value = true
     }
 
-    /**
-     * Deletes for real. There is no pending state to hold a list in any more: the row asks
-     * for confirmation before calling this, so there is nothing left to take back.
-     */
     fun confirmDelete(preview: ListPreview) = viewModelScope.launch {
         when (preview.gameType)
         {
@@ -168,11 +154,7 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Starts a new list with the same people, round count and settings as the most recent
-     * one, skipping setup. Participants are recreated: their ids belong to the list they were
-     * recorded in.
-     */
+    /** Same people and settings as [template], with new participant ids. */
     fun quickStart(template: ListPreview) = viewModelScope.launch {
         when (template.gameType)
         {
@@ -202,7 +184,7 @@ class LibraryViewModel @Inject constructor(
             onSuccess = { game ->
                 _navigateToGame.postValue(Event(OpenList(GameType.SKAT, game.id)))
             },
-            onFailure = { _errorMessage.postValue(Event(it.message ?: "Could not start list")) }
+            onFailure = { _errorMessage.postValue(userError(R.string.error_start_list, it)) }
         )
     }
 
@@ -227,11 +209,10 @@ class LibraryViewModel @Inject constructor(
             onSuccess = { game ->
                 _navigateToGame.postValue(Event(OpenList(GameType.DOPPELKOPF, game.id)))
             },
-            onFailure = { _errorMessage.postValue(Event(it.message ?: "Could not start list")) }
+            onFailure = { _errorMessage.postValue(userError(R.string.error_start_list, it)) }
         )
     }
 
-    /** Name to offer for the next list, continuing the numbering of [template]. */
     fun suggestedTitleFor(template: ListPreview) = nextQuickStartTitle(template.title.value)
 
     private fun nextTitle(previous: Title): Title =

@@ -9,8 +9,5 @@ class GetListCountsUseCase @Inject constructor(
     private val repository: PlayerStatisticsRepository,
 )
 {
-    suspend operator fun invoke(playerId: UUID): Result<ListCounts>
-    {
-        return repository.getListCounts(playerId)
-    }
+    suspend operator fun invoke(): Result<Map<UUID, ListCounts>> = repository.getAllListCounts()
 }

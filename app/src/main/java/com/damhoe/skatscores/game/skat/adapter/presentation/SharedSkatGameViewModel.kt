@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.game.skat.adapter.presentation
 
+import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -9,27 +10,20 @@ import androidx.lifecycle.viewModelScope
 import com.damhoe.skatscores.game.skat.application.usecases.SkatGameUseCases
 import com.damhoe.skatscores.game.skat.domain.SkatGame
 import com.damhoe.skatscores.game.skat.domain.SkatParticipants
-import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 import com.damhoe.skatscores.shared.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * Holds the game shown by [SkatGameFragment].
- *
- * Editing surfaces (round sheet, settings sheet, players sheet) own their own saves and report
- * back with a fragment result, so this only loads, refreshes and applies the two actions that
- * live on the game screen itself.
- */
+/** Observes the game, so writes from any sheet arrive without a refresh. */
 @HiltViewModel
 class SharedSkatGameViewModel @Inject constructor(
     private val skatGameUseCases: SkatGameUseCases,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel()
 {
-    private var _skatGame = MutableLiveData<SkatGame>()
+    private val _skatGame = MutableLiveData<SkatGame>()
     val skatGame: LiveData<SkatGame> = _skatGame
 
     val skatParticipants: LiveData<SkatParticipants> = _skatGame.map { it.participants }
@@ -37,71 +31,66 @@ class SharedSkatGameViewModel @Inject constructor(
     private val _navigateUpEvent = MutableLiveData<Event<Unit>>()
     val navigateUpEvent: LiveData<Event<Unit>> = _navigateUpEvent
 
-    /**
-     * Whether the score board shows the tournament breakdown. Collapsed whenever a list is
-     * opened - the board is pinned above the round log, so the extra height is opt-in - but
-     * kept here rather than in the fragment so it survives a rotation.
-     */
+    private val _isUndoing = MutableLiveData(false)
+    val isUndoing: LiveData<Boolean> = _isUndoing
+
+    /** An undo finishes faster than a double tap, so a cooldown is needed as well. */
+    private var lastUndoAt = 0L
+
+    private val _roundRemovedEvent = MutableLiveData<Event<Unit>>()
+    val roundRemovedEvent: LiveData<Event<Unit>> = _roundRemovedEvent
+
     private val _isBreakdownExpanded = MutableLiveData(false)
     val isBreakdownExpanded: LiveData<Boolean> = _isBreakdownExpanded
 
-    val skatGameId = savedStateHandle.get<String>("gameId")
+    val skatGameId: UUID? = savedStateHandle.get<String>("gameId")
         ?.let { UUID.fromString(it) }
-        ?.also { initialize(it) }
-        ?: _navigateUpEvent.postValue(Event(Unit)).let { null }
 
-    fun initialize(skatGameId: UUID) = load(skatGameId)
+    init
+    {
+        if (skatGameId == null) _navigateUpEvent.value = Event(Unit) else observe(skatGameId)
+    }
 
     fun toggleBreakdown()
     {
         _isBreakdownExpanded.value = _isBreakdownExpanded.value != true
     }
 
-    fun refresh()
-    {
-        skatGameId?.let { load(it) }
-    }
+    /** A later null means the settings sheet deleted the list; that sheet navigates away. */
+    private fun observe(skatGameId: UUID) = viewModelScope.launch {
+        var hasLoaded = false
 
-    private fun load(skatGameId: UUID)
-    {
-        viewModelScope.launch {
-            skatGameUseCases.getSkatGame(skatGameId)
-                .onSuccess { skatGame ->
-                    if (skatGame == null)
-                    {
-                        _navigateUpEvent.postValue(Event(Unit))
-                        return@launch
-                    }
-                    _skatGame.postValue(skatGame)
+        skatGameUseCases.observeSkatGame(skatGameId).collect { skatGame ->
+            when
+            {
+                skatGame != null ->
+                {
+                    hasLoaded = true
+                    _skatGame.value = skatGame
                 }
-                .onFailure {
-                    _navigateUpEvent.postValue(Event(Unit))
-                }
+
+                !hasLoaded -> _navigateUpEvent.value = Event(Unit)
+            }
         }
     }
 
-    fun addScore(score: SkatScore)
-    {
-        viewModelScope.launch {
-            val currentGame = _skatGame.value ?: return@launch
-            skatGameUseCases.addScoreToSkatGame(skatGame = currentGame, score = score)
-                .onSuccess { updatedGame -> _skatGame.postValue(updatedGame) }
-        }
-    }
-
-    /**
-     * Undo in the bottom bar: drops the round that was played last, and the only way a round
-     * is ever removed. There is deliberately no delete-by-id here - a round in the middle of
-     * the log can be edited from its row, but not deleted, so the numbering cannot develop
-     * holes. RemoveLastScoreUseCase is what reaches DeleteScoreUseCase, and it only ever
-     * hands it the last score.
-     */
     fun removeLastScore()
     {
+        val gameId = skatGameId ?: return
+        if (_isUndoing.value == true) return
+        if (SystemClock.elapsedRealtime() - lastUndoAt < UNDO_COOLDOWN_MS) return
+
+        _isUndoing.value = true
         viewModelScope.launch {
-            val currentGame = _skatGame.value ?: return@launch
-            skatGameUseCases.removeLastScore(currentGame)
-                .onSuccess { updatedGame -> _skatGame.postValue(updatedGame) }
+            skatGameUseCases.removeLastScore(gameId)
+                .onSuccess { removed -> if (removed) _roundRemovedEvent.value = Event(Unit) }
+            lastUndoAt = SystemClock.elapsedRealtime()
+            _isUndoing.value = false
         }
+    }
+
+    private companion object
+    {
+        const val UNDO_COOLDOWN_MS = 700L
     }
 }

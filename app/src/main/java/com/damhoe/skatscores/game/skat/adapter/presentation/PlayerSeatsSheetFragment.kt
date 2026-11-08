@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.damhoe.skatscores.R
@@ -25,22 +24,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-/**
- * Who sits at the three seats of a running list, reached from the game screen's app bar.
- *
- * The seats were a section of the settings sheet for a while, which buried the edit that
- * happens most often - somebody arrives, somebody swaps out - under the ones that happen once.
- */
 @AndroidEntryPoint
 class PlayerSeatsSheetFragment : BottomSheetDialogFragment()
 {
     private val viewModel: PlayerSeatsViewModel by viewModels()
     private lateinit var binding: SheetPlayerSeatsBinding
 
-    /** Set while pushing state into the controls, so their listeners do not echo back. */
+    /** Suppresses control listeners while state is pushed into the controls. */
     private var isBinding = false
 
-    /** Seats the user has actually edited; errors only surface for those. */
+    /** Errors are only shown for seats the user has edited. */
     private val touchedSeats = mutableSetOf<Int>()
 
     override fun onCreateView(
@@ -62,7 +55,6 @@ class PlayerSeatsSheetFragment : BottomSheetDialogFragment()
         setupObservers()
     }
 
-    /** Three fields plus their dropdowns want the whole sheet, not a peek. */
     override fun onStart()
     {
         super.onStart()
@@ -87,7 +79,6 @@ class PlayerSeatsSheetFragment : BottomSheetDialogFragment()
         }
     }
 
-    /** Registered players are offered as suggestions; any other text becomes a guest. */
     private fun setupPlayerSuggestions()
     {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -100,7 +91,7 @@ class PlayerSeatsSheetFragment : BottomSheetDialogFragment()
 
     private fun setupObservers()
     {
-        // Only the initial load writes into the text fields; later edits come from the user.
+        // Only the initial load writes into the fields.
         viewModel.loaded.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { names ->
                 isBinding = true
@@ -131,7 +122,6 @@ class PlayerSeatsSheetFragment : BottomSheetDialogFragment()
 
         viewModel.dismissEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
-                setFragmentResult(REQUEST_KEY, bundleOf())
                 dismiss()
             }
         }
@@ -152,7 +142,6 @@ class PlayerSeatsSheetFragment : BottomSheetDialogFragment()
     companion object
     {
         const val TAG = "PlayerSeatsSheetFragment"
-        const val REQUEST_KEY = "PlayerSeatsRequest"
 
         fun newInstance(gameId: UUID) = PlayerSeatsSheetFragment().apply {
             arguments = bundleOf(PlayerSeatsViewModel.ARG_GAME_ID to gameId.toString())

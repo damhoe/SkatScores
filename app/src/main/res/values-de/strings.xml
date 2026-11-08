@@ -1,4 +1,3 @@
-<!-- values-de/strings.xml -->
 <resources>
     <string name="title_statistics">Statistik</string>
     <string name="title_new_game">Neue Liste</string>
@@ -15,7 +14,7 @@
     <string name="hint_player2">Spieler 2</string>
     <string name="hint_player1">Spieler 1</string>
     <string name="default_list_title">Liste</string>
-    <string name="text_about">Version 1.0 (2023)\nCopyright © Genf 2023\nDiese App wurde von Damian Hoedtke entwickelt.</string>
+    <string name="text_about">Version %1$s\nDiese App wurde von Damian Hoedtke entwickelt.</string>
     <string name="description_new_score">Neuer Eintrag</string>
     <string name="german">Deutsch</string>
     <string name="english">Englisch</string>
@@ -38,19 +37,10 @@
     <string name="description_diamonds">Karo</string>
     <string name="text_info_no_players">Erstelle Spieler*innenprofile für deine Listen.</string>
     <string name="description_create_new_profile">Erstelle ein neues Profil.</string>
-    <string name="passe_text">Es wurde eingepasst.</string>
-    <string name="overbid_text">Es wurde überreizt.</string>
-    <string name="won_text">Gewonnen</string>
-    <string name="lost_text">Verloren</string>
     <string name="title_library">Listen</string>
     <string name="title_players_short">Spieler</string>
     <string name="language_preference_title">Sprache</string>
     <string name="theme_preference_title">Design</string>
-    <string name="system_preference_category_title">System</string>
-    <string name="behavior_preference_category_title">Funktion</string>
-    <string name="badge_preference_title">Zeige offene Listen als Badge</string>
-    <string name="other_preference_category_title">Sonstiges</string>
-    <string name="about_preference_title">Über die App</string>
     <string name="hint_player_name">Name</string>
     <string name="dialog_title_create_player">Erstelle Spieler*in</string>
     <string name="dialog_title_button_cancel">Abbrechen</string>
@@ -65,7 +55,6 @@
     <string name="title_game_settings">Optionen</string>
     <string name="title_bidding">Reizwert</string>
 
-    <!-- Home / Game redesign -->
     <string name="greeting_morning">Guten Morgen</string>
     <string name="greeting_afternoon">Guten Tag</string>
     <string name="greeting_evening">Guten Abend</string>
@@ -77,7 +66,10 @@
     <string name="title_same_round_again">Gleiche Runde nochmal</string>
     <string name="title_recently_played">Zuletzt gespielt</string>
     <string name="title_show_all">Alle</string>
-    <string name="title_no_running_list">Keine Liste läuft — starte eine neue.</string>
+    <string name="title_no_running_list">Keine Liste läuft</string>
+    <string name="text_no_running_list">Starte eine neue oder mach unten weiter.</string>
+    <string name="title_empty_lists">Noch keine Listen</string>
+    <string name="text_empty_lists">Tippe auf +, um eine Liste zu starten. Jede Runde, die du einträgst, landet hier.</string>
     <string name="description_quick_start">Neue Liste mit den gleichen Spielern starten</string>
     <string name="description_new_list">Neue Liste</string>
     <string name="message_list_deleted">Liste gelöscht</string>
@@ -90,6 +82,8 @@
     <string name="message_round_removed">Runde entfernt</string>
     <string name="description_undo">Letzte Runde zurücknehmen</string>
     <string name="description_share">Liste teilen</string>
+    <string name="format_share_footer">Gezählt mit %1$s</string>
+    <string name="message_share_failed">Keine App zum Teilen gefunden</string>
     <string name="description_close">Schließen</string>
     <string name="description_clear_player">Name löschen</string>
     <string name="menu_delete_list">Liste löschen</string>
@@ -130,7 +124,6 @@
         <item quantity="other">%d Runden schon gespielt</item>
     </plurals>
 
-    <!-- Doppelkopf -->
     <string name="title_new_doppelkopf_list">Neue Doppelkopf-Liste</string>
     <string name="default_doppelkopf_list_title">Doppelkopf</string>
     <string name="description_new_doppelkopf_list">Neue Doppelkopf-Liste</string>
@@ -165,7 +158,6 @@
     <string name="format_points_for_party">Punkte für %s</string>
     <string name="format_solo_round">Solo · %s</string>
 
-    <!-- Statistik -->
     <string name="format_rounds_in_lists">%1$s in %2$s</string>
     <plurals name="label_round_count">
         <item quantity="one">1 Runde</item>

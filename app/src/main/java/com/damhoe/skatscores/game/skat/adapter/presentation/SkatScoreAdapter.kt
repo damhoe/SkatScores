@@ -16,16 +16,12 @@ import com.damhoe.skatscores.game.skat.domain.SkatParticipants
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore
 import com.google.android.material.color.MaterialColors
 
-/**
- * The round log: one row per played round, newest first. The rows describe what was played
- * instead of spreading a single value across three mostly empty columns.
- */
+/** The round log, newest first. */
 class SkatScoreAdapter(
     private val listener: IScoreActionListener,
     private val textFactory: RoundTextFactory,
 ) : ListAdapter<SkatScoreAdapter.Round, SkatScoreViewHolder>(RoundDiffCallback())
 {
-    /** A score together with the round number it was played in. */
     data class Round(val number: Int, val score: SkatScore)
 
     private var participants: SkatParticipants? = null
@@ -36,7 +32,7 @@ class SkatScoreAdapter(
         notifyItemRangeChanged(0, itemCount)
     }
 
-    /** Scores arrive in playing order; the log shows the newest round at the top. */
+    /** [scores] in playing order. */
     fun submitScores(scores: List<SkatScore>)
     {
         submitList(scores.mapIndexed { index, score -> Round(index + 1, score) }.reversed())
@@ -118,11 +114,21 @@ class SkatScoreAdapter(
         override fun areItemsTheSame(oldItem: Round, newItem: Round): Boolean =
             oldItem.score.id == newItem.score.id
 
-        // SkatScore subclasses are not data classes, so compare what the row actually shows.
+        // SkatScore subclasses are not data classes, so compare what the row shows.
         override fun areContentsTheSame(oldItem: Round, newItem: Round): Boolean =
             oldItem.number == newItem.number &&
                     oldItem.score.declarerId == newItem.score.declarerId &&
                     oldItem.score.result == newItem.score.result &&
-                    oldItem.score.toPoints() == newItem.score.toPoints()
+                    oldItem.score.toPoints() == newItem.score.toPoints() &&
+                    shownKey(oldItem.score) == shownKey(newItem.score)
+
+        private fun shownKey(score: SkatScore): String = when (score)
+        {
+            is SkatScore.Passe -> "passe"
+            is SkatScore.Overbid -> "overbid|${score.suit.name}|${score.bid.value}"
+            is SkatScore.Null -> "null|${score.options?.name}"
+            is SkatScore.GrandOrSuit ->
+                "suit|${score.suit.name}|${score.spitzen.value}|${score.options?.name}"
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.game.doppelkopf.adapter.presentation.scores
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -19,11 +21,6 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * Backs the Doppelkopf round sheet. Holds one [DoppelkopfRoundDraft] and republishes it on
- * every edit, so the points preview and the enabled state of the controls always describe the
- * same round.
- */
 @HiltViewModel
 class DoppelkopfRoundEntryViewModel @Inject constructor(
     private val useCases: DoppelkopfGameUseCases,
@@ -44,19 +41,22 @@ class DoppelkopfRoundEntryViewModel @Inject constructor(
     private val _participants = MutableLiveData<DoppelkopfParticipants>()
     val participants: LiveData<DoppelkopfParticipants> = _participants
 
-    /** Whether this list counts the extras collected during play. */
     private val _countsExtraPoints = MutableLiveData(false)
     val countsExtraPoints: LiveData<Boolean> = _countsExtraPoints
 
-    /** Round number this sheet is editing, 1-based, for the header. */
+    /** 1-based. */
     private val _roundNumber = MutableLiveData(1)
     val roundNumber: LiveData<Int> = _roundNumber
 
     private val _dismissEvent = MutableLiveData<Event<Unit>>()
     val dismissEvent: LiveData<Event<Unit>> = _dismissEvent
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
+
+    /** Guards against a double tap recording the round twice. */
+    private val _isSaving = MutableLiveData(false)
+    val isSaving: LiveData<Boolean> = _isSaving
 
     val soloKindOptions: List<DoppelkopfSoloKind> = DoppelkopfSoloKind.entries
     val winLevelOptions: List<DoppelkopfWinLevel> = DoppelkopfWinLevel.entries
@@ -101,10 +101,7 @@ class DoppelkopfRoundEntryViewModel @Inject constructor(
         _draft.value = _draft.value?.let(transform) ?: return
     }
 
-    /**
-     * Switching between a normal round and a solo clears the other kind's seat choice, so a
-     * half-filled normal round cannot leak into a solo.
-     */
+    /** Clears the other kind's seat choice. */
     fun setKind(kind: DoppelkopfRoundKind) = edit { draft ->
         when (kind)
         {
@@ -113,10 +110,7 @@ class DoppelkopfRoundEntryViewModel @Inject constructor(
         }
     }
 
-    /**
-     * A tap on a seat. In a normal round it moves that seat between Re and Kontra; in a solo
-     * it picks who went alone.
-     */
+    /** Toggles Re/Kontra in a normal round; picks the soloist in a solo. */
     fun toggleSeat(seatIndex: Int)
     {
         val participant = _participants.value?.asList()?.getOrNull(seatIndex) ?: return
@@ -133,12 +127,7 @@ class DoppelkopfRoundEntryViewModel @Inject constructor(
 
     fun setWinLevel(level: DoppelkopfWinLevel) = edit { it.copy(winLevel = level) }
 
-    /**
-     * What was announced in advance; null is "nothing announced".
-     *
-     * Deliberately independent of the win level: a party can announce "keine 90" and still
-     * lose the round, and the announcement is worth its points to whoever wins either way.
-     */
+    /** Independent of the win level: an Absage can be announced and still lost. */
     fun setAbsage(level: DoppelkopfWinLevel?) = edit { it.copy(absage = level) }
 
     fun setReAnnounced(enabled: Boolean) = edit { it.copy(reAnnounced = enabled) }
@@ -158,9 +147,12 @@ class DoppelkopfRoundEntryViewModel @Inject constructor(
 
     fun save()
     {
+        if (_isSaving.value == true) return
         val draft = _draft.value ?: return
         val game = game ?: return
         if (!draft.isComplete) return
+
+        _isSaving.value = true
 
         viewModelScope.launch {
             val result =
@@ -175,7 +167,8 @@ class DoppelkopfRoundEntryViewModel @Inject constructor(
             result.fold(
                 onSuccess = { _dismissEvent.postValue(Event(Unit)) },
                 onFailure = {
-                    _errorMessage.postValue(Event(it.message ?: "Could not save round"))
+                    _isSaving.value = false
+                    _errorMessage.postValue(userError(R.string.error_save_round, it))
                 }
             )
         }

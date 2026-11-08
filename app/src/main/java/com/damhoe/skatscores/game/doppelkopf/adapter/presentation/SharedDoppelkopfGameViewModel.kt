@@ -1,5 +1,6 @@
 package com.damhoe.skatscores.game.doppelkopf.adapter.presentation
 
+import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -15,14 +16,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * Holds the game shown by [DoppelkopfGameFragment], and shared with the chart screen through
- * the Doppelkopf navigation graph.
- *
- * Editing surfaces (round sheet, settings sheet) own their own saves and report back with a
- * fragment result, so this only loads, refreshes and applies the one action that lives on the
- * game screen itself.
- */
+/** Shared with the chart screen. Observes the game, so writes from any sheet arrive by themselves. */
 @HiltViewModel
 class SharedDoppelkopfGameViewModel @Inject constructor(
     private val useCases: DoppelkopfGameUseCases,
@@ -37,48 +31,60 @@ class SharedDoppelkopfGameViewModel @Inject constructor(
     private val _navigateUpEvent = MutableLiveData<Event<Unit>>()
     val navigateUpEvent: LiveData<Event<Unit>> = _navigateUpEvent
 
+    private val _isUndoing = MutableLiveData(false)
+    val isUndoing: LiveData<Boolean> = _isUndoing
+
+    /** An undo finishes faster than a double tap, so a cooldown is needed as well. */
+    private var lastUndoAt = 0L
+
+    private val _roundRemovedEvent = MutableLiveData<Event<Unit>>()
+    val roundRemovedEvent: LiveData<Event<Unit>> = _roundRemovedEvent
+
     val gameId: UUID? = savedStateHandle.get<String>(ARG_GAME_ID)
         ?.let { UUID.fromString(it) }
-        ?.also { load(it) }
-        ?: _navigateUpEvent.postValue(Event(Unit)).let { null }
 
-    fun refresh()
+    init
     {
-        gameId?.let { load(it) }
+        if (gameId == null) _navigateUpEvent.value = Event(Unit) else observe(gameId)
     }
 
-    private fun load(gameId: UUID)
-    {
-        viewModelScope.launch {
-            useCases.getGame(gameId)
-                .onSuccess { game ->
-                    if (game == null)
-                    {
-                        _navigateUpEvent.postValue(Event(Unit))
-                        return@launch
-                    }
-                    _game.postValue(game)
+    /** A later null means the settings sheet deleted the list; that sheet navigates away. */
+    private fun observe(gameId: UUID) = viewModelScope.launch {
+        var hasLoaded = false
+
+        useCases.observeGame(gameId).collect { game ->
+            when
+            {
+                game != null ->
+                {
+                    hasLoaded = true
+                    _game.value = game
                 }
-                .onFailure { _navigateUpEvent.postValue(Event(Unit)) }
+
+                !hasLoaded -> _navigateUpEvent.value = Event(Unit)
+            }
         }
     }
 
-    /**
-     * Undo in the bottom bar: drops the round that was played last, and the only way a round
-     * is ever removed. A round in the middle of the log can be edited from its row, but not
-     * deleted, so the numbering cannot develop holes.
-     */
     fun removeLastScore()
     {
+        val gameId = gameId ?: return
+        if (_isUndoing.value == true) return
+        if (SystemClock.elapsedRealtime() - lastUndoAt < UNDO_COOLDOWN_MS) return
+
+        _isUndoing.value = true
         viewModelScope.launch {
-            val currentGame = _game.value ?: return@launch
-            useCases.removeLastScore(currentGame)
-                .onSuccess { updated -> _game.postValue(updated) }
+            useCases.removeLastScore(gameId)
+                .onSuccess { removed -> if (removed) _roundRemovedEvent.value = Event(Unit) }
+            lastUndoAt = SystemClock.elapsedRealtime()
+            _isUndoing.value = false
         }
     }
 
     companion object
     {
+        private const val UNDO_COOLDOWN_MS = 700L
+
         const val ARG_GAME_ID = "gameId"
     }
 }

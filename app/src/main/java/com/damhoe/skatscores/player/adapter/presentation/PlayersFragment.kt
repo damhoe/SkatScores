@@ -75,7 +75,6 @@ class PlayersFragment :
         binding.playerRecyclerView.apply {
             adapter = playerAdapter
             layoutManager = LinearLayoutManager(context)
-            // Same hairline between rows as the recent lists on home.
             addItemDecoration(
                 GamePreviewAdapter.DividerDecoration(
                     MaterialColors.getColor(this, R.attr.colorSurfaceContainer),
@@ -88,12 +87,9 @@ class PlayersFragment :
 
     private fun setupBottomBar()
     {
-        // Switching tabs, not stepping back: this pops to the lists however deep the stack
-        // happens to be, and leaves them exactly as they were rather than rebuilding them.
         binding.listsTab.setOnClickListener {
             findNavController().popBackStack(R.id.libraryFragment, /* inclusive = */ false)
         }
-        // The tab for the screen you are on scrolls it home, the way the lists tab does.
         binding.playersTab.setOnClickListener {
             binding.playerRecyclerView.smoothScrollToPosition(0)
         }

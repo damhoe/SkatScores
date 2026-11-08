@@ -22,11 +22,6 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
 
-/**
- * Everything about a running Doppelkopf list that is not a round and not who is playing it:
- * its name, its round count and its scoring mode. The four seats are next door in
- * [DoppelkopfPlayerSeatsSheetFragment], which the game screen opens from a button of its own.
- */
 @AndroidEntryPoint
 class DoppelkopfGameSettingsSheetFragment : BottomSheetDialogFragment()
 {
@@ -35,7 +30,7 @@ class DoppelkopfGameSettingsSheetFragment : BottomSheetDialogFragment()
 
     private var roundCountChips: Map<DoppelkopfRoundCount, MaterialButton> = emptyMap()
 
-    /** Set while pushing state into the controls, so their listeners do not echo back. */
+    /** Suppresses control listeners while state is pushed into the controls. */
     private var isBinding = false
 
     override fun onCreateView(
@@ -57,10 +52,7 @@ class DoppelkopfGameSettingsSheetFragment : BottomSheetDialogFragment()
         setupObservers()
     }
 
-    /**
-     * Its sections are taller than the collapsed peek height, and a sheet that opens
-     * half-drawn hides the save button behind a drag.
-     */
+    /** Opens expanded so the save button is not hidden below the peek height. */
     override fun onStart()
     {
         super.onStart()
@@ -105,7 +97,7 @@ class DoppelkopfGameSettingsSheetFragment : BottomSheetDialogFragment()
 
     private fun setupObservers()
     {
-        // Only the initial load writes into the text fields; later edits come from the user.
+        // Only the initial load writes into the fields.
         viewModel.loaded.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { draft ->
                 isBinding = true
@@ -152,7 +144,6 @@ class DoppelkopfGameSettingsSheetFragment : BottomSheetDialogFragment()
             }
         }
 
-        // The list is gone, so the screen behind this sheet has nothing to show any more.
         viewModel.deletedEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 setFragmentResult(REQUEST_KEY, bundleOf(RESULT_DELETED to true))
@@ -172,7 +163,6 @@ class DoppelkopfGameSettingsSheetFragment : BottomSheetDialogFragment()
         const val TAG = "DoppelkopfGameSettingsSheet"
         const val REQUEST_KEY = "DoppelkopfGameSettingsRequest"
 
-        /** Set on the result when the list was deleted rather than saved. */
         const val RESULT_DELETED = "deleted"
 
         fun newInstance(gameId: UUID) = DoppelkopfGameSettingsSheetFragment().apply {

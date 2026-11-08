@@ -47,10 +47,6 @@ class LibraryFragment :
         listenForNewLists()
     }
 
-    /**
-     * One listener for the whole screen: the helpers in InsetsManager each consume the insets,
-     * so they cannot be combined on sibling views.
-     */
     private fun applyInsets()
     {
         val scrollBottomPadding = binding.content.paddingBottom
@@ -103,7 +99,6 @@ class LibraryFragment :
         }
     }
 
-    /** Long press on a row: confirm, then the list is gone. */
     private fun askBeforeDeleting(preview: ListPreview)
     {
         requireContext().confirmListDeletion(
@@ -118,10 +113,6 @@ class LibraryFragment :
         }
     }
 
-    /**
-     * Game-type filters. The two games keep separate lists, separate setup and separate
-     * scoring, so this row picks which of them the whole screen is about.
-     */
     private fun setupGameTypeFilters()
     {
         binding.filterSkat.setOnClickListener { viewModel.selectGameType(GameType.SKAT) }
@@ -134,6 +125,7 @@ class LibraryFragment :
     {
         binding.settingsButton.setOnClickListener { showAppSettingsDialog() }
         binding.addButton.setOnClickListener { showNewListSheet() }
+        binding.noRunningList.root.setOnClickListener { showNewListSheet() }
         binding.playersTab.setOnClickListener { navigateToPlayers() }
         binding.listsTab.setOnClickListener { binding.content.smoothScrollTo(0, 0) }
         binding.showAllLink.setOnClickListener { viewModel.showAllRecent() }
@@ -150,7 +142,10 @@ class LibraryFragment :
             )
         }
 
-        viewModel.activeList.observe(viewLifecycleOwner) { bindActiveList(it) }
+        viewModel.activeList.observe(viewLifecycleOwner) {
+            bindActiveList(it)
+            renderEmptyState()
+        }
 
         viewModel.quickStartTemplate.observe(viewLifecycleOwner) { template ->
             val hasTemplate = template != null
@@ -167,6 +162,7 @@ class LibraryFragment :
             gamePreviewAdapter.submitList(previews)
             binding.recentHeader.visibility =
                 if (previews.isEmpty()) View.GONE else View.VISIBLE
+            renderEmptyState()
         }
 
         viewModel.canShowMoreRecent.observe(viewLifecycleOwner) { canShowMore ->
@@ -186,11 +182,23 @@ class LibraryFragment :
         }
     }
 
+    /**
+     * No lists at all: one centred prompt. Lists but none running: a placeholder for the hero
+     * card. Called by both observers, since either can arrive first.
+     */
+    private fun renderEmptyState()
+    {
+        val hasActiveList = viewModel.activeList.value != null
+        val hasNoLists = !hasActiveList && viewModel.recentGames.value.isNullOrEmpty()
+
+        binding.emptyState.root.visibility = if (hasNoLists) View.VISIBLE else View.GONE
+        binding.noRunningList.root.visibility =
+            if (hasActiveList || hasNoLists) View.GONE else View.VISIBLE
+    }
+
     private fun bindActiveList(preview: ListPreview?)
     {
-        val hasActiveList = preview != null
-        binding.activeList.root.visibility = if (hasActiveList) View.VISIBLE else View.GONE
-        binding.noRunningListHint.visibility = if (hasActiveList) View.GONE else View.VISIBLE
+        binding.activeList.root.visibility = if (preview != null) View.VISIBLE else View.GONE
 
         if (preview == null) return
 
@@ -202,7 +210,6 @@ class LibraryFragment :
             bindStanding(player2Name, player2Total, preview, seat = 1)
             bindStanding(player3Name, player3Total, preview, seat = 2)
 
-            // The fourth column only belongs to a Doppelkopf table.
             val hasFourthSeat = preview.playerNames.size > 3
             player4Column.visibility = if (hasFourthSeat) View.VISIBLE else View.GONE
             if (hasFourthSeat) bindStanding(player4Name, player4Total, preview, seat = 3)
@@ -266,10 +273,7 @@ class LibraryFragment :
         LibraryFragmentDirections.actionHomeToAppSettings()
     )
 
-    /**
-     * Opens the new-list sheet for the game currently selected, prefilled from the most recent
-     * list so the usual case is "change nothing and hit Start".
-     */
+    /** Prefilled from the most recent list. */
     private fun showNewListSheet()
     {
         val template = viewModel.quickStartTemplate.value

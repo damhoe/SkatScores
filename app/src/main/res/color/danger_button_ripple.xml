@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Press feedback for the delete button, in the same error colour as its label. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:alpha="0.16"

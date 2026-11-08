@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_player_name_exists">A player with this name already exists.</string>
+    <string name="error_load_list">This list could not be opened.</string>
+    <string name="error_save_settings">The settings could not be saved.</string>
+    <string name="error_delete_list">The list could not be deleted.</string>
+    <string name="error_save_players">The players could not be saved.</string>
+    <string name="error_create_list">The list could not be created.</string>
+    <string name="error_save_round">The round could not be saved.</string>
+    <string name="error_start_list">The list could not be started.</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.game.skat.adapter.presentation.scores
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -20,10 +22,6 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * Backs the round sheet. Holds one [RoundDraft] and republishes it on every edit, so the
- * points preview and the enabled/visible state of the controls always describe the same round.
- */
 @HiltViewModel
 class RoundEntryViewModel @Inject constructor(
     private val skatGameUseCases: SkatGameUseCases,
@@ -44,15 +42,19 @@ class RoundEntryViewModel @Inject constructor(
     private val _participants = MutableLiveData<SkatParticipants>()
     val participants: LiveData<SkatParticipants> = _participants
 
-    /** Round number this sheet is editing, 1-based, for the header. */
+    /** 1-based. */
     private val _roundNumber = MutableLiveData(1)
     val roundNumber: LiveData<Int> = _roundNumber
 
     private val _dismissEvent = MutableLiveData<Event<Unit>>()
     val dismissEvent: LiveData<Event<Unit>> = _dismissEvent
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
+
+    /** Guards against a double tap recording the round twice. */
+    private val _isSaving = MutableLiveData(false)
+    val isSaving: LiveData<Boolean> = _isSaving
 
     init
     {
@@ -80,15 +82,14 @@ class RoundEntryViewModel @Inject constructor(
                 } else
                 {
                     _roundNumber.postValue(skatGame.scores.size + 1)
-                    _draft.postValue(RoundDraft.forNewRound(defaultDeclarer(skatGame)))
+                    _draft.postValue(RoundDraft.forNewRound(forehandOfNextRound(skatGame)))
                 }
             },
             onFailure = { _dismissEvent.postValue(Event(Unit)) }
         )
     }
 
-    /** Forehand of the coming round is the most likely declarer, so preselect that seat. */
-    private fun defaultDeclarer(skatGame: SkatGame): Participant
+    private fun forehandOfNextRound(skatGame: SkatGame): Participant
     {
         val seats = skatGame.participants.asList()
         val forehand = Math.floorMod(skatGame.dealerPosition + 1, seats.size)
@@ -103,12 +104,14 @@ class RoundEntryViewModel @Inject constructor(
     fun setDeclarer(declarer: Participant?) = edit { it.copy(declarer = declarer) }
 
     fun setGame(game: RoundGame) = edit { draft ->
-        // Overbid is not representable for a Null game, so fall back to a plain result.
         val result =
             if (game == RoundGame.NULL && draft.result == RoundResult.OVERBID) RoundResult.LOST
             else draft.result
 
-        draft.copy(game = game, result = result)
+        val spitzen =
+            if (draft.spitzen.value > game.maxSpitzen) Spitzen(game.maxSpitzen) else draft.spitzen
+
+        draft.copy(game = game, result = result, spitzen = spitzen)
     }
 
     fun setSpitzen(value: Int) = edit { draft ->
@@ -120,7 +123,7 @@ class RoundEntryViewModel @Inject constructor(
 
     fun setHand(enabled: Boolean) = edit { it.copy(hand = enabled) }
 
-    /** Schwarz implies Schneider, so clearing Schneider has to clear Schwarz too. */
+    /** Schwarz implies Schneider. */
     fun setSchneider(enabled: Boolean) = edit { draft ->
         if (enabled) draft.copy(schneider = true)
         else draft.copy(schneider = false, schwarz = false, announced = false)
@@ -141,8 +144,11 @@ class RoundEntryViewModel @Inject constructor(
 
     fun save()
     {
+        if (_isSaving.value == true) return
         val draft = _draft.value ?: return
         val game = game ?: return
+
+        _isSaving.value = true
 
         viewModelScope.launch {
             val result =
@@ -157,7 +163,8 @@ class RoundEntryViewModel @Inject constructor(
             result.fold(
                 onSuccess = { _dismissEvent.postValue(Event(Unit)) },
                 onFailure = {
-                    _errorMessage.postValue(Event(it.message ?: "Could not save round"))
+                    _isSaving.value = false
+                    _errorMessage.postValue(userError(R.string.error_save_round, it))
                 }
             )
         }

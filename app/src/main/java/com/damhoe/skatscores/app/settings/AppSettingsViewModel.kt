@@ -18,11 +18,4 @@ class AppSettingsViewModel @Inject constructor(
         viewModelScope.launch {
             storageManager.setTheme(theme)
         }
-
-    val language = storageManager.languageFlow.asLiveData(Dispatchers.IO)
-
-    fun setLanguage(language: String) =
-        viewModelScope.launch {
-            storageManager.setLanguage(language)
-        }
 }

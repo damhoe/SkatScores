@@ -4,14 +4,8 @@ import com.damhoe.skatscores.shared.signed
 import com.damhoe.skatscores.databinding.ViewPointsBreakdownBinding
 import com.damhoe.skatscores.game.skat.domain.SeatBreakdown
 
-/**
- * Binding for the tournament breakdown, shared by the score board and the chart screen.
- *
- * Both surfaces show the same parts in the same seat order, so they format them here rather
- * than each in their own fragment.
- */
+/** Shared by the score board and the chart screen. */
 
-/** Fills the three labelled rows of view_points_breakdown, one column per seat. */
 fun ViewPointsBreakdownBinding.bindBreakdown(breakdowns: List<SeatBreakdown>)
 {
     listOf(gameValue1, gameValue2, gameValue3).forEachIndexed { seat, view ->

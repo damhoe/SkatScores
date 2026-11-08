@@ -9,16 +9,8 @@ import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfSoloKind
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
-/** A soloist plays for three, so their side of the round counts three times. */
 const val SOLO_FACTOR = 3
 
-/**
- * One played Doppelkopf round.
- *
- * A round is always won by one of the two parties, so unlike a Skat round there is no passed
- * case: [winner] and [value] are what every round has, and the two subclasses only differ in
- * how the seats are divided between the parties.
- */
 @Parcelize
 sealed class DoppelkopfScore(
     override val id: UUID,
@@ -27,26 +19,17 @@ sealed class DoppelkopfScore(
     abstract val winner: DoppelkopfParty
     abstract val value: DoppelkopfRoundValue
 
-    /** Which side a seat played on, or null when the seat was not part of this round. */
+    /** Null when the seat is not in this round. */
     abstract fun partyOf(participantId: UUID): DoppelkopfParty?
 
     abstract val isSolo: Boolean
 
-    /** The seat that played alone, or null for a normal game. */
     abstract val soloistId: UUID?
 
-    /**
-     * What the round is worth to one member of the winning party, before the extras a
-     * detailed list adds on top. Mirrors Skat, where a score also reports its plain game
-     * value and the scoring mode is applied when the totals are added up.
-     */
+    /** Per member of the winning party, without extras. */
     override fun toPoints(): Int = value.basePoints(winner, isSolo)
 
-    /**
-     * Points this round is worth for one seat, given what the round came to. The seats of a
-     * round always add up to zero: a soloist wins or loses three times what each opponent
-     * does, and in a normal game the two winners take what the two losers give up.
-     */
+    /** Zero-sum over the seats: the soloist gets three times an opponent's share. */
     fun pointsFor(participantId: UUID, roundValue: Int): Int
     {
         val party = partyOf(participantId) ?: return 0
@@ -56,10 +39,8 @@ sealed class DoppelkopfScore(
         return sign * factor * roundValue
     }
 
-    /** A normal game: two seats hold the queens of clubs and play as Re. */
     class Normal(
         override val id: UUID,
-        /** The two seats that played as Re. */
         val reSeats: Set<UUID>,
         override val winner: DoppelkopfParty,
         override val value: DoppelkopfRoundValue,
@@ -81,7 +62,6 @@ sealed class DoppelkopfScore(
         }
     }
 
-    /** A solo: one seat is Re on their own against the other three. */
     class Solo(
         override val id: UUID,
         val soloist: UUID,
@@ -96,7 +76,6 @@ sealed class DoppelkopfScore(
         override fun partyOf(participantId: UUID): DoppelkopfParty =
             if (participantId == soloist) RE else KONTRA
 
-        /** Whether the soloist came out on top; the round log reads better that way. */
         val soloistWon: Boolean get() = winner == RE
 
         companion object

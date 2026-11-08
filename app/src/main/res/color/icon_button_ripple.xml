@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  State layer for the bare icon buttons in the headers.
-
-  The inherited text-button ripple is keyed to colorPrimary at a low alpha, which is all but
-  invisible on a plain header. These are the M3 state-layer opacities over colorOnSurface, so
-  a press reads as the circular ripple the platform draws everywhere else.
--->
+<!-- M3 state-layer opacities over colorOnSurface; the inherited ripple is nearly invisible. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:alpha="0.12"

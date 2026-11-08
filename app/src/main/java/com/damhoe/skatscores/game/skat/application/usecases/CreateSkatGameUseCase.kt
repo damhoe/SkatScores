@@ -19,7 +19,7 @@ data class CreateSkatGameCommand(
     val settings: SkatSettings,
     val title: Title,
     val playerCount: SkatPlayerCount,
-    /** Who sits at the table. Null means start with placeholder guests. */
+    /** Null starts with placeholder guests. */
     val participants: SkatParticipants? = null,
 ) : Parcelable
 

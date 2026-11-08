@@ -9,7 +9,7 @@ import com.damhoe.skatscores.game.skat.domain.scores.SkatScore.GrandOrSuit.Grand
 import com.damhoe.skatscores.game.skat.domain.scores.SkatScore.Null.NullOptions
 import java.util.UUID
 
-/** What was played. Null is a game of its own, not one of the [SkatSuit] values. */
+/** Null is a game of its own, not a [SkatSuit]. */
 enum class RoundGame
 {
     DIAMONDS,
@@ -31,6 +31,10 @@ enum class RoundGame
             NULL -> null
         }
 
+    /** Only the four jacks are trump in a Grand. */
+    val maxSpitzen: Int
+        get() = if (this == GRAND) 4 else 11
+
     companion object
     {
         fun of(suit: SkatSuit) = when (suit)
@@ -49,21 +53,13 @@ enum class RoundResult
     WON,
     LOST,
 
-    /** Declarer bid higher than the game was worth. Not available for a Null game. */
     OVERBID,
 }
 
-/**
- * A round while it is being entered or edited.
- *
- * This is the single editable representation behind the round sheet: it holds every field of
- * every score type, converts to the matching [SkatScore], and can be rebuilt from one so an
- * existing round can be reopened without losing information.
- */
+/** Editable form of any [SkatScore]; converts both ways without losing information. */
 data class RoundDraft(
-    /** Null while entering a new round. */
     val scoreId: UUID? = null,
-    /** Null means nobody played: the round was passed. */
+    /** Null for a passed round. */
     val declarer: Participant? = null,
     val game: RoundGame = RoundGame.CLUBS,
     val spitzen: Spitzen = Spitzen(1),
@@ -80,16 +76,10 @@ data class RoundDraft(
 
     val isEditingExistingRound: Boolean get() = scoreId != null
 
-    /** A Null game cannot be recorded as overbid, so the option is not offered for it. */
     val canBeOverbid: Boolean get() = game != RoundGame.NULL
 
-    /** Spitzen and the win levels have no effect on a Null game. */
     val usesMultipliers: Boolean get() = game != RoundGame.NULL
 
-    /**
-     * The points this round would score for its declarer. Drives the live preview in the
-     * sheet, so it goes through the same [SkatScore.toPoints] the score board uses.
-     */
     val points: Int get() = toSkatScore(scoreId ?: PREVIEW_ID).toPoints()
 
     fun toSkatScore(id: UUID = scoreId ?: UUID.randomUUID()): SkatScore
@@ -139,10 +129,7 @@ data class RoundDraft(
         else -> null
     }
 
-    /**
-     * Collapses the toggles onto the flat combination enum. Schwarz implies Schneider there,
-     * which is why the Schneider cases come after the Schwarz ones.
-     */
+    /** Schwarz implies Schneider, so the Schwarz cases must be checked first. */
     private fun grandOrSuitOptions() = when
     {
         ouvert -> GrandOrSuitOptions.OUVERT
@@ -156,10 +143,9 @@ data class RoundDraft(
 
     companion object
     {
-        /** Stand-in id while a new round has no identity yet; never persisted. */
+        /** Only for computing a preview; never persisted. */
         private val PREVIEW_ID: UUID = UUID(0L, 0L)
 
-        /** A blank round with the next dealer's left-hand neighbour pre-selected. */
         fun forNewRound(declarer: Participant?) = RoundDraft(declarer = declarer)
 
         fun fromScore(score: SkatScore, participants: SkatParticipants): RoundDraft
@@ -214,7 +200,6 @@ data class RoundDraft(
             GrandOrSuitOptions.HAND_SCHWARZ,
         )
 
-        // Schwarz implies Schneider, so the schwarz combinations count as schneider too.
         private val schneiderOptions = setOf(
             GrandOrSuitOptions.SCHNEIDER,
             GrandOrSuitOptions.HAND_SCHNEIDER,

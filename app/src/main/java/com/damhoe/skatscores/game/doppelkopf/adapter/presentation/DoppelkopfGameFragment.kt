@@ -17,6 +17,7 @@ import com.damhoe.skatscores.game.doppelkopf.adapter.presentation.scores.Doppelk
 import com.damhoe.skatscores.game.doppelkopf.adapter.presentation.scores.DoppelkopfRoundTextFactory
 import com.damhoe.skatscores.game.doppelkopf.domain.DoppelkopfGame
 import com.damhoe.skatscores.game.doppelkopf.domain.scores.DoppelkopfScore
+import com.damhoe.skatscores.shared.shareList
 import com.damhoe.skatscores.shared.signed
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.Snackbar
@@ -35,6 +36,8 @@ class DoppelkopfGameFragment :
     private lateinit var binding: FragmentDoppelkopfGameBinding
     private lateinit var scoreAdapter: DoppelkopfScoreAdapter
 
+    private val roundText by lazy { DoppelkopfRoundTextFactory(requireContext()) }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
@@ -45,7 +48,7 @@ class DoppelkopfGameFragment :
         setupAppBar()
         setupBottomBar()
         setupObservers()
-        listenForRoundChanges()
+        leaveWhenListIsDeleted()
     }
 
     private fun applyInsets()
@@ -79,7 +82,7 @@ class DoppelkopfGameFragment :
 
     private fun setUpRecyclerView()
     {
-        scoreAdapter = DoppelkopfScoreAdapter(this, DoppelkopfRoundTextFactory(requireContext()))
+        scoreAdapter = DoppelkopfScoreAdapter(this, roundText)
         binding.scoresRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = scoreAdapter
@@ -91,21 +94,14 @@ class DoppelkopfGameFragment :
         binding.returnButton.setOnClickListener { findNavController().navigateUp() }
         binding.playersButton.setOnClickListener { showPlayerSeatsSheet() }
         binding.settingsButton.setOnClickListener { showGameSettingsSheet() }
+        binding.shareButton.setOnClickListener { shareGame() }
     }
 
     private fun setupBottomBar()
     {
         binding.editScoreButton.setOnClickListener { showRoundSheet(scoreId = null) }
         binding.chartAction.setOnClickListener { navigateToGameGraph() }
-        // The only way to remove a round, and it only ever removes the newest one. The rows
-        // themselves just edit, so this carries the confirmation the row menu used to show.
-        binding.undoAction.setOnClickListener {
-            viewModel.removeLastScore()
-            Snackbar
-                .make(binding.root, R.string.message_round_removed, Snackbar.LENGTH_LONG)
-                .setAnchorView(binding.bottomPill)
-                .show()
-        }
+        binding.undoAction.setOnClickListener { viewModel.removeLastScore() }
     }
 
     private fun setupObservers()
@@ -118,8 +114,7 @@ class DoppelkopfGameFragment :
 
             val hasRounds = game.scores.isNotEmpty()
             binding.emptyRoundsHint.visibility = if (hasRounds) View.GONE else View.VISIBLE
-            binding.undoAction.isEnabled = hasRounds
-            binding.undoAction.alpha = if (hasRounds) 1f else 0.4f
+            bindUndoAction()
 
             bindScoreboard(game)
         }
@@ -128,40 +123,48 @@ class DoppelkopfGameFragment :
             scoreAdapter.setParticipants(it)
         }
 
+        viewModel.isUndoing.observe(viewLifecycleOwner) { bindUndoAction() }
+
+        viewModel.roundRemovedEvent.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                Snackbar
+                    .make(binding.root, R.string.message_round_removed, Snackbar.LENGTH_LONG)
+                    .setAnchorView(binding.bottomPill)
+                    .show()
+            }
+        }
+
         viewModel.navigateUpEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
-                Snackbar.make(requireView(), "Failed to load game details.", Snackbar.LENGTH_LONG)
+                Snackbar.make(requireView(), R.string.error_load_list, Snackbar.LENGTH_LONG)
                     .show()
                 findNavController().navigateUp()
             }
         }
     }
 
-    /** Each sheet reports back after saving so the board can pick up what changed. */
-    private fun listenForRoundChanges()
+    private fun leaveWhenListIsDeleted()
     {
-        listOf(
-            DoppelkopfRoundEntrySheetFragment.REQUEST_KEY,
+        parentFragmentManager.setFragmentResultListener(
             DoppelkopfGameSettingsSheetFragment.REQUEST_KEY,
-            DoppelkopfPlayerSeatsSheetFragment.REQUEST_KEY,
-        ).forEach { requestKey ->
-            parentFragmentManager.setFragmentResultListener(
-                requestKey,
-                viewLifecycleOwner
-            ) { _, result ->
-                // The settings sheet can delete the list it was opened on; there is no game
-                // left to refresh into, so leave for the library instead.
-                if (result.getBoolean(DoppelkopfGameSettingsSheetFragment.RESULT_DELETED, false))
-                {
-                    findNavController().navigateUp()
-                    return@setFragmentResultListener
-                }
-                viewModel.refresh()
+            viewLifecycleOwner
+        ) { _, result ->
+            if (result.getBoolean(DoppelkopfGameSettingsSheetFragment.RESULT_DELETED, false))
+            {
+                findNavController().navigateUp()
             }
         }
     }
 
-    /** "Runde 9 / 16 · Gibt: Evi" — same shape as the library's active list card. */
+    private fun bindUndoAction()
+    {
+        val enabled = viewModel.game.value?.scores?.isNotEmpty() == true &&
+                viewModel.isUndoing.value != true
+        binding.undoAction.isEnabled = enabled
+        binding.undoAction.alpha = if (enabled) 1f else 0.4f
+    }
+
+    /** "Runde 9 / 16 · Gibt: Evi" */
     private fun progressLabelFor(game: DoppelkopfGame): String
     {
         val rounds = getString(
@@ -216,6 +219,19 @@ class DoppelkopfGameFragment :
         )
     }
 
+    private fun shareGame()
+    {
+        val game = viewModel.game.value ?: return
+
+        if (!shareList(game.asSharedList(requireContext(), roundText)))
+        {
+            Snackbar
+                .make(binding.root, R.string.message_share_failed, Snackbar.LENGTH_LONG)
+                .setAnchorView(binding.bottomPill)
+                .show()
+        }
+    }
+
     private fun showRoundSheet(scoreId: UUID?)
     {
         val gameId = viewModel.gameId ?: return
@@ -232,7 +248,6 @@ class DoppelkopfGameFragment :
         )
     }
 
-    /** The seats are their own sheet, so that a substitution is one tap from the board. */
     private fun showPlayerSeatsSheet()
     {
         val gameId = viewModel.gameId ?: return

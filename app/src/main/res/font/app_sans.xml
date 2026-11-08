@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Text face for the redesigned screens: Geist (OFL).
-
-  Four static weights rather than the variable TTF, so android:textFontWeight in
-  redesign_styles.xml resolves to a real cut instead of a synthetic one. Italics are not
-  shipped because nothing in the design uses them.
--->
+<!-- Geist (OFL). Static weights, so textFontWeight resolves to real cuts. -->
 <font-family xmlns:android="http://schemas.android.com/apk/res/android">
     <font
         android:font="@font/geist_regular"

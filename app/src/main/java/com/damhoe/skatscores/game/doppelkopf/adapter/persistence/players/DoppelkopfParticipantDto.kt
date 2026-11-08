@@ -59,7 +59,6 @@ data class DoppelkopfParticipantDto(
             seat: Int,
         ): DoppelkopfParticipantDto
         {
-            // Keep the participant id: scores reference it to find their score board column.
             return DoppelkopfParticipantDto(
                 id = participant.id,
                 gameId = gameId,

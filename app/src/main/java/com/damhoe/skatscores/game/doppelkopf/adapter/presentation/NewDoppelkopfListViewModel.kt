@@ -1,5 +1,7 @@
 package com.damhoe.skatscores.game.doppelkopf.adapter.presentation
 
+import com.damhoe.skatscores.R
+import com.damhoe.skatscores.shared.userError
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,12 +19,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * A new Doppelkopf list while it is being set up.
- *
- * Seats are deliberately absent, as for a Skat list: a new list starts with placeholder players
- * and they are chosen in the game view.
- */
+/** No seats: a new list starts with placeholder players. */
 data class NewDoppelkopfListDraft(
     val title: String = "",
     val roundCount: DoppelkopfRoundCount = DoppelkopfGameDefaults.RoundCount,
@@ -46,8 +43,8 @@ class NewDoppelkopfListViewModel @Inject constructor(
     private val _navigateToGame = MutableLiveData<Event<UUID>>()
     val navigateToGame: LiveData<Event<UUID>> = _navigateToGame
 
-    private val _errorMessage = MutableLiveData<Event<String>>()
-    val errorMessage: LiveData<Event<String>> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<Int>>()
+    val errorMessage: LiveData<Event<Int>> = _errorMessage
 
     val roundCountOptions: List<DoppelkopfRoundCount> =
         DoppelkopfRoundCount.ALLOWED_VALUES.map { DoppelkopfRoundCount(it) }
@@ -59,7 +56,6 @@ class NewDoppelkopfListViewModel @Inject constructor(
     fun setScoringMode(scoringMode: DoppelkopfScoringMode) =
         edit { it.copy(scoringMode = scoringMode) }
 
-    /** Starts from a suggested name and round count, usually taken from the last list. */
     fun prefill(title: String, roundCount: DoppelkopfRoundCount?) = edit { draft ->
         draft.copy(title = title, roundCount = roundCount ?: draft.roundCount)
     }
@@ -87,12 +83,11 @@ class NewDoppelkopfListViewModel @Inject constructor(
                         scoringMode = draft.scoringMode,
                     ),
                     title = title,
-                    // No participants: the use case seats placeholder guests.
                 )
             ).fold(
                 onSuccess = { game -> _navigateToGame.postValue(Event(game.id)) },
                 onFailure = {
-                    _errorMessage.postValue(Event(it.message ?: "Could not create list"))
+                    _errorMessage.postValue(userError(R.string.error_create_list, it))
                 }
             )
         }

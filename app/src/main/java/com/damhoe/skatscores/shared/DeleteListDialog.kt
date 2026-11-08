@@ -4,14 +4,6 @@ import android.content.Context
 import com.damhoe.skatscores.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-/**
- * The one confirmation for deleting a list, shared by the two places that can start it: a long
- * press on a row on home, and the delete button in the game settings sheet.
- *
- * Deleting a list is not undoable, so it asks first and names what goes with it. The running
- * list never appears in the recent rows - the hero card holds it - which is why the settings
- * sheet needs the same door.
- */
 fun Context.confirmListDeletion(
     listName: String,
     roundsPlayed: Int,

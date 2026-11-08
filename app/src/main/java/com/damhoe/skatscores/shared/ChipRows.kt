@@ -9,15 +9,7 @@ import com.google.android.material.button.MaterialButton
 private const val CHIP_HEIGHT_DP = 44
 private const val CHIP_GAP_DP = 8
 
-/**
- * Fills a vertical container with rows of selection chips, one chip per value.
- *
- * Chips are inflated from [R.layout.view_sheet_chip] rather than constructed so they keep the
- * sheet chip style, and building them from data means a row can only ever offer values the
- * caller actually supports.
- *
- * @return the chip for each value, so the caller can drive checked and enabled state
- */
+/** Inflated from [R.layout.view_sheet_chip] to keep the sheet chip style. */
 fun <T> LinearLayout.fillWithChipRows(
     values: List<T>,
     perRow: Int = 3,
@@ -50,7 +42,6 @@ fun <T> LinearLayout.fillWithChipRows(
             row.addView(chip)
         }
 
-        // Keep a short last row aligned with the full ones above it.
         repeat(perRow - rowValues.size) {
             val filler = View(context)
             filler.layoutParams = LinearLayout.LayoutParams(0, dp(CHIP_HEIGHT_DP), 1f).apply {

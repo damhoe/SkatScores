@@ -1,146 +1,118 @@
 package com.damhoe.skatscores.game.doppelkopf.adapter.persistence.scores
 
-import android.util.Log
+import com.damhoe.skatscores.persistence.DatabaseConstants.DoppelkopfGamesTable
 import com.damhoe.skatscores.persistence.DatabaseConstants.DoppelkopfScoresTable
+import com.damhoe.skatscores.persistence.DatabaseConstants.SyncColumns
 import com.damhoe.skatscores.persistence.DatabaseHelper
-import com.damhoe.skatscores.persistence.getIntOrNull
 import com.damhoe.skatscores.persistence.mapToList
 import com.damhoe.skatscores.persistence.mapToOneOrNull
+import com.damhoe.skatscores.persistence.run
+import com.damhoe.skatscores.persistence.softDelete
+import com.damhoe.skatscores.persistence.updateStamped
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val TAG = "DoppelkopfScoresAdapter"
-
+/** Rounds in `seq` order; undone rounds are tombstoned and never read. */
 @Singleton
 class DoppelkopfScorePersistenceAdapter @Inject constructor(
     val databaseHelper: DatabaseHelper,
 )
 {
-    fun getScoresForGame(gameId: UUID): List<DoppelkopfScoreDto>
+    fun getScoresForGame(gameId: UUID): Result<List<DoppelkopfScoreDto>>
     {
         return databaseHelper.readableDatabase.run {
             val query = "SELECT * FROM ${DoppelkopfScoresTable.TABLE_NAME}" +
                     " WHERE ${DoppelkopfScoresTable.COLUMN_GAME_ID} = ?" +
-                    " ORDER BY ${DoppelkopfScoresTable.COLUMN_ROUND} ASC"
+                    " AND ${SyncColumns.COLUMN_DELETED_AT} IS NULL" +
+                    " ORDER BY ${DoppelkopfScoresTable.COLUMN_SEQ} ASC"
 
-            rawQuery(query, arrayOf(gameId.toString()))
+            val scores = rawQuery(query, arrayOf(gameId.toString()))
                 .mapToList { cursor -> DoppelkopfScoreDto.mapFrom(cursor) }
+
+            Result.success(scores)
+        }
+    }
+
+    fun getScoresOfLiveGames(): Result<List<DoppelkopfScoreDto>>
+    {
+        return databaseHelper.readableDatabase.run {
+            val query = "SELECT s.* FROM ${DoppelkopfScoresTable.TABLE_NAME} s" +
+                    " INNER JOIN ${DoppelkopfGamesTable.TABLE_NAME} g" +
+                    " ON g.${DoppelkopfGamesTable.COLUMN_ID} = s.${DoppelkopfScoresTable.COLUMN_GAME_ID}" +
+                    " WHERE g.${SyncColumns.COLUMN_DELETED_AT} IS NULL" +
+                    " AND s.${SyncColumns.COLUMN_DELETED_AT} IS NULL" +
+                    " ORDER BY s.${DoppelkopfScoresTable.COLUMN_GAME_ID}," +
+                    " s.${DoppelkopfScoresTable.COLUMN_SEQ}"
+
+            val scores = rawQuery(query, null)
+                .mapToList { cursor -> DoppelkopfScoreDto.mapFrom(cursor) }
+
+            Result.success(scores)
+        }
+    }
+
+    /** Includes undone rounds, so a new round never takes an undone round's slot. */
+    fun lastSeq(gameId: UUID): Result<String?>
+    {
+        return databaseHelper.readableDatabase.run {
+            val query = "SELECT MAX(${DoppelkopfScoresTable.COLUMN_SEQ})" +
+                    " FROM ${DoppelkopfScoresTable.TABLE_NAME}" +
+                    " WHERE ${DoppelkopfScoresTable.COLUMN_GAME_ID} = ?"
+
+            val seq = rawQuery(query, arrayOf(gameId.toString()))
+                .mapToOneOrNull { cursor -> if (cursor.isNull(0)) null else cursor.getString(0) }
+
+            Result.success(seq)
         }
     }
 
     fun insert(score: DoppelkopfScoreDto): Result<Unit>
     {
         return databaseHelper.writableDatabase.run {
-            val rowId = insert(
-                DoppelkopfScoresTable.TABLE_NAME,
-                null,
-                score.toContentValues(),
-            )
-
-            if (rowId > 0)
-            {
-                Log.d(TAG, "Inserted DoppelkopfScore: ${score.id}")
-                Result.success(Unit)
-            } else
-            {
-                Result.failure(
-                    IllegalStateException("Failed to insert DoppelkopfScore: ${score.id}")
-                )
-            }
+            insertOrThrow(DoppelkopfScoresTable.TABLE_NAME, null, score.toContentValues())
+            Result.success(Unit)
         }
     }
 
-    /**
-     * Replaces a round in place. The row keeps its id and round number, so the score board
-     * order and the unique (game_id, round) constraint are unaffected.
-     */
+    /** Keeps id and seq; fails when the round has been undone. */
     fun update(score: DoppelkopfScoreDto): Result<Unit>
     {
         return databaseHelper.writableDatabase.run {
-            val rowsAffected = update(
+            val rowsAffected = updateStamped(
                 DoppelkopfScoresTable.TABLE_NAME,
-                score.toContentValues(),
-                "${DoppelkopfScoresTable.COLUMN_ID} = ?",
-                arrayOf(score.id.toString()),
+                score.toEditContentValues(),
+                "${DoppelkopfScoresTable.COLUMN_ID} = ?" +
+                        " AND ${DoppelkopfScoresTable.COLUMN_GAME_ID} = ?" +
+                        " AND ${SyncColumns.COLUMN_DELETED_AT} IS NULL",
+                arrayOf(score.id.toString(), score.gameId.toString()),
             )
 
-            if (rowsAffected > 0)
-            {
-                Log.d(TAG, "Updated DoppelkopfScore: ${score.id}")
-                Result.success(Unit)
-            } else
-            {
-                Result.failure(
-                    IllegalStateException("No DoppelkopfScore found to update: ${score.id}")
-                )
-            }
+            if (rowsAffected > 0) Result.success(Unit)
+            else Result.failure(NoSuchElementException("No round ${score.id} to update"))
         }
     }
 
-    fun delete(id: UUID): Result<Unit>
+    /** The id of the round taken back, or null when the list has none. */
+    fun softDeleteLast(gameId: UUID): Result<UUID?>
     {
         return databaseHelper.writableDatabase.run {
-            val rowsAffected = delete(
-                DoppelkopfScoresTable.TABLE_NAME,
-                "${DoppelkopfScoresTable.COLUMN_ID} = ?",
-                arrayOf(id.toString()),
-            )
-
-            if (rowsAffected > 0)
-            {
-                Result.success(Unit)
-            } else
-            {
-                Result.failure(NoSuchElementException("No DoppelkopfScore found with ID: $id"))
-            }
-        }
-    }
-
-    /** Drops every round of a list; see the note on the participants adapter. */
-    fun deleteAllOfGame(gameId: UUID): Result<Unit>
-    {
-        return databaseHelper.writableDatabase.run {
-            delete(
-                DoppelkopfScoresTable.TABLE_NAME,
-                "${DoppelkopfScoresTable.COLUMN_GAME_ID} = ?",
-                arrayOf(gameId.toString()),
-            )
-
-            Result.success(Unit)
-        }
-    }
-
-    /**
-     * Closes the gap left by a deleted round. Rounds are dense and zero-based, and
-     * (game_id, round) is unique, so later rounds have to shift down.
-     */
-    fun shiftRoundsDown(gameId: UUID, fromRound: Int): Result<Unit>
-    {
-        return databaseHelper.writableDatabase.run {
-            execSQL(
-                "UPDATE ${DoppelkopfScoresTable.TABLE_NAME}" +
-                        " SET ${DoppelkopfScoresTable.COLUMN_ROUND} = ${DoppelkopfScoresTable.COLUMN_ROUND} - 1" +
+            val lastId = rawQuery(
+                "SELECT ${DoppelkopfScoresTable.COLUMN_ID} FROM ${DoppelkopfScoresTable.TABLE_NAME}" +
                         " WHERE ${DoppelkopfScoresTable.COLUMN_GAME_ID} = ?" +
-                        " AND ${DoppelkopfScoresTable.COLUMN_ROUND} > ?",
-                arrayOf(gameId.toString(), fromRound)
+                        " AND ${SyncColumns.COLUMN_DELETED_AT} IS NULL" +
+                        " ORDER BY ${DoppelkopfScoresTable.COLUMN_SEQ} DESC LIMIT 1",
+                arrayOf(gameId.toString()),
+            ).mapToOneOrNull { cursor -> cursor.getString(0) }
+                ?: return@run Result.success(null)
+
+            softDelete(
+                DoppelkopfScoresTable.TABLE_NAME,
+                "${DoppelkopfScoresTable.COLUMN_ID} = ?",
+                arrayOf(lastId),
             )
 
-            Result.success(Unit)
-        }
-    }
-
-    fun getRound(id: UUID): Result<Int?>
-    {
-        return databaseHelper.readableDatabase.run {
-            val query = "SELECT ${DoppelkopfScoresTable.COLUMN_ROUND}" +
-                    " FROM ${DoppelkopfScoresTable.TABLE_NAME}" +
-                    " WHERE ${DoppelkopfScoresTable.COLUMN_ID} = ?"
-
-            val round = rawQuery(query, arrayOf(id.toString()))
-                .mapToOneOrNull { cursor -> cursor.getIntOrNull(DoppelkopfScoresTable.COLUMN_ROUND) }
-
-            Result.success(round)
+            Result.success(UUID.fromString(lastId))
         }
     }
 }

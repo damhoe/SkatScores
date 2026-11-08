@@ -13,10 +13,6 @@ import java.time.Instant
 import java.util.UUID
 import kotlin.math.max
 
-/**
- * The shape the game graph relies on: one running-total series per seat, aligned with the
- * score board columns, plus the vertical range the chart derives from it.
- */
 class PointsHistoryTest
 {
     private val forehand = Participant.Guest(UUID.randomUUID(), PlayerName("Marlon"))
@@ -69,8 +65,6 @@ class PointsHistoryTest
         assertTrue(history.all { it == listOf(0, 0) })
     }
 
-    // The chart centres its vertical range on the data and never lets it collapse; a zero
-    // height would divide by zero when mapping points to pixels.
     private fun verticalSpanOf(history: List<List<Int>>, minSpan: Float = 40f): Float
     {
         val all = history.flatten()

@@ -13,17 +13,13 @@ data class SkatParticipants(
     val rearHand: Participant
 ) : Parcelable
 {
-    /** The participants in table order, i.e. the column order used on the score board. */
+    /** Table order, which is also the score board's column order. */
     fun asList(): List<Participant> = listOf(foreHand, middleHand, rearHand)
 
-    /** Column of the given participant on the score board, or null if not at this table. */
     fun seatOf(participantId: UUID): Int? =
         asList().indexOfFirst { it.id == participantId }.takeIf { it >= 0 }
 
-    /**
-     * The same people at the same seats, but as fresh participants. Used when starting a new
-     * list from an old one: participant ids are per-list, so they must not be shared.
-     */
+    /** Same people and seats with new ids; participant ids belong to one list. */
     fun asNewParticipants(): SkatParticipants = SkatParticipants(
         foreHand = foreHand.withId(UUID.randomUUID()),
         middleHand = middleHand.withId(UUID.randomUUID()),
@@ -32,11 +28,7 @@ data class SkatParticipants(
 
     companion object
     {
-        /**
-         * Placeholder seats for a list that has just been created. These are visible until
-         * the players are picked in the game view, so they read as slots to fill rather than
-         * as table positions.
-         */
+        /** Placeholder guests until the players are picked. */
         fun createNew(): SkatParticipants
         {
             return SkatParticipants(

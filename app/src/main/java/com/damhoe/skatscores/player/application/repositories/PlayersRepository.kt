@@ -7,9 +7,14 @@ import java.util.UUID
 interface PlayersRepository
 {
     suspend fun insert(player: Player): Result<Unit>
+
+    /** The player's seats stay as guests. */
     suspend fun delete(id: UUID): Result<Player?>
+
+    /** Also renames the seats linked to the player. */
     suspend fun update(player: Player): Result<Unit>
-    fun get(id: UUID): Result<Player?>
-    suspend fun refreshAll()
+
+    suspend fun get(id: UUID): Result<Player?>
+
     val allPlayers: StateFlow<List<Player>>
 }

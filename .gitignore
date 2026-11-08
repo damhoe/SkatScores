@@ -13,3 +13,15 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Release signing: the upload key and its passwords never go into the repository.
+keystore.properties
+*.jks
+*.keystore
+
+# Per-developer IDE state: devices, deployment targets, assistant settings.
+/.idea/appInsightsSettings.xml
+/.idea/deploymentTargetDropDown.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deviceManager.xml
+/.idea/studiobot.xml

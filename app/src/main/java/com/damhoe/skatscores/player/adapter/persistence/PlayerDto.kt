@@ -3,7 +3,7 @@ package com.damhoe.skatscores.player.adapter.persistence
 import android.database.Cursor
 import androidx.core.content.contentValuesOf
 import com.damhoe.skatscores.persistence.DatabaseConstants.PlayersTable
-import com.damhoe.skatscores.persistence.DatabaseConstants.SkatGamesTable
+import com.damhoe.skatscores.persistence.Schema
 import com.damhoe.skatscores.persistence.getStringOrNull
 import com.damhoe.skatscores.persistence.getUuidOrNull
 import com.damhoe.skatscores.player.domain.Player
@@ -29,6 +29,7 @@ class PlayerDto(
     fun toContentValues() = contentValuesOf(
         PlayersTable.COLUMN_ID to id.toString(),
         PlayersTable.COLUMN_NAME to name,
+        PlayersTable.COLUMN_CREATED_AT to Schema.timestamp(createdAt),
     )
 
     companion object
@@ -44,7 +45,7 @@ class PlayerDto(
 
         fun mapFrom(cursor: Cursor): PlayerDto
         {
-            val id = cursor.getUuidOrNull(SkatGamesTable.COLUMN_ID)!!
+            val id = cursor.getUuidOrNull(PlayersTable.COLUMN_ID)!!
             val name = cursor.getStringOrNull(PlayersTable.COLUMN_NAME)!!
 
             val createdAtString = cursor.getStringOrNull(PlayersTable.COLUMN_CREATED_AT)

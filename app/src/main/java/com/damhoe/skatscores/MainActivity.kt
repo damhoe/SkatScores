@@ -1,15 +1,11 @@
 package com.damhoe.skatscores
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.navigateUp
 import com.damhoe.skatscores.app.settings.AppSettingsViewModel
@@ -33,25 +29,18 @@ class MainActivity : AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
+        // Before super.onCreate, so the first frame already uses the stored theme.
+        (application as SkatScoresApp).applyStoredTheme()
         super.onCreate(savedInstanceState)
 
-        if (savedInstanceState != null && Build.VERSION.SDK_INT >= 35) {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-        }
         enableEdgeToEdge()
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        viewModel.language.observe(this) {
-            settingsManager.setLanguage(it)
-        }
         viewModel.theme.observe(this) {
             settingsManager.setTheme(it)
         }
-
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
-        val navController = navHostFragment!!.navController
     }
 
     val appBarConfiguration: AppBarConfiguration

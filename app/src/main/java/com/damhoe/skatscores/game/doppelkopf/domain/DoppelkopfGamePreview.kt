@@ -6,12 +6,7 @@ import com.damhoe.skatscores.game.common.Title
 import java.time.Instant
 import java.util.UUID
 
-/**
- * Everything the home screen needs about one Doppelkopf list.
- *
- * Seat order of [playerNames] and [totals] is the table order of
- * [DoppelkopfParticipants.asList].
- */
+/** [playerNames] and [totals] are in the seat order of [DoppelkopfParticipants.asList]. */
 data class DoppelkopfGamePreview(
     val title: Title,
     val playedAt: Instant,

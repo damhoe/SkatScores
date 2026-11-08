@@ -15,7 +15,7 @@
     <string name="hint_player2">Player 2</string>
     <string name="hint_player1">Player 1</string>
     <string name="default_list_title">Skatround</string>
-    <string name="text_about">Version 1.0 (2023)\nCopyright © Geneva 2023\nThis app was developed by Damian Hoedtke.</string>
+    <string name="text_about">Version %1$s\nThis app was developed by Damian Hoedtke.</string>
     <string name="description_new_score">Create a new score</string>
 
     <string name="german">German</string>
@@ -52,19 +52,10 @@
     <string name="description_diamonds">Diamonds</string>
     <string name="text_info_no_players">Create player profiles for your games.</string>
     <string name="description_create_new_profile">Create a new profile</string>
-    <string name="passe_text">This game was passed.</string>
-    <string name="overbid_text">It was overbidden.</string>
-    <string name="won_text">Won</string>
-    <string name="lost_text">Lost</string>
     <string name="title_library">Lists</string>
     <string name="title_players_short">Players</string>
     <string name="language_preference_title">Language</string>
     <string name="theme_preference_title">Theme</string>
-    <string name="system_preference_category_title">System</string>
-    <string name="behavior_preference_category_title">Behavior</string>
-    <string name="badge_preference_title">Show unfinished games as badge</string>
-    <string name="other_preference_category_title">Other</string>
-    <string name="about_preference_title">About this app</string>
     <string name="hint_player_name">Name</string>
     <string name="dialog_title_create_player">Create player</string>
     <string name="dialog_title_button_cancel">Cancel</string>
@@ -76,14 +67,9 @@
     <string name="dialog_title_edit_player_name">Change name</string>
     <string name="title_button_delete">Delete</string>
     <string name="title_button_player_statistics">View stats</string>
-    <string name="theme_preference_key" translatable="false">ui_mode</string>
-    <string name="badge_preference_key" translatable="false">unfinished_as_badge</string>
-    <string name="about_preference_key" translatable="false">about</string>
-    <string name="language_preference_key" translatable="false">language</string>
     <string name="title_game_settings">Settings</string>
     <string name="title_bidding">Bidding value</string>
 
-    <!-- Home / Game redesign -->
     <string name="greeting_morning">Good morning</string>
     <string name="greeting_afternoon">Good afternoon</string>
     <string name="greeting_evening">Good evening</string>
@@ -95,7 +81,10 @@
     <string name="title_same_round_again">Same round again</string>
     <string name="title_recently_played">Recently played</string>
     <string name="title_show_all">All</string>
-    <string name="title_no_running_list">No list running — start a new one.</string>
+    <string name="title_no_running_list">No list running</string>
+    <string name="text_no_running_list">Start a new one, or pick up one from below.</string>
+    <string name="title_empty_lists">No lists yet</string>
+    <string name="text_empty_lists">Tap + to start a list. Every round you score for your table lands here.</string>
     <string name="description_quick_start">Start a new list with the same players</string>
     <string name="description_new_list">New list</string>
     <string name="message_list_deleted">List deleted</string>
@@ -110,6 +99,8 @@
     <string name="message_round_removed">Round removed</string>
     <string name="description_undo">Undo last round</string>
     <string name="description_share">Share list</string>
+    <string name="format_share_footer">Scored with %1$s</string>
+    <string name="message_share_failed">No app to share with</string>
     <string name="description_close">Close</string>
     <string name="description_clear_player">Clear name</string>
     <string name="menu_delete_list">Delete list</string>
@@ -124,7 +115,6 @@
     <string name="error_duplicate_players">Players need different names</string>
     <string name="label_game_type_skat" translatable="false">Skat</string>
     <string name="label_game_type_doppelkopf" translatable="false">Doppelkopf</string>
-    <!-- "2 Skat". The game names are proper nouns, so only the number moves. -->
     <string name="format_game_list_count" translatable="false">%1$d %2$s</string>
     <string name="label_no_lists_yet">No lists yet</string>
     <string name="text_edit_players_hint">Rounds already recorded stay with their seat.</string>
@@ -155,7 +145,6 @@
         <item quantity="other">%d rounds already played</item>
     </plurals>
 
-    <!-- Doppelkopf -->
     <string name="title_new_doppelkopf_list">New Doppelkopf list</string>
     <string name="default_doppelkopf_list_title">Doppelkopf</string>
     <string name="description_new_doppelkopf_list">New Doppelkopf list</string>
@@ -198,7 +187,6 @@
     <string name="label_minus" translatable="false">−</string>
     <string name="format_solo_round">Solo · %s</string>
 
-    <!-- Statistics -->
     <string name="format_rounds_in_lists">%1$s in %2$s</string>
     <plurals name="label_round_count">
         <item quantity="one">1 round</item>
