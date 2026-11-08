@@ -2,7 +2,7 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
-    id("com.android.legacy-kapt")
+    id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.parcelize")
     id("androidx.navigation.safeargs")
     id("com.google.dagger.hilt.android")
@@ -104,7 +104,7 @@ dependencies {
 
     // Dagger
     implementation("com.google.dagger:hilt-android:2.60.1")
-    kapt("com.google.dagger:hilt-compiler:2.60.1")
+    ksp("com.google.dagger:hilt-compiler:2.60.1")
 
     // Data store
     implementation("androidx.datastore:datastore-core-android:1.3.0")
@@ -114,7 +114,4 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
-}
-kapt {
-    correctErrorTypes = true
 }
