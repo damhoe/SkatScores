@@ -2,8 +2,7 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.kapt")
+    id("com.android.legacy-kapt")
     id("org.jetbrains.kotlin.plugin.parcelize")
     id("androidx.navigation.safeargs")
     id("com.google.dagger.hilt.android")
@@ -67,10 +66,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlin {
-        jvmToolchain(17)
-    }
-
     buildFeatures {
         dataBinding = true
     }
@@ -78,6 +73,10 @@ android {
     packaging {
         resources.excludes.add("META-INF/*")
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
