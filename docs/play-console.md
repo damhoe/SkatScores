@@ -1,7 +1,7 @@
 # Play Console release checklist
 
 What has to happen outside the code before SkatScores can go to production. The code side of
-Phase 3 (target API 36, release signing) is done in `app/build.gradle.kts`.
+Phase 3 (target API 37, release signing) is done in `app/build.gradle.kts`.
 
 ## 1. Upload key and Play App Signing
 
@@ -23,17 +23,23 @@ Phase 3 (target API 36, release signing) is done in `app/build.gradle.kts`.
 
 ## 2. Target API level
 
-`targetSdk = 36`. Play requires new apps and updates to target the level of the previous year's
+`targetSdk = 37` (Android 17). Play requires new apps and updates to target the level of the previous year's
 Android release; check the current deadline under *Policy → App content* or the
 "Target API level requirements" help page before uploading.
 
-Behaviour that API 36 changes, to check on an Android 16 device or emulator:
+Behaviour that API 36 and 37 change, to check on an Android 17 device or emulator:
 
 - Predictive back is on: back from the round sheet, settings sheets and the player screens
   should animate and close them. The app has no custom back handling.
-- On large screens (≥ 600 dp) orientation and resizability locks are ignored. The app sets
-  none, so only layout quality on tablets/foldables is at stake (Phase 4).
+- On large screens (≥ 600 dp) orientation and resizability locks are ignored, and since API 37
+  there is no opt-out. The app sets none, so only layout quality on tablets/foldables is at
+  stake (Phase 4).
 - Edge-to-edge cannot be opted out of; the app already draws edge-to-edge.
+- On Android 17 the keyboard is no longer re-shown after rotation (all apps, any target):
+  check that the name fields in the new-list and player sheets still behave acceptably.
+- Android 18 will stop granting URI permissions implicitly for `ACTION_SEND`. Sharing sends
+  plain text only, so nothing to change unless file sharing is added; then set
+  `FLAG_GRANT_READ_URI_PERMISSION`.
 
 ## 3. App content (Policy → App content)
 
@@ -104,7 +110,7 @@ production access. Organisation accounts are exempt.
    about the test.
 
 Use the pre-launch report of the first upload: it runs the app on real devices and flags
-crashes, accessibility issues (touch targets, contrast) and API 36 problems.
+crashes, accessibility issues (touch targets, contrast) and API 37 problems.
 
 ## 5. Store listing
 
