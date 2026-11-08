@@ -3,321 +3,318 @@
   Chip rows are LinearLayouts, not toggle groups, which would fuse the chips into one bar.
   Single selection is enforced in the fragment.
 -->
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_bottom_sheet"
+        android:clipToPadding="false">
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_bottom_sheet"
-            android:clipToPadding="false">
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="20dp">
+
+        <View
+                android:layout_width="38dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/bg_drag_handle" />
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="20dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="20dp"
-                android:paddingBottom="20dp">
-
-            <View
-                    android:layout_width="38dp"
-                    android:layout_height="4dp"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/bg_drag_handle" />
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:baselineAligned="false"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                <TextView
-                        android:id="@+id/sheetTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAppearance="@style/TextAppearance.App.AppBarTitle"
-                        tools:text="Runde 9" />
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/closeButton"
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:contentDescription="@string/description_close"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        app:icon="@drawable/ic_close_24dp"
-                        app:iconSize="20dp"
-                        app:iconTint="?attr/colorOutline" />
-
-            </LinearLayout>
+                android:layout_marginTop="14dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
             <TextView
-                    style="@style/Widget.App.Sheet.SectionLabel"
-                    android:text="@string/title_round_kind" />
-
-            <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/sheetTitle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.App.AppBarTitle"
+                    tools:text="Runde 9" />
 
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/kindNormal"
-                        style="@style/Widget.App.Sheet.Chip"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:text="@string/label_round_normal" />
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/kindSolo"
-                        style="@style/Widget.App.Sheet.Chip"
-                        android:layout_width="0dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:text="@string/label_round_solo" />
-
-            </LinearLayout>
-
-            <TextView
-                    android:id="@+id/seatsLabel"
-                    style="@style/Widget.App.Sheet.SectionLabel"
-                    android:text="@string/title_who_was_re" />
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/seat1"
-                        style="@style/Widget.App.Sheet.Chip"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        tools:text="Marlon" />
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/seat2"
-                        style="@style/Widget.App.Sheet.Chip"
-                        android:layout_width="0dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        tools:text="Evi" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/seat3"
-                        style="@style/Widget.App.Sheet.Chip"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        tools:text="Daniel" />
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/seat4"
-                        style="@style/Widget.App.Sheet.Chip"
-                        android:layout_width="0dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        tools:text="Sonja" />
-
-            </LinearLayout>
-
-            <TextView
-                    android:id="@+id/seatsHint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textAppearance="@style/TextAppearance.App.Meta"
-                    tools:text="Mark the two players who had the queens of clubs." />
-
-            <LinearLayout
-                    android:id="@+id/soloKindBlock"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                <TextView
-                        style="@style/Widget.App.Sheet.SectionLabel"
-                        android:text="@string/title_solo_kind" />
-
-                <LinearLayout
-                        android:id="@+id/soloKindRows"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
-
-            </LinearLayout>
-
-            <TextView
-                    style="@style/Widget.App.Sheet.SectionLabel"
-                    android:text="@string/title_winner" />
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/winnerRe"
-                        style="@style/Widget.App.Sheet.Chip"
-                        android:layout_width="0dp"
-                        android:layout_height="46dp"
-                        android:layout_weight="1"
-                        android:text="@string/label_re" />
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/winnerKontra"
-                        style="@style/Widget.App.Sheet.Chip"
-                        android:layout_width="0dp"
-                        android:layout_height="46dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:text="@string/label_kontra" />
-
-            </LinearLayout>
-
-            <TextView
-                    style="@style/Widget.App.Sheet.SectionLabel"
-                    android:text="@string/title_win_level" />
-
-            <LinearLayout
-                    android:id="@+id/winLevelRows"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-
-            <TextView
-                    style="@style/Widget.App.Sheet.SectionLabel"
-                    android:text="@string/title_dk_announcements" />
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/announceRe"
-                        style="@style/Widget.App.Sheet.Toggle"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:text="@string/label_re" />
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/announceKontra"
-                        style="@style/Widget.App.Sheet.Toggle"
-                        android:layout_width="0dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:text="@string/label_kontra" />
-
-            </LinearLayout>
-
-            <TextView
-                    style="@style/Widget.App.Sheet.SectionLabel"
-                    android:text="@string/title_dk_absage" />
-
-            <LinearLayout
-                    android:id="@+id/absageRows"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-
-            <LinearLayout
-                    android:id="@+id/extraPointsBlock"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                <TextView
-                        style="@style/Widget.App.Sheet.SectionLabel"
-                        android:text="@string/title_dk_extra_points" />
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_dk_extra_points_hint"
-                        android:textAppearance="@style/TextAppearance.App.Meta" />
-
-                <include
-                        android:id="@+id/extraRe"
-                        layout="@layout/view_extra_points_stepper"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp" />
-
-                <include
-                        android:id="@+id/extraKontra"
-                        layout="@layout/view_extra_points_stepper"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:baselineAligned="false"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                    <TextView
-                            android:id="@+id/pointsForLabel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textAppearance="@style/TextAppearance.App.MetaSmall"
-                            tools:text="Punkte für Re" />
-
-                    <TextView
-                            android:id="@+id/pointsPreview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.App.PointsPreview"
-                            tools:text="+4" />
-
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButton
-                        android:id="@+id/saveButton"
-                        style="@style/Widget.App.Sheet.SaveButton"
-                        android:layout_width="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="@string/dialog_title_button_save" />
-
-            </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/closeButton"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="@string/description_close"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:icon="@drawable/ic_close_24dp"
+                    app:iconSize="20dp"
+                    app:iconTint="?attr/colorOutline" />
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+        <TextView
+                style="@style/Widget.App.Sheet.SectionLabel"
+                android:text="@string/title_round_kind" />
 
-</layout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/kindNormal"
+                    style="@style/Widget.App.Sheet.Chip"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/label_round_normal" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/kindSolo"
+                    style="@style/Widget.App.Sheet.Chip"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/label_round_solo" />
+
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/seatsLabel"
+                style="@style/Widget.App.Sheet.SectionLabel"
+                android:text="@string/title_who_was_re" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/seat1"
+                    style="@style/Widget.App.Sheet.Chip"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    tools:text="Marlon" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/seat2"
+                    style="@style/Widget.App.Sheet.Chip"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    tools:text="Evi" />
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/seat3"
+                    style="@style/Widget.App.Sheet.Chip"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    tools:text="Daniel" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/seat4"
+                    style="@style/Widget.App.Sheet.Chip"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    tools:text="Sonja" />
+
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/seatsHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.App.Meta"
+                tools:text="Mark the two players who had the queens of clubs." />
+
+        <LinearLayout
+                android:id="@+id/soloKindBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_solo_kind" />
+
+            <LinearLayout
+                    android:id="@+id/soloKindRows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+        </LinearLayout>
+
+        <TextView
+                style="@style/Widget.App.Sheet.SectionLabel"
+                android:text="@string/title_winner" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/winnerRe"
+                    style="@style/Widget.App.Sheet.Chip"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="1"
+                    android:text="@string/label_re" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/winnerKontra"
+                    style="@style/Widget.App.Sheet.Chip"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/label_kontra" />
+
+        </LinearLayout>
+
+        <TextView
+                style="@style/Widget.App.Sheet.SectionLabel"
+                android:text="@string/title_win_level" />
+
+        <LinearLayout
+                android:id="@+id/winLevelRows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        <TextView
+                style="@style/Widget.App.Sheet.SectionLabel"
+                android:text="@string/title_dk_announcements" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/announceRe"
+                    style="@style/Widget.App.Sheet.Toggle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/label_re" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/announceKontra"
+                    style="@style/Widget.App.Sheet.Toggle"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/label_kontra" />
+
+        </LinearLayout>
+
+        <TextView
+                style="@style/Widget.App.Sheet.SectionLabel"
+                android:text="@string/title_dk_absage" />
+
+        <LinearLayout
+                android:id="@+id/absageRows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        <LinearLayout
+                android:id="@+id/extraPointsBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+            <TextView
+                    style="@style/Widget.App.Sheet.SectionLabel"
+                    android:text="@string/title_dk_extra_points" />
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_dk_extra_points_hint"
+                    android:textAppearance="@style/TextAppearance.App.Meta" />
+
+            <include
+                    android:id="@+id/extraRe"
+                    layout="@layout/view_extra_points_stepper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+            <include
+                    android:id="@+id/extraKontra"
+                    layout="@layout/view_extra_points_stepper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/pointsForLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.MetaSmall"
+                        tools:text="Punkte für Re" />
+
+                <TextView
+                        android:id="@+id/pointsPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.App.PointsPreview"
+                        tools:text="+4" />
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveButton"
+                    style="@style/Widget.App.Sheet.SaveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/dialog_title_button_save" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

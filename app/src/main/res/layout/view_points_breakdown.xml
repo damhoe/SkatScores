@@ -1,81 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <TextView
+            style="@style/Widget.App.Breakdown.Label"
+            android:text="@string/label_points_without_bonus" />
 
-        <TextView
-                style="@style/Widget.App.Breakdown.Label"
-                android:text="@string/label_points_without_bonus" />
-
-        <LinearLayout style="@style/Widget.App.Breakdown.Row">
-
-            <TextView
-                    android:id="@+id/gameValue1"
-                    style="@style/Widget.App.Breakdown.Value"
-                    tools:text="212" />
-
-            <TextView
-                    android:id="@+id/gameValue2"
-                    style="@style/Widget.App.Breakdown.Value"
-                    tools:text="-156" />
-
-            <TextView
-                    android:id="@+id/gameValue3"
-                    style="@style/Widget.App.Breakdown.Value"
-                    tools:text="+62" />
-
-        </LinearLayout>
+    <LinearLayout style="@style/Widget.App.Breakdown.Row">
 
         <TextView
-                style="@style/Widget.App.Breakdown.Label"
-                android:text="@string/label_solo_bonus" />
-
-        <LinearLayout style="@style/Widget.App.Breakdown.Row">
-
-            <TextView
-                    android:id="@+id/soloBonus1"
-                    style="@style/Widget.App.Breakdown.Value"
-                    tools:text="+150" />
-
-            <TextView
-                    android:id="@+id/soloBonus2"
-                    style="@style/Widget.App.Breakdown.Value"
-                    tools:text="-100" />
-
-            <TextView
-                    android:id="@+id/soloBonus3"
-                    style="@style/Widget.App.Breakdown.Value"
-                    tools:text="0" />
-
-        </LinearLayout>
+                android:id="@+id/gameValue1"
+                style="@style/Widget.App.Breakdown.Value"
+                tools:text="212" />
 
         <TextView
-                style="@style/Widget.App.Breakdown.Label"
-                android:text="@string/label_against_bonus" />
+                android:id="@+id/gameValue2"
+                style="@style/Widget.App.Breakdown.Value"
+                tools:text="-156" />
 
-        <LinearLayout style="@style/Widget.App.Breakdown.Row">
-
-            <TextView
-                    android:id="@+id/againstBonus1"
-                    style="@style/Widget.App.Breakdown.Value"
-                    tools:text="+200" />
-
-            <TextView
-                    android:id="@+id/againstBonus2"
-                    style="@style/Widget.App.Breakdown.Value"
-                    tools:text="+120" />
-
-            <TextView
-                    android:id="@+id/againstBonus3"
-                    style="@style/Widget.App.Breakdown.Value"
-                    tools:text="+160" />
-
-        </LinearLayout>
+        <TextView
+                android:id="@+id/gameValue3"
+                style="@style/Widget.App.Breakdown.Value"
+                tools:text="+62" />
 
     </LinearLayout>
 
-</layout>
+    <TextView
+            style="@style/Widget.App.Breakdown.Label"
+            android:text="@string/label_solo_bonus" />
+
+    <LinearLayout style="@style/Widget.App.Breakdown.Row">
+
+        <TextView
+                android:id="@+id/soloBonus1"
+                style="@style/Widget.App.Breakdown.Value"
+                tools:text="+150" />
+
+        <TextView
+                android:id="@+id/soloBonus2"
+                style="@style/Widget.App.Breakdown.Value"
+                tools:text="-100" />
+
+        <TextView
+                android:id="@+id/soloBonus3"
+                style="@style/Widget.App.Breakdown.Value"
+                tools:text="0" />
+
+    </LinearLayout>
+
+    <TextView
+            style="@style/Widget.App.Breakdown.Label"
+            android:text="@string/label_against_bonus" />
+
+    <LinearLayout style="@style/Widget.App.Breakdown.Row">
+
+        <TextView
+                android:id="@+id/againstBonus1"
+                style="@style/Widget.App.Breakdown.Value"
+                tools:text="+200" />
+
+        <TextView
+                android:id="@+id/againstBonus2"
+                style="@style/Widget.App.Breakdown.Value"
+                tools:text="+120" />
+
+        <TextView
+                android:id="@+id/againstBonus3"
+                style="@style/Widget.App.Breakdown.Value"
+                tools:text="+160" />
+
+    </LinearLayout>
+
+</LinearLayout>

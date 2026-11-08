@@ -1,51 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <LinearLayout
-            android:layout_width="match_parent"
+    <TextView
+            android:id="@+id/extraLabel"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.App.RowTitle"
+            tools:text="Re" />
 
-        <TextView
-                android:id="@+id/extraLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textAppearance="@style/TextAppearance.App.RowTitle"
-                tools:text="Re" />
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/extraRemove"
+            style="@style/Widget.App.Sheet.Stepper"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/description_dk_extra_remove"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/label_minus" />
 
-        <com.google.android.material.button.MaterialButton
-                android:id="@+id/extraRemove"
-                style="@style/Widget.App.Sheet.Stepper"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:contentDescription="@string/description_dk_extra_remove"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/label_minus" />
+    <TextView
+            android:id="@+id/extraValue"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.App.NumberInline"
+            tools:text="2" />
 
-        <TextView
-                android:id="@+id/extraValue"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.App.NumberInline"
-                tools:text="2" />
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/extraAdd"
+            style="@style/Widget.App.Sheet.Stepper"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/description_dk_extra_add"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/label_plus" />
 
-        <com.google.android.material.button.MaterialButton
-                android:id="@+id/extraAdd"
-                style="@style/Widget.App.Sheet.Stepper"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:contentDescription="@string/description_dk_extra_add"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/label_plus" />
-
-    </LinearLayout>
-
-</layout>
+</LinearLayout>
