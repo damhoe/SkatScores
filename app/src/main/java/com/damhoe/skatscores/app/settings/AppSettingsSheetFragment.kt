@@ -79,7 +79,7 @@ class AppSettingsSheetFragment : BottomSheetDialogFragment()
             }
         }
 
-        val current = chips[viewModel.theme.value] ?: binding.themeSystem
+        val current = chips[viewModel.theme.value] ?: binding.themeDark
         checkOnly(current, chips.values)
     }
 

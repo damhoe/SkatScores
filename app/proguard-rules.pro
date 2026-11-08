@@ -1,4 +1,4 @@
-# Project-specific R8 rules. The libraries in use (Hilt, Navigation, DataBinding, Parcelize,
+# Project-specific R8 rules. The libraries in use (Hilt, Navigation, Parcelize,
 # DataStore) ship their own consumer rules, and nothing here uses reflection, so little is
 # needed.
 

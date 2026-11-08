@@ -8,7 +8,7 @@
     <color name="hero_on_surface_muted">#B8FFFFFF</color>
     <color name="hero_on_surface_faint">#38FFFFFF</color>
     <color name="hero_negative">#E4A89C</color>
-    <color name="hero_accent">#E4A89C</color>
+    <color name="hero_accent">@color/hero_negative</color>
     <color name="hero_track">#38FFFFFF</color>
     <color name="hero_button">#FFFFFF</color>
     <color name="hero_on_button">#34618E</color>
