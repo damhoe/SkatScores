@@ -1,9 +1,9 @@
 <resources>
     <!--
-      The hero card is a coloured surface in both themes, so its content colours are literal.
-      values-night overrides the ones that differ, keeping the card in the primary's hue.
+      The hero card is a dark surface in both themes, so its content colours are literal.
+      values-night overrides the ones that differ: there the card is a neutral surface.
     -->
-    <color name="hero_surface">#535CA8</color>
+    <color name="hero_surface">#34618E</color>
     <color name="hero_on_surface">#FFFFFF</color>
     <color name="hero_on_surface_muted">#B8FFFFFF</color>
     <color name="hero_on_surface_faint">#38FFFFFF</color>
@@ -11,7 +11,7 @@
     <color name="hero_accent">#E4A89C</color>
     <color name="hero_track">#38FFFFFF</color>
     <color name="hero_button">#FFFFFF</color>
-    <color name="hero_on_button">#535CA8</color>
+    <color name="hero_on_button">#34618E</color>
 
     <color name="md_theme_light_hairline">#d4d7de</color>
     <color name="md_theme_dark_hairline">#2b2e33</color>
@@ -21,7 +21,7 @@
     <color name="md_theme_dark_suit_red">#E4A89C</color>
 
     <!-- Separated by hue rather than lightness, so the lines stay distinct in both themes. -->
-    <color name="md_theme_light_chart_series_1">#535CA8</color>
+    <color name="md_theme_light_chart_series_1">#34618E</color>
     <color name="md_theme_light_chart_series_2">#a95d4c</color>
     <color name="md_theme_light_chart_series_3">#3F6B44</color>
     <color name="md_theme_light_chart_series_4">#8A6A1F</color>
@@ -31,7 +31,7 @@
     <color name="md_theme_dark_chart_series_4">#E8C77A</color>
 
     <!-- Used at full strength for the initial and at low alpha for the circle behind it. -->
-    <color name="md_theme_light_avatar_1">#535CA8</color>
+    <color name="md_theme_light_avatar_1">#34618E</color>
     <color name="md_theme_light_avatar_2">#A95D4C</color>
     <color name="md_theme_light_avatar_3">#3F6B44</color>
     <color name="md_theme_light_avatar_4">#8A6A1F</color>
@@ -44,9 +44,9 @@
     <color name="md_theme_dark_avatar_5">#93C6D1</color>
     <color name="md_theme_dark_avatar_6">#CBA6D0</color>
 
-    <color name="md_theme_light_primary">#535CA8</color>
+    <color name="md_theme_light_primary">#34618E</color>
     <color name="md_theme_light_onPrimary">#ffffff</color>
-    <color name="md_theme_light_primaryContainer">#535CA8</color>
+    <color name="md_theme_light_primaryContainer">#34618E</color>
     <color name="md_theme_light_onPrimaryContainer">#ffffff</color>
     <color name="md_theme_light_secondary">#292A51</color>
     <color name="md_theme_light_onSecondary">#ffffff</color>
