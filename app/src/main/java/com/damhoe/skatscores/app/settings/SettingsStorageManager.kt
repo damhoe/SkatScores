@@ -24,7 +24,7 @@ class SettingsStorageManager @Inject constructor(
 
     private val storage = context.dataStore
 
-    private val defaultTheme = context.getString(R.string.system_theme_preference_value)
+    private val defaultTheme = context.getString(R.string.night_theme_preference_value)
 
     companion object
     {

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The same surface as the other cards: a coloured card competes with the light-blue
+      primary, so the button carries the colour instead.
+    -->
+    <color name="hero_surface">@color/md_theme_dark_surfaceContainer</color>
+    <color name="hero_negative">#FFB4AB</color>
+    <color name="hero_accent">#9FCAFD</color>
+    <color name="hero_button">#9FCAFD</color>
+    <color name="hero_on_button">#003257</color>
+</resources>

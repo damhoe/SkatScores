@@ -1,11 +1,17 @@
 <resources>
-    <!-- The same in both themes. -->
+    <!--
+      The hero card is a coloured surface in both themes, so its content colours are literal.
+      values-night overrides the ones that differ, keeping the card in the primary's hue.
+    -->
     <color name="hero_surface">#535CA8</color>
     <color name="hero_on_surface">#FFFFFF</color>
     <color name="hero_on_surface_muted">#B8FFFFFF</color>
     <color name="hero_on_surface_faint">#38FFFFFF</color>
     <color name="hero_negative">#E4A89C</color>
+    <color name="hero_accent">#E4A89C</color>
     <color name="hero_track">#38FFFFFF</color>
+    <color name="hero_button">#FFFFFF</color>
+    <color name="hero_on_button">#535CA8</color>
 
     <color name="md_theme_light_hairline">#d4d7de</color>
     <color name="md_theme_dark_hairline">#2b2e33</color>
@@ -75,8 +81,8 @@
 
     <color name="md_theme_dark_primary">#9FCAFD</color>
     <color name="md_theme_dark_onPrimary">#003257</color>
-    <color name="md_theme_dark_primaryContainer">#6994C4</color>
-    <color name="md_theme_dark_onPrimaryContainer">#002B4C</color>
+    <color name="md_theme_dark_primaryContainer">#174975</color>
+    <color name="md_theme_dark_onPrimaryContainer">#D1E4FF</color>
     <color name="md_theme_dark_secondary">#B1C8EC</color>
     <color name="md_theme_dark_onSecondary">#1A314E</color>
     <color name="md_theme_dark_secondaryContainer">#425877</color>
@@ -116,8 +122,8 @@
     <color name="md_theme_dark_surfaceDim">#111317</color>
     <color name="md_theme_dark_surfaceBright">#37393D</color>
     <color name="md_theme_dark_surfaceContainerLowest">#0C0E11</color>
-    <color name="md_theme_dark_surfaceContainerLow">#1A1C1F</color>
-    <color name="md_theme_dark_surfaceContainer">#1E2023</color>
-    <color name="md_theme_dark_surfaceContainerHigh">#282A2D</color>
-    <color name="md_theme_dark_surfaceContainerHighest">#333538</color>
+    <color name="md_theme_dark_surfaceContainerLow">#1D2025</color>
+    <color name="md_theme_dark_surfaceContainer">#262A31</color>
+    <color name="md_theme_dark_surfaceContainerHigh">#30343B</color>
+    <color name="md_theme_dark_surfaceContainerHighest">#3A3E46</color>
 </resources>

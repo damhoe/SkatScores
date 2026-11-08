@@ -68,7 +68,9 @@
 
     <!--
       Material's type scale hard-codes Roboto and components ignore the theme's font family,
-      so each scale style is overridden with only the family changed.
+      so each scale style is overridden with the family changed. Material takes the medium
+      weight of the title and label styles from sans-serif-medium, which the swap drops, so
+      those restate it as textFontWeight.
     -->
     <style name="TextAppearance.App.M3.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
         <item name="fontFamily">@font/app_sans</item>
@@ -108,11 +110,13 @@
     <style name="TextAppearance.App.M3.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
         <item name="fontFamily">@font/app_sans</item>
         <item name="android:fontFamily">@font/app_sans</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 
     <style name="TextAppearance.App.M3.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
         <item name="fontFamily">@font/app_sans</item>
         <item name="android:fontFamily">@font/app_sans</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 
     <style name="TextAppearance.App.M3.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
@@ -133,16 +137,19 @@
     <style name="TextAppearance.App.M3.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
         <item name="fontFamily">@font/app_sans</item>
         <item name="android:fontFamily">@font/app_sans</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 
     <style name="TextAppearance.App.M3.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
         <item name="fontFamily">@font/app_sans</item>
         <item name="android:fontFamily">@font/app_sans</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 
     <style name="TextAppearance.App.M3.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
         <item name="fontFamily">@font/app_sans</item>
         <item name="android:fontFamily">@font/app_sans</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 
     <style name="Widget.App.CollapsingToolbar" parent="@style/Widget.Material3.CollapsingToolbar">
